@@ -4,5 +4,15 @@
     "type": "git",
     "url": "https://vsr-git.informatik.tu-chemnitz.de/sulfur/sulfur"
   },
-  "description": "Library and web application to create W3C widgets perfoming CRUD operations on a DataGridService."
+  "description": "Library and web application to create W3C widgets perfoming CRUD operations on a DataGridService.",
+  "devDependencies": {
+    "testem": "~0.3.24",
+    "jshint": "~2.1.4",
+    "chai": "~1.7.2",
+    "sinon": "~1.7.3",
+    "sinon-chai": "~2.4.0"
+  },
+  "dependencies": {
+    "requirejs": "~2.1.8"
+  }
 }
