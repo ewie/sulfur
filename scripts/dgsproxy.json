@@ -1,0 +1,9 @@
+{
+  "proxy": {
+    "port": 8000
+  },
+  "dgs": {
+    "host": "192.168.56.101",
+    "path": "/datagridservice/"
+  }
+}
