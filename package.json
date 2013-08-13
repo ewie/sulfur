@@ -1,0 +1,8 @@
+{
+  "name": "sulfur",
+  "repository": {
+    "type": "git",
+    "url": "https://vsr-git.informatik.tu-chemnitz.de/sulfur/sulfur"
+  },
+  "description": "Library and web application to create W3C widgets perfoming CRUD operations on a DataGridService."
+}
