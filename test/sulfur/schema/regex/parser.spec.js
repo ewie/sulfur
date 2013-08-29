@@ -44,7 +44,7 @@ define([
   var expect = $shared.expect;
   var bind = $shared.bind;
 
-  describe('sulfur.schema.regex.parser', function () {
+  describe('sulfur/schema/regex/parser', function () {
 
     var parser;
 

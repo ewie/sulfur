@@ -17,7 +17,7 @@ define([
   var expect = $shared.expect;
   var bind = $shared.bind;
 
-  describe('sulfur.schema.regex.quant', function () {
+  describe('sulfur/schema/regex/quant', function () {
 
     describe('#initialize()', function () {
 

@@ -19,7 +19,7 @@ define([
   var sinon = $shared.sinon;
   var bind = $shared.bind;
 
-  describe('sulfur.schema.regex.pattern', function () {
+  describe('sulfur/schema/regex/pattern', function () {
 
     describe('#initialize()', function () {
 

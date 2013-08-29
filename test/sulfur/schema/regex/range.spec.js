@@ -18,7 +18,7 @@ define([
   var expect = $shared.expect;
   var bind = $shared.bind;
 
-  describe('sulfur.schema.regex.range', function () {
+  describe('sulfur/schema/regex/range', function () {
 
     describe('#initialize()', function () {
 

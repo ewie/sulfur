@@ -16,7 +16,7 @@ define([
 
   var expect = $shared.expect;
 
-  describe('sulfur.schema.regex.any', function () {
+  describe('sulfur/schema/regex/any', function () {
 
     it("should exist", function () {
       expect($any).to.exist;

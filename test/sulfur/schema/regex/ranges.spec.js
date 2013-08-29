@@ -17,7 +17,7 @@ define([
   var expect = $shared.expect;
   var sinon = $shared.sinon;
 
-  describe('sulfur.schema.regex.ranges', function () {
+  describe('sulfur/schema/regex/ranges', function () {
 
     describe('#initialize()', function () {
 

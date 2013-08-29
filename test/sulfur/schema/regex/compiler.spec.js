@@ -26,7 +26,7 @@ define([
     });
   }
 
-  describe('sulfur.schema.regex.compiler', function () {
+  describe('sulfur/schema/regex/compiler', function () {
 
     var parse = (function () {
       var parser = $parser.create();

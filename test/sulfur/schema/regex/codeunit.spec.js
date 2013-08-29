@@ -17,7 +17,7 @@ define([
   var expect = $shared.expect;
   var bind = $shared.bind;
 
-  describe('sulfur.schema.regex.codeunit', function () {
+  describe('sulfur/schema/regex/codeunit', function () {
 
     describe('#initialize()', function () {
 

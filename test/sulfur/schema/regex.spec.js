@@ -30,7 +30,7 @@ define([
   var expect = $shared.expect;
   var sinon = $shared.sinon;
 
-  describe('sulfur.schema.xsd.regex', function () {
+  describe('sulfur/schema/xsd/regex', function () {
 
     var sandbox;
 

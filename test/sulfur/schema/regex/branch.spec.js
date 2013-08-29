@@ -19,7 +19,7 @@ define([
   var expect = $shared.expect;
   var sinon = $shared.sinon;
 
-  describe('sulfur.schema.regex.branch', function () {
+  describe('sulfur/schema/regex/branch', function () {
 
     describe('#initialize()', function () {
 

@@ -17,7 +17,7 @@ define([
   var expect = shared.expect;
   var bind = shared.bind;
 
-  describe('sulfur.unicode', function () {
+  describe('sulfur/unicode', function () {
 
     describe('.decodeCharacterFromUtf16()', function () {
 

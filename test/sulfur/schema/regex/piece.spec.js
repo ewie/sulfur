@@ -32,7 +32,7 @@ define([
   var expect = $shared.expect;
   var sinon = $shared.sinon;
 
-  describe('sulfur.schema.regex.piece', function () {
+  describe('sulfur/schema/regex/piece', function () {
 
     describe('#initialize()', function () {
 

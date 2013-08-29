@@ -19,7 +19,7 @@ define([
 
   var expect = $shared.expect;
 
-  describe('sulfur.schema.regex.group', function () {
+  describe('sulfur/schema/regex/group', function () {
 
     describe('#initialize()', function () {
 

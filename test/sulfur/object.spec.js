@@ -18,7 +18,7 @@ define([
   var sinon = $shared.sinon;
   var descriptor = $shared.descriptor;
 
-  describe('sulfur.object', function () {
+  describe('sulfur/object', function () {
 
     var sandbox;
 

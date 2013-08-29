@@ -39,7 +39,7 @@ define([
 
   var expect = $shared.expect;
 
-  describe('sulfur.schema.regex.translater', function () {
+  describe('sulfur/schema/regex/translater', function () {
 
     describe('#translate()', function () {
 
