@@ -25,11 +25,6 @@ define([
 
       context("with no items", function () {
 
-        //it("should throw", function () {
-        //  expect(bind($group, 'create', []))
-        //    .to.throw("group must contain at least one item");
-        //});
-
         it("should initialize an empty group", function () {
           var group = $group.create();
           expect(group.isEmpty()).to.be.true;
@@ -43,6 +38,7 @@ define([
       });
 
       context("with no options", function () {
+
         var group;
 
         beforeEach(function () {
