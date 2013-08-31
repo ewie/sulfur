@@ -339,7 +339,7 @@ define([
 
     describe('.getBlockRange()', function () {
 
-      context("with a valid category name", function () {
+      context("with a valid block name", function () {
 
         it("should return a copy of the array", function () {
           var range = unicode.getBlockRange('BasicLatin');
@@ -384,7 +384,7 @@ define([
 
     describe('.getCategoryGroupNames()', function () {
 
-      it("should return an array with category names as of Unicode 3.0.0", function () {
+      it("should return an array with category group names as of Unicode 3.0.0", function () {
         var x = Object.keys(UCD_300_CATEGORY_GROUPS);
         expect(unicode.getCategoryGroupNames()).to.eql(x);
       });
