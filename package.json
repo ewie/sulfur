@@ -1,10 +1,13 @@
 {
   "name": "sulfur",
+  "version": "0.0.1",
+  "license": "3-clause BSD",
   "repository": {
     "type": "git",
     "url": "https://vsr-git.informatik.tu-chemnitz.de/sulfur/sulfur"
   },
   "description": "Library and web application to create W3C widgets perfoming CRUD operations on a DataGridService.",
+  "private": true,
   "devDependencies": {
     "testem": "0.4",
     "jshint": "2.1",
