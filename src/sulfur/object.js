@@ -39,7 +39,10 @@ define(function () {
       writable: true,
       configurable: true,
       value: function () {
-        var obj = Object.create(this.prototype);
+        // XXX A regular invocation causes an error on Chrome 23, because
+        //   Object.create would SOMETIMES return undefined for no good reason.
+        //   By using #call we can solve this problem.
+        var obj = Object.create.call(Object, this.prototype);
         obj.initialize.apply(obj, arguments);
         return obj;
       }
