@@ -101,7 +101,7 @@ define([
             day: parseDec(m[3]),
             hour: parseDec(m[4]),
             minute: parseDec(m[5]),
-            second: m[6]
+            second: $decimal.parse(m[6])
           };
           if (m[7] === 'Z') {
             options.tzhour = options.tzminute = 0;
@@ -237,24 +237,17 @@ define([
         }
       }
 
+      var MIN_SECOND = $decimal.create();
+      var MAX_SECOND = $decimal.parse('60');
+
       function assertSecond(second) {
-        if (typeof second === 'number') {
-          if (!isInteger(second)) {
-            throw new Error("second must be an integer");
-          }
-          second = $decimal.parse(second.toString(10));
-        } else if (typeof second === 'string') {
-          if (!$decimal.isDecimal(second)) {
-            throw new Error('invalid second value "' + second + '"');
-          }
-          second = $decimal.parse(second);
+        if (!$decimal.prototype.isPrototypeOf(second)) {
+          throw new Error("second must be a decimal");
         }
-        var MIN = $decimal.parse('0');
-        if (second.lt(MIN)) {
+        if (second.lt(MIN_SECOND)) {
           throw new Error("second must be non-negative");
         }
-        var MAX = $decimal.parse('60');
-        if (second.gteq(MAX)) {
+        if (second.gteq(MAX_SECOND)) {
           throw new Error("second must not be greater than or equal to 60");
         }
       }
@@ -322,7 +315,7 @@ define([
 
         var hour = optionOrDefault(options, 'hour', 0);
         var minute = optionOrDefault(options, 'minute', 0);
-        var second = optionOrDefault(options, 'second', 0);
+        var second = optionOrDefault(options, 'second', $decimal.create());
 
         assertTime(hour, minute, second);
 

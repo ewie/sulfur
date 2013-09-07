@@ -56,7 +56,7 @@ define([
           day: 3,
           hour: 4,
           minute: 5,
-          second: '06.789'
+          second: $decimal.parse('6.789')
         });
       });
 
@@ -125,7 +125,7 @@ define([
           day: 1,
           hour: 0,
           minute: 0,
-          second: '00.123'
+          second: $decimal.parse('0.123')
         });
       });
 
@@ -148,7 +148,7 @@ define([
           day: 1,
           hour: 0,
           minute: 0,
-          second: '00',
+          second: $decimal.create(),
           tzhour: 0,
           tzminute: 0
         });
@@ -163,7 +163,7 @@ define([
           day: 1,
           hour: 0,
           minute: 0,
-          second: '00',
+          second: $decimal.create(),
           tzhour: 1,
           tzminute: 0
         });
@@ -178,7 +178,7 @@ define([
           day: 1,
           hour: 0,
           minute: 0,
-          second: '00',
+          second: $decimal.create(),
           tzhour: -1,
           tzminute: 0
         });
@@ -332,66 +332,19 @@ define([
           .to.throw("minute must not be greater than 59");
       });
 
-      context("when second is a number", function () {
-
-        it("should reject a non-integer value", function () {
-          expect(bind($dateTime, 'create', { second: 1.2 }))
-            .to.throw("second must be an integer");
-        });
-
-        it("should reject a negative value", function () {
-          expect(bind($dateTime, 'create', { second: -1 }))
-            .to.throw("second must be non-negative");
-        });
-
-        it("should reject a value greater than 59", function () {
-          expect(bind($dateTime, 'create', { second: 60 }))
-            .to.throw("second must not be greater than or equal to 60");
-        });
-
-        it("should convert to a sulfur/schema/decimal", function () {
-          var dt = $dateTime.create({ second: 1 });
-          expect(dt.second).to.eql($decimal.parse('1'));
-        });
-
+      it("should reject non-decimal second", function () {
+        expect(bind($dateTime, 'create', { second: 0 }))
+          .to.throw("second must be a decimal");
       });
 
-      context("when second is a string", function () {
-
-        it("should reject an invalid string", function () {
-          expect(bind($dateTime, 'create', { second: '0.123abc' }))
-            .to.throw('invalid second value "0.123abc"');
-        });
-
-        it("should reject a negative value", function () {
-          expect(bind($dateTime, 'create', { second: '-1' }))
-            .to.throw("second must be non-negative");
-        });
-
-        it("should reject a value greater than or equal to 60", function () {
-          expect(bind($dateTime, 'create', { second: '60' }))
-            .to.throw("second must not be greater than or equal to 60");
-        });
-
-        it("should convert to a sulfur/schema/decimal", function () {
-          var dt = $dateTime.create({ second: '1' });
-          expect(dt.second).to.eql($decimal.parse('1'));
-        });
-
+      it("should reject a negative second", function () {
+        expect(bind($dateTime, 'create', { second: $decimal.parse('-1') }))
+          .to.throw("second must be non-negative");
       });
 
-      context("when second is a sulfur/schema/decimal", function () {
-
-        it("should reject a negative value", function () {
-          expect(bind($dateTime, 'create', { second: $decimal.parse('-1') }))
-            .to.throw("second must be non-negative");
-        });
-
-        it("should reject a value greater than or equal to 60", function () {
-          expect(bind($dateTime, 'create', { second: $decimal.parse('60') }))
-            .to.throw("second must not be greater than or equal to 60");
-        });
-
+      it("should reject a second greater than or equal to 60", function () {
+        expect(bind($dateTime, 'create', { second: $decimal.parse('60') }))
+          .to.throw("second must not be greater than or equal to 60");
       });
 
       context("with a time zone", function () {
@@ -453,7 +406,7 @@ define([
       });
 
       it("should include the second's fractional part", function () {
-        var dt = $dateTime.create({ second: '1.2' });
+        var dt = $dateTime.create({ second: $decimal.parse('1.2') });
         expect(dt.toLiteral()).to.equal('0001-01-01T00:00:01.2');
       });
 
@@ -733,8 +686,8 @@ define([
 
                       context("with inequal second", function () {
 
-                        var lhs = $dateTime.create({ second: 1, tzhour: 0 });
-                        var rhs = $dateTime.create({ second: 2, tzhour: 0 });
+                        var lhs = $dateTime.create({ second: $decimal.parse('1'), tzhour: 0 });
+                        var rhs = $dateTime.create({ second: $decimal.parse('2'), tzhour: 0 });
 
                         it("should return -1 if LHS second is less than RHS second", function () {
                           expect(lhs.cmp(rhs)).to.equal(-1);
@@ -903,8 +856,8 @@ define([
 
                     context("with inequal second", function () {
 
-                      var lhs = $dateTime.create({ second: 1 });
-                      var rhs = $dateTime.create({ second: 2 });
+                      var lhs = $dateTime.create({ second: $decimal.parse('1') });
+                      var rhs = $dateTime.create({ second: $decimal.parse('2') });
 
                       it("should return -1 if LHS second is less than RHS second", function () {
                         expect(lhs.cmp(rhs)).to.equal(-1);
