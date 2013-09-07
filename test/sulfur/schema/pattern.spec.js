@@ -19,7 +19,7 @@ define([
   var sinon = $shared.sinon;
   var bind = $shared.bind;
 
-  describe.only('sulfur/schema/pattern', function () {
+  describe('sulfur/schema/pattern', function () {
 
     var sandbox;
 
