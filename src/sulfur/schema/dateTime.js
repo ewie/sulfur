@@ -420,9 +420,6 @@ define([
      * @return [string].
      */
     toCanonicalLiteral: function () {
-      //if (!this.hasTimeZone() || this.isZulu()) {
-      //  return this.toLiteral();
-      //}
       return this.normalize().toLiteral();
     },
 
