@@ -47,7 +47,7 @@ define([
 
     describe('.parse()', function () {
 
-      it("should create a dateTime object", function () {
+      it("should accept a valid datetime literal", function () {
         var spy = sandbox.spy($dateTime.prototype, 'initialize');
         var dt = $dateTime.parse('0001-02-03T04:05:06.789');
         expect(spy).to.be.calledOn(dt).and.be.calledWith({
@@ -60,63 +60,7 @@ define([
         });
       });
 
-      it("should throw an error if #initialize() throws", function () {
-        sandbox.stub($dateTime.prototype, 'initialize').throws(new Error('invalid for testing purposes'));
-        expect(bind($dateTime, 'parse', '0001-01-01T00:00:00'))
-          .to.throw('invalid datetime literal "0001-01-01T00:00:00", error: invalid for testing purposes');
-      });
-
-      it("should reject years with less than 4 digits", function () {
-        expect(bind($dateTime, 'parse', '001-01-01T00:00:00'))
-          .to.throw('invalid datetime literal "001-01-01T00:00:00"');
-      });
-
-      it("should reject years with more than 4 digits", function () {
-        expect(bind($dateTime, 'parse', '00001-01-01T00:00:00'))
-          .to.throw('invalid datetime literal "00001-01-01T00:00:00"');
-      });
-
-      it("should throw on months with less than 2 digits", function () {
-        expect(bind($dateTime, 'parse', '0001-1-1T00:00:00'))
-          .to.throw('invalid datetime literal "0001-1-1T00:00:00"');
-      });
-
-      it("should throw on months with more than 2 digits", function () {
-        expect(bind($dateTime, 'parse', '0001-001-01T00:00:00'))
-          .to.throw('invalid datetime literal "0001-001-01T00:00:00"');
-      });
-
-      it("should throw on days with less than 2 digits", function () {
-        expect(bind($dateTime, 'parse', '0001-01-1T00:00:00'))
-          .to.throw('invalid datetime literal "0001-01-1T00:00:00"');
-      });
-
-      it("should throw on days with more than 2 digits", function () {
-        expect(bind($dateTime, 'parse', '0001-01-001T00:00:00'))
-          .to.throw('invalid datetime literal "0001-01-001T00:00:00"');
-      });
-
-      it("should throw on hours with less than 2 digits", function () {
-        expect(bind($dateTime, 'parse', '0001-01-01T0:00:00'))
-          .to.throw('invalid datetime literal "0001-01-01T0:00:00"');
-      });
-
-      it("should throw on hours with more than 2 digits", function () {
-        expect(bind($dateTime, 'parse', '0001-01-01T000:00:00'))
-          .to.throw('invalid datetime literal "0001-01-01T000:00:00"');
-      });
-
-      it("should throw on minutes with less than 2 digits", function () {
-        expect(bind($dateTime, 'parse', '0001-01-01T00:0:00'))
-          .to.throw('invalid datetime literal "0001-01-01T00:0:00"');
-      });
-
-      it("should throw on minutes with more than 2 digits", function () {
-        expect(bind($dateTime, 'parse', '0001-01-01T00:000:00'))
-          .to.throw('invalid datetime literal "0001-01-01T00:000:00"');
-      });
-
-      it("should accept a fractional part as string", function () {
+      it("should accept a second with fractional part", function () {
         var spy = sandbox.spy($dateTime.prototype, 'initialize');
         var dt = $dateTime.parse('0001-01-01T00:00:00.123');
         expect(spy).to.be.calledOn(dt).and.calledWith({
@@ -127,16 +71,6 @@ define([
           minute: 0,
           second: $decimal.parse('0.123')
         });
-      });
-
-      it("should reject a value with less than 2 digits", function () {
-        expect(bind($dateTime, 'parse', '0001-01-01T00:00:0'))
-          .to.throw('invalid datetime literal "0001-01-01T00:00:0"');
-      });
-
-      it("should reject a value with more than 2 digits", function () {
-        expect(bind($dateTime, 'parse', '0001-01-01T00:00:000'))
-          .to.throw('invalid datetime literal "0001-01-01T00:00:000"');
       });
 
       it("should accept time zone Z as 00:00", function () {
@@ -184,22 +118,88 @@ define([
         });
       });
 
-      it("should reject time zone hour with less than 2 digits", function () {
+      it("should throw an error if #initialize() throws", function () {
+        sandbox.stub($dateTime.prototype, 'initialize').throws(new Error('invalid for testing purposes'));
+        expect(bind($dateTime, 'parse', '0001-01-01T00:00:00'))
+          .to.throw('invalid datetime literal "0001-01-01T00:00:00", error: invalid for testing purposes');
+      });
+
+      it("should reject a year with less than 4 digits", function () {
+        expect(bind($dateTime, 'parse', '001-01-01T00:00:00'))
+          .to.throw('invalid datetime literal "001-01-01T00:00:00"');
+      });
+
+      it("should reject a year with more than 4 digits", function () {
+        expect(bind($dateTime, 'parse', '00001-01-01T00:00:00'))
+          .to.throw('invalid datetime literal "00001-01-01T00:00:00"');
+      });
+
+      it("should reject a month with less than 2 digits", function () {
+        expect(bind($dateTime, 'parse', '0001-1-1T00:00:00'))
+          .to.throw('invalid datetime literal "0001-1-1T00:00:00"');
+      });
+
+      it("should reject a month with more than 2 digits", function () {
+        expect(bind($dateTime, 'parse', '0001-001-01T00:00:00'))
+          .to.throw('invalid datetime literal "0001-001-01T00:00:00"');
+      });
+
+      it("should reject a day with less than 2 digits", function () {
+        expect(bind($dateTime, 'parse', '0001-01-1T00:00:00'))
+          .to.throw('invalid datetime literal "0001-01-1T00:00:00"');
+      });
+
+      it("should reject a day with more than 2 digits", function () {
+        expect(bind($dateTime, 'parse', '0001-01-001T00:00:00'))
+          .to.throw('invalid datetime literal "0001-01-001T00:00:00"');
+      });
+
+      it("should reject an hour with less than 2 digits", function () {
+        expect(bind($dateTime, 'parse', '0001-01-01T0:00:00'))
+          .to.throw('invalid datetime literal "0001-01-01T0:00:00"');
+      });
+
+      it("should reject an hour with more than 2 digits", function () {
+        expect(bind($dateTime, 'parse', '0001-01-01T000:00:00'))
+          .to.throw('invalid datetime literal "0001-01-01T000:00:00"');
+      });
+
+      it("should reject a minute with less than 2 digits", function () {
+        expect(bind($dateTime, 'parse', '0001-01-01T00:0:00'))
+          .to.throw('invalid datetime literal "0001-01-01T00:0:00"');
+      });
+
+      it("should reject a minute with more than 2 digits", function () {
+        expect(bind($dateTime, 'parse', '0001-01-01T00:000:00'))
+          .to.throw('invalid datetime literal "0001-01-01T00:000:00"');
+      });
+
+      it("should reject a second with less than 2 digits", function () {
+        expect(bind($dateTime, 'parse', '0001-01-01T00:00:0'))
+          .to.throw('invalid datetime literal "0001-01-01T00:00:0"');
+      });
+
+      it("should reject a second with more than 2 digits", function () {
+        expect(bind($dateTime, 'parse', '0001-01-01T00:00:000'))
+          .to.throw('invalid datetime literal "0001-01-01T00:00:000"');
+      });
+
+      it("should reject a time zone hour with less than 2 digits", function () {
         expect(bind($dateTime, 'parse', '0001-01-01T00:00:00+1:00'))
           .to.throw('invalid datetime literal "0001-01-01T00:00:00+1:00"');
       });
 
-      it("should reject time zone hour with more than 2 digits", function () {
+      it("should reject a time zone hour with more than 2 digits", function () {
         expect(bind($dateTime, 'parse', '0001-01-01T00:00:00+001:00'))
           .to.throw('invalid datetime literal "0001-01-01T00:00:00+001:00"');
       });
 
-      it("should reject time zone minute with less than 2 digits", function () {
+      it("should reject a time zone minute with less than 2 digits", function () {
         expect(bind($dateTime, 'parse', '0001-01-01T00:00:00+01:0'))
           .to.throw('invalid datetime literal "0001-01-01T00:00:00+01:0"');
       });
 
-      it("should reject time zone minute with more than 2 digits", function () {
+      it("should reject a time zone minute with more than 2 digits", function () {
         expect(bind($dateTime, 'parse', '0001-01-01T00:00:00+01:000'))
           .to.throw('invalid datetime literal "0001-01-01T00:00:00+01:000"');
       });
