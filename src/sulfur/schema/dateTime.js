@@ -94,21 +94,21 @@ define([
         if (!m) {
           throw new Error('invalid datetime literal "' + s + '"');
         }
+        var options = {
+          year: parseDec(m[1]),
+          month: parseDec(m[2]),
+          day: parseDec(m[3]),
+          hour: parseDec(m[4]),
+          minute: parseDec(m[5]),
+          second: $decimal.parse(m[6])
+        };
+        if (m[7] === 'Z') {
+          options.tzhour = options.tzminute = 0;
+        } else if (m[7]) {
+          options.tzhour = parseDec(m[8]);
+          options.tzminute = parseDec(m[9]);
+        }
         try {
-          var options = {
-            year: parseDec(m[1]),
-            month: parseDec(m[2]),
-            day: parseDec(m[3]),
-            hour: parseDec(m[4]),
-            minute: parseDec(m[5]),
-            second: $decimal.parse(m[6])
-          };
-          if (m[7] === 'Z') {
-            options.tzhour = options.tzminute = 0;
-          } else if (m[7]) {
-            options.tzhour = parseDec(m[8]);
-            options.tzminute = parseDec(m[9]);
-          }
           return this.create(options);
         } catch (e) {
           throw new Error('invalid datetime literal "' + s + '", error: ' + e.message);
@@ -376,8 +376,12 @@ define([
           sec = '0' + sec;
         }
 
-        var s = toString(this.year, 4) + '-' + toString(this.month, 2) + '-' + toString(this.day, 2) +
-                'T' + toString(this.hour, 2) + ':' + toString(this.minute, 2) + ':' + sec;
+        var s =
+          toString(this.year, 4) + '-' +
+          toString(this.month, 2) + '-' +
+          toString(this.day, 2) + 'T' +
+          toString(this.hour, 2) + ':' +
+          toString(this.minute, 2) + ':' + sec;
 
         if (this.isZulu()) {
           s += 'Z';

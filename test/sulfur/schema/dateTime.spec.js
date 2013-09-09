@@ -88,7 +88,7 @@ define([
         });
       });
 
-      it("should accept positive time zones", function () {
+      it("should accept a positive time zone", function () {
         var spy = sandbox.spy($dateTime.prototype, 'initialize');
         var dt = $dateTime.parse('0001-01-01T00:00:00+01:00');
         expect(spy).to.be.calledOn(dt).and.calledWith({
@@ -103,7 +103,7 @@ define([
         });
       });
 
-      it("should accept negative time zones", function () {
+      it("should accept a negative time zone", function () {
         var spy = sandbox.spy($dateTime.prototype, 'initialize');
         var dt = $dateTime.parse('0001-01-01T00:00:00-01:00');
         expect(spy).to.be.calledOn(dt).and.calledWith({
@@ -135,8 +135,8 @@ define([
       });
 
       it("should reject a month with less than 2 digits", function () {
-        expect(bind($dateTime, 'parse', '0001-1-1T00:00:00'))
-          .to.throw('invalid datetime literal "0001-1-1T00:00:00"');
+        expect(bind($dateTime, 'parse', '0001-1-01T00:00:00'))
+          .to.throw('invalid datetime literal "0001-1-01T00:00:00"');
       });
 
       it("should reject a month with more than 2 digits", function () {
