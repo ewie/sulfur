@@ -73,7 +73,7 @@ define([
         });
       });
 
-      it("should accept time zone Z as 00:00", function () {
+      it("should accept timezone Z as 00:00", function () {
         var spy = sandbox.spy($dateTime.prototype, 'initialize');
         var dt = $dateTime.parse('0001-01-01T00:00:00Z');
         expect(spy).to.be.calledOn(dt).and.calledWith({
@@ -88,7 +88,7 @@ define([
         });
       });
 
-      it("should accept a positive time zone", function () {
+      it("should accept a positive timezone", function () {
         var spy = sandbox.spy($dateTime.prototype, 'initialize');
         var dt = $dateTime.parse('0001-01-01T00:00:00+01:00');
         expect(spy).to.be.calledOn(dt).and.calledWith({
@@ -103,7 +103,7 @@ define([
         });
       });
 
-      it("should accept a negative time zone", function () {
+      it("should accept a negative timezone", function () {
         var spy = sandbox.spy($dateTime.prototype, 'initialize');
         var dt = $dateTime.parse('0001-01-01T00:00:00-01:00');
         expect(spy).to.be.calledOn(dt).and.calledWith({
@@ -184,22 +184,22 @@ define([
           .to.throw('invalid datetime literal "0001-01-01T00:00:000"');
       });
 
-      it("should reject a time zone hour with less than 2 digits", function () {
+      it("should reject a timezone hour with less than 2 digits", function () {
         expect(bind($dateTime, 'parse', '0001-01-01T00:00:00+1:00'))
           .to.throw('invalid datetime literal "0001-01-01T00:00:00+1:00"');
       });
 
-      it("should reject a time zone hour with more than 2 digits", function () {
+      it("should reject a timezone hour with more than 2 digits", function () {
         expect(bind($dateTime, 'parse', '0001-01-01T00:00:00+001:00'))
           .to.throw('invalid datetime literal "0001-01-01T00:00:00+001:00"');
       });
 
-      it("should reject a time zone minute with less than 2 digits", function () {
+      it("should reject a timezone minute with less than 2 digits", function () {
         expect(bind($dateTime, 'parse', '0001-01-01T00:00:00+01:0'))
           .to.throw('invalid datetime literal "0001-01-01T00:00:00+01:0"');
       });
 
-      it("should reject a time zone minute with more than 2 digits", function () {
+      it("should reject a timezone minute with more than 2 digits", function () {
         expect(bind($dateTime, 'parse', '0001-01-01T00:00:00+01:000'))
           .to.throw('invalid datetime literal "0001-01-01T00:00:00+01:000"');
       });
@@ -347,51 +347,41 @@ define([
           .to.throw("second must not be greater than or equal to 60");
       });
 
-      context("with a time zone", function () {
+      context("with a timezone", function () {
 
-        it("should use zero for time zone hour when not given", function () {
+        it("should use zero for timezone hour when not given", function () {
           var dt = $dateTime.create({ tzminute: 0 });
           expect(dt.tzhour).to.equal(0);
         });
 
-        it("should use zero for time zone minute when not given", function () {
+        it("should use zero for timezone minute when not given", function () {
           var dt = $dateTime.create({ tzhour: 0 });
           expect(dt.tzminute).to.equal(0);
         });
 
-        it("should reject time zone hour greater than 14", function () {
-          expect(bind($dateTime, 'create', { tzhour: 15 }))
-            .to.throw("time zone hour must not be greater than 14");
+        it("should reject timezone hour greater than 99", function () {
+          expect(bind($dateTime, 'create', { tzhour: 100 }))
+            .to.throw("timezone hour must not be greater than 99");
         });
 
-        it("should reject time zone hour less than -14", function () {
-          expect(bind($dateTime, 'create', { tzhour: -15 }))
-            .to.throw("time zone hour must not be less than -14");
+        it("should reject timezone hour less than -99", function () {
+          expect(bind($dateTime, 'create', { tzhour: -100 }))
+            .to.throw("timezone hour must not be less than -99");
         });
 
-        it("should reject time zone minute greater than 59", function () {
-          expect(bind($dateTime, 'create', { tzminute: 60 }))
-            .to.throw("time zone minute must not be greater than 59");
+        it("should reject timezone minute greater than 99", function () {
+          expect(bind($dateTime, 'create', { tzminute: 100 }))
+            .to.throw("timezone minute must not be greater than 99");
         });
 
-        it("should reject time zone minute less than -59", function () {
-          expect(bind($dateTime, 'create', { tzminute: -60 }))
-            .to.throw("time zone minute must not be less than -59");
+        it("should reject timezone minute less than -99", function () {
+          expect(bind($dateTime, 'create', { tzminute: -100 }))
+            .to.throw("timezone minute must not be less than -99");
         });
 
         it("should reject non-zero hour and non-zero minute with different signs", function () {
           expect(bind($dateTime, 'create', { tzhour: 1, tzminute: -30 }))
-            .to.throw("time zone hour and minute must be of the same sign for a non-zero hour");
-        });
-
-        it("should reject a time zone greater than +14:00", function () {
-          expect(bind($dateTime, 'create', { tzhour: 14, tzminute: 1 }))
-            .to.throw("time zone must not be greater than +14:00");
-        });
-
-        it("should reject a time zone less than -14:00", function () {
-          expect(bind($dateTime, 'create', { tzhour: -14, tzminute: 1 }))
-            .to.throw("time zone must not be less than -14:00");
+            .to.throw("timezone hour and minute must be of the same sign for a non-zero hour");
         });
 
       });
@@ -410,34 +400,34 @@ define([
         expect(dt.toLiteral()).to.equal('0001-01-01T00:00:01.2');
       });
 
-      context("with time zone", function () {
+      context("with timezone", function () {
 
         it("should use 'Z' when UTC", function () {
           var dt = $dateTime.create({ tzhour: 0 });
           expect(dt.toLiteral()).to.equal('0001-01-01T00:00:00Z');
         });
 
-        it("should use '+' for a positive time zone hour", function () {
+        it("should use '+' for a positive timezone hour", function () {
           var dt = $dateTime.create({ tzhour: 1 });
           expect(dt.toLiteral()).to.equal('0001-01-01T00:00:00+01:00');
         });
 
-        it("should use '-' for a negative time zone hour", function () {
+        it("should use '-' for a negative timezone hour", function () {
           var dt = $dateTime.create({ tzhour: -1 });
           expect(dt.toLiteral()).to.equal('0001-01-01T00:00:00-01:00');
         });
 
-        it("should use '+' for a positive time zone minute", function () {
+        it("should use '+' for a positive timezone minute", function () {
           var dt = $dateTime.create({ tzminute: 1 });
           expect(dt.toLiteral()).to.equal('0001-01-01T00:00:00+00:01');
         });
 
-        it("should use '-' for a negative time zone minute", function () {
+        it("should use '-' for a negative timezone minute", function () {
           var dt = $dateTime.create({ tzminute: -1 });
           expect(dt.toLiteral()).to.equal('0001-01-01T00:00:00-00:01');
         });
 
-        it("should pad time zone hour and minute with a zero to 2 digits", function () {
+        it("should pad timezone hour and minute with a zero to 2 digits", function () {
           var dt = $dateTime.create({ tzhour: 1 });
           expect(dt.toLiteral()).to.equal('0001-01-01T00:00:00+01:00');
         });
@@ -456,22 +446,21 @@ define([
         expect(normalizeSpy).to.be.calledOn(dt);
         expect(toLiteralSpy)
           .to.be.calledOn(normalizeSpy.getCall(0).returnValue)
-          .and
-          .to.have.returned(r);
+          .and.to.have.returned(r);
       });
 
     });
 
-    describe('#hasTimeZone()', function () {
+    describe('#hasTimezone()', function () {
 
-      it("should return true if it has a time zone", function () {
+      it("should return true if it has a timezone", function () {
         var dt = $dateTime.create({ tzhour: 0 });
-        expect(dt.hasTimeZone()).to.be.true;
+        expect(dt.hasTimezone()).to.be.true;
       });
 
-      it("should return false if it has no time zone", function () {
+      it("should return false if it has no timezone", function () {
         var dt = $dateTime.create();
-        expect(dt.hasTimeZone()).to.be.false;
+        expect(dt.hasTimezone()).to.be.false;
       });
 
     });
@@ -483,7 +472,7 @@ define([
         expect(dt.isZulu()).to.be.false;
       });
 
-      context("with a time zone", function () {
+      context("with a timezone", function () {
 
         it("should return true if hour and minute are both zero", function () {
           var dt = $dateTime.create({ tzhour: 0 });
@@ -506,13 +495,13 @@ define([
 
     describe('#normalize()', function () {
 
-      it("should return this if there's no time zone", function () {
+      it("should return this if there's no timezone", function () {
         var dt = $dateTime.create();
         var r = dt.normalize();
         expect(r).to.equal(dt);
       });
 
-      context("with a time zone", function () {
+      context("with a timezone", function () {
 
         it("should return this if already in UTC", function () {
           var dt = $dateTime.create({ tzhour: 0 });
@@ -573,302 +562,121 @@ define([
 
     describe('#cmp()', function () {
 
-      context("when the LHS has a time zone", function () {
+      it("should compare the normalized LHS and RHS", function () {
+        var normalizeSpy = sandbox.spy($dateTime.prototype, 'normalize');
 
-        context("when the RHS has a time zone", function () {
+        var lhs = $dateTime.create();
+        var rhs = $dateTime.create();
 
-          it("should call #cmp() on the normalized LHS passing the normalized RHS", function () {
-            var lhs = $dateTime.create({ year: 1000, tzhour: 1 });
-            var rhs = $dateTime.create({ year: 1000, tzhour: 2 });
-            var normalizeSpy = sandbox.spy($dateTime.prototype, 'normalize');
-            var cmpSpy = sandbox.spy($dateTime.prototype, 'cmp');
-            var result = lhs.cmp(rhs);
-            expect(normalizeSpy).to.be.calledTwice;
-            expect(normalizeSpy.getCall(0).thisValue).to.equal(lhs);
-            expect(normalizeSpy.getCall(1).thisValue).to.equal(rhs);
-            expect(cmpSpy).to.be.calledOn(normalizeSpy.getCall(0).returnValue)
-              .and.calledWith(normalizeSpy.getCall(1).returnValue)
-              .and.to.have.returned(result);
-          });
+        lhs.cmp(rhs);
 
-          context("when LHS and RHS are both in UTC", function () {
+        expect(normalizeSpy).to.be.calledTwice;
+        expect(normalizeSpy.getCall(0).thisValue).to.equal(lhs);
+        expect(normalizeSpy.getCall(1).thisValue).to.equal(rhs);
+      });
 
-            context("with inequal year", function () {
+      context("with inequal normalized year", function () {
 
-              var lhs = $dateTime.create({ year: 1, tzhour: 0 });
-              var rhs = $dateTime.create({ year: 2, tzhour: 0 });
+        var lhs = $dateTime.create({ year: 1 });
+        var rhs = $dateTime.create({ year: 2 });
 
-              it("should return -1 if LHS year is less than RHS year", function () {
-                expect(lhs.cmp(rhs)).to.equal(-1);
-              });
-
-              it("should return 1 if LHS year is greater than RHS year", function () {
-                expect(rhs.cmp(lhs)).to.equal(1);
-              });
-
-            });
-
-            context("with equal year", function ()  {
-
-              context("with inequal month", function () {
-
-                var lhs = $dateTime.create({ month: 1, tzhour: 0 });
-                var rhs = $dateTime.create({ month: 2, tzhour: 0 });
-
-                it("should return -1 if LHS month is less than RHS month", function () {
-                  expect(lhs.cmp(rhs)).to.equal(-1);
-                });
-
-                it("should return 1 if LHS month is greater than RHS month", function () {
-                  expect(rhs.cmp(lhs)).to.equal(1);
-                });
-
-              });
-
-              context("with equal month", function ()  {
-
-                context("with inequal day", function () {
-
-                  var lhs = $dateTime.create({ day: 1, tzhour: 0 });
-                  var rhs = $dateTime.create({ day: 2, tzhour: 0 });
-
-                  it("should return -1 if LHS day is less than RHS day", function () {
-                    expect(lhs.cmp(rhs)).to.equal(-1);
-                  });
-
-                  it("should return 1 if LHS day is greater than RHS month", function () {
-                    expect(rhs.cmp(lhs)).to.equal(1);
-                  });
-
-                });
-
-                context("with equal day", function ()  {
-
-                  context("with inequal hour", function () {
-
-                    var lhs = $dateTime.create({ hour: 1, tzhour: 0 });
-                    var rhs = $dateTime.create({ hour: 2, tzhour: 0 });
-
-                    it("should return -1 if LHS hour is less than RHS hour", function () {
-                      expect(lhs.cmp(rhs)).to.equal(-1);
-                    });
-
-                    it("should return 1 if LHS hour is greater than RHS hour", function () {
-                      expect(rhs.cmp(lhs)).to.equal(1);
-                    });
-
-                  });
-
-                  context("with equal hour", function ()  {
-
-                    context("with inequal minute", function () {
-
-                      var lhs = $dateTime.create({ minute: 1, tzhour: 0 });
-                      var rhs = $dateTime.create({ minute: 2, tzhour: 0 });
-
-                      it("should return -1 if LHS minute is less than RHS minute", function () {
-                        expect(lhs.cmp(rhs)).to.equal(-1);
-                      });
-
-                      it("should return 1 if LHS minute is greater than RHS minute", function () {
-                        expect(rhs.cmp(lhs)).to.equal(1);
-                      });
-
-                    });
-
-                    context("with equal minute", function ()  {
-
-                      it("should return 0 with equal second", function () {
-                        var lhs = $dateTime.create({ tzhour: 0 });
-                        var rhs = $dateTime.create({ tzhour: 0 });
-                        expect(lhs.cmp(rhs)).to.equal(0);
-                      });
-
-                      context("with inequal second", function () {
-
-                        var lhs = $dateTime.create({ second: $decimal.parse('1'), tzhour: 0 });
-                        var rhs = $dateTime.create({ second: $decimal.parse('2'), tzhour: 0 });
-
-                        it("should return -1 if LHS second is less than RHS second", function () {
-                          expect(lhs.cmp(rhs)).to.equal(-1);
-                        });
-
-                        it("should return 1 if LHS second is greater than RHS second", function () {
-                          expect(rhs.cmp(lhs)).to.equal(1);
-                        });
-
-                      });
-
-                    });
-
-                  });
-
-                });
-
-              });
-
-            });
-
-          });
-
+        it("should return -1 if LHS year is less than RHS year", function () {
+          expect(lhs.cmp(rhs)).to.equal(-1);
         });
 
-        context("when the RHS has no time zone", function () {
-
-          it("should return -1 if LHS is less than RHS+14:00", function () {
-            var lhs = $dateTime.create({ year: 2000, tzhour: 0 });
-            var rhs = $dateTime.create({ year: 2000, hour: 15 });
-            expect(lhs.cmp(rhs)).to.equal(-1);
-          });
-
-          it("should return 1 if LHS is greater than or equal to RHS+14:00 and greater than RHS-14:00", function () {
-            var lhs = $dateTime.create({ year: 2000, hour: 15, tzhour: 0 });
-            var rhs = $dateTime.create({ year: 2000 });
-            expect(lhs.cmp(rhs)).to.equal(1);
-          });
-
-          it("should return undefined if RHS+14:00 < LHS < RHS-14:00", function () {
-            var lhs = $dateTime.create({ year: 2000, tzhour: 0 });
-            var rhs = $dateTime.create({ year: 2000 });
-            expect(lhs.cmp(rhs)).to.be.undefined;
-          });
-
+        it("should return 1 if LHS year is greater than RHS year", function () {
+          expect(rhs.cmp(lhs)).to.equal(1);
         });
 
       });
 
-      context("when the LHS has no time zone", function () {
+      context("with equal normalized year", function ()  {
 
-        context("when the RHS has a time zone", function () {
+        context("with inequal normalized month", function () {
 
-          it("should return -1 if LHS-14:00 is less than RHS", function () {
-            var lhs = $dateTime.create({ year: 2000 });
-            var rhs = $dateTime.create({ year: 2000, hour: 15, tzhour: 0 });
+          var lhs = $dateTime.create({ month: 1 });
+          var rhs = $dateTime.create({ month: 2 });
+
+          it("should return -1 if LHS month is less than RHS month", function () {
             expect(lhs.cmp(rhs)).to.equal(-1);
           });
 
-          it("should return 1 if LHS-14:00 is greater than or equal RHS and LHS+14:00 is greater than RHS", function () {
-            var lhs = $dateTime.create({ year: 2000, hour: 15 });
-            var rhs = $dateTime.create({ year: 2000, tzhour: 0 });
-            expect(lhs.cmp(rhs)).to.equal(1);
-          });
-
-          it("should return undefined if LHS+14:00 < RHS < LHS-14:00", function () {
-            var lhs = $dateTime.create({ year: 2000 });
-            var rhs = $dateTime.create({ year: 2000, tzhour: 0 });
-            expect(lhs.cmp(rhs)).to.be.undefined;
+          it("should return 1 if LHS month is greater than RHS month", function () {
+            expect(rhs.cmp(lhs)).to.equal(1);
           });
 
         });
 
-        context("when the RHS has no time zone", function () {
+        context("with equal normalized month", function ()  {
 
-          context("with inequal year", function () {
+          context("with inequal normalized day", function () {
 
-            var lhs = $dateTime.create({ year: 1 });
-            var rhs = $dateTime.create({ year: 2 });
+            var lhs = $dateTime.create({ day: 1 });
+            var rhs = $dateTime.create({ day: 2 });
 
-            it("should return -1 if LHS year is less than RHS year", function () {
+            it("should return -1 if LHS day is less than RHS day", function () {
               expect(lhs.cmp(rhs)).to.equal(-1);
             });
 
-            it("should return 1 if LHS year is greater than RHS year", function () {
+            it("should return 1 if LHS day is greater than RHS month", function () {
               expect(rhs.cmp(lhs)).to.equal(1);
             });
 
           });
 
-          context("with equal year", function ()  {
+          context("with equal normalized day", function ()  {
 
-            context("with inequal month", function () {
+            context("with inequal normalized hour", function () {
 
-              var lhs = $dateTime.create({ month: 1 });
-              var rhs = $dateTime.create({ month: 2 });
+              var lhs = $dateTime.create({ hour: 1 });
+              var rhs = $dateTime.create({ hour: 2 });
 
-              it("should return -1 if LHS month is less than RHS month", function () {
+              it("should return -1 if LHS hour is less than RHS hour", function () {
                 expect(lhs.cmp(rhs)).to.equal(-1);
               });
 
-              it("should return 1 if LHS month is greater than RHS month", function () {
+              it("should return 1 if LHS hour is greater than RHS hour", function () {
                 expect(rhs.cmp(lhs)).to.equal(1);
               });
 
             });
 
-            context("with equal month", function ()  {
+            context("with equal normalized hour", function ()  {
 
-              context("with inequal day", function () {
+              context("with inequal normalized minute", function () {
 
-                var lhs = $dateTime.create({ day: 1 });
-                var rhs = $dateTime.create({ day: 2 });
+                var lhs = $dateTime.create({ minute: 1 });
+                var rhs = $dateTime.create({ minute: 2 });
 
-                it("should return -1 if LHS day is less than RHS day", function () {
+                it("should return -1 if LHS minute is less than RHS minute", function () {
                   expect(lhs.cmp(rhs)).to.equal(-1);
                 });
 
-                it("should return 1 if LHS day is greater than RHS month", function () {
+                it("should return 1 if LHS minute is greater than RHS minute", function () {
                   expect(rhs.cmp(lhs)).to.equal(1);
                 });
 
               });
 
-              context("with equal day", function ()  {
+              context("with equal normalized minute", function ()  {
 
-                context("with inequal hour", function () {
+                it("should return 0 with equal second", function () {
+                  var lhs = $dateTime.create();
+                  var rhs = $dateTime.create();
+                  expect(lhs.cmp(rhs)).to.equal(0);
+                });
 
-                  var lhs = $dateTime.create({ hour: 1 });
-                  var rhs = $dateTime.create({ hour: 2 });
+                context("with inequal second", function () {
 
-                  it("should return -1 if LHS hour is less than RHS hour", function () {
+                  var lhs = $dateTime.create({ second: $decimal.parse('1') });
+                  var rhs = $dateTime.create({ second: $decimal.parse('2') });
+
+                  it("should return -1 if LHS second is less than RHS second", function () {
                     expect(lhs.cmp(rhs)).to.equal(-1);
                   });
 
-                  it("should return 1 if LHS hour is greater than RHS hour", function () {
+                  it("should return 1 if LHS second is greater than RHS second", function () {
                     expect(rhs.cmp(lhs)).to.equal(1);
-                  });
-
-                });
-
-                context("with equal hour", function ()  {
-
-                  context("with inequal minute", function () {
-
-                    var lhs = $dateTime.create({ minute: 1 });
-                    var rhs = $dateTime.create({ minute: 2 });
-
-                    it("should return -1 if LHS minute is less than RHS minute", function () {
-                      expect(lhs.cmp(rhs)).to.equal(-1);
-                    });
-
-                    it("should return 1 if LHS minute is greater than RHS minute", function () {
-                      expect(rhs.cmp(lhs)).to.equal(1);
-                    });
-
-                  });
-
-                  context("with equal minute", function ()  {
-
-                    it("should return 0 with equal second", function () {
-                      var lhs = $dateTime.create();
-                      var rhs = $dateTime.create();
-                      expect(lhs.cmp(rhs)).to.equal(0);
-                    });
-
-                    context("with inequal second", function () {
-
-                      var lhs = $dateTime.create({ second: $decimal.parse('1') });
-                      var rhs = $dateTime.create({ second: $decimal.parse('2') });
-
-                      it("should return -1 if LHS second is less than RHS second", function () {
-                        expect(lhs.cmp(rhs)).to.equal(-1);
-                      });
-
-                      it("should return 1 if LHS second is greater than RHS second", function () {
-                        expect(rhs.cmp(lhs)).to.equal(1);
-                      });
-
-                    });
-
                   });
 
                 });
@@ -890,15 +698,17 @@ define([
       it("should return true if #cmp() returns zero", function () {
         var lhs = $dateTime.create();
         var rhs = $dateTime.create();
-        sandbox.stub($dateTime.prototype, 'cmp').returns(0);
+        var cmpStub = sandbox.stub($dateTime.prototype, 'cmp').returns(0);
         expect(lhs.eq(rhs)).to.be.true;
+        expect(cmpStub).to.be.calledOn(lhs).and.calledWith(rhs);
       });
 
       it("should return false if #cmp() return non-zero", function () {
         var lhs = $dateTime.create();
         var rhs = $dateTime.create();
-        sandbox.stub($dateTime.prototype, 'cmp').returns(1);
+        var cmpStub = sandbox.stub($dateTime.prototype, 'cmp').returns(1);
         expect(lhs.eq(rhs)).to.be.false;
+        expect(cmpStub).to.be.calledOn(lhs).and.calledWith(rhs);
       });
 
     });
@@ -908,15 +718,17 @@ define([
       it("should return true if #cmp() returns less than zero", function () {
         var lhs = $dateTime.create();
         var rhs = $dateTime.create();
-        sandbox.stub($dateTime.prototype, 'cmp').returns(-1);
+        var cmpStub = sandbox.stub($dateTime.prototype, 'cmp').returns(-1);
         expect(lhs.lt(rhs)).to.be.true;
+        expect(cmpStub).to.be.calledOn(lhs).and.calledWith(rhs);
       });
 
       it("should return false if #cmp() returns non-negative", function () {
         var lhs = $dateTime.create();
         var rhs = $dateTime.create();
-        sandbox.stub($dateTime.prototype, 'cmp').returns(0);
+        var cmpStub = sandbox.stub($dateTime.prototype, 'cmp').returns(0);
         expect(lhs.lt(rhs)).to.be.false;
+        expect(cmpStub).to.be.calledOn(lhs).and.calledWith(rhs);
       });
 
     });
@@ -926,15 +738,17 @@ define([
       it("should return true if #cmp() returns greater than zero", function () {
         var lhs = $dateTime.create();
         var rhs = $dateTime.create();
-        sandbox.stub($dateTime.prototype, 'cmp').returns(1);
+        var cmpStub = sandbox.stub($dateTime.prototype, 'cmp').returns(1);
         expect(lhs.gt(rhs)).to.be.true;
+        expect(cmpStub).to.be.calledOn(lhs).and.calledWith(rhs);
       });
 
       it("should return false if #cmp() returns non-positive", function () {
         var lhs = $dateTime.create();
         var rhs = $dateTime.create();
-        sandbox.stub($dateTime.prototype, 'cmp').returns(0);
+        var cmpStub = sandbox.stub($dateTime.prototype, 'cmp').returns(0);
         expect(lhs.gt(rhs)).to.be.false;
+        expect(cmpStub).to.be.calledOn(lhs).and.calledWith(rhs);
       });
 
     });
@@ -944,15 +758,17 @@ define([
       it("should return false if #gt() returns true", function () {
         var lhs = $dateTime.create();
         var rhs = $dateTime.create();
-        sandbox.stub($dateTime.prototype, 'gt').returns(true);
+        var gtStub = sandbox.stub($dateTime.prototype, 'gt').returns(true);
         expect(lhs.lteq(rhs)).to.be.false;
+        expect(gtStub).to.be.calledOn(lhs).and.calledWith(rhs);
       });
 
       it("should return true if #gt() returns false", function () {
         var lhs = $dateTime.create();
         var rhs = $dateTime.create();
-        sandbox.stub($dateTime.prototype, 'gt').returns(false);
+        var gtStub = sandbox.stub($dateTime.prototype, 'gt').returns(false);
         expect(lhs.lteq(rhs)).to.be.true;
+        expect(gtStub).to.be.calledOn(lhs).and.calledWith(rhs);
       });
 
     });
@@ -962,15 +778,17 @@ define([
       it("should return false if #lt() returns true", function () {
         var lhs = $dateTime.create();
         var rhs = $dateTime.create();
-        sandbox.stub($dateTime.prototype, 'lt').returns(true);
+        var ltStub = sandbox.stub($dateTime.prototype, 'lt').returns(true);
         expect(lhs.gteq(rhs)).to.be.false;
+        expect(ltStub).to.be.calledOn(lhs).and.calledWith(rhs);
       });
 
       it("should return true if #lt() returns false", function () {
         var lhs = $dateTime.create();
         var rhs = $dateTime.create();
-        sandbox.stub($dateTime.prototype, 'lt').returns(false);
+        var ltStub = sandbox.stub($dateTime.prototype, 'lt').returns(false);
         expect(lhs.gteq(rhs)).to.be.true;
+        expect(ltStub).to.be.calledOn(lhs).and.calledWith(rhs);
       });
 
     });

@@ -27,6 +27,11 @@ define([
    *     on the next day
    *
    *   - it does not accept leap seconds, i.e. 2012-06-30T23:59:60Z
+   *
+   *   - it does accept timezones from -99:99 to +99:99
+   *
+   *   - it does not correctly compare two datetime instances when only
+   *     one instance defines a timezone
    */
 
   function isLeapYear(year) {
@@ -78,9 +83,9 @@ define([
        *   $4 hour
        *   $5 minute
        *   $6 second with optional fractional part
-       *   $7 optional time zone
-       *   $8 signed time zone hour
-       *   $9 time zone minute
+       *   $7 optional timezone
+       *   $8 signed timezone hour
+       *   $9 timezone minute
        */
       var DATETIME_PATTERN = /^([0-9]{4})-([0-9]{2})-([0-9]{2})T([0-9]{2}):([0-9]{2}):([0-9]{2}(?:\.[0-9]+)?)(([+-][0-9]{2}):([0-9]{2})|Z)?$/;
 
@@ -135,7 +140,7 @@ define([
      * @option options [number] tzminute (default 0 if `tzhour` is given)
      *
      * @throw [Error] on values outside their valid range and on invalid date,
-     *   time or time zone
+     *   time or timezone
      */
     initialize: (function () {
 
@@ -252,21 +257,21 @@ define([
         }
       }
 
-      function assertTimeZoneHour(hour) {
-        if (hour > 14) {
-          throw new Error("time zone hour must not be greater than 14");
+      function assertTimezoneHour(hour) {
+        if (hour > 99) {
+          throw new Error("timezone hour must not be greater than 99");
         }
-        if (hour < -14) {
-          throw new Error("time zone hour must not be less than -14");
+        if (hour < -99) {
+          throw new Error("timezone hour must not be less than -99");
         }
       }
 
-      function assertTimeZoneMinute(minute) {
-        if (minute > 59) {
-          throw new Error("time zone minute must not be greater than 59");
+      function assertTimezoneMinute(minute) {
+        if (minute > 99) {
+          throw new Error("timezone minute must not be greater than 99");
         }
-        if (minute < -59) {
-          throw new Error("time zone minute must not be less than -59");
+        if (minute < -99) {
+          throw new Error("timezone minute must not be less than -99");
         }
       }
 
@@ -282,20 +287,12 @@ define([
         assertSecond(second);
       }
 
-      function assertTimeZone(hour, minute) {
-        assertTimeZoneHour(hour);
-        assertTimeZoneMinute(minute);
-
-        if (hour === 14 && minute !== 0) {
-          throw new Error("time zone must not be greater than +14:00");
-        }
-
-        if (hour === -14 && minute !== 0) {
-          throw new Error("time zone must not be less than -14:00");
-        }
+      function assertTimezone(hour, minute) {
+        assertTimezoneHour(hour);
+        assertTimezoneMinute(minute);
 
         if (hour !== 0 && minute !== 0 && sgn(hour) !== sgn(minute)) {
-          throw new Error("time zone hour and minute must be of the same sign for a non-zero hour");
+          throw new Error("timezone hour and minute must be of the same sign for a non-zero hour");
         }
       }
 
@@ -331,7 +328,7 @@ define([
         if (isDefined(options.tzhour) || isDefined(options.tzminute)) {
           tzhour = optionOrDefault(options, 'tzhour', 0);
           tzminute = optionOrDefault(options, 'tzminute', 0);
-          assertTimeZone(tzhour, tzminute);
+          assertTimezone(tzhour, tzminute);
         }
 
         this.year = year;
@@ -385,7 +382,7 @@ define([
 
         if (this.isZulu()) {
           s += 'Z';
-        } else if (this.hasTimeZone()) {
+        } else if (this.hasTimezone()) {
           var tzhr = 0;
           var tzmin = 0;
           if (this.tzhour < 0) {
@@ -421,11 +418,11 @@ define([
     },
 
     /**
-     * Check if the datetime defines a time zone.
+     * Check if the datetime defines a timezone.
      *
-     * @return [boolean] whether a time zone is defined or not
+     * @return [boolean] whether a timezone is defined or not
      */
-    hasTimeZone: function () {
+    hasTimezone: function () {
       return isDefined(this.tzhour);
     },
 
@@ -439,11 +436,11 @@ define([
     },
 
     /**
-     * Normalize this datetime by applying the time zone offset resulting in a
+     * Normalize this datetime by applying the timezone offset resulting in a
      * UTC datetime.
      *
      * @return [dateTime] the normalized datetime in UTC
-     * @return [this] the datetime if it has no time zone or already is UTC
+     * @return [this] the datetime if it has no timezone or already is UTC
      *
      * @throw [Error] if the resulting datetime is invalid (1 > year > 9999)
      */
@@ -479,7 +476,7 @@ define([
 
       return function () {
 
-        if (!this.hasTimeZone() || this.isZulu()) {
+        if (!this.hasTimezone() || this.isZulu()) {
           return this;
         }
 
@@ -551,56 +548,10 @@ define([
       // All properties which can be compared numerically.
       var PROPERTIES = 'year month day hour minute'.split(' ');
 
-      function addTimeZone(dt, tzhour) {
-        return $dateTime.create({
-          year: dt.year,
-          month: dt.month,
-          day: dt.day,
-          hour: dt.hour,
-          minute: dt.minute,
-          second: dt.second,
-          tzhour: tzhour
-        }).normalize();
-      }
-
       return function (other) {
 
-        var lhs, rhs;
-
-        if (this.hasTimeZone() && other.hasTimeZone() && !this.isZulu() && !other.isZulu()) {
-          lhs = this.normalize();
-          rhs = other.normalize();
-          return lhs.cmp(rhs);
-        }
-
-        if (this.hasTimeZone() && !other.hasTimeZone()) {
-          lhs = this.normalize();
-          rhs = addTimeZone(other, 14);
-          if (lhs.lt(rhs)) {
-            return -1;
-          }
-          rhs = addTimeZone(other, -14);
-          if (lhs.gt(rhs)) {
-            return 1;
-          }
-          return undefined;
-        }
-
-        if (!this.hasTimeZone() && other.hasTimeZone()) {
-          rhs = other.normalize();
-          lhs = addTimeZone(this, -14);
-          if (lhs.lt(rhs)) {
-            return -1;
-          }
-          lhs = addTimeZone(this, 14);
-          if (lhs.gt(rhs)) {
-            return 1;
-          }
-          return undefined;
-        }
-
-        lhs = this;
-        rhs = other;
+        var lhs = this.normalize();
+        var rhs = other.normalize();
 
         for (var i = 0, p; i < PROPERTIES.length; i += 1) {
           p = PROPERTIES[i];
