@@ -8,14 +8,14 @@
   },
   "description": "Library and web application to create W3C widgets perfoming CRUD operations on a DataGridService.",
   "private": true,
-  "devDependencies": {
-    "testem": "0.4",
-    "jshint": "2.1",
-    "chai": "1.7",
-    "sinon": "1.7",
-    "sinon-chai": "2.4"
-  },
   "dependencies": {
     "requirejs": "2.1"
+  },
+  "devDependencies": {
+    "chai": "1.7",
+    "jshint": "2.1",
+    "sinon": "1.7",
+    "sinon-chai": "2.4",
+    "testem": "0.4"
   }
 }
