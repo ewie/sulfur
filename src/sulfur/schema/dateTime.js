@@ -67,7 +67,7 @@ define([
      *
      * @param [string] s
      *
-     * @return [dateTime] the parsed datetime
+     * @return [sulfur/schema/dateTime] the parsed datetime
      *
      * @throw [Error] on an invalid string representation or invalid values
      */
@@ -439,10 +439,11 @@ define([
      * Normalize this datetime by applying the timezone offset resulting in a
      * UTC datetime.
      *
-     * @return [dateTime] the normalized datetime in UTC
+     * @return [sulfur/schema/dateTime] the normalized datetime in UTC
      * @return [this] the datetime if it has no timezone or already is UTC
      *
-     * @throw [Error] if the resulting datetime is invalid (1 > year > 9999)
+     * @throw [Error] if the normalized datetime would be invalid
+     *   (1 > year > 9999)
      */
     normalize: (function () {
 
@@ -537,7 +538,7 @@ define([
     /**
      * Compare with a datetime as RHS.
      *
-     * @param [dateTime] other the RHS datetime
+     * @param [sulfur/schema/dateTime] other the RHS datetime
      *
      * @return [-1] if less than `other`
      * @return [0] if equal to `other`
@@ -572,7 +573,7 @@ define([
     /**
      * Check for equality with another datetime.
      *
-     * @param [dateTime] other
+     * @param [sulfur/schema/dateTime] other
      *
      * @return [boolean] whether equal to `other` or not
      */
@@ -583,7 +584,7 @@ define([
     /**
      * Check if less than another datetime.
      *
-     * @param [dateTime] other
+     * @param [sulfur/schema/dateTime] other
      *
      * @return [boolean] whether less than `other` or not
      */
@@ -594,7 +595,7 @@ define([
     /**
      * Check if greater than another datetime.
      *
-     * @param [dateTime] other
+     * @param [sulfur/schema/dateTime] other
      *
      * @return [boolean] whether greater than `other` or not
      */
@@ -605,7 +606,7 @@ define([
     /**
      * Check if less than or equal to another datetime.
      *
-     * @param [dateTime] other
+     * @param [sulfur/schema/dateTime] other
      *
      * @return [boolean] whether less than or equal `other` or not
      */
@@ -616,7 +617,7 @@ define([
     /**
      * Check if greater than or equal to another datetime.
      *
-     * @param [dateTime] other
+     * @param [sulfur/schema/dateTime] other
      *
      * @return [boolean] whether greater than or equal to `other` or not
      */
