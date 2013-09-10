@@ -15,7 +15,7 @@ define([
 
   /**
    * Implemenation of XSD's dateTime, which deviates from the current standard
-   * in numerous ways to accomodate the datatypes behaviour exposed by the
+   * in numerous ways to accomodate the datatype's behaviour exposed by the
    * DataGridService (via .NET). The .NET-Implemenation exposes the following
    * issues:
    *
@@ -30,8 +30,8 @@ define([
    *
    *   - it does accept timezones from -99:99 to +99:99
    *
-   *   - it does not correctly compare two datetime instances when only
-   *     one instance defines a timezone
+   *   - it does not correctly compare two datetime instances when only one
+   *     instance defines a timezone
    */
 
   function isLeapYear(year) {
