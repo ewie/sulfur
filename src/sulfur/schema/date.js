@@ -25,7 +25,7 @@ define([
    *
    *   - it does accept timezones from -99:99 to +99:99
    *
-   *   - it does not correctly compare two datet instances when only one
+   *   - it does not correctly compare two date instances when only one
    *     instance defines a timezone
    */
 
@@ -221,7 +221,7 @@ define([
       var tzhr = dtu.hour - dtn.hour;
       var tzmin = dtu.minute - dtn.minute;
 
-      // Handle an eventually overflow of timezone minute.
+      // Handle an eventual overflow of the timezone minute.
       if (tzhr > 0 && tzmin < 0) {
         tzhr -= 1;
         tzmin += 60;
