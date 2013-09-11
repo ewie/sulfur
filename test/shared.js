@@ -8,14 +8,16 @@
 
 define([
   'chai',
+  'chai-things',
   'sinon-chai',
   'sinon'
-], function (chai, sinonChai, sinon) {
+], function (chai, chaiThings, sinonChai, sinon) {
 
   'use strict';
 
   var expect = chai.expect;
 
+  chai.use(chaiThings);
   chai.use(sinonChai);
 
   chai.use(function (chai) {
