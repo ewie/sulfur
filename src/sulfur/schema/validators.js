@@ -10,9 +10,12 @@ define([
   'sulfur/schema/validator/all',
   'sulfur/schema/validator/enumeration',
   'sulfur/schema/validator/length',
+  'sulfur/schema/validator/maximum',
+  'sulfur/schema/validator/minimum',
   'sulfur/schema/validator/pattern',
+  'sulfur/schema/validator/prototype',
   'sulfur/schema/validator/some'
-], function (all, enumeration, length, pattern, some) {
+], function (all, enumeration, length, maximum, minimum, pattern, prototype, some) {
 
   'use strict';
 
@@ -20,7 +23,10 @@ define([
     all: all,
     enumeration: enumeration,
     length: length,
+    maximum: maximum,
+    minimum: minimum,
     pattern: pattern,
+    prototype: prototype,
     some: some
   };
 
