@@ -73,7 +73,6 @@ define([
         if (!isValidXmlCharacterCodepoint(val)) {
           throw new Error("illegal XML character " + m);
         }
-        //return encodeToSurrogatePair(val);
         return $unicode.encodeCharacterAsUtf16(val);
       });
 
@@ -82,7 +81,6 @@ define([
         if (!isValidXmlCharacterCodepoint(val)) {
           throw new Error("illegal XML character " + m);
         }
-        //return encodeToSurrogatePair(val);
         return $unicode.encodeCharacterAsUtf16(val);
       });
 
@@ -152,7 +150,6 @@ define([
     },
 
     consumeCodepoint: function () {
-      //var pair = decodeFromSurrogatePair(this.source);
       var pair = $unicode.decodeCharacterFromUtf16(this.source);
       if (pair[1].length > 1) {
         console.log(pair);
@@ -211,7 +208,7 @@ define([
 
   var parseQuantifier = (function () {
     function parseSimpleQuantifier(scanner) {
-      var match = scanner.matches(/^[?+*]/);
+      var match = scanner.scan(/^[?+*]/);
       if (match) {
         switch (match[0]) {
         case '+':
@@ -230,12 +227,16 @@ define([
         if (p === -1) {
           throw new Error("incomplete quantifier");
         }
+
         var s = scanner.consume(p);
         var match = /^(?:(\d+)(,)?|(\d+),(\d+))$/.exec(s);
         if (!match) {
           throw new Error("invalid quantifier {" + s + "}");
         }
-        scanner.advance(p + 1);
+
+        // Consume the closing curly brace.
+        scanner.advance(1);
+
         var min, max;
         if (match[1]) {
           min = parseInt(match[1], 10);
@@ -244,6 +245,7 @@ define([
           min = parseInt(match[3], 10);
           max = parseInt(match[4], 10);
         }
+
         return $quant.create(min, max);
       }
     }
