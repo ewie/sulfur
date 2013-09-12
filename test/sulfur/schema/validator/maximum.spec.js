@@ -50,13 +50,13 @@ define([
           expect(max.cmp).to.be.calledOn(max).and.be.calledWith(value);
         });
 
-        it("should return true when maximum#cmp(value) returns 1", function () {
+        it("should return true when maximum#cmp(value) returns positive", function () {
           var max = { cmp: function () { return 1; } };
           var validator = $maximumValidator.create(max);
           expect(validator.validate()).to.be.true;
         });
 
-        it("should return false when maximum#cmp(value) returns -1", function () {
+        it("should return false when maximum#cmp(value) returns negative", function () {
           var max = { cmp: function () { return -1; } };
           var validator = $maximumValidator.create(max);
           expect(validator.validate()).to.be.false;

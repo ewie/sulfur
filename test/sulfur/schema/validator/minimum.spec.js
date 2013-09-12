@@ -50,13 +50,13 @@ define([
           expect(min.cmp).to.be.calledOn(min).and.be.calledWith(value);
         });
 
-        it("should return true when minimum#cmp(value) returns -1", function () {
+        it("should return true when minimum#cmp(value) returns negative", function () {
           var min = { cmp: function () { return -1; } };
           var validator = $minimumValidator.create(min);
           expect(validator.validate()).to.be.true;
         });
 
-        it("should return false when minimum#cmp(value) returns 1", function () {
+        it("should return false when minimum#cmp(value) returns positive", function () {
           var min = { cmp: function () { return 1; } };
           var validator = $minimumValidator.create(min);
           expect(validator.validate()).to.be.false;
