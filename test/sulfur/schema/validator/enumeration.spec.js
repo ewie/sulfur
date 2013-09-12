@@ -5,7 +5,7 @@
  */
 
 /* global define */
-/* global beforeEach, describe, it */
+/* global beforeEach, context, describe, it */
 
 define([
   'shared',
@@ -16,6 +16,7 @@ define([
 
   var expect = $shared.expect;
   var bind = $shared.bind;
+  var sinon = $shared.sinon;
 
   describe('sulfur/schema/validator/enumeration', function () {
 
@@ -33,21 +34,58 @@ define([
       var validator;
       var values;
 
-      beforeEach(function () {
-        values = [ 'a', '0' ];
-        validator = $enumerationValidator.create(values);
+      context("when the tested value responds to #cmp()", function () {
+
+        beforeEach(function () {
+          values = [ { dummy: 1 } ];
+          validator = $enumerationValidator.create(values);
+        });
+
+        it("should call #cmp() on the tested value with the asserted value as argument", function () {
+          var value = { cmp: sinon.spy() };
+          validator.validate(value);
+          expect(value.cmp).to.be.calledOn(value).and.to.be.calledWith(values[0]);
+        });
+
+        it("should return as soon as #cmp() returns zero", function () {
+          values.push({ dummy: 2 });
+          var value = { cmp: sinon.stub().returns(0) };
+          validator.validate(value);
+          expect(value.cmp).to.be.calledWith(values[0]);
+          expect(value.cmp).to.not.be.calledWith(values[1]);
+        });
+
+        it("should return true if #cmp() returns zero for any value", function () {
+          var value = { cmp: sinon.stub().returns(0) };
+          expect(validator.validate(value)).to.be.true;
+        });
+
+        it("should return false if #cmp() never returns zero for any value", function () {
+          var value = { cmp: sinon.stub().returns(1) };
+          expect(validator.validate(value)).to.be.false;
+        });
+
       });
 
-      it("should check for strict equality", function () {
-        expect(validator.validate(0)).to.be.false;
-      });
+      context("when the tested value does not respond to #cmp()", function () {
 
-      it("should return true on a valid value", function () {
-        expect(validator.validate('a')).to.be.true;
-      });
+        beforeEach(function () {
+          values = [ 'a', '0' ];
+          validator = $enumerationValidator.create(values);
+        });
 
-      it("should return false on an invalid value", function () {
-        expect(validator.validate('b')).to.be.false;
+        it("should check for strict equality", function () {
+          expect(validator.validate(0)).to.be.false;
+        });
+
+        it("should return true on a valid value", function () {
+          expect(validator.validate('a')).to.be.true;
+        });
+
+        it("should return false on an invalid value", function () {
+          expect(validator.validate('b')).to.be.false;
+        });
+
       });
 
     });

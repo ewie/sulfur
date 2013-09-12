@@ -35,9 +35,13 @@ define([
      *   values
      */
     validate: function (value) {
-      return this._values.some(function (validValue) {
-        return validValue === value;
-      });
+      var fn;
+      if (typeof value.cmp === 'function') {
+        fn = function (validValue) { return value.cmp(validValue) === 0; };
+      } else {
+        fn = function (validValue) { return validValue === value; };
+      }
+      return this._values.some(fn);
     }
 
   });
