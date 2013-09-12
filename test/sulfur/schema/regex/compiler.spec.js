@@ -55,6 +55,34 @@ define([
         expect(r).to.eql(x);
       });
 
+      context("subpatterns", function () {
+
+        it("should keep subpatterns when quantified with ?", function () {
+          var r = compiler.compile(parse('(ab)?'));
+          var x = /^(?:ab)?$/;
+          expect(r).to.eql(x);
+        });
+
+        it("should keep subpatterns when quantified with *", function () {
+          var r = compiler.compile(parse('(ab)*'));
+          var x = /^(?:ab)*$/;
+          expect(r).to.eql(x);
+        });
+
+        it("should keep subpatterns when quantified with +", function () {
+          var r = compiler.compile(parse('(ab)+'));
+          var x = /^(?:ab)+$/;
+          expect(r).to.eql(x);
+        });
+
+        it("should keep subpatterns when quantified with {min,max} (min <> max <> 1)", function () {
+          var r = compiler.compile(parse('(ab){1,3}'));
+          var x = /^(?:ab){1,3}$/;
+          expect(r).to.eql(x);
+        });
+
+      });
+
       context("characters", function () {
 
         context("when less than or equal U+00FF", function () {

@@ -10,8 +10,9 @@ define([
   'sulfur/object',
   'sulfur/schema/regex/codeunit',
   'sulfur/schema/regex/group',
-  'sulfur/schema/regex/range'
-], function ($object, $codeunit, $group, $range) {
+  'sulfur/schema/regex/range',
+  'sulfur/schema/regex/pattern'
+], function ($object, $codeunit, $group, $range, $pattern) {
 
   'use strict';
 
@@ -20,14 +21,17 @@ define([
    * expression tree.
    */
 
-  function compilePattern(pattern) {
+  function compilePattern(pattern, quant) {
     var s = pattern.branches.reduce(function (s, branch, index) {
       if (index > 0) {
         s += '|';
       }
       return s + compileBranch(branch);
     }, '');
-    return pattern.branches.length > 1 ? '(?:' + s + ')' : s;
+    if (pattern.branches.length > 1 || quant && (quant.min !== 0 || quant.max !== 0)) {
+      return '(?:' + s + ')';
+    }
+    return s;
   }
 
   function compileBranch(branch) {
@@ -42,6 +46,8 @@ define([
       atom = compileCodeunit(piece.atom);
     } else if ($group.prototype.isPrototypeOf(piece.atom)) {
       atom = compileGroup(piece.atom);
+    } else if ($pattern.prototype.isPrototypeOf(piece.atom)) {
+      atom = compilePattern(piece.atom, piece.quant);
     } else {
       throw new Error("not implemented");
     }
