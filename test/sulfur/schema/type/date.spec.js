@@ -20,7 +20,7 @@ define([
   var expect = $shared.expect;
   var bind = $shared.bind;
 
-  describe.only('sulfur/schema/type/date', function () {
+  describe('sulfur/schema/type/date', function () {
 
     describe('.validateFacets()', function () {
 
