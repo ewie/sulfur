@@ -41,15 +41,33 @@ define([
      *
      * @option facets [array] enumeration
      * @option facets [sulfur/schema/dateTime] maxExclusive
-     * @option facets [sulfur/schema/dataTime] maxInclusive
+     * @option facets [sulfur/schema/dateTime] maxInclusive
      * @option facets [sulfur/schema/dateTime] minExclusive
-     * @option facets [sulfur/schema/dataTime] minInclusive
+     * @option facets [sulfur/schema/dateTime] minInclusive
      * @option facets [array] patterns
      */
     validateFacets: (function () {
 
+      function validateEnumerationFacet(facets, errors) {
+        if (facets.enumeration.length === 0) {
+          if (errors) {
+            errors.push([ 'enumeration', "must specify at least one XSD datetime value" ]);
+          }
+          return false;
+        }
+        return facets.enumeration.every(function (_) {
+          if ($dateTime.prototype.isPrototypeOf(_)) {
+            return true;
+          }
+          if (errors) {
+            errors.push([ 'enumeration', "must specify only XSD datetime values" ]);
+          }
+          return false;
+        });
+      }
+
       function validateMaxExclusiveFacet(facets, errors) {
-        if (facets.hasOwnProperty('maxInclusive')) {
+        if (isDefined(facets.maxInclusive)) {
           if (errors) {
             errors.push([ 'maxExclusive', "cannot be used along with facet maxInclusive" ]);
           }
@@ -61,13 +79,13 @@ define([
           }
           return false;
         }
-        if (facets.hasOwnProperty('minExclusive') && facets.maxExclusive.lt(facets.minExclusive)) {
+        if (isDefined(facets.minExclusive) && facets.maxExclusive.lt(facets.minExclusive)) {
           if (errors) {
             errors.push([ 'maxExclusive', "must be greater than or equal to facet minExclusive" ]);
           }
           return false;
         }
-        if (facets.hasOwnProperty('minInclusive') && facets.maxExclusive.lteq(facets.minInclusive)) {
+        if (isDefined(facets.minInclusive) && facets.maxExclusive.lteq(facets.minInclusive)) {
           if (errors) {
             errors.push([ 'maxExclusive', "must be greater than facet minInclusive" ]);
           }
@@ -83,13 +101,13 @@ define([
           }
           return false;
         }
-        if (facets.hasOwnProperty('minInclusive') && facets.maxInclusive.lt(facets.minInclusive)) {
+        if (isDefined(facets.minInclusive) && facets.maxInclusive.lt(facets.minInclusive)) {
           if (errors) {
             errors.push([ 'maxInclusive', "must be greater than or equal to facet minInclusive" ]);
           }
           return false;
         }
-        if (facets.hasOwnProperty('minExclusive') && facets.maxInclusive.lteq(facets.minExclusive)) {
+        if (isDefined(facets.minExclusive) && facets.maxInclusive.lteq(facets.minExclusive)) {
           if (errors) {
             errors.push([ 'maxInclusive', "must be greater than facet minExclusive" ]);
           }
@@ -99,7 +117,7 @@ define([
       }
 
       function validateMinExclusiveFacet(facets, errors) {
-        if (facets.hasOwnProperty('minInclusive')) {
+        if (isDefined(facets.minInclusive)) {
           if (errors) {
             errors.push([ 'minExclusive', "cannot be used along with facet minInclusive" ]);
           }
@@ -122,24 +140,6 @@ define([
           return false;
         }
         return true;
-      }
-
-      function validateEnumerationFacet(facets, errors) {
-        if (facets.enumeration.length === 0) {
-          if (errors) {
-            errors.push([ 'enumeration', "must specify at least one XSD datetime value" ]);
-          }
-          return false;
-        }
-        return facets.enumeration.every(function (_) {
-          if ($dateTime.prototype.isPrototypeOf(_)) {
-            return true;
-          }
-          if (errors) {
-            errors.push([ 'enumeration', "must specify only XSD datetime values" ]);
-          }
-          return false;
-        });
       }
 
       function validatePatternsFacet(facets, errors) {
@@ -192,9 +192,9 @@ define([
      *
      * @option facets [array] enumeration
      * @option facets [sulfur/schema/dateTime] maxExclusive
-     * @option facets [sulfur/schema/dataTime] maxInclusive
+     * @option facets [sulfur/schema/dateTime] maxInclusive
      * @option facets [sulfur/schema/dateTime] minExclusive
-     * @option facets [sulfur/schema/dataTime] minInclusive
+     * @option facets [sulfur/schema/dateTime] minInclusive
      * @option facets [array] patterns
      *
      * @throw [Error] if .validateFacets() returns false
