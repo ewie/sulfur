@@ -251,6 +251,9 @@ define([
       }
 
       function assertTimezoneHour(hour) {
+        if (!$util.isInteger(hour)) {
+          throw new Error("timezone hour must be an integer");
+        }
         if (hour > 99) {
           throw new Error("timezone hour must not be greater than 99");
         }
@@ -260,6 +263,9 @@ define([
       }
 
       function assertTimezoneMinute(minute) {
+        if (!$util.isInteger(minute)) {
+          throw new Error("timezone minute must be an integer");
+        }
         if (minute > 99) {
           throw new Error("timezone minute must not be greater than 99");
         }

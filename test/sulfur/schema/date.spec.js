@@ -245,6 +245,11 @@ define([
           expect(dt.tzminute).to.equal(0);
         });
 
+        it("should reject a non-integer timezone hour", function () {
+          expect(bind($date, 'create', { tzhour: 1.2 }))
+            .to.throw("timezone hour must be an integer");
+        });
+
         it("should reject timezone hour greater than 99", function () {
           expect(bind($date, 'create', { tzhour: 100 }))
             .to.throw("timezone hour must not be greater than 99");
@@ -253,6 +258,11 @@ define([
         it("should reject timezone hour less than -99", function () {
           expect(bind($date, 'create', { tzhour: -100 }))
             .to.throw("timezone hour must not be less than -99");
+        });
+
+        it("should reject a non-integer timezone minute", function () {
+          expect(bind($date, 'create', { tzminute: 1.2 }))
+            .to.throw("timezone minute must be an integer");
         });
 
         it("should reject timezone minute greater than 99", function () {
