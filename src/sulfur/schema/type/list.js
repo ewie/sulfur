@@ -8,14 +8,11 @@
 
 define([
   'sulfur/factory',
-  'sulfur/schema/validators'
-], function ($factory, $validators) {
+  'sulfur/schema/validators',
+  'sulfur/util'
+], function ($factory, $validators, $util) {
 
   'use strict';
-
-  function isDefined(x) {
-    return typeof x !== 'undefined';
-  }
 
   var $ = $factory.clone({
 
@@ -41,7 +38,7 @@ define([
           }
           return false;
         }
-        if (isDefined(facets.minLength) && value < facets.minLength) {
+        if ($util.isDefined(facets.minLength) && value < facets.minLength) {
           if (errors) {
             errors.push([ 'maxLength', "must be greater than or equal to facet minLength" ]);
           }
@@ -68,7 +65,7 @@ define([
 
       return function (facets, errors) {
         return VALIDATORS.every(function (_) {
-          return isDefined(facets[_[0]]) ? _[1](facets, errors) : true;
+          return $util.isDefined(facets[_[0]]) ? _[1](facets, errors) : true;
         });
       };
 
@@ -107,7 +104,7 @@ define([
     validator: function () {
       var validators = [ $validators.each.create(this.itemType.validator()) ];
 
-      if (isDefined(this.maxLength) || isDefined(this.minLength)) {
+      if ($util.isDefined(this.maxLength) || $util.isDefined(this.minLength)) {
         validators.push($validators.length.create({
           max: this.maxLength,
           min: this.minLength

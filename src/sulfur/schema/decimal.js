@@ -6,7 +6,10 @@
 
 /* global define */
 
-define(['sulfur/factory'], function ($factory) {
+define([
+  'sulfur/factory',
+  'sulfur/util'
+], function ($factory, $util) {
 
   'use strict';
 
@@ -64,7 +67,7 @@ define(['sulfur/factory'], function ($factory) {
   $.augment({
 
     /**
-     * @param [object] options
+     * @param [object] options (opional)
      *
      * @option options [string] integralDigits (default '0')
      *   the digits to the left of the period
@@ -74,17 +77,19 @@ define(['sulfur/factory'], function ($factory) {
      *   whether the decimal is positive
      */
     initialize: function (options) {
-      if (options && options.integralDigits) {
+      options || (options = {});
+
+      if (options.integralDigits) {
         this.integralDigits = options.integralDigits.replace(/^0+/, '') || '0';
       } else {
         this.integralDigits = '0';
       }
-      if (options && options.fractionDigits) {
+      if (options.fractionDigits) {
         this.fractionDigits = options.fractionDigits.replace(/0+$/, '');
       } else {
         this.fractionDigits = '';
       }
-      if (options && options.hasOwnProperty('positive')) {
+      if ($util.isDefined(options.positive)) {
         if (this.integralDigits === '0' && !this.fractionDigits) {
           this.positive = true;
         } else {

@@ -10,24 +10,10 @@ define([
   'sulfur/factory',
   'sulfur/schema/pattern',
   'sulfur/schema/validators',
-  'sulfur/util/orderedMap'
-], function ($factory, $pattern, $validators, $orderedMap) {
+  'sulfur/util'
+], function ($factory, $pattern, $validators, $util) {
 
   'use strict';
-
-  function isDefined(x) {
-    return typeof x !== 'undefined';
-  }
-
-  function uniq(values, keyfn) {
-    var map = $orderedMap.create(keyfn);
-    values.forEach(function (value) {
-      if (map.canBeInserted(value)) {
-        map.insert(value);
-      }
-    });
-    return map.toArray();
-  }
 
   var $ = $factory.clone({
 
@@ -91,7 +77,7 @@ define([
       return function (facets, errors) {
         return VALIDATORS.every(function (_) {
           var facetName = _[0];
-          if (isDefined(facets[facetName])) {
+          if ($util.isDefined(facets[facetName])) {
             return _[1](facets, errors);
           }
           return true;
@@ -123,11 +109,11 @@ define([
       }
 
       if (facets.enumeration) {
-        this.enumeration = uniq(facets.enumeration);
+        this.enumeration = $util.uniq(facets.enumeration);
       }
 
       if (facets.patterns) {
-        this.patterns = uniq(facets.patterns, function (pattern) {
+        this.patterns = $util.uniq(facets.patterns, function (pattern) {
           return pattern.toLiteral();
         });
       }

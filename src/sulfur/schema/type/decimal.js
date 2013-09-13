@@ -11,28 +11,10 @@ define([
   'sulfur/schema/decimal',
   'sulfur/schema/pattern',
   'sulfur/schema/validators',
-  'sulfur/util/orderedMap'
-], function ($factory, $decimal, $pattern, $validators, $orderedMap) {
+  'sulfur/util'
+], function ($factory, $decimal, $pattern, $validators, $util) {
 
   'use strict';
-
-  function isDefined(x) {
-    return typeof x !== 'undefined';
-  }
-
-  function isInteger(x) {
-    return ~~x === x && x < Math.pow(2, 53);
-  }
-
-  function uniq(values, keyfn) {
-    var map = $orderedMap.create(keyfn);
-    values.forEach(function (value) {
-      if (map.canBeInserted(value)) {
-        map.insert(value);
-      }
-    });
-    return map.toArray();
-  }
 
   var $ = $factory.clone({
 
@@ -74,7 +56,7 @@ define([
 
       function validateFractionDigitsFacet(facets, errors) {
         var value = facets.fractionDigits;
-        if (value < 0 || !isInteger(value)) {
+        if (value < 0 || !$util.isInteger(value)) {
           if (errors) {
             errors.push([ 'fractionDigits', "must be an integer within range [0, 2^53)" ]);
           }
@@ -84,7 +66,7 @@ define([
       }
 
       function validateMaxExclusiveFacet(facets, errors) {
-        if (isDefined(facets.maxInclusive)) {
+        if ($util.isDefined(facets.maxInclusive)) {
           if (errors) {
             errors.push([ 'maxExclusive', "cannot be used along with facet maxInclusive" ]);
           }
@@ -96,7 +78,7 @@ define([
           }
           return false;
         }
-        if (isDefined(facets.minInclusive)) {
+        if ($util.isDefined(facets.minInclusive)) {
           if (facets.maxExclusive.lteq(facets.minInclusive)) {
             if (errors) {
               errors.push([ 'maxExclusive', "must be greater than facet minInclusive" ]);
@@ -104,7 +86,7 @@ define([
             return false;
           }
         }
-        if (isDefined(facets.minExclusive)) {
+        if ($util.isDefined(facets.minExclusive)) {
           if (facets.maxExclusive.lt(facets.minExclusive)) {
             if (errors) {
               errors.push([ 'maxExclusive', "must be greater than or equal to facet minExclusive" ]);
@@ -122,7 +104,7 @@ define([
           }
           return false;
         }
-        if (isDefined(facets.minInclusive)) {
+        if ($util.isDefined(facets.minInclusive)) {
           if (facets.maxInclusive.lt(facets.minInclusive)) {
             if (errors) {
               errors.push([ 'maxInclusive', "must be greater than or equal to facet minInclusive" ]);
@@ -130,7 +112,7 @@ define([
             return false;
           }
         }
-        if (isDefined(facets.minExclusive)) {
+        if ($util.isDefined(facets.minExclusive)) {
           if (facets.maxInclusive.lteq(facets.minExclusive)) {
             if (errors) {
               errors.push([ 'maxInclusive', "must be greater than facet minExclusive" ]);
@@ -142,7 +124,7 @@ define([
       }
 
       function validateMinExclusiveFacet(facets, errors) {
-        if (isDefined(facets.minInclusive)) {
+        if ($util.isDefined(facets.minInclusive)) {
           if (errors) {
             errors.push([ 'minExclusive', "cannot be used along with facet minInclusive" ]);
           }
@@ -187,7 +169,7 @@ define([
 
       function validateTotalDigitsFacet(facets, errors) {
         var value = facets.totalDigits;
-        if (value < 1 || !isInteger(value)) {
+        if (value < 1 || !$util.isInteger(value)) {
           if (errors) {
             errors.push([ 'totalDigits', "must be an integer within range (0, 2^53)" ]);
           }
@@ -209,7 +191,7 @@ define([
 
       return function (facets, errors) {
         return VALIDATORS.every(function (_) {
-          return !isDefined(facets[_[0]]) || _[1](facets, errors);
+          return !$util.isDefined(facets[_[0]]) || _[1](facets, errors);
         });
       };
 
@@ -245,7 +227,7 @@ define([
       }
 
       if (facets.enumeration) {
-        this.enumeration = uniq(facets.enumeration, function (value) {
+        this.enumeration = $util.uniq(facets.enumeration, function (value) {
           return value.toLiteral();
         });
       }
@@ -257,7 +239,7 @@ define([
       this.minInclusive = facets.minInclusive;
 
       if (facets.patterns) {
-        this.patterns = uniq(facets.patterns, function (value) {
+        this.patterns = $util.uniq(facets.patterns, function (value) {
           return value.toLiteral();
         });
       }
@@ -272,7 +254,7 @@ define([
         validators.push($validators.enumeration.create(this.enumeration));
       }
 
-      if (isDefined(this.fractionDigits)) {
+      if ($util.isDefined(this.fractionDigits)) {
         validators.push($validators.property.create(
           'countFractionDigits',
           $validators.maximum.create(this.fractionDigits)
@@ -305,7 +287,7 @@ define([
         );
       }
 
-      if (isDefined(this.totalDigits)) {
+      if ($util.isDefined(this.totalDigits)) {
         validators.push($validators.property.create(
           'countDigits',
           $validators.maximum.create(this.totalDigits)

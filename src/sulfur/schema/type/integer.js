@@ -9,18 +9,15 @@
 define([
   'sulfur/schema/type/decimal',
   'sulfur/schema/integer',
-  'sulfur/schema/validators'
-], function ($decimalType, $integer, $validators) {
+  'sulfur/schema/validators',
+  'sulfur/util'
+], function ($decimalType, $integer, $validators, $util) {
 
   'use strict';
 
   var $ = $decimalType.clone({
 
     validateFacets: (function () {
-
-      function isDefined(x) {
-        return typeof x !== 'undefined';
-      }
 
       function isInteger(x) {
         return $integer.prototype.isPrototypeOf(x);
@@ -105,7 +102,7 @@ define([
 
       return function (facets, errors) {
         return VALIDATORS.every(function (_) {
-          if (isDefined(facets[_[0]])) {
+          if ($util.isDefined(facets[_[0]])) {
             return _[1](facets, errors);
           }
           return true;

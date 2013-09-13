@@ -8,8 +8,9 @@
 
 define([
   'sulfur/factory',
-  'sulfur/schema/decimal'
-], function ($factory, $decimal) {
+  'sulfur/schema/decimal',
+  'sulfur/util'
+], function ($factory, $decimal, $util) {
 
   'use strict';
 
@@ -36,10 +37,6 @@ define([
 
   function isLeapYear(year) {
     return year % 400 === 0 || year % 100 !== 0 && year % 4 === 0;
-  }
-
-  function isDefined(obj) {
-    return typeof obj !== 'undefined';
   }
 
   var $dateTime = $factory.clone({
@@ -144,10 +141,6 @@ define([
      */
     initialize: (function () {
 
-      function isInteger(x) {
-        return ~~x === x;
-      }
-
       function sgn(x) {
         if (x < 0) {
           return -1;
@@ -159,7 +152,7 @@ define([
       }
 
       function assertYear(year) {
-        if (!isInteger(year)) {
+        if (!$util.isInteger(year)) {
           throw new Error("year must be an integer");
         }
 
@@ -173,7 +166,7 @@ define([
       }
 
       function assertMonth(month) {
-        if (!isInteger(month)) {
+        if (!$util.isInteger(month)) {
           throw new Error("month must be an integer");
         }
 
@@ -187,7 +180,7 @@ define([
       }
 
       function assertDay(day, month, year) {
-        if (!isInteger(day)) {
+        if (!$util.isInteger(day)) {
           throw new Error("day must be an integer");
         }
 
@@ -215,7 +208,7 @@ define([
       }
 
       function assertHour(hour) {
-        if (!isInteger(hour)) {
+        if (!$util.isInteger(hour)) {
           throw new Error("hour must be an integer");
         }
 
@@ -229,7 +222,7 @@ define([
       }
 
       function assertMinute(minute) {
-        if (!isInteger(minute)) {
+        if (!$util.isInteger(minute)) {
           throw new Error("minute must be an integer");
         }
 
@@ -297,7 +290,7 @@ define([
       }
 
       function optionOrDefault(options, property, default_) {
-        return isDefined(options[property]) ? options[property] : default_;
+        return $util.isDefined(options[property]) ? options[property] : default_;
       }
 
       return function (options) {
@@ -325,7 +318,7 @@ define([
         var tzhour;
         var tzminute;
 
-        if (isDefined(options.tzhour) || isDefined(options.tzminute)) {
+        if ($util.isDefined(options.tzhour) || $util.isDefined(options.tzminute)) {
           tzhour = optionOrDefault(options, 'tzhour', 0);
           tzminute = optionOrDefault(options, 'tzminute', 0);
           assertTimezone(tzhour, tzminute);
@@ -339,7 +332,7 @@ define([
         this.minute = minute;
         this.second = second;
 
-        if (isDefined(tzhour)) {
+        if ($util.isDefined(tzhour)) {
           this.tzhour = tzhour;
           this.tzminute = tzminute;
         }
@@ -423,7 +416,7 @@ define([
      * @return [boolean] whether a timezone is defined or not
      */
     hasTimezone: function () {
-      return isDefined(this.tzhour);
+      return $util.isDefined(this.tzhour);
     },
 
     /**

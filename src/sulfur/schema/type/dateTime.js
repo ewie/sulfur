@@ -11,24 +11,10 @@ define([
   'sulfur/schema/dateTime',
   'sulfur/schema/pattern',
   'sulfur/schema/validators',
-  'sulfur/util/orderedMap'
-], function ($factory, $dateTime, $pattern, $validators, $orderedMap) {
+  'sulfur/util'
+], function ($factory, $dateTime, $pattern, $validators, $util) {
 
   'use strict';
-
-  function isDefined(x) {
-    return typeof x !== 'undefined';
-  }
-
-  function uniq(values, keyfn) {
-    var map = $orderedMap.create(keyfn);
-    values.forEach(function (value) {
-      if (map.canBeInserted(value)) {
-        map.insert(value);
-      }
-    });
-    return map.toArray();
-  }
 
   var $ = $factory.clone({
 
@@ -67,7 +53,7 @@ define([
       }
 
       function validateMaxExclusiveFacet(facets, errors) {
-        if (isDefined(facets.maxInclusive)) {
+        if ($util.isDefined(facets.maxInclusive)) {
           if (errors) {
             errors.push([ 'maxExclusive', "cannot be used along with facet maxInclusive" ]);
           }
@@ -79,13 +65,13 @@ define([
           }
           return false;
         }
-        if (isDefined(facets.minExclusive) && facets.maxExclusive.lt(facets.minExclusive)) {
+        if ($util.isDefined(facets.minExclusive) && facets.maxExclusive.lt(facets.minExclusive)) {
           if (errors) {
             errors.push([ 'maxExclusive', "must be greater than or equal to facet minExclusive" ]);
           }
           return false;
         }
-        if (isDefined(facets.minInclusive) && facets.maxExclusive.lteq(facets.minInclusive)) {
+        if ($util.isDefined(facets.minInclusive) && facets.maxExclusive.lteq(facets.minInclusive)) {
           if (errors) {
             errors.push([ 'maxExclusive', "must be greater than facet minInclusive" ]);
           }
@@ -101,13 +87,13 @@ define([
           }
           return false;
         }
-        if (isDefined(facets.minInclusive) && facets.maxInclusive.lt(facets.minInclusive)) {
+        if ($util.isDefined(facets.minInclusive) && facets.maxInclusive.lt(facets.minInclusive)) {
           if (errors) {
             errors.push([ 'maxInclusive', "must be greater than or equal to facet minInclusive" ]);
           }
           return false;
         }
-        if (isDefined(facets.minExclusive) && facets.maxInclusive.lteq(facets.minExclusive)) {
+        if ($util.isDefined(facets.minExclusive) && facets.maxInclusive.lteq(facets.minExclusive)) {
           if (errors) {
             errors.push([ 'maxInclusive', "must be greater than facet minExclusive" ]);
           }
@@ -117,7 +103,7 @@ define([
       }
 
       function validateMinExclusiveFacet(facets, errors) {
-        if (isDefined(facets.minInclusive)) {
+        if ($util.isDefined(facets.minInclusive)) {
           if (errors) {
             errors.push([ 'minExclusive', "cannot be used along with facet minInclusive" ]);
           }
@@ -172,7 +158,7 @@ define([
       return function (facets, errors) {
         return VALIDATORS.every(function (_) {
           var name = _[0];
-          if (isDefined(facets[name])) {
+          if ($util.isDefined(facets[name])) {
             return _[1](facets, errors);
           }
           return true;
@@ -213,7 +199,7 @@ define([
       this.minInclusive = facets.minInclusive;
 
       if (facets.enumeration) {
-        this.enumeration = uniq(facets.enumeration.map(function (_) {
+        this.enumeration = $util.uniq(facets.enumeration.map(function (_) {
           return _.normalize();
         }), function (_) {
           return _.toLiteral();
@@ -221,7 +207,7 @@ define([
       }
 
       if (facets.patterns) {
-        this.patterns = uniq(facets.patterns, function (_) {
+        this.patterns = $util.uniq(facets.patterns, function (_) {
           return _.toLiteral();
         });
       }

@@ -10,25 +10,11 @@ define([
   'sulfur/factory',
   'sulfur/schema/pattern',
   'sulfur/schema/validators',
-  'sulfur/util/orderedMap',
+  'sulfur/util',
   'unorm'
-], function ($factory, $pattern, $validators, $orderedMap, $unorm) {
+], function ($factory, $pattern, $validators, $util, $unorm) {
 
   'use strict';
-
-  function isDefined(obj) {
-    return typeof obj !== 'undefined';
-  }
-
-  function uniq(values, keyfn) {
-    var map = $orderedMap.create(keyfn);
-    values.forEach(function (value) {
-      if (map.canBeInserted(value)) {
-        map.insert(value);
-      }
-    });
-    return map.toArray();
-  }
 
   var $ = $factory.clone({
 
@@ -65,7 +51,7 @@ define([
           }
           return false;
         }
-        if (isDefined('minLength')) {
+        if ($util.isDefined(facets.minLength)) {
           if (facets.maxLength < facets.minLength) {
             if (errors) {
               errors.push([ 'maxLength', "must be greater than or equal to facet minLength" ]);
@@ -114,7 +100,7 @@ define([
       return function (facets, errors) {
         return VALIDATORS.every(function (_) {
           var name = _[0];
-          if (isDefined(facets[name])) {
+          if ($util.isDefined(facets[name])) {
             return _[1](facets, errors);
           }
           return true;
@@ -148,16 +134,16 @@ define([
       }
 
       if (facets.enumeration) {
-        this.enumeration = uniq(facets.enumeration.map(function (_) {
+        this.enumeration = $util.uniq(facets.enumeration.map(function (_) {
           return $unorm.nfc(_);
         }));
       }
 
-      isDefined(facets.maxLength) && (this.maxLength = facets.maxLength);
-      isDefined(facets.minLength) && (this.minLength = facets.minLength);
+      $util.isDefined(facets.maxLength) && (this.maxLength = facets.maxLength);
+      $util.isDefined(facets.minLength) && (this.minLength = facets.minLength);
 
       if (facets.patterns) {
-        this.patterns = uniq(facets.patterns, function (_) {
+        this.patterns = $util.uniq(facets.patterns, function (_) {
           return _.toLiteral();
         });
       }
@@ -171,7 +157,7 @@ define([
     validator: function () {
       var validators = [];
 
-      if (isDefined(this.maxLength) || isDefined(this.minLength)) {
+      if ($util.isDefined(this.maxLength) || $util.isDefined(this.minLength)) {
         validators.push($validators.length.create({
           min: this.minLength,
           max: this.maxLength
