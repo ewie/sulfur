@@ -70,12 +70,12 @@ define([
             max = { cmp: function () { return 0; } };
           });
 
-          it("should return true when matching inclusivelly", function () {
+          it("should return true when matching inclusively", function () {
             var validator = $maximumValidator.create(max);
             expect(validator.validate()).to.be.true;
           });
 
-          it("should return false when matching exclusivelly", function () {
+          it("should return false when matching exclusively", function () {
             var validator = $maximumValidator.create(max, { exclusive: true });
             expect(validator.validate()).to.be.false;
           });
@@ -98,12 +98,12 @@ define([
 
         context("when value === maximum", function () {
 
-          it("should return true when matching inclusivelly", function () {
+          it("should return true when matching inclusively", function () {
             var validator = $maximumValidator.create(2);
             expect(validator.validate(2)).to.be.true;
           });
 
-          it("should return false when matching exclusivelly", function () {
+          it("should return false when matching exclusively", function () {
             var validator = $maximumValidator.create(2, { exclusive: true });
             expect(validator.validate(2)).to.be.false;
           });

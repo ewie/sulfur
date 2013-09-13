@@ -16,7 +16,7 @@ define(['sulfur/factory'], function ($factory) {
      * @param [any] minimum
      * @param [object] options (optional)
      *
-     * @option options [boolean] exclusive whether to match exclusivelly or not
+     * @option options [boolean] exclusive whether to match exclusively or not
      */
     initialize: function (minimum, options) {
       options || (options = {});
@@ -32,7 +32,7 @@ define(['sulfur/factory'], function ($factory) {
      * @param [any] value
      *
      * @return [boolean] whether `value` is greater than minimum or equal when
-     *   matched inclusivelly
+     *   matched inclusively
      */
     validate: function (value) {
       var x, y;
