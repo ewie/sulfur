@@ -30,6 +30,30 @@ define([
       sandbox.restore();
     });
 
+    describe('.isValidLiteral()', function () {
+
+      it("should accept integer literals", function () {
+        expect($decimal.isValidLiteral('0')).to.be.true;
+      });
+
+      it("should accept fraction digits", function () {
+        expect($decimal.isValidLiteral('0.0')).to.be.true;
+      });
+
+      it("should accept negative decimals", function () {
+        expect($decimal.isValidLiteral('-1.2')).to.be.true;
+      });
+
+      it("should accept explicitely positive decimals", function () {
+        expect($decimal.isValidLiteral('+1.2')).to.be.true;
+      });
+
+      it("should reject strings not representing a valid decimal", function () {
+        expect($decimal.isValidLiteral('123abc')).to.be.false;
+      });
+
+    });
+
     describe('.parse()', function () {
 
       it("should reject strings not representing a decimal number", function () {
@@ -63,99 +87,14 @@ define([
 
     });
 
-    describe('.parseInteger()', function () {
-
-      it("should reject strings not representing a decimal number", function () {
-        expect(bind($decimal, 'parse', '123abc'))
-          .to.throw('"123abc" does not represent a valid decimal number');
-      });
-
-      it("should reject strings with any significant fraction digits", function () {
-        expect(bind($decimal, 'parseInteger', '1.2'))
-          .to.throw('"1.2" is not an integer');
-      });
-
-      context("with a valid string", function () {
-
-        it("should accept integers", function () {
-          var d = $decimal.parse('0');
-          expect(d.integralDigits).to.equal('0');
-        });
-
-        it("should accept an optional positive sign", function () {
-          var d = $decimal.parse('+1');
-          expect(d.positive).to.be.true;
-        });
-
-        it("should accept negative integers", function () {
-          var d = $decimal.parse('-1');
-          expect(d.positive).to.be.false;
-        });
-
-        it("should accept insignifcant fractional digits", function () {
-          var d = $decimal.parse('0.0');
-          expect(d.isInteger()).to.be.true;
-        });
-
-      });
-
-    });
-
-    describe('.isDecimal()', function () {
-
-      it("should accept integer literals", function () {
-        expect($decimal.isDecimal('0')).to.be.true;
-      });
-
-      it("should accept fraction digits", function () {
-        expect($decimal.isDecimal('0.0')).to.be.true;
-      });
-
-      it("should accept negative decimals", function () {
-        expect($decimal.isDecimal('-1.2')).to.be.true;
-      });
-
-      it("should accept explicitely positive decimals", function () {
-        expect($decimal.isDecimal('+1.2')).to.be.true;
-      });
-
-      it("should reject strings not representing a valid decimal", function () {
-        expect($decimal.isDecimal('123abc')).to.be.false;
-      });
-
-    });
-
-    describe('.isInteger()', function () {
-
-      it("should accept integer literals", function () {
-        expect($decimal.isInteger('0')).to.be.true;
-      });
-
-      it("should accept negative integer literals", function () {
-        expect($decimal.isInteger('-1')).to.be.true;
-      });
-
-      it("should accept explicitely positive integer literals", function () {
-        expect($decimal.isInteger('+2')).to.be.true;
-      });
-
-      it("should accept insignificant fraction digits", function () {
-        expect($decimal.isInteger('0.0')).to.be.true;
-      });
-
-      it("should reject significant fraction digits", function () {
-        expect($decimal.isInteger('0.1')).to.be.false;
-      });
-
-      it("should reject strings not representing a valid integer", function () {
-        expect($decimal.isInteger('1only23abc')).to.be.false;
-      });
-
-    });
-
     describe('#initialize()', function () {
 
       describe("option `integralDigitis`", function () {
+
+        it("should default to '0' when not given", function () {
+          var d = $decimal.create();
+          expect(d.integralDigits).to.equal('0');
+        });
 
         context("when given", function () {
 
@@ -176,18 +115,14 @@ define([
 
         });
 
-        context("when not given", function () {
-
-          it("should initialize with '0'", function () {
-            var d = $decimal.create();
-            expect(d.integralDigits).to.equal('0');
-          });
-
-        });
-
       });
 
       describe("option `fractionDigits`", function () {
+
+        it("should default to '0' when not given", function () {
+          var d = $decimal.create();
+          expect(d.fractionDigits).to.equal('');
+        });
 
         context("when given", function () {
 
@@ -203,60 +138,40 @@ define([
 
         });
 
-        context("when not given", function () {
-
-          it("should initialize with no fraction digits", function () {
-            var d = $decimal.create();
-            expect(d.fractionDigits).to.not.exist;
-          });
-
-        });
-
       });
 
       describe("option `positive`", function () {
 
         context("when given", function () {
 
-          context("when true", function () {
+          it("should initialize as positive when true", function () {
+            var d = $decimal.create({ positive: true });
+            expect(d.positive).to.be.true;
+          });
 
-            it("should initialize as positive", function () {
-              var d = $decimal.create({ positive: true });
+          context("when false", function () {
+
+            it("should initialize as negative", function () {
+              var d = $decimal.create({ integralDigits: '1', positive: false });
+              expect(d.positive).to.be.false;
+            });
+
+            it("should initialize as positive when value is zero", function () {
+              var d = $decimal.create({ positive: false });
               expect(d.positive).to.be.true;
             });
 
           });
 
-          context("when false", function () {
-
-            it("should initialize asonly negative", function () {
-              var d = $decimal.create({ integralDigits: '1', positive: false });
-              expect(d.positive).to.be.false;
-            });
-
-            context("with '0' as integralDigits and no fractionDigits", function () {
-
-              it("should initialize as positive", function () {
-                var d = $decimal.create({ positive: false });
-                expect(d.positive).to.be.true;
-              });
-
-            });
-
-          });
-
         });
 
-        context("when not given", function () {
-
-          it("should initialize as positive", function () {
-            var d = $decimal.create();
-            expect(d.positive).to.be.true;
-          });
-
+        it("should initialize as positive when not given", function () {
+          var d = $decimal.create();
+          expect(d.positive).to.be.true;
         });
 
       });
+
     });
 
     describe('#toLiteral()', function () {
@@ -266,44 +181,14 @@ define([
         expect(d.toLiteral()).to.equal('123');
       });
 
-      context("with fraction digits", function () {
-
-        it("should include the fraction digits, separated from the integral digits by a period", function () {
-          var d = $decimal.parse('123.456');
-          expect(d.toLiteral()).to.equal('123.456');
-        });
-
+      it("should include significant fraction digits", function () {
+        var d = $decimal.parse('123.456');
+        expect(d.toLiteral()).to.equal('123.456');
       });
 
-      context("when negative", function () {
-
-        it("should prepend a minus", function () {
-          var d = $decimal.parse('-123');
-          expect(d.toLiteral()).to.equal('-123');
-        });
-
-      });
-
-    });
-
-    describe('#isInteger()', function () {
-
-      context("with fraction digits", function () {
-
-        it("should return false", function () {
-          var d = $decimal.create({ fractionDigits: '1' });
-          expect(d.isInteger()).to.be.false;
-        });
-
-      });
-
-      context("with no fraction digits", function () {
-
-        it("should return true", function () {
-          var d = $decimal.create();
-          expect(d.isInteger()).to.be.true;
-        });
-
+      it("should use a sign when negative", function () {
+        var d = $decimal.parse('-123');
+        expect(d.toLiteral()).to.equal('-123');
       });
 
     });

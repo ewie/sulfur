@@ -23,15 +23,20 @@ define(['sulfur/object'], function ($object) {
    *   $2 integral digits
    *   $3 optional fraction digits
    */
-  var DECIMAL_PATTERN = /^([+-])?([0-9]+)(?:\.([0-9]+))?$/;
+  var LITERAL_PATTERN = /^([+-])?([0-9]+)(?:\.([0-9]+))?$/;
 
-  /**
-   * A regular expression matching an integer literal with optional insignifcant
-   * fraction digits (only zero digits).
-   */
-  var INTEGER_PATTERN = /^[+-]?[0-9]+(?:\.0+)?$/;
+  var $ = $object.clone({
 
-  var $decimal = $object.clone({
+    /**
+     * Check if a string represents a valid decimal value.
+     *
+     * @param [string] s the string representation
+     *
+     * @return [boolean] whether the representation is valid
+     */
+    isValidLiteral: function (s) {
+      return LITERAL_PATTERN.test(s);
+    },
 
     /**
      * Parse a string representing a decimal value.
@@ -43,7 +48,7 @@ define(['sulfur/object'], function ($object) {
      * @throw [Error] if the string represents no valid decimal
      */
     parse: function (s) {
-      var m = DECIMAL_PATTERN.exec(s);
+      var m = LITERAL_PATTERN.exec(s);
       if (!m) {
         throw new Error('"' + s + '" does not represent a valid decimal number');
       }
@@ -52,58 +57,18 @@ define(['sulfur/object'], function ($object) {
         fractionDigits: m[3],
         positive: m[1] !== '-'
       });
-    },
-
-    /**
-     * Parse a string representing an integer value (i.e. a decimal with no
-     * significant fraction digits).
-     *
-     * @param [string] s the string representation
-     *
-     * @return [decimal] the parsed decimal
-     *
-     * @throw [Error] if the string represent no valid integer
-     */
-    parseInteger: function (s) {
-      var d = this.parse(s);
-      if (d.countFractionDigits()) {
-        throw new Error('"' + s + '" is not an integer');
-      }
-      return d;
-    },
-
-    /**
-     * Check if a string represents a valid decimal value.
-     *
-     * @param [string] s the string representation
-     *
-     * @return [boolean] whether the representation is valid
-     */
-    isDecimal: function (s) {
-      return DECIMAL_PATTERN.test(s);
-    },
-
-    /**
-     * Check if a string represents a valid integer value.
-     *
-     * @param [string] s the string representation
-     *
-     * @return [boolean] whether the representation is valid
-     */
-    isInteger: function (s) {
-      return INTEGER_PATTERN.test(s);
     }
 
   });
 
-  $decimal.augment({
+  $.augment({
 
     /**
      * @param [object] options
      *
      * @option options [string] integralDigits (default '0')
      *   the digits to the left of the period
-     * @option options [string] fractionDigits (default '')
+     * @option options [string] fractionDigits (default '0')
      *   the digits to the right of the period
      * @option options [boolean] positive (default true)
      *   whether the decimal is positive
@@ -116,6 +81,8 @@ define(['sulfur/object'], function ($object) {
       }
       if (options && options.fractionDigits) {
         this.fractionDigits = options.fractionDigits.replace(/0+$/, '');
+      } else {
+        this.fractionDigits = '';
       }
       if (options && options.hasOwnProperty('positive')) {
         if (this.integralDigits === '0' && !this.fractionDigits) {
@@ -146,15 +113,6 @@ define(['sulfur/object'], function ($object) {
     },
 
     /**
-     * Check if the decimal represents an integer (i.e. no fraction digits).
-     *
-     * @return [boolean] whether it's an integer
-     */
-    isInteger: function () {
-      return this.countFractionDigits() === 0;
-    },
-
-    /**
      * Get the number of total digits.
      *
      * @return [number]
@@ -181,6 +139,15 @@ define(['sulfur/object'], function ($object) {
       return this.fractionDigits ? this.fractionDigits.length : 0;
     },
 
+    /**
+     * Compare with a decimal as RHS.
+     *
+     * @param [sulfur/schema/decimal] other the RHS datetime
+     *
+     * @return [-1] if less than `other`
+     * @return [0] if equal to `other`
+     * @return [1] if greater than `other`
+     */
     cmp: function (other) {
       if (!this.positive && other.positive) {
         return -1;
@@ -260,6 +227,6 @@ define(['sulfur/object'], function ($object) {
 
   });
 
-  return $decimal;
+  return $;
 
 });
