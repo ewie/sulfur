@@ -7,8 +7,8 @@
 /* global define */
 
 define([
-  'sulfur/object'
-], function ($object) {
+  'sulfur/factory'
+], function ($factory) {
 
   'use strict';
 
@@ -17,7 +17,7 @@ define([
    * Codeunits are used to represent UTF-16 encoded characters.
    */
 
-  return $object.derive({
+  return $factory.derive({
     /**
      * @param [number] value the codeunit value in the range U+0000..U+FFFF
      *

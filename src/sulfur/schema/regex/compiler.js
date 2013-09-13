@@ -7,12 +7,12 @@
 /* global define */
 
 define([
-  'sulfur/object',
+  'sulfur/factory',
   'sulfur/schema/regex/codeunit',
   'sulfur/schema/regex/group',
   'sulfur/schema/regex/range',
   'sulfur/schema/regex/pattern'
-], function ($object, $codeunit, $group, $range, $pattern) {
+], function ($factory, $codeunit, $group, $range, $pattern) {
 
   'use strict';
 
@@ -124,7 +124,7 @@ define([
     return '[' + neg + s + ']';
   }
 
-  return $object.derive({
+  return $factory.derive({
     /**
      * Compile a tree given by its root pattern.
      *

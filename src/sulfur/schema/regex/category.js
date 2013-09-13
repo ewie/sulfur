@@ -7,9 +7,9 @@
 /* global define */
 
 define([
-  'sulfur/object',
+  'sulfur/factory',
   'sulfur/unicode'
-], function ($object, $unicode) {
+], function ($factory, $unicode) {
 
   'use strict';
 
@@ -23,7 +23,7 @@ define([
    * Category or Group.
    */
 
-  return $object.derive({
+  return $factory.derive({
     /**
      * @param [string] name the name of a Unicode General Category or Group
      * @param [boolean] positive (default true) whether to match the codepoints

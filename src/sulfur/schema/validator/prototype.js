@@ -6,11 +6,11 @@
 
 /* global define */
 
-define(['sulfur/object'], function ($object) {
+define(['sulfur/factory'], function ($factory) {
 
   'use strict';
 
-  return $object.derive({
+  return $factory.derive({
 
     /**
      * Initialize the validator with an object responding to #isPrototypeOf().

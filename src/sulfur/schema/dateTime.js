@@ -7,9 +7,9 @@
 /* global define */
 
 define([
-  'sulfur/object',
+  'sulfur/factory',
   'sulfur/schema/decimal'
-], function ($object, $decimal) {
+], function ($factory, $decimal) {
 
   'use strict';
 
@@ -42,7 +42,7 @@ define([
     return typeof obj !== 'undefined';
   }
 
-  var $dateTime = $object.clone({
+  var $dateTime = $factory.clone({
 
     /**
      * Check if a string represents a valid dateTime according to XML Schema 1.0

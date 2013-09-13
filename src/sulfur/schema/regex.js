@@ -7,11 +7,11 @@
 /* global define */
 
 define([
-  'sulfur/object',
+  'sulfur/factory',
   'sulfur/schema/regex/compiler',
   'sulfur/schema/regex/parser',
   'sulfur/schema/regex/translator'
-], function ($object, $compiler, $parser, $translator) {
+], function ($factory, $compiler, $parser, $translator) {
 
   'use strict';
 
@@ -57,7 +57,7 @@ define([
    *     these do not represent valid characters)
    */
 
-  var $regex = $object.clone({
+  var $ = $factory.clone({
     /**
      * Parse a regular expression as defined by XML Schema 1.0
      *
@@ -85,72 +85,74 @@ define([
      */
     compile: function (source) {
       return this.parse(source).translate().compile();
-    },
-
-    prototype: {
-      /**
-       * Initialize the regular expression with the given pattern.
-       *
-       * @param [pattern] pattern
-       */
-      initialize: function (pattern) {
-        this.pattern = pattern;
-      },
-
-      /**
-       * Translate the regular expression tree to a tree which can be compiled
-       * to a JavaScript regular expression.
-       *
-       * @return [regex] the translated regular expression tree
-       */
-      translate: function () {
-        var translator = $translator.create();
-        var pattern = translator.translate(this.pattern);
-        return $regex.create(pattern);
-      },
-
-      /**
-       * Check if the translated regular expression contains a group with
-       * surrogate codepoints. Such a group causes the regular expression to
-       * not behave as indented and may therefor give false results.
-       *
-       * @return [true] if the regular expression contains a group with
-       *   surrogate codepoints
-       * @return [false] otherwise
-       */
-      containsGroupWithSurrogateCodepoints: function () {
-        return this.pattern.containsGroupWithSurrogateCodepoints();
-      },
-
-      /**
-       * Check if the translated regular expression contains an empty group.
-       * Such a group causes the regular expression to fail on every input.
-       * Because a group matches a single codepoint which is a member of the
-       * group's set of valid codepoints, an empty group cannot match any
-       * codepoint because any codepoint cannot be member of the empty set.
-       * An empty group results from a group subtraction when the LHS group is
-       * a subset of the RHS group.
-       *
-       * @return [true] if the regular expression contains an empty group
-       * @return [false] otherwise
-       */
-      containsEmptyGroup: function () {
-        return this.pattern.containsEmptyGroup();
-      },
-
-      /**
-       * Compile the regular expression to an executable JavaScript regular
-       * expression.
-       *
-       * @return [RegExp] an executable JavaScript regular expression
-       */
-      compile: function () {
-        var compiler = $compiler.create();
-        return compiler.compile(this.pattern);
-      }
     }
   });
 
-  return $regex;
+  $.augment({
+
+    /**
+     * Initialize the regular expression with the given pattern.
+     *
+     * @param [pattern] pattern
+     */
+    initialize: function (pattern) {
+      this.pattern = pattern;
+    },
+
+    /**
+     * Translate the regular expression tree to a tree which can be compiled
+     * to a JavaScript regular expression.
+     *
+     * @return [regex] the translated regular expression tree
+     */
+    translate: function () {
+      var translator = $translator.create();
+      var pattern = translator.translate(this.pattern);
+      return this.factory.create(pattern);
+    },
+
+    /**
+     * Check if the translated regular expression contains a group with
+     * surrogate codepoints. Such a group causes the regular expression to
+     * not behave as indented and may therefor give false results.
+     *
+     * @return [true] if the regular expression contains a group with
+     *   surrogate codepoints
+     * @return [false] otherwise
+     */
+    containsGroupWithSurrogateCodepoints: function () {
+      return this.pattern.containsGroupWithSurrogateCodepoints();
+    },
+
+    /**
+     * Check if the translated regular expression contains an empty group.
+     * Such a group causes the regular expression to fail on every input.
+     * Because a group matches a single codepoint which is a member of the
+     * group's set of valid codepoints, an empty group cannot match any
+     * codepoint because any codepoint cannot be member of the empty set.
+     * An empty group results from a group subtraction when the LHS group is
+     * a subset of the RHS group.
+     *
+     * @return [true] if the regular expression contains an empty group
+     * @return [false] otherwise
+     */
+    containsEmptyGroup: function () {
+      return this.pattern.containsEmptyGroup();
+    },
+
+    /**
+     * Compile the regular expression to an executable JavaScript regular
+     * expression.
+     *
+     * @return [RegExp] an executable JavaScript regular expression
+     */
+    compile: function () {
+      var compiler = $compiler.create();
+      return compiler.compile(this.pattern);
+    }
+
+  });
+
+  return $;
 
 });

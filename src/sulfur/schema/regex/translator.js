@@ -7,7 +7,7 @@
 /* global define */
 
 define([
-  'sulfur/object',
+  'sulfur/factory',
   'sulfur/schema/regex/any',
   'sulfur/schema/regex/block',
   'sulfur/schema/regex/branch',
@@ -22,7 +22,7 @@ define([
   'sulfur/schema/regex/ranges',
   'sulfur/unicode'
 ], function (
-  $object,
+  $factory,
   $any,
   $block,
   $branch,
@@ -398,7 +398,7 @@ define([
     return $ranges.create(cRanges.concat(pRanges, zRanges)).array;
   }
 
-  return $object.derive({
+  return $factory.derive({
     translate: function (pattern) {
       return translatePattern(pattern);
     }

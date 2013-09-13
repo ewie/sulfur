@@ -7,8 +7,8 @@
 /* global define */
 
 define([
-  'sulfur/object'
-], function ($object) {
+  'sulfur/factory'
+], function ($factory) {
 
   'use strict';
 
@@ -141,7 +141,7 @@ define([
     return index - offset;
   }
 
-  var $ranges = $object.derive({
+  var $ = $factory.derive({
     /**
      * Initialize the range collection with an array of ranges that will be
      * sorted and disjoined and be made available as #array.
@@ -176,7 +176,7 @@ define([
         ranges.push([ this.array[this.array.length - 1][1] + 1, 0xFFFF ]);
       }
 
-      return $ranges.create(ranges);
+      return $.create(ranges);
     },
 
     /**
@@ -213,7 +213,7 @@ define([
         }
       }
 
-      return $ranges.create(results);
+      return $.create(results);
     },
 
     /**
@@ -223,10 +223,10 @@ define([
      *   and the other collection.
      */
     add: function (other) {
-      return $ranges.create(this.array.concat(other.array));
+      return $.create(this.array.concat(other.array));
     }
   });
 
-  return $ranges;
+  return $;
 
 });

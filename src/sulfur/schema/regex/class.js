@@ -7,8 +7,8 @@
 /* global define */
 
 define([
-  'sulfur/object'
-], function ($object) {
+  'sulfur/factory'
+], function ($factory) {
 
   'use strict';
 
@@ -24,7 +24,7 @@ define([
    * A multi character escape using a character class.
    */
 
-  var $class = $object.derive({
+  var $ = $factory.derive({
     /**
      * @param [string] name of the character class
      * @param [boolean] whether to match codepoints of that class or the inverse
@@ -38,8 +38,8 @@ define([
     }
   });
 
-  $class.extend(CLASSES);
+  $.extend(CLASSES);
 
-  return $class;
+  return $;
 
 });

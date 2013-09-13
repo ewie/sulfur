@@ -643,7 +643,7 @@ define([
         expect($validators.all.prototype).to.be.prototypeOf(v);
       });
 
-      it("should include a validator/prototype matching sulfur/schema/dateTime", function () {
+      it("should include a validator/prototype matching sulfur/schema/decimal", function () {
         var type = $decimalType.create();
         var v = type.validator();
         expect(v).to.eql($validators.all.create([

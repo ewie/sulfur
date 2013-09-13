@@ -7,8 +7,8 @@
 /* global define */
 
 define([
-  'sulfur/object'
-], function ($object) {
+  'sulfur/factory'
+], function ($factory) {
 
   'use strict';
 
@@ -16,7 +16,7 @@ define([
    * A branch of an alternation "|".
    */
 
-  return $object.derive({
+  return $factory.derive({
     /**
      * @param [array] pieces (optional) an array of pieces under this branch
      */

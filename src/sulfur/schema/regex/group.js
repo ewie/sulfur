@@ -7,8 +7,8 @@
 /* global define */
 
 define([
-  'sulfur/object'
-], function ($object) {
+  'sulfur/factory'
+], function ($factory) {
 
   'use strict';
 
@@ -17,7 +17,7 @@ define([
    * group.
    */
 
-  return $object.derive({
+  return $factory.derive({
     /**
      * Initialize a group with an array of items (any of codepoint, codeunit,
      * range, class, block or category).

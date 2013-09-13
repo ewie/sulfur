@@ -6,7 +6,7 @@
 
 /* global define */
 
-define(['sulfur/object'], function ($object) {
+define(['sulfur/factory'], function ($factory) {
 
   'use strict';
 
@@ -25,7 +25,7 @@ define(['sulfur/object'], function ($object) {
    */
   var LITERAL_PATTERN = /^([+-])?([0-9]+)(?:\.([0-9]+))?$/;
 
-  var $ = $object.clone({
+  var $ = $factory.clone({
 
     /**
      * Check if a string represents a valid decimal value.

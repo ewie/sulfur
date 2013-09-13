@@ -7,7 +7,7 @@
 /* global define */
 
 define([
-  'sulfur/object',
+  'sulfur/factory',
   'sulfur/schema/regex/any',
   'sulfur/schema/regex/block',
   'sulfur/schema/regex/branch',
@@ -21,7 +21,7 @@ define([
   'sulfur/schema/regex/range',
   'sulfur/unicode'
 ], function (
-  $object,
+  $factory,
   $any,
   $block,
   $branch,
@@ -96,7 +96,7 @@ define([
     };
   }());
 
-  var $scanner = $object.derive({
+  var $scanner = $factory.derive({
     initialize: function (source) {
       // By resolving character references the scanner is much simpler.
       this.source = resolveCharacterReferences(source);
@@ -449,7 +449,7 @@ define([
 
   }());
 
-  return $object.derive({
+  return $factory.derive({
     /**
      * @param [string] source the regular expression source text
      *

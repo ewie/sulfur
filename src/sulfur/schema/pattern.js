@@ -7,9 +7,9 @@
 /* global define */
 
 define([
-  'sulfur/object',
+  'sulfur/factory',
   'sulfur/schema/regex'
-], function ($object, $regex) {
+], function ($factory, $regex) {
 
   'use strict';
 
@@ -18,7 +18,7 @@ define([
    * Provides a simple interface to match a string against the pattern.
    */
 
-  var $ = $object.clone({
+  var $ = $factory.clone({
 
     /**
      * Check if a string represents a valid XSD pattern.

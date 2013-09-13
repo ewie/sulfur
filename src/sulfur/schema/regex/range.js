@@ -7,8 +7,8 @@
 /* global define */
 
 define([
-  'sulfur/object'
-], function ($object) {
+  'sulfur/factory'
+], function ($factory) {
 
   'use strict';
 
@@ -16,7 +16,7 @@ define([
    * A range represents a non-empty interval of codepoints.
    */
 
-  return $object.derive({
+  return $factory.derive({
     /**
      * @param [codepoint|codeunit] start the first value in the range
      * @param [codepoint|codeunit] end the last value in the range

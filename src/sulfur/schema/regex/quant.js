@@ -7,8 +7,8 @@
 /* global define */
 
 define([
-  'sulfur/object'
-], function ($object) {
+  'sulfur/factory'
+], function ($factory) {
 
   'use strict';
 
@@ -17,7 +17,7 @@ define([
    * occurrences. The maximum may be unlimited.
    */
 
-  return $object.derive({
+  return $factory.derive({
     /**
      * @param [number] min
      * @param [number] max (default `min`) use Number.POSITIVE_INFINITY for an

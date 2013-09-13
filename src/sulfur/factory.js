@@ -28,7 +28,7 @@ define(function () {
     Array.prototype.forEach.call(args, fn);
   }
 
-  return Object.create(Object.prototype, {
+  var $ = Object.create(Object.prototype, {
     /**
      * Create an object from .prototype and call #initialize on the new object
      * passing on any arguments.
@@ -49,16 +49,16 @@ define(function () {
     },
 
     /**
-     * Clone this object and set up the prototype chain. Extend the new object
-     * with zero or more extension. Objects with objects to the right having
-     * higher precedence.
+     * Clone this factory and set up the prototype chain. Extend the new factory
+     * with zero or more extension, with objects to the right having higher
+     * precedence.
      *
      * @param [object...] extensions (optional)
-     * @param [function] spec (optional) a function to receive the base object
+     * @param [function] spec (optional) a function to receive the base factory
      *   and all extensions, may return an object to be used as the rightmost
      *   extension
      *
-     * @return [object] a new object using this as prototype
+     * @return [object] a new factory using this as prototype
      */
     clone: {
       writable: true,
@@ -67,7 +67,9 @@ define(function () {
         var args = argumentsArray(arguments);
         var obj = Object.create(this);
         Object.defineProperty(obj, 'prototype', {
-          value: Object.create(this.prototype)
+          value: Object.create(this.prototype, {
+            factory: { value: obj }
+          })
         });
         handleSpec(obj, this, args);
         return obj.extend.apply(obj, args);
@@ -75,15 +77,15 @@ define(function () {
     },
 
     /**
-     * Clone this object and set up the prototype chain. Mix in zero or more
-     * objects into the new object's .prototype property. Objects to the right
-     * having higher precedence.
+     * Clone this factory and set up the prototype chain. Mix in zero or more
+     * objects into the new factory's .prototype property, with objects to the
+     * right having higher precedence.
      *
      * @param [object...] mixins (optional)
-     * @param [function] spec (optional) a function to receive the base object
+     * @param [function] spec (optional) a function to receive the base factory
      *   and all mixins, may return an object to be used as the rightmost mixin
      *
-     * @return [object] a new object using this as prototype
+     * @return [object] a new factory using this as prototype
      */
     derive: {
       writable: true,
@@ -97,8 +99,8 @@ define(function () {
     },
 
     /**
-     * Extend this with zero or more extension objects. Objects to the right
-     * have higher precedence.
+     * Extend this with zero or more extension objects, with objects to the
+     * right have higher precedence.
      *
      * @param [object...] extensions (optional)
      *
@@ -143,23 +145,27 @@ define(function () {
         }.bind(this));
         return this;
       }
-    },
-
-    /**
-     * The prototype used to create new objects.
-     */
-    prototype: {
-      value: Object.create(Object.prototype, {
-        /**
-         * A dummy initialize function.
-         */
-        initialize: {
-          writable: true,
-          configurable: true,
-          value: function () {}
-        }
-      })
     }
   });
+
+  /**
+   * The prototype used to create new objects.
+   */
+  Object.defineProperty($, 'prototype', {
+    value: Object.create(Object.prototype, {
+      /**
+       * A dummy initialize function.
+       */
+      initialize: {
+        writable: true,
+        configurable: true,
+        value: function () {}
+      },
+
+      factory: { value: $ }
+    })
+  });
+
+  return $;
 
 });

@@ -7,9 +7,9 @@
 /* global define */
 
 define([
-  'sulfur/object',
+  'sulfur/factory',
   'sulfur/unicode'
-], function ($object, $unicode) {
+], function ($factory, $unicode) {
 
   'use strict';
 
@@ -25,7 +25,7 @@ define([
    * A multi character escape "\p" or "\P" using a Unicode Block name.
    */
 
-  return $object.derive({
+  return $factory.derive({
     /**
      * @param [string] name the Unicode Block name
      * @param [boolean] positive (default true) whether to match the codepoints

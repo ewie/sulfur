@@ -7,9 +7,9 @@
 /* global define */
 
 define([
-  'sulfur/object',
+  'sulfur/factory',
   'sulfur/unicode'
-], function ($object, $unicode) {
+], function ($factory, $unicode) {
 
   'use strict';
 
@@ -34,7 +34,7 @@ define([
    * A codepoint represents a valid XML character using its UCS codepoint value.
    */
 
-  return $object.derive({
+  return $factory.derive({
     /**
      * @param [number|string] value a valid XML character
      *   either as UCS codepoint in the range U+0000..U+10FFFF, or as string

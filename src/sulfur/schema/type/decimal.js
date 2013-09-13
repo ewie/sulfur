@@ -7,12 +7,12 @@
 /* global define */
 
 define([
-  'sulfur/object',
+  'sulfur/factory',
   'sulfur/schema/decimal',
   'sulfur/schema/pattern',
   'sulfur/schema/validators',
   'sulfur/util/orderedMap'
-], function ($object, $decimal, $pattern, $validators, $orderedMap) {
+], function ($factory, $decimal, $pattern, $validators, $orderedMap) {
 
   'use strict';
 
@@ -34,7 +34,7 @@ define([
     return map.toArray();
   }
 
-  var $ = $object.clone({
+  var $ = $factory.clone({
 
     /**
      * Initialize the type with facets.
@@ -240,7 +240,7 @@ define([
       facets || (facets = []);
 
       var errors = [];
-      if (!$.validateFacets(facets, errors)) {
+      if (!this.factory.validateFacets(facets, errors)) {
         throw new Error('facet ' + errors[0][0] + ' ' + errors[0][1]);
       }
 

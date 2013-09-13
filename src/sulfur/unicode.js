@@ -27,7 +27,7 @@ define(function () {
     return 0 <= value && value <= 0x10FFFF;
   }
 
-  var $unicode = {
+  var $ = {
     /**
      * Decode a character represented by a string into its UCS codepoint value.
      *
@@ -75,7 +75,7 @@ define(function () {
      *   surrogate pair
      */
     encodeCharacterAsUtf16: function (value) {
-      var pair = $unicode.encodeToSurrogatePair(value);
+      var pair = $.encodeToSurrogatePair(value);
       if (pair) {
         return String.fromCharCode(pair[0]) + String.fromCharCode(pair[1]);
       }
@@ -149,7 +149,7 @@ define(function () {
      * @return [undefined] if `name` does not denote a valid Block
      */
     getBlockRange: function (name) {
-      if ($unicode.isValidBlock(name)) {
+      if ($.isValidBlock(name)) {
         // return a copy
         var range = BLOCKS[name];
         return [ range[0], range[1] ];
@@ -165,7 +165,7 @@ define(function () {
      * @return [undefined] if `name` does not denote a valid General Category
      */
     getCategoryRanges: function (name) {
-      if ($unicode.isValidCategory(name)) {
+      if ($.isValidCategory(name)) {
         return copy(CATEGORIES[name]);
       }
     },
@@ -179,7 +179,7 @@ define(function () {
      * @return [undefined] if `name` does not denote a valid General Category Group
      */
     getCategoryGroupRanges: function (name) {
-      if ($unicode.isValidCategoryGroup(name)) {
+      if ($.isValidCategoryGroup(name)) {
         if (typeof CATEGORY_GROUPS[name] === 'string') {
           CATEGORY_GROUPS[name] = resolveCategoryGroup(name);
         }
@@ -942,7 +942,7 @@ define(function () {
     [0x309D,0x309E],[0x30FC,0x30FE]
   ])));
 
-  return $unicode;
+  return $;
 
 });
 

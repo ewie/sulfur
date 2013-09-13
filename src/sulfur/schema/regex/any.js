@@ -7,8 +7,8 @@
 /* global define */
 
 define([
-  'sulfur/object'
-], function ($object) {
+  'sulfur/factory'
+], function ($factory) {
 
   'use strict';
 
@@ -16,6 +16,6 @@ define([
    * The wildcard "." matching any non-line-breaking character.
    */
 
-  return $object.derive();
+  return $factory.derive();
 
 });

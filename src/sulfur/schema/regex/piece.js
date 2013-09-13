@@ -7,9 +7,9 @@
 /* global define */
 
 define([
-  'sulfur/object',
+  'sulfur/factory',
   'sulfur/schema/regex/quant'
-], function ($object, $quant) {
+], function ($factory, $quant) {
 
   'use strict';
 
@@ -18,7 +18,7 @@ define([
    * category) with a quantifier.
    */
 
-  return $object.derive({
+  return $factory.derive({
     /**
      * @param [codepoint|codeunit|class|group|pattern|block|category] atom
      * @param [quant] quant (default quantifier of exactly 1)

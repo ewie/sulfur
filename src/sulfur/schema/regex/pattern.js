@@ -7,8 +7,8 @@
 /* global define */
 
 define([
-  'sulfur/object'
-], function ($object) {
+  'sulfur/factory'
+], function ($factory) {
 
   'use strict';
 
@@ -16,7 +16,7 @@ define([
    * A pattern holds one or more branches (i.e. alternations).
    */
 
-  return $object.derive({
+  return $factory.derive({
     /**
      * @param [array] an array of one or more branches
      *
