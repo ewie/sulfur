@@ -8,6 +8,7 @@
 
 define([
   'sulfur/schema/validator/all',
+  'sulfur/schema/validator/each',
   'sulfur/schema/validator/enumeration',
   'sulfur/schema/validator/length',
   'sulfur/schema/validator/maximum',
@@ -18,6 +19,7 @@ define([
   'sulfur/schema/validator/some'
 ], function (
     all,
+    each,
     enumeration,
     length,
     maximum,
@@ -32,6 +34,7 @@ define([
 
   return {
     all: all,
+    each: each,
     enumeration: enumeration,
     length: length,
     maximum: maximum,
