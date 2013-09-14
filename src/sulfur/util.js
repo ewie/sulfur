@@ -23,14 +23,20 @@ define(['sulfur/util/orderedMap'], function ($orderedMap) {
       return typeof x !== 'undefined';
     },
 
+    /**
+     * Check if a value is not undefined.
+     *
+     * @param [any] x
+     *
+     * @return [boolean] whether x is not undefined or not
+     */
     isInteger: (function () {
 
       var MAX = Math.pow(2, 53);
       var MIN = -MAX;
 
       return function (x) {
-        return typeof x === 'number' &&
-          ~~x === x && MIN < x && x < MAX;
+        return typeof x === 'number' && ~~x === x && MIN < x && x < MAX;
       };
 
     }()),

@@ -33,29 +33,31 @@ define([
 
     describe('.isInteger()', function () {
 
-      it("should return true with an integer value", function () {});
+      it("should accept an integer value", function () {
+        expect($util.isInteger(1)).to.be.true;
+      });
 
-      it("should return false when the value is not of type 'number'", function () {
+      it("should reject a value not of type 'number'", function () {
         expect($util.isInteger('1')).to.be.false;
       });
 
-      it("should return false when the value is not equal to its rounded value", function () {
+      it("should reject a value not equal to its rounded value", function () {
         expect($util.isInteger(1.2)).to.be.false;
       });
 
-      it("should return false when the value is equal to 2^53", function () {
+      it("should reject a value equal to 2^53", function () {
         expect($util.isInteger(Math.pow(2, 53))).to.be.false;
       });
 
-      it("should return false when the value is greater than 2^53", function () {
+      it("should reject a value greater than 2^53", function () {
         expect($util.isInteger(Math.pow(2, 54))).to.be.false;
       });
 
-      it("should return false when the value is equal to -2^53", function () {
+      it("should reject a value equal to -2^53", function () {
         expect($util.isInteger(-Math.pow(2, 53))).to.be.false;
       });
 
-      it("should return false when the value is less than -2^53", function () {
+      it("should reject a value less than -2^53", function () {
         expect($util.isInteger(-Math.pow(2, 54))).to.be.false;
       });
 
