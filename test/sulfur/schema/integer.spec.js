@@ -102,6 +102,15 @@ define([
 
     describe('#initialize()', function () {
 
+      it("should call sulfur/schema/decimal#initialize()", function () {
+        var decimalInitializeSpy = sandbox.spy($decimal.prototype, 'initialize');
+        var value = { integralDigits: '123' };
+        var d = $integer.create(value);
+        expect(decimalInitializeSpy)
+          .to.be.calledOn(d)
+          .and.be.calledWith(sinon.match.same(value));
+      });
+
       describe("option `fractionDigits`", function () {
 
         it("should accept insignifcant fractionDigits", function () {
