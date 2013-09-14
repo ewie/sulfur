@@ -162,16 +162,6 @@ define([
         expect(f.getValue()).to.equal(123);
       });
 
-      //it("should reject a finite value less than -(.getMinValue())", function () {
-      //  expect(bind($double, 'create', -$double.getMaxValue() * 2))
-      //    .to.throw("must not be less than " + -$double.getMaxValue());
-      //});
-
-      //it("should reject a finite value greater than .getMaxValue()", function () {
-      //  expect(bind($double, 'create', $double.getMaxValue() * 2))
-      //    .to.throw("must not be greater than " + $double.getMaxValue());
-      //});
-
       it("should reject a value not of type number", function () {
         expect(bind($double, 'create', '123'))
           .to.throw("must be initialized with a proper number");
