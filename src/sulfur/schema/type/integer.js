@@ -30,15 +30,13 @@ define([
           }
           return false;
         }
-        return facets.enumeration.every(function (value) {
-          if (isInteger(value)) {
-            return true;
-          }
+        if (!facets.enumeration.every(isInteger)) {
           if (errors) {
             errors.push([ 'enumeration', "must specify only integer values" ]);
           }
           return false;
-        });
+        }
+        return true;
       }
 
       function validateMinInclusiveFacet(facets, errors) {
@@ -102,10 +100,7 @@ define([
 
       return function (facets, errors) {
         return VALIDATORS.every(function (_) {
-          if ($util.isDefined(facets[_[0]])) {
-            return _[1](facets, errors);
-          }
-          return true;
+          return $util.isUndefined(facets[_[0]]) || _[1](facets, errors);
         }) && $decimalType.validateFacets(facets, errors);
       };
 

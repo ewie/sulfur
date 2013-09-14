@@ -65,7 +65,7 @@ define([
 
       return function (facets, errors) {
         return VALIDATORS.every(function (_) {
-          return $util.isDefined(facets[_[0]]) ? _[1](facets, errors) : true;
+          return $util.isUndefined(facets[_[0]]) || _[1](facets, errors);
         });
       };
 

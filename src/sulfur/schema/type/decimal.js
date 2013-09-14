@@ -36,6 +36,10 @@ define([
      */
     validateFacets: (function () {
 
+      function isDecimal(x) {
+        return $decimal.prototype.isPrototypeOf(x);
+      }
+
       function validateEnumerationFacet(facets, errors) {
         if (facets.enumeration.length === 0) {
           if (errors) {
@@ -43,15 +47,13 @@ define([
           }
           return false;
         }
-        return facets.enumeration.every(function (_) {
-          if ($decimal.prototype.isPrototypeOf(_)) {
-            return true;
-          }
+        if (!facets.enumeration.every(isDecimal)) {
           if (errors) {
             errors.push([ 'enumeration', "must specify only decimal values" ]);
           }
           return false;
-        });
+        }
+        return true;
       }
 
       function validateFractionDigitsFacet(facets, errors) {
@@ -72,7 +74,7 @@ define([
           }
           return false;
         }
-        if (!$decimal.prototype.isPrototypeOf(facets.maxExclusive)) {
+        if (!isDecimal(facets.maxExclusive)) {
           if (errors) {
             errors.push([ 'maxExclusive', "must be a decimal value" ]);
           }
@@ -98,7 +100,7 @@ define([
       }
 
       function validateMaxInclusiveFacet(facets, errors) {
-        if (!$decimal.prototype.isPrototypeOf(facets.maxInclusive)) {
+        if (!isDecimal(facets.maxInclusive)) {
           if (errors) {
             errors.push([ 'maxInclusive', "must be a decimal value" ]);
           }
@@ -130,7 +132,7 @@ define([
           }
           return false;
         }
-        if (!$decimal.prototype.isPrototypeOf(facets.minExclusive)) {
+        if (!isDecimal(facets.minExclusive)) {
           if (errors) {
             errors.push([ 'minExclusive', "must be a decimal value" ]);
           }
@@ -140,7 +142,7 @@ define([
       }
 
       function validateMinInclusiveFacet(facets, errors) {
-        if ($decimal.prototype.isPrototypeOf(facets.minInclusive)) {
+        if (isDecimal(facets.minInclusive)) {
           return true;
         }
         if (errors) {
@@ -156,15 +158,13 @@ define([
           }
           return false;
         }
-        return facets.patterns.every(function (_) {
-          if ($pattern.prototype.isPrototypeOf(_)) {
-            return true;
-          }
+        if (!facets.patterns.every($util.bind($pattern.prototype, 'isPrototypeOf'))) {
           if (errors) {
             errors.push([ 'patterns', "must specify only XSD patterns" ]);
           }
           return false;
-        });
+        }
+        return true;
       }
 
       function validateTotalDigitsFacet(facets, errors) {
@@ -191,7 +191,7 @@ define([
 
       return function (facets, errors) {
         return VALIDATORS.every(function (_) {
-          return !$util.isDefined(facets[_[0]]) || _[1](facets, errors);
+          return $util.isUndefined(facets[_[0]]) || _[1](facets, errors);
         });
       };
 
@@ -217,7 +217,6 @@ define([
      *
      * @throw [Error] if .validateFacets() returns false
      */
-
     initialize: function (facets) {
       facets || (facets = []);
 
@@ -227,9 +226,7 @@ define([
       }
 
       if (facets.enumeration) {
-        this.enumeration = $util.uniq(facets.enumeration, function (value) {
-          return value.toLiteral();
-        });
+        this.enumeration = $util.uniq(facets.enumeration, $util.method('toLiteral'));
       }
 
       this.fractionDigits = facets.fractionDigits;
@@ -239,9 +236,7 @@ define([
       this.minInclusive = facets.minInclusive;
 
       if (facets.patterns) {
-        this.patterns = $util.uniq(facets.patterns, function (value) {
-          return value.toLiteral();
-        });
+        this.patterns = $util.uniq(facets.patterns, $util.method('toLiteral'));
       }
 
       this.totalDigits = facets.totalDigits;

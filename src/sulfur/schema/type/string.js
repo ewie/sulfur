@@ -79,15 +79,13 @@ define([
           }
           return false;
         }
-        return facets.patterns.every(function (pattern) {
-          if ($pattern.prototype.isPrototypeOf(pattern)) {
-            return true;
-          }
+        if (!facets.patterns.every($util.bind($pattern.prototype, 'isPrototypeOf'))) {
           if (errors) {
             errors.push([ 'patterns', "must specify only XSD patterns" ]);
           }
           return false;
-        });
+        }
+        return true;
       }
 
       var VALIDATORS = [
@@ -99,11 +97,7 @@ define([
 
       return function (facets, errors) {
         return VALIDATORS.every(function (_) {
-          var name = _[0];
-          if ($util.isDefined(facets[name])) {
-            return _[1](facets, errors);
-          }
-          return true;
+          return $util.isUndefined(facets[_[0]]) || _[1](facets, errors);
         });
       };
 
@@ -134,18 +128,14 @@ define([
       }
 
       if (facets.enumeration) {
-        this.enumeration = $util.uniq(facets.enumeration.map(function (_) {
-          return $unorm.nfc(_);
-        }));
+        this.enumeration = $util.uniq(facets.enumeration.map($util.bind($unorm, 'nfc')));
       }
 
       $util.isDefined(facets.maxLength) && (this.maxLength = facets.maxLength);
       $util.isDefined(facets.minLength) && (this.minLength = facets.minLength);
 
       if (facets.patterns) {
-        this.patterns = $util.uniq(facets.patterns, function (_) {
-          return _.toLiteral();
-        });
+        this.patterns = $util.uniq(facets.patterns, $util.method('toLiteral'));
       }
     },
 

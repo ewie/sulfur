@@ -19,7 +19,7 @@ define([
   var $ = $factory.clone({
 
     /**
-     * Initialize the type with facets.
+     * Validate the facets applicable to the dateTime type.
      *
      * @param [object] facets
      * @param [array] errors (optional) an array receiving a pair of facet name
@@ -31,8 +31,14 @@ define([
      * @option facets [sulfur/schema/dateTime] minExclusive
      * @option facets [sulfur/schema/dateTime] minInclusive
      * @option facets [array] patterns
+     *
+     * @return [boolean] whether all facets are valid or not
      */
     validateFacets: (function () {
+
+      function isDateTime(x) {
+        return $dateTime.prototype.isPrototypeOf(x);
+      }
 
       function validateEnumerationFacet(facets, errors) {
         if (facets.enumeration.length === 0) {
@@ -41,15 +47,13 @@ define([
           }
           return false;
         }
-        return facets.enumeration.every(function (_) {
-          if ($dateTime.prototype.isPrototypeOf(_)) {
-            return true;
-          }
+        if (!facets.enumeration.every(isDateTime)) {
           if (errors) {
             errors.push([ 'enumeration', "must specify only XSD datetime values" ]);
           }
           return false;
-        });
+        }
+        return true;
       }
 
       function validateMaxExclusiveFacet(facets, errors) {
@@ -59,7 +63,7 @@ define([
           }
           return false;
         }
-        if (!$dateTime.prototype.isPrototypeOf(facets.maxExclusive)) {
+        if (!isDateTime(facets.maxExclusive)) {
           if (errors) {
             errors.push([ 'maxExclusive', "must be an XSD datetime" ]);
           }
@@ -81,7 +85,7 @@ define([
       }
 
       function validateMaxInclusiveFacet(facets, errors) {
-        if (!$dateTime.prototype.isPrototypeOf(facets.maxInclusive)) {
+        if (!isDateTime(facets.maxInclusive)) {
           if (errors) {
             errors.push([ 'maxInclusive', "must be an XSD datetime" ]);
           }
@@ -109,7 +113,7 @@ define([
           }
           return false;
         }
-        if (!$dateTime.prototype.isPrototypeOf(facets.minExclusive)) {
+        if (!isDateTime(facets.minExclusive)) {
           if (errors) {
             errors.push([ 'minExclusive', "must be an XSD datetime" ]);
           }
@@ -119,7 +123,7 @@ define([
       }
 
       function validateMinInclusiveFacet(facets, errors) {
-        if (!$dateTime.prototype.isPrototypeOf(facets.minInclusive)) {
+        if (!isDateTime(facets.minInclusive)) {
           if (errors) {
             errors.push([ 'minInclusive', "must be an XSD datetime" ]);
           }
@@ -135,15 +139,13 @@ define([
           }
           return false;
         }
-        return facets.patterns.every(function (_) {
-          if ($pattern.prototype.isPrototypeOf(_)) {
-            return true;
-          }
+        if (!facets.patterns.every($util.bind($pattern.prototype, 'isPrototypeOf'))) {
           if (errors) {
             errors.push([ 'patterns', "must specify only XSD patterns" ]);
           }
           return false;
-        });
+        }
+        return true;
       }
 
       var VALIDATORS = [
@@ -157,11 +159,7 @@ define([
 
       return function (facets, errors) {
         return VALIDATORS.every(function (_) {
-          var name = _[0];
-          if ($util.isDefined(facets[name])) {
-            return _[1](facets, errors);
-          }
-          return true;
+          return $util.isUndefined(facets[_[0]]) || _[1](facets, errors);
         });
       };
 
@@ -199,17 +197,13 @@ define([
       this.minInclusive = facets.minInclusive;
 
       if (facets.enumeration) {
-        this.enumeration = $util.uniq(facets.enumeration.map(function (_) {
-          return _.normalize();
-        }), function (_) {
-          return _.toLiteral();
-        });
+        this.enumeration = $util.uniq(
+          facets.enumeration.map($util.method('normalize')),
+          $util.method('toLiteral'));
       }
 
       if (facets.patterns) {
-        this.patterns = $util.uniq(facets.patterns, function (_) {
-          return _.toLiteral();
-        });
+        this.patterns = $util.uniq(facets.patterns, $util.method('toLiteral'));
       }
     },
 

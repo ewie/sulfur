@@ -18,6 +18,22 @@ define([
 
   var $ = $factory.clone({
 
+    /**
+     * Validate the facets applicable to the float type.
+     *
+     * @param [object] facets
+     * @param [array] errors (optional) an array receiving a pair of facet name
+     *   and message for each validation error
+     *
+     * @option facets [array] enumeration
+     * @option facets [sulfur/schema/double] maxExclusive
+     * @option facets [sulfur/schema/double] maxInclusive
+     * @option facets [sulfur/schema/double] minExclusive
+     * @option facets [sulfur/schema/double] minInclusive
+     * @option facets [array] patterns
+     *
+     * @return [boolean] whether all facets are valid or not
+     */
     validateFacets: (function () {
 
       function isFloat(x) {
@@ -153,6 +169,20 @@ define([
 
   $.augment({
 
+    /**
+     * Validate the type with facets.
+     *
+     * @param [object] facets (optional)
+     *
+     * @option facets [array] enumeration
+     * @option facets [sulfur/schema/double] maxExclusive
+     * @option facets [sulfur/schema/double] maxInclusive
+     * @option facets [sulfur/schema/double] minExclusive
+     * @option facets [sulfur/schema/double] minInclusive
+     * @option facets [array] patterns
+     *
+     * @throw [Error] if .validateFacets() returns false
+     */
     initialize: function (facets) {
       facets || (facets = {});
 
@@ -175,6 +205,11 @@ define([
       }
     },
 
+    /**
+     * Create a validator for this float type using all defined facets.
+     *
+     * @return [#validate()] the validator
+     */
     validator: function () {
       var validators = [ $validators.prototype.create($float.prototype) ];
 
