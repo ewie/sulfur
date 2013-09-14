@@ -65,12 +65,16 @@ define(['sulfur/factory'], function ($factory) {
           return this.create(Number.NEGATIVE_INFINITY);
         default:
           var value = parseFloat(s);
+
+          // A syntactical valid literal representing a finite value may
+          // evaluate to +/- infinity if it lies outside the range of double
+          // values.
           if (value < -this.getMaxValue()) {
             throw new Error("must not be less than " + -this.getMaxValue());
-          }
-          if (value > this.getMaxValue()) {
+          } else if (value > this.getMaxValue()) {
             throw new Error("must not be greater than " + this.getMaxValue());
           }
+
           return this.create(value);
         }
       };
@@ -182,6 +186,61 @@ define(['sulfur/factory'], function ($factory) {
         return undefined;
       }
       return 0;
+    },
+
+    /**
+     * Check for equality with another double.
+     *
+     * @param [sulfur/schema/double] other
+     *
+     * @return [boolean] whether equal to `other` or not
+     */
+    eq: function (other) {
+      return this.cmp(other) === 0;
+    },
+
+    /**
+     * Check if less than another double.
+     *
+     * @param [sulfur/schema/double] other
+     *
+     * @return [boolean] whether less than `other` or not
+     */
+    lt: function (other) {
+      return this.cmp(other) < 0;
+    },
+
+    /**
+     * Check if greater than another double.
+     *
+     * @param [sulfur/schema/double] other
+     *
+     * @return [boolean] whether greater than `other` or not
+     */
+    gt: function (other) {
+      return this.cmp(other) > 0;
+    },
+
+    /**
+     * Check if less than or equal to another double.
+     *
+     * @param [sulfur/schema/double] other
+     *
+     * @return [boolean] whether less than or equal `other` or not
+     */
+    lteq: function (other) {
+      return !this.gt(other);
+    },
+
+    /**
+     * Check if greater than or equal to another double.
+     *
+     * @param [sulfur/schema/double] other
+     *
+     * @return [boolean] whether greater than or equal to `other` or not
+     */
+    gteq: function (other) {
+      return !this.lt(other);
     }
 
   });

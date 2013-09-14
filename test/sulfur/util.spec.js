@@ -19,6 +19,44 @@ define([
 
   describe('sulfur/util', function () {
 
+    describe('.bind()', function () {
+
+      it("should return a function", function () {
+        expect($util.bind({ bar: function () {} }, 'bar')).to.be.a('function');
+      });
+
+      it("should prepend optional arguments", function () {
+        var obj = { foo: sinon.spy() };
+        var arg1 = {};
+        var arg2 = {};
+        var fn = $util.bind(obj, 'foo', arg1);
+        fn(arg2);
+        expect(obj.foo).to.be.calledWith(
+          sinon.match.same(arg1),
+          sinon.match.same(arg2));
+      });
+
+      describe("the returned function", function () {
+
+        it("should bind the object to the method", function () {
+          var obj = { foo: sinon.spy() };
+          var fn = $util.bind(obj, 'foo');
+          fn();
+          expect(obj.foo).to.be.calledOn(obj);
+        });
+
+        it("should pass all arguments to the bound method", function () {
+          var obj = { foo: sinon.spy() };
+          var fn = $util.bind(obj, 'foo');
+          var arg = {};
+          fn(arg);
+          expect(obj.foo).to.be.calledWith(sinon.match.same(arg));
+        });
+
+      });
+
+    });
+
     describe('.isDefined()', function () {
 
       it("should return true when the argument is not undefined", function () {
@@ -27,6 +65,18 @@ define([
 
       it("should return false when the argument is undefined", function () {
         expect($util.isDefined(undefined)).to.be.false;
+      });
+
+    });
+
+    describe('.isUndefined()', function () {
+
+      it("should return true when the argument is undefined", function () {
+        expect($util.isUndefined(undefined)).to.be.true;
+      });
+
+      it("should return false when the argument is not undefined", function () {
+        expect($util.isUndefined(0)).to.be.false;
       });
 
     });
@@ -62,6 +112,33 @@ define([
       });
 
     });
+
+    describe('.method()', function () {
+
+      it("should return a function", function () {
+        expect($util.method()).to.be.a('function');
+      });
+
+      describe("the returned function", function () {
+
+        it("should call the named method on an object provided as argument", function () {
+          var obj = { foo: sinon.spy() };
+          var fn = $util.method('foo');
+          fn(obj);
+          expect(obj.foo).to.be.calledOn(obj);
+        });
+
+        it("should return the result of callong the method", function () {
+          var result = {};
+          var obj = { foo: function () { return result; } };
+          var fn = $util.method('foo');
+          expect(fn(obj)).to.equal(result);
+        });
+
+      });
+
+    });
+
 
     describe('.uniq()', function () {
 

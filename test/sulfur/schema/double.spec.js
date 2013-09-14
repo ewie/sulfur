@@ -289,6 +289,126 @@ define([
 
     });
 
+    describe('#eq()', function () {
+
+      var lhs;
+      var rhs;
+
+      beforeEach(function () {
+        lhs = $double.create();
+        rhs = $double.create();
+      });
+
+      it("should return true if #cmp() returns zero", function () {
+        var cmpStub = sandbox.stub($double.prototype, 'cmp').returns(0);
+        expect(lhs.eq(rhs)).to.be.true;
+        expect(cmpStub).to.be.calledOn(lhs).and.calledWith(rhs);
+      });
+
+      it("should return false if #cmp() return non-zero", function () {
+        var cmpStub = sandbox.stub($double.prototype, 'cmp').returns(1);
+        expect(lhs.eq(rhs)).to.be.false;
+        expect(cmpStub).to.be.calledOn(lhs).and.calledWith(rhs);
+      });
+
+    });
+
+    describe('#lt()', function () {
+
+      var lhs;
+      var rhs;
+
+      beforeEach(function () {
+        lhs = $double.create();
+        rhs = $double.create();
+      });
+
+      it("should return true if #cmp() returns less than zero", function () {
+        var cmpStub = sandbox.stub($double.prototype, 'cmp').returns(-1);
+        expect(lhs.lt(rhs)).to.be.true;
+        expect(cmpStub).to.be.calledOn(lhs).and.calledWith(rhs);
+      });
+
+      it("should return false if #cmp() returns non-negative", function () {
+        var cmpStub = sandbox.stub($double.prototype, 'cmp').returns(0);
+        expect(lhs.lt(rhs)).to.be.false;
+        expect(cmpStub).to.be.calledOn(lhs).and.calledWith(rhs);
+      });
+
+    });
+
+    describe('#gt()', function () {
+
+      var lhs;
+      var rhs;
+
+      beforeEach(function () {
+        lhs = $double.create();
+        rhs = $double.create();
+      });
+
+      it("should return true if #cmp() returns greater than zero", function () {
+        var cmpStub = sandbox.stub($double.prototype, 'cmp').returns(1);
+        expect(lhs.gt(rhs)).to.be.true;
+        expect(cmpStub).to.be.calledOn(lhs).and.calledWith(rhs);
+      });
+
+      it("should return false if #cmp() returns non-positive", function () {
+        var cmpStub = sandbox.stub($double.prototype, 'cmp').returns(0);
+        expect(lhs.gt(rhs)).to.be.false;
+        expect(cmpStub).to.be.calledOn(lhs).and.calledWith(rhs);
+      });
+
+    });
+
+    describe('#lteq()', function () {
+
+      var lhs;
+      var rhs;
+
+      beforeEach(function () {
+        lhs = $double.create();
+        rhs = $double.create();
+      });
+
+      it("should return false if #gt() returns true", function () {
+        var gtStub = sandbox.stub($double.prototype, 'gt').returns(true);
+        expect(lhs.lteq(rhs)).to.be.false;
+        expect(gtStub).to.be.calledOn(lhs).and.calledWith(rhs);
+      });
+
+      it("should return true if #gt() returns false", function () {
+        var gtStub = sandbox.stub($double.prototype, 'gt').returns(false);
+        expect(lhs.lteq(rhs)).to.be.true;
+        expect(gtStub).to.be.calledOn(lhs).and.calledWith(rhs);
+      });
+
+    });
+
+    describe('#gteq()', function () {
+
+      var lhs;
+      var rhs;
+
+      beforeEach(function () {
+        lhs = $double.create();
+        rhs = $double.create();
+      });
+
+      it("should return false if #lt() returns true", function () {
+        var ltStub = sandbox.stub($double.prototype, 'lt').returns(true);
+        expect(lhs.gteq(rhs)).to.be.false;
+        expect(ltStub).to.be.calledOn(lhs).and.calledWith(rhs);
+      });
+
+      it("should return true if #lt() returns false", function () {
+        var ltStub = sandbox.stub($double.prototype, 'lt').returns(false);
+        expect(lhs.gteq(rhs)).to.be.true;
+        expect(ltStub).to.be.calledOn(lhs).and.calledWith(rhs);
+      });
+
+    });
+
   });
 
 });

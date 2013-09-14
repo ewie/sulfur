@@ -13,6 +13,24 @@ define(['sulfur/util/orderedMap'], function ($orderedMap) {
   return {
 
     /**
+     * Bind an object to one of its methods.
+     *
+     * @param [object] obj
+     * @param [string] name
+     * @param [any...] args
+     *
+     * @return [function] a function calling `name` on `obj` with prepended
+     *   arguments `args`
+     */
+    bind: function () {
+      var args = Array.prototype.slice.call(arguments);
+      var obj = args.shift();
+      var name = args.shift();
+      var fn = obj[name];
+      return fn.bind.apply(fn, [obj].concat(args));
+    },
+
+    /**
      * Check if a value is not undefined.
      *
      * @param [any] x
@@ -20,7 +38,18 @@ define(['sulfur/util/orderedMap'], function ($orderedMap) {
      * @return [boolean] whether `x` is not undefined or not
      */
     isDefined: function (x) {
-      return typeof x !== 'undefined';
+      return !this.isUndefined(x);
+    },
+
+    /**
+     * Check if a value is undefined.
+     *
+     * @param [any] x
+     *
+     * @return [boolean] whether `x` is undefined or not
+     */
+    isUndefined: function (x) {
+      return typeof x === 'undefined';
     },
 
     /**
@@ -41,6 +70,21 @@ define(['sulfur/util/orderedMap'], function ($orderedMap) {
       };
 
     }()),
+
+    /**
+     * Create a function that calls a method on an object given as first
+     * argument.
+     *
+     * @param [string] name
+     *
+     * @return [function] a function calling `name` on any object given as
+     *   first argument
+     */
+    method: function (name) {
+      return function (obj) {
+        return obj[name]();
+      };
+    },
 
     /**
      * Remove duplicate elements from an array by using a string key.
