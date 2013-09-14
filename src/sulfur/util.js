@@ -17,18 +17,19 @@ define(['sulfur/util/orderedMap'], function ($orderedMap) {
      *
      * @param [any] x
      *
-     * @return [boolean] whether x is not undefined or not
+     * @return [boolean] whether `x` is not undefined or not
      */
     isDefined: function (x) {
       return typeof x !== 'undefined';
     },
 
     /**
-     * Check if a value is not undefined.
+     * Check if a number represents an 53-bit integer, which are the only
+     * integer values that can be represented with a double.
      *
      * @param [any] x
      *
-     * @return [boolean] whether x is not undefined or not
+     * @return [boolean] whether `x` is a number representing a 53-bit integer
      */
     isInteger: (function () {
 
