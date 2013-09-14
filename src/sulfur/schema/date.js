@@ -109,7 +109,7 @@ define([
       options || (options = {});
 
       // Represent the date by using a dateTime with the date's midpoint (noon).
-      this.dt = $dateTime.create({
+      this._midpoint = $dateTime.create({
         year: options.year,
         month: options.month,
         day: options.day,
@@ -123,35 +123,35 @@ define([
      * @return [number] the year
      */
     get year() {
-      return this.dt.year;
+      return this._midpoint.year;
     },
 
     /**
      * @return [number] the month
      */
     get month() {
-      return this.dt.month;
+      return this._midpoint.month;
     },
 
     /**
      * @return [number] the day
      */
     get day() {
-      return this.dt.day;
+      return this._midpoint.day;
     },
 
     /**
      * @return [number] the timezone hour
      */
     get tzhour() {
-      return this.dt.tzhour;
+      return this._midpoint.tzhour;
     },
 
     /**
      * @return [number] the timezone minute
      */
     get tzminute() {
-      return this.dt.tzminute;
+      return this._midpoint.tzminute;
     },
 
     /**
@@ -160,7 +160,7 @@ define([
      * @return [boolean] whether the date defines a timezone or not
      */
     hasTimezone: function () {
-      return this.dt.hasTimezone();
+      return this._midpoint.hasTimezone();
     },
 
     /**
@@ -169,7 +169,7 @@ define([
      * @return [boolean] whether the date is UTC or not
      */
     isZulu: function () {
-      return this.dt.isZulu();
+      return this._midpoint.isZulu();
     },
 
     /**
@@ -178,7 +178,7 @@ define([
      * @return [string] the literal
      */
     toLiteral: function () {
-      return this.dt.toLiteral().replace('T12:00:00', '');
+      return this._midpoint.toLiteral().replace('T12:00:00', '');
     },
 
     /**
@@ -208,7 +208,7 @@ define([
         return this;
       }
 
-      var dtn = this.dt.normalize();
+      var dtn = this._midpoint.normalize();
 
       var dtu = $dateTime.create({
         year: this.year,
@@ -246,7 +246,7 @@ define([
      * @return [1] if greater than `other`
      */
     cmp: function (other) {
-      return this.dt.cmp(other.dt);
+      return this._midpoint.cmp(other._midpoint);
     },
 
     /**
