@@ -26,13 +26,13 @@ define([
       function validateEnumerationFacet(facets, errors) {
         if (facets.enumeration.length === 0) {
           if (errors) {
-            errors.push([ 'enumeration', "must specify at least one integer value" ]);
+            errors.push([ 'enumeration', "must specify at least one sulfur/schema/integer value" ]);
           }
           return false;
         }
         if (!facets.enumeration.every(isInteger)) {
           if (errors) {
-            errors.push([ 'enumeration', "must specify only integer values" ]);
+            errors.push([ 'enumeration', "must specify only sulfur/schema/integer values" ]);
           }
           return false;
         }
@@ -44,7 +44,7 @@ define([
           return true;
         }
         if (errors) {
-          errors.push([ 'minInclusive', "must be an integer value" ]);
+          errors.push([ 'minInclusive', "must be a sulfur/schema/integer value" ]);
         }
         return false;
       }
@@ -54,7 +54,7 @@ define([
           return true;
         }
         if (errors) {
-          errors.push([ 'maxInclusive', "must be an integer value" ]);
+          errors.push([ 'maxInclusive', "must be a sulfur/schema/integer value" ]);
         }
         return false;
       }
@@ -64,7 +64,7 @@ define([
           return true;
         }
         if (errors) {
-          errors.push([ 'minExclusive', "must be an integer value" ]);
+          errors.push([ 'minExclusive', "must be a sulfur/schema/integer value" ]);
         }
         return false;
       }
@@ -74,7 +74,7 @@ define([
           return true;
         }
         if (errors) {
-          errors.push([ 'maxExclusive', "must be an integer value" ]);
+          errors.push([ 'maxExclusive', "must be a sulfur/schema/integer value" ]);
         }
         return false;
       }
