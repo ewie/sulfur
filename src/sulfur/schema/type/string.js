@@ -9,10 +9,10 @@
 define([
   'sulfur/factory',
   'sulfur/schema/pattern',
+  'sulfur/schema/string',
   'sulfur/schema/validators',
-  'sulfur/util',
-  'unorm'
-], function ($factory, $pattern, $validators, $util, $unorm) {
+  'sulfur/util'
+], function ($factory, $pattern, $string, $validators, $util) {
 
   'use strict';
 
@@ -37,7 +37,15 @@ define([
       function validateEnumerationFacet(facets, errors) {
         if (facets.enumeration.length === 0) {
           if (errors) {
-            errors.push([ 'enumeration', "must specify at least one value" ]);
+            errors.push([ 'enumeration',
+              "must specify at least one sulfur/schema/string value" ]);
+          }
+          return false;
+        }
+        if (!facets.enumeration.every($util.bind($string.prototype, 'isPrototypeOf'))) {
+          if (errors) {
+            errors.push([ 'enumeration',
+              "must specify only sulfur/schema/string values" ]);
           }
           return false;
         }
@@ -54,7 +62,8 @@ define([
         if ($util.isDefined(facets.minLength)) {
           if (facets.maxLength < facets.minLength) {
             if (errors) {
-              errors.push([ 'maxLength', "must be greater than or equal to facet minLength" ]);
+              errors.push([ 'maxLength',
+                "must be greater than or equal to facet minLength" ]);
             }
             return false;
           }
@@ -75,13 +84,13 @@ define([
       function validatePatternsFacet(facets, errors) {
         if (facets.patterns.length === 0) {
           if (errors) {
-            errors.push([ 'patterns', "must specify at least one XSD pattern" ]);
+            errors.push([ 'patterns', "must specify at least one sulfur/schema/pattern" ]);
           }
           return false;
         }
         if (!facets.patterns.every($util.bind($pattern.prototype, 'isPrototypeOf'))) {
           if (errors) {
-            errors.push([ 'patterns', "must specify only XSD patterns" ]);
+            errors.push([ 'patterns', "must specify only sulfur/schema/pattern" ]);
           }
           return false;
         }
@@ -128,7 +137,7 @@ define([
       }
 
       if (facets.enumeration) {
-        this.enumeration = $util.uniq(facets.enumeration.map($util.bind($unorm, 'nfc')));
+        this.enumeration = $util.uniq(facets.enumeration, $util.method('getValue'));
       }
 
       $util.isDefined(facets.maxLength) && (this.maxLength = facets.maxLength);

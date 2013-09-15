@@ -9,11 +9,11 @@
 
 define([
   'shared',
-  'sulfur/schema/type/string',
   'sulfur/schema/pattern',
-  'sulfur/schema/regex',
+  'sulfur/schema/string',
+  'sulfur/schema/type/string',
   'sulfur/schema/validators'
-], function ($shared, $stringType, $pattern, $regex, $validators) {
+], function ($shared, $pattern, $string, $stringType, $validators) {
 
   'use strict';
 
@@ -26,8 +26,10 @@ define([
 
       context("with facet `enumeration`", function () {
 
-        it("should accept an array of strings", function () {
-          expect($stringType.validateFacets({ enumeration: ['a'] })).to.be.true;
+        it("should accept an array of sulfur/schema/string", function () {
+          expect($stringType.validateFacets({
+            enumeration: [ $string.create() ]
+          })).to.be.true;
         });
 
         context("when empty", function () {
@@ -41,7 +43,24 @@ define([
             $stringType.validateFacets({ enumeration: [] }, errors);
             expect(errors).to.include.something.eql([
               'enumeration',
-              "must specify at least one value"
+              "must specify at least one sulfur/schema/string value"
+            ]);
+          });
+
+        });
+
+        context("when empty", function () {
+
+          it("should reject", function () {
+            expect($stringType.validateFacets({ enumeration: [''] })).to.be.false;
+          });
+
+          it("should add a validation error", function () {
+            var errors = [];
+            $stringType.validateFacets({ enumeration: [''] }, errors);
+            expect(errors).to.include.something.eql([
+              'enumeration',
+              "must specify only sulfur/schema/string values"
             ]);
           });
 
@@ -169,7 +188,7 @@ define([
             $stringType.validateFacets({ patterns: [] }, errors);
             expect(errors).to.include.something.eql([
               'patterns',
-              "must specify at least one XSD pattern"
+              "must specify at least one sulfur/schema/pattern"
             ]);
           });
 
@@ -186,7 +205,7 @@ define([
             $stringType.validateFacets({ patterns: [''] }, errors);
             expect(errors).to.include.something.eql([
               'patterns',
-              "must specify only XSD patterns"
+              "must specify only sulfur/schema/pattern"
             ]);
           });
 
@@ -204,7 +223,7 @@ define([
 
       it("should throw any of the validation errors when .validateFacets() returns false", function () {
         expect(bind($stringType, 'create', { patterns: [] }))
-          .to.throw("facet patterns must specify at least one XSD pattern");
+          .to.throw("facet patterns must specify at least one sulfur/schema/pattern");
       });
 
       context("when .validateFacets() returns true", function () {
@@ -222,18 +241,18 @@ define([
         context("with facet `enumeration`", function () {
 
           it("should use the facet", function () {
-            var type = $stringType.create({ enumeration: [''] });
-            expect(type.enumeration).to.eql(['']);
+            var type = $stringType.create({ enumeration: [ $string.create() ] });
+            expect(type.enumeration).to.eql([ $string.create() ]);
           });
 
-          it("should normalize each value to NFC", function () {
-            var type = $stringType.create({ enumeration: ['\u0065\u0301'] });
-            expect(type.enumeration).to.eql(['\u00E9']);
-          });
-
-          it("should ignore duplicate values after normalization", function () {
-            var type = $stringType.create({ enumeration: ['\u00C5', '\u0041\u030A'] });
-            expect(type.enumeration).to.eql(['\u00C5']);
+          it("should ignore duplicate values", function () {
+            var type = $stringType.create({
+              enumeration: [
+                $string.create('\u00C5'),
+                $string.create('\u0041\u030A')
+              ]
+            });
+            expect(type.enumeration).to.eql([ $string.create('\u00C5') ]);
           });
 
         });
@@ -270,10 +289,10 @@ define([
       });
 
       it("should include a validator/enumeration when facet `enumeration` is defined", function () {
-        var type = $stringType.create({ enumeration: [ 'a', 'b' ] });
+        var type = $stringType.create({ enumeration: [ $string.create() ] });
         var v = type.validator();
         expect(v).to.eql($validators.all.create([
-          $validators.enumeration.create([ 'a', 'b' ])
+          $validators.enumeration.create([ $string.create() ])
         ]));
       });
 
@@ -294,19 +313,11 @@ define([
       });
 
       it("should include a validator/some with validator/pattern when facet `pattern` is defined", function () {
-        var type = $stringType.create({
-          patterns: [
-            $pattern.create('a'),
-            $pattern.create('b')
-          ]
-        });
-
+        var type = $stringType.create({ patterns: [ $pattern.create('.') ] });
         var v = type.validator();
-
         expect(v).to.eql($validators.all.create([
           $validators.some.create([
-            $validators.pattern.create($pattern.create('a')),
-            $validators.pattern.create($pattern.create('b'))
+            $validators.pattern.create($pattern.create('.'))
           ])
         ]));
       });
