@@ -559,78 +559,204 @@ define([
 
       context("when .validateFacets() returns true", function () {
 
-        it("should use facet `enumeration` when given", function () {
-          var type = $decimalType.create({
-            enumeration: [ $decimal.parse('1') ]
-          });
-          expect(type.enumeration).to.eql([ $decimal.parse('1') ]);
-        });
+        context("with facet `enumeration`", function () {
 
-        it("should ignore duplicate values in facet `enumeration`", function () {
-          var type = $decimalType.create({
-            enumeration: [
-              $decimal.parse('1'),
-              $decimal.parse('1')
-            ]
+          it("should use the values", function () {
+            var type = $decimalType.create({
+              enumeration: [ $decimal.parse('1') ]
+            });
+            expect(type.getEnumerationValues()).to.eql([ $decimal.parse('1') ]);
           });
-          expect(type.enumeration).to.eql([ $decimal.parse('1') ]);
+
+          it("should ignore duplicate values", function () {
+            var type = $decimalType.create({
+              enumeration: [
+                $decimal.parse('1'),
+                $decimal.parse('1')
+              ]
+            });
+            expect(type.getEnumerationValues()).to.eql([ $decimal.parse('1') ]);
+          });
+
         });
 
         it("should use facet `fractionDigits` when given", function () {
           var type = $decimalType.create({ fractionDigits: 0 });
-          expect(type.fractionDigits).to.eql(0);
+          expect(type.getFractionDigitsValue()).to.eql(0);
         });
 
         it("should use facet `maxExclusive` when given", function () {
           var type = $decimalType.create({
             maxExclusive: $decimal.parse('1')
           });
-          expect(type.maxExclusive).to.eql($decimal.parse('1'));
+          expect(type.getMaxExclusiveValue()).to.eql($decimal.parse('1'));
         });
 
         it("should use facet `maxInclusive` when given", function () {
           var type = $decimalType.create({
             maxInclusive: $decimal.parse('1')
           });
-          expect(type.maxInclusive).to.eql($decimal.parse('1'));
+          expect(type.getMaxInclusiveValue()).to.eql($decimal.parse('1'));
         });
 
         it("should use facet `minExclusive` when given", function () {
           var type = $decimalType.create({
             minExclusive: $decimal.parse('1')
           });
-          expect(type.minExclusive).to.eql($decimal.parse('1'));
+          expect(type.getMinExclusiveValue()).to.eql($decimal.parse('1'));
         });
 
         it("should use facet `minInclusive` when given", function () {
           var type = $decimalType.create({
             minInclusive: $decimal.parse('1')
           });
-          expect(type.minInclusive).to.eql($decimal.parse('1'));
+          expect(type.getMinInclusiveValue()).to.eql($decimal.parse('1'));
         });
 
-        it("should use facet `patterns` when given", function () {
-          var type = $decimalType.create({
-            patterns: [ $pattern.create('.') ]
-          });
-          expect(type.patterns).to.eql([ $pattern.create('.') ]);
-        });
+        context("with facet `patterns`", function () {
 
-        it("should ignore duplicate patterns in facet `patterns` based on their source", function () {
-          var type = $decimalType.create({
-            patterns: [
-              $pattern.create('.'),
-              $pattern.create('.')
-            ]
+          it("should use the patterns", function () {
+            var type = $decimalType.create({
+              patterns: [ $pattern.create('.') ]
+            });
+            expect(type.getPatternValues()).to.eql([ $pattern.create('.') ]);
           });
-          expect(type.patterns).to.eql([ $pattern.create('.') ]);
+
+          it("should ignore duplicate patterns based on their source", function () {
+            var type = $decimalType.create({
+              patterns: [
+                $pattern.create('.'),
+                $pattern.create('.')
+              ]
+            });
+            expect(type.getPatternValues()).to.eql([ $pattern.create('.') ]);
+          });
+
         });
 
         it("should use facet `totalDigits` when given", function () {
           var type = $decimalType.create({ totalDigits: 1 });
-          expect(type.totalDigits).to.eql(1);
+          expect(type.getTotalDigitsValue()).to.eql(1);
         });
 
+      });
+
+    });
+
+    describe('#getEnumerationValues()', function () {
+
+      it("should return undefined if facet `enumeration` is not defined", function () {
+        var type = $decimalType.create();
+        expect(type.getEnumerationValues()).to.be.undefined;
+      });
+
+      it("should return the values of facet `enumeration` when defined", function () {
+        var values = [ $decimal.create() ];
+        var type = $decimalType.create({ enumeration: values });
+        expect(type.getEnumerationValues()).to.eql(values);
+      });
+
+    });
+
+    describe('#getFractionDigitsValue()', function () {
+
+      it("should return undefined if facet `fractionDigits` is not defined", function () {
+        var type = $decimalType.create();
+        expect(type.getFractionDigitsValue()).to.be.undefined;
+      });
+
+      it("should return the values of facet `fractionDigits` when defined", function () {
+        var type = $decimalType.create({ fractionDigits: 0 });
+        expect(type.getFractionDigitsValue()).to.eql(0);
+      });
+
+    });
+
+    describe('#getMaxExclusiveValue()', function () {
+
+      it("should return undefined if facet `maxExclusive` is not defined", function () {
+        var type = $decimalType.create();
+        expect(type.getMaxExclusiveValue()).to.be.undefined;
+      });
+
+      it("should return the values of facet `maxExclusive` when defined", function () {
+        var value = $decimal.create();
+        var type = $decimalType.create({ maxExclusive: value });
+        expect(type.getMaxExclusiveValue()).to.eql(value);
+      });
+
+    });
+
+    describe('#getMaxInclusiveValue()', function () {
+
+      it("should return undefined if facet `maxInclusive` is not defined", function () {
+        var type = $decimalType.create();
+        expect(type.getMaxInclusiveValue()).to.be.undefined;
+      });
+
+      it("should return the values of facet `maxInclusive` when defined", function () {
+        var value = $decimal.create();
+        var type = $decimalType.create({ maxInclusive: value });
+        expect(type.getMaxInclusiveValue()).to.eql(value);
+      });
+
+    });
+
+    describe('#getMinExclusiveValue()', function () {
+
+      it("should return undefined if facet `minExclusive` is not defined", function () {
+        var type = $decimalType.create();
+        expect(type.getMinExclusiveValue()).to.be.undefined;
+      });
+
+      it("should return the values of facet `minExclusive` when defined", function () {
+        var value = $decimal.create();
+        var type = $decimalType.create({ minExclusive: value });
+        expect(type.getMinExclusiveValue()).to.eql(value);
+      });
+
+    });
+
+    describe('#getMinInclusiveValue()', function () {
+
+      it("should return undefined if facet `minInclusive` is not defined", function () {
+        var type = $decimalType.create();
+        expect(type.getMinInclusiveValue()).to.be.undefined;
+      });
+
+      it("should return the values of facet `minInclusive` when defined", function () {
+        var value = $decimal.create();
+        var type = $decimalType.create({ minInclusive: value });
+        expect(type.getMinInclusiveValue()).to.eql(value);
+      });
+
+    });
+
+    describe('#getPatternValues()', function () {
+
+      it("should return undefined if facet `enumeration` is not defined", function () {
+        var type = $decimalType.create();
+        expect(type.getPatternValues()).to.be.undefined;
+      });
+
+      it("should return the values of facet `enumeration` when defined", function () {
+        var patterns = [ $pattern.create('.') ];
+        var type = $decimalType.create({ patterns: patterns });
+        expect(type.getPatternValues()).to.eql(patterns);
+      });
+
+    });
+
+    describe('#getTotalDigitsValue()', function () {
+
+      it("should return undefined if facet `totalDigits` is not defined", function () {
+        var type = $decimalType.create();
+        expect(type.getTotalDigitsValue()).to.be.undefined;
+      });
+
+      it("should return the values of facet `totalDigits` when defined", function () {
+        var type = $decimalType.create({ totalDigits: 1 });
+        expect(type.getTotalDigitsValue()).to.eql(1);
       });
 
     });

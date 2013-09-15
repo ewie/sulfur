@@ -228,21 +228,11 @@ define([
 
       context("when .validateFacets() returns true", function () {
 
-        it("should use facet `maxLength` when given", function () {
-          var type = $stringType.create({ maxLength: 3 });
-          expect(type.maxLength).to.equal(3);
-        });
-
-        it("should use facet `minLength` when given", function () {
-          var type = $stringType.create({ minLength: 3 });
-          expect(type.minLength).to.equal(3);
-        });
-
         context("with facet `enumeration`", function () {
 
-          it("should use the facet", function () {
+          it("should use the values", function () {
             var type = $stringType.create({ enumeration: [ $string.create() ] });
-            expect(type.enumeration).to.eql([ $string.create() ]);
+            expect(type.getEnumerationValues()).to.eql([ $string.create() ]);
           });
 
           it("should ignore duplicate values", function () {
@@ -252,30 +242,98 @@ define([
                 $string.create('\u0041\u030A')
               ]
             });
-            expect(type.enumeration).to.eql([ $string.create('\u00C5') ]);
+            expect(type.getEnumerationValues()).to.eql([ $string.create('\u00C5') ]);
           });
 
         });
 
+        it("should use facet `maxLength` when given", function () {
+          var type = $stringType.create({ maxLength: 3 });
+          expect(type.getMaxLengthValue()).to.equal(3);
+        });
+
+        it("should use facet `minLength` when given", function () {
+          var type = $stringType.create({ minLength: 3 });
+          expect(type.getMinLengthValue()).to.equal(3);
+        });
+
         context("with facet `patterns`", function () {
 
-          it("should use the facet", function () {
+          it("should use the patterns", function () {
             var type = $stringType.create({ patterns: [ $pattern.create('') ] });
-            expect(type.patterns).to.eql([ $pattern.create('') ]);
+            expect(type.getPatternValues()).to.eql([ $pattern.create('') ]);
           });
 
-          it("should ignore duplicate patterns", function () {
+          it("should ignore duplicate patterns based on their source", function () {
             var type = $stringType.create({
               patterns: [
                 $pattern.create('.'),
                 $pattern.create('.')
               ]
             });
-            expect(type.patterns).to.eql([ $pattern.create('.') ]);
+            expect(type.getPatternValues()).to.eql([ $pattern.create('.') ]);
           });
 
         });
 
+      });
+
+    });
+
+    describe('#getEnumerationValues()', function () {
+
+      it("should return undefined if facet `enumeration` is not defined", function () {
+        var type = $stringType.create();
+        expect(type.getEnumerationValues()).to.be.undefined;
+      });
+
+      it("should return the values of facet `enumeration` when defined", function () {
+        var values = [ $string.create() ];
+        var type = $stringType.create({ enumeration: values });
+        expect(type.getEnumerationValues()).to.eql(values);
+      });
+
+    });
+
+    describe('#getMaxLengthValue()', function () {
+
+      it("should return undefined if facet `minExclusive` is not defined", function () {
+        var type = $stringType.create();
+        expect(type.getMaxLengthValue()).to.be.undefined;
+      });
+
+      it("should return the values of facet `minExclusive` when defined", function () {
+        var type = $stringType.create({ maxLength: 3 });
+        expect(type.getMaxLengthValue()).to.eql(3);
+      });
+
+    });
+
+    describe('#getMinLengthValue()', function () {
+
+      it("should return undefined if facet `minInclusive` is not defined", function () {
+        var type = $stringType.create();
+        expect(type.getMinLengthValue()).to.be.undefined;
+      });
+
+      it("should return the values of facet `minInclusive` when defined", function () {
+        var type = $stringType.create({ minLength: 1 });
+        expect(type.getMinLengthValue()).to.eql(1);
+      });
+
+    });
+
+    describe('#getPatternValues()', function () {
+
+      it("should return undefined if facet `enumeration` is not defined", function () {
+        var type = $stringType.create();
+        expect(type.getPatternValues()).to.be.undefined;
+      });
+
+      it("should return the values of facet `enumeration` when defined", function () {
+        var patterns = [ $pattern.create('.') ];
+        var type = $stringType.create({ patterns: patterns });
+        expect(type.getPatternValues()).to.eql(patterns);
       });
 
     });

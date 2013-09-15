@@ -102,14 +102,30 @@ define([
       }
 
       if (facets.enumeration) {
-        this.enumeration = $util.uniq(facets.enumeration);
+        this._enumeration = $util.uniq(facets.enumeration);
       }
 
       if (facets.patterns) {
-        this.patterns = $util.uniq(facets.patterns, function (pattern) {
+        this._patterns = $util.uniq(facets.patterns, function (pattern) {
           return pattern.toLiteral();
         });
       }
+    },
+
+    /**
+     * @return [array] the values of facet `enumeration` if defined
+     * @return [undefined] if facet `enumeration` is not defined
+     */
+    getEnumerationValues: function () {
+      return this._enumeration;
+    },
+
+    /**
+     * @return [array] the patterns of facet `patterns` if defined
+     * @return [undefined] if facet `patterns` is not defined
+     */
+    getPatternValues: function () {
+      return this._patterns;
     },
 
     /**
@@ -120,14 +136,14 @@ define([
     validator: function () {
       var validators = [ $validators.prototype.create($boolean.prototype) ];
 
-      if (this.enumeration) {
-        validators.push($validators.enumeration.create(this.enumeration));
+      if (this._enumeration) {
+        validators.push($validators.enumeration.create(this._enumeration));
       }
 
-      if (this.patterns) {
+      if (this._patterns) {
         validators.push(
           $validators.some.create(
-            this.patterns.map(function (pattern) {
+            this._patterns.map(function (pattern) {
               return $validators.pattern.create(pattern);
             })
           )

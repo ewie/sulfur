@@ -93,6 +93,12 @@ define([
 
     describe('#initialize()', function () {
 
+      it("should initialize the item type", function () {
+        var itemType = {};
+        var type = $listType.create(itemType);
+        expect(type.getItemType()).to.equal(itemType);
+      });
+
       it("should be callable without any facets", function () {
         expect(bind($listType, 'create')).to.not.throw();
       });
@@ -106,42 +112,52 @@ define([
 
         it("should use facet `maxLength` when given", function () {
           var type = $listType.create({}, { maxLength: 3 });
-          expect(type.maxLength).to.equal(3);
+          expect(type.getMaxLengthValue()).to.equal(3);
         });
 
         it("should use facet `minLength` when given", function () {
           var type = $listType.create({}, { minLength: 3 });
-          expect(type.minLength).to.equal(3);
+          expect(type.getMinLengthValue()).to.equal(3);
         });
 
       });
 
     });
 
-    describe('#itemType', function () {
+    describe('#getItemType()', function () {
 
       it("should return the list's item type", function () {
         var itemType = {};
         var type = $listType.create(itemType);
-        expect(type.itemType).to.equal(itemType);
+        expect(type.getItemType()).to.equal(itemType);
       });
 
     });
 
-    describe('#maxLength', function () {
+    describe('#getMaxLengthValue()', function () {
 
-      it("should return the lists's maximum allowed number of items", function () {
+      it("should return the value of facet `maxLength` when defined", function () {
         var type = $listType.create({}, { maxLength: 3 });
-        expect(type.maxLength).to.equal(3);
+        expect(type.getMaxLengthValue()).to.equal(3);
+      });
+
+      it("should return undefined when facet `maxLength` is not defined", function () {
+        var type = $listType.create({});
+        expect(type.getMaxLengthValue()).to.be.undefined;
       });
 
     });
 
-    describe('#minLength', function () {
+    describe('#getMinLengthValue()', function () {
 
-      it("should return the list's minimum required number of items", function () {
+      it("should return value of facet `minLength` when defined", function () {
         var type = $listType.create({}, { minLength: 1 });
-        expect(type.minLength).to.equal(1);
+        expect(type.getMinLengthValue()).to.equal(1);
+      });
+
+      it("should return undefined when facet `minLength` is not defined", function () {
+        var type = $listType.create({});
+        expect(type.getMinLengthValue()).to.be.undefined;
       });
 
     });
@@ -169,7 +185,7 @@ define([
         var type = $listType.create(itemType);
         var v = type.validator();
         expect(v).to.eql($validators.all.create([
-          $validators.each.create(type.itemType.validator())
+          $validators.each.create(itemType.validator())
         ]));
       });
 
@@ -177,7 +193,7 @@ define([
         var type = $listType.create(itemType, { maxLength: 3 });
         var v = type.validator();
         expect(v).to.eql($validators.all.create([
-          $validators.each.create(type.itemType.validator()),
+          $validators.each.create(itemType.validator()),
           $validators.length.create({ max: 3 })
         ]));
       });
@@ -186,7 +202,7 @@ define([
         var type = $listType.create(itemType, { minLength: 1 });
         var v = type.validator();
         expect(v).to.eql($validators.all.create([
-          $validators.each.create(type.itemType.validator()),
+          $validators.each.create(itemType.validator()),
           $validators.length.create({ min: 1 })
         ]));
       });

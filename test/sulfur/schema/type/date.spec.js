@@ -407,59 +407,157 @@ define([
 
       context("when .validateFacets() returns true", function () {
 
-        it("should use facet `enumeration` when given", function () {
-          var dt = $date.create();
-          var type = $dateType.create({ enumeration: [ dt ] });
-          expect(type.enumeration).to.eql([ dt ]);
+        context("with facet `enumeration`", function () {
+
+          it("should use the values", function () {
+            var dt = $date.create();
+            var type = $dateType.create({ enumeration: [ dt ] });
+            expect(type.getEnumerationValues()).to.eql([ dt ]);
+          });
+
+          it("should ignore duplicate values their canonical representation", function () {
+            var values = [
+              $date.create({ day: 2, tzhour: 24 }),
+              $date.create({ day: 1, tzhour: 0 })
+            ];
+            var type = $dateType.create({ enumeration: values });
+            expect(type.getEnumerationValues()).to.eql([ $date.create({ day: 1, tzhour: 0 }) ]);
+          });
+
         });
 
         it("should use facet `maxExclusive` when given", function () {
           var dt = $date.create();
           var type = $dateType.create({ maxExclusive: dt });
-          expect(type.maxExclusive).to.equal(dt);
+          expect(type.getMaxExclusiveValue()).to.equal(dt);
         });
 
         it("should use facet `maxInclusive` when given", function () {
           var dt = $date.create();
           var type = $dateType.create({ maxInclusive: dt });
-          expect(type.maxInclusive).to.equal(dt);
+          expect(type.getMaxInclusiveValue()).to.equal(dt);
         });
 
         it("should use facet `minExclusive` when given", function () {
           var dt = $date.create();
           var type = $dateType.create({ minExclusive: dt });
-          expect(type.minExclusive).to.equal(dt);
+          expect(type.getMinExclusiveValue()).to.equal(dt);
         });
 
         it("should use facet `minInclusive` when given", function () {
           var dt = $date.create();
           var type = $dateType.create({ minInclusive: dt });
-          expect(type.minInclusive).to.equal(dt);
+          expect(type.getMinInclusiveValue()).to.equal(dt);
         });
 
-        it("should ignore duplicate values in facet `enumeration` based on their canonical representation", function () {
-          var values = [
-            $date.create({ day: 2, tzhour: 24 }),
-            $date.create({ day: 1, tzhour: 0 })
-          ];
-          var type = $dateType.create({ enumeration: values });
-          expect(type.enumeration).to.eql([ $date.create({ day: 1, tzhour: 0 }) ]);
+        context("with facet `patterns`", function () {
+
+          it("should use the patterns", function () {
+            var type = $dateType.create({ patterns: [ $pattern.create('.') ] });
+            expect(type.getPatternValues()).to.eql([ $pattern.create('.') ]);
+          });
+
+          it("should ignore duplicate patterns based on their source", function () {
+            var patterns = [
+              $pattern.create('.'),
+              $pattern.create('.')
+            ];
+            var type = $dateType.create({ patterns: patterns });
+            expect(type.getPatternValues()).to.eql([ $pattern.create('.') ]);
+          });
+
         });
 
-        it("should use facet `patterns` when given", function () {
-          var type = $dateType.create({ patterns: [ $pattern.create('.') ] });
-          expect(type.patterns).to.eql([ $pattern.create('.') ]);
-        });
+      });
 
-        it("should ignore duplicate values in facet `patterns`", function () {
-          var patterns = [
-            $pattern.create('.'),
-            $pattern.create('.')
-          ];
-          var type = $dateType.create({ patterns: patterns });
-          expect(type.patterns).to.eql([ $pattern.create('.') ]);
-        });
+    });
 
+    describe('#getEnumerationValues()', function () {
+
+      it("should return undefined if facet `enumeration` is not defined", function () {
+        var type = $dateType.create();
+        expect(type.getEnumerationValues()).to.be.undefined;
+      });
+
+      it("should return the values of facet `enumeration` when defined", function () {
+        var values = [ $date.create() ];
+        var type = $dateType.create({ enumeration: values });
+        expect(type.getEnumerationValues()).to.eql(values);
+      });
+
+    });
+
+    describe('#getMaxExclusiveValue()', function () {
+
+      it("should return undefined if facet `maxExclusive` is not defined", function () {
+        var type = $dateType.create();
+        expect(type.getMaxExclusiveValue()).to.be.undefined;
+      });
+
+      it("should return the values of facet `maxExclusive` when defined", function () {
+        var value = $date.create();
+        var type = $dateType.create({ maxExclusive: value });
+        expect(type.getMaxExclusiveValue()).to.eql(value);
+      });
+
+    });
+
+    describe('#getMaxInclusiveValue()', function () {
+
+      it("should return undefined if facet `maxInclusive` is not defined", function () {
+        var type = $dateType.create();
+        expect(type.getMaxInclusiveValue()).to.be.undefined;
+      });
+
+      it("should return the values of facet `maxInclusive` when defined", function () {
+        var value = $date.create();
+        var type = $dateType.create({ maxInclusive: value });
+        expect(type.getMaxInclusiveValue()).to.eql(value);
+      });
+
+    });
+
+    describe('#getMinExclusiveValue()', function () {
+
+      it("should return undefined if facet `minExclusive` is not defined", function () {
+        var type = $dateType.create();
+        expect(type.getMinExclusiveValue()).to.be.undefined;
+      });
+
+      it("should return the values of facet `minExclusive` when defined", function () {
+        var value = $date.create();
+        var type = $dateType.create({ minExclusive: value });
+        expect(type.getMinExclusiveValue()).to.eql(value);
+      });
+
+    });
+
+    describe('#getMinInclusiveValue()', function () {
+
+      it("should return undefined if facet `minInclusive` is not defined", function () {
+        var type = $dateType.create();
+        expect(type.getMinInclusiveValue()).to.be.undefined;
+      });
+
+      it("should return the values of facet `minInclusive` when defined", function () {
+        var value = $date.create();
+        var type = $dateType.create({ minInclusive: value });
+        expect(type.getMinInclusiveValue()).to.eql(value);
+      });
+
+    });
+
+    describe('#getPatternValues()', function () {
+
+      it("should return undefined if facet `enumeration` is not defined", function () {
+        var type = $dateType.create();
+        expect(type.getPatternValues()).to.be.undefined;
+      });
+
+      it("should return the values of facet `enumeration` when defined", function () {
+        var patterns = [ $pattern.create('.') ];
+        var type = $dateType.create({ patterns: patterns });
+        expect(type.getPatternValues()).to.eql(patterns);
       });
 
     });

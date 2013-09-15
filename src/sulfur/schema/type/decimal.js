@@ -226,66 +226,130 @@ define([
       }
 
       if (facets.enumeration) {
-        this.enumeration = $util.uniq(facets.enumeration, $util.method('toLiteral'));
+        this._enumeration = $util.uniq(facets.enumeration, $util.method('toLiteral'));
       }
 
-      this.fractionDigits = facets.fractionDigits;
-      this.maxExclusive = facets.maxExclusive;
-      this.maxInclusive = facets.maxInclusive;
-      this.minExclusive = facets.minExclusive;
-      this.minInclusive = facets.minInclusive;
+      this._fractionDigits = facets.fractionDigits;
+      this._maxExclusive = facets.maxExclusive;
+      this._maxInclusive = facets.maxInclusive;
+      this._minExclusive = facets.minExclusive;
+      this._minInclusive = facets.minInclusive;
 
       if (facets.patterns) {
-        this.patterns = $util.uniq(facets.patterns, $util.method('toLiteral'));
+        this._patterns = $util.uniq(facets.patterns, $util.method('toLiteral'));
       }
 
-      this.totalDigits = facets.totalDigits;
+      this._totalDigits = facets.totalDigits;
+    },
+
+    /**
+     * @return [array] the values of facet `enumeration` if defined
+     * @return [undefined] if facet `enumeration` is not defined
+     */
+    getEnumerationValues: function () {
+      return this._enumeration;
+    },
+
+    /**
+     * @return [number] the value of facet `fractionDigits` if defined
+     * @return [undefined] if facet `fractionDigits` is not defined
+     */
+    getFractionDigitsValue: function () {
+      return this._fractionDigits;
+    },
+
+    /**
+     * @return [sulfur/schema/decimal] the value if facet `maxExclusive` when defined
+     * @return [undefined] if facet `maxExclusive` is not defined
+     */
+    getMaxExclusiveValue: function () {
+      return this._maxExclusive;
+    },
+
+    /**
+     * @return [sulfur/schema/decimal] the value if facet `maxInclusive` when defined
+     * @return [undefined] if facet `maxInclusive` is not defined
+     */
+    getMaxInclusiveValue: function () {
+      return this._maxInclusive;
+    },
+
+    /**
+     * @return [sulfur/schema/decimal] the value if facet `minExclusive` when defined
+     * @return [undefined] if facet `minExclusive` is not defined
+     */
+    getMinExclusiveValue: function () {
+      return this._minExclusive;
+    },
+
+    /**
+     * @return [sulfur/schema/decimal] the value if facet `minInclusive` when defined
+     * @return [undefined] if facet `minInclusive` is not defined
+     */
+    getMinInclusiveValue: function () {
+      return this._minInclusive;
+    },
+
+    /**
+     * @return [array] the patterns of facet `patterns` if defined
+     * @return [undefined] if facet `patterns` is not defined
+     */
+    getPatternValues: function () {
+      return this._patterns;
+    },
+
+    /**
+     * @return [number] the value of facet `totalDigits` if defined
+     * @return [undefined] if facet `totalDigits` is not defined
+     */
+    getTotalDigitsValue: function () {
+      return this._totalDigits;
     },
 
     validator: function () {
       var validators = [ $validators.prototype.create($decimal.prototype) ];
 
-      if (this.enumeration) {
-        validators.push($validators.enumeration.create(this.enumeration));
+      if (this._enumeration) {
+        validators.push($validators.enumeration.create(this._enumeration));
       }
 
-      if ($util.isDefined(this.fractionDigits)) {
+      if ($util.isDefined(this._fractionDigits)) {
         validators.push($validators.property.create(
           'countFractionDigits',
-          $validators.maximum.create(this.fractionDigits)
+          $validators.maximum.create(this._fractionDigits)
         ));
       }
 
-      if (this.maxExclusive) {
-        validators.push($validators.maximum.create(this.maxExclusive, { exclusive: true }));
+      if (this._maxExclusive) {
+        validators.push($validators.maximum.create(this._maxExclusive, { exclusive: true }));
       }
 
-      if (this.maxInclusive) {
-        validators.push($validators.maximum.create(this.maxInclusive));
+      if (this._maxInclusive) {
+        validators.push($validators.maximum.create(this._maxInclusive));
       }
 
-      if (this.minExclusive) {
-        validators.push($validators.minimum.create(this.minExclusive, { exclusive: true }));
+      if (this._minExclusive) {
+        validators.push($validators.minimum.create(this._minExclusive, { exclusive: true }));
       }
 
-      if (this.minInclusive) {
-        validators.push($validators.minimum.create(this.minInclusive));
+      if (this._minInclusive) {
+        validators.push($validators.minimum.create(this._minInclusive));
       }
 
-      if (this.patterns) {
+      if (this._patterns) {
         validators.push(
           $validators.some.create(
-            this.patterns.map(function (_) {
+            this._patterns.map(function (_) {
               return $validators.pattern.create(_);
             })
           )
         );
       }
 
-      if ($util.isDefined(this.totalDigits)) {
+      if ($util.isDefined(this._totalDigits)) {
         validators.push($validators.property.create(
           'countDigits',
-          $validators.maximum.create(this.totalDigits)
+          $validators.maximum.create(this._totalDigits)
         ));
       }
 

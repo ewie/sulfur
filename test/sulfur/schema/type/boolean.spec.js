@@ -125,38 +125,76 @@ define([
 
       context("when .validateFacets() returns true", function () {
 
-        it("should use facet `enumeration` when given", function () {
-          var type = $booleanType.create({
-            enumeration: [ $boolean.create(true) ]
+        context("with facet `enumeration`", function () {
+
+          it("should use the values", function () {
+            var type = $booleanType.create({
+              enumeration: [ $boolean.create(true) ]
+            });
+            expect(type.getEnumerationValues()).to.eql([ $boolean.create(true) ]);
           });
-          expect(type.enumeration).to.eql([ $boolean.create(true) ]);
-        });
 
-        it("should ignore duplicate values in facet `enumeration`", function () {
-          var type = $booleanType.create({
-            enumeration: [
-              $boolean.create(true),
-              $boolean.create(true)
-            ]
+          it("should ignore duplicate values", function () {
+            var type = $booleanType.create({
+              enumeration: [
+                $boolean.create(true),
+                $boolean.create(true)
+              ]
+            });
+            expect(type.getEnumerationValues()).to.eql([ $boolean.create(true) ]);
           });
-          expect(type.enumeration).to.eql([ $boolean.create(true) ]);
+
         });
 
-        it("should use facet `patterns` when given", function () {
-          var type = $booleanType.create({ patterns: [ $pattern.create('true') ] });
-          expect(type.patterns).to.eql([$pattern.create('true')]);
-        });
+        context("with facet `patterns`", function () {
 
-        it("should ignore duplicate patterns in facet `patterns` based on their source", function () {
-          var type = $booleanType.create({
-            patterns: [
-              $pattern.create('true'),
-              $pattern.create('true')
-            ]
+          it("should use the patterns", function () {
+            var type = $booleanType.create({ patterns: [ $pattern.create('true') ] });
+            expect(type.getPatternValues()).to.eql([$pattern.create('true')]);
           });
-          expect(type.patterns).to.eql([ $pattern.create('true') ]);
+
+          it("should ignore duplicate patterns based on their source", function () {
+            var type = $booleanType.create({
+              patterns: [
+                $pattern.create('true'),
+                $pattern.create('true')
+              ]
+            });
+            expect(type.getPatternValues()).to.eql([ $pattern.create('true') ]);
+          });
+
         });
 
+      });
+
+    });
+
+    describe('#getEnumerationValues()', function () {
+
+      it("should return values of facet `enumeration` when defined", function () {
+        var values = [ $boolean.create(true) ];
+        var type = $booleanType.create({ enumeration: values });
+        expect(type.getEnumerationValues()).to.eql(values);
+      });
+
+      it("should return undefined when facet `enumeration` is not defined", function () {
+        var type = $booleanType.create();
+        expect(type.getEnumerationValues()).to.be.undefined;
+      });
+
+    });
+
+    describe('#getPatternValues()', function () {
+
+      it("should return the patterns of facet `patterns` when defined", function () {
+        var patterns = [ $pattern.create('.') ];
+        var type = $booleanType.create({ patterns: patterns });
+        expect(type.getPatternValues()).to.eql(patterns);
+      });
+
+      it("should return undefined when facet `patterns` is not defined", function () {
+        var type = $booleanType.create();
+        expect(type.getPatternValues()).to.be.undefined;
       });
 
     });

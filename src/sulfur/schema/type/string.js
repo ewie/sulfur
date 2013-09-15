@@ -137,15 +137,47 @@ define([
       }
 
       if (facets.enumeration) {
-        this.enumeration = $util.uniq(facets.enumeration, $util.method('getValue'));
+        this._enumeration = $util.uniq(facets.enumeration, $util.method('getValue'));
       }
 
-      $util.isDefined(facets.maxLength) && (this.maxLength = facets.maxLength);
-      $util.isDefined(facets.minLength) && (this.minLength = facets.minLength);
+      this._maxLength = facets.maxLength;
+      this._minLength = facets.minLength;
 
       if (facets.patterns) {
-        this.patterns = $util.uniq(facets.patterns, $util.method('toLiteral'));
+        this._patterns = $util.uniq(facets.patterns, $util.method('toLiteral'));
       }
+    },
+
+    /**
+     * @return [array] the values of facet `enumeration` if defined
+     * @return [undefined] if facet `enumeration` is not defined
+     */
+    getEnumerationValues: function () {
+      return this._enumeration;
+    },
+
+    /**
+     * @return [number] the value of facet `maxLength` when defined
+     * @return [undefined] when facet `maxLength` is not defined
+     */
+    getMaxLengthValue: function () {
+      return this._maxLength;
+    },
+
+    /**
+     * @return [number] the value of facet `minLength` when defined
+     * @return [undefined] when facet `minLength` is not defined
+     */
+    getMinLengthValue: function () {
+      return this._minLength;
+    },
+
+    /**
+     * @return [array] the patterns of facet `patterns` if defined
+     * @return [undefined] if facet `patterns` is not defined
+     */
+    getPatternValues: function () {
+      return this._patterns;
     },
 
     /**
@@ -156,21 +188,21 @@ define([
     validator: function () {
       var validators = [];
 
-      if ($util.isDefined(this.maxLength) || $util.isDefined(this.minLength)) {
+      if ($util.isDefined(this._maxLength) || $util.isDefined(this._minLength)) {
         validators.push($validators.length.create({
-          min: this.minLength,
-          max: this.maxLength
+          min: this._minLength,
+          max: this._maxLength
         }));
       }
 
-      if (this.enumeration) {
-        validators.push($validators.enumeration.create(this.enumeration));
+      if (this._enumeration) {
+        validators.push($validators.enumeration.create(this._enumeration));
       }
 
-      if (this.patterns) {
+      if (this._patterns) {
         validators.push(
           $validators.some.create(
-            this.patterns.map(function (_) {
+            this._patterns.map(function (_) {
               return $validators.pattern.create(_);
             })
           )

@@ -411,61 +411,159 @@ define([
 
       context("when .validateFacets() returns true", function () {
 
-        it("should use facet `enumeration` when given", function () {
-          var d = $float.create();
-          var type = $floatType.create({ enumeration: [ d ] });
-          expect(type.enumeration).to.eql([ d ]);
+        context("with facet `enumeration`", function () {
+
+          it("should use the values", function () {
+            var d = $float.create();
+            var type = $floatType.create({ enumeration: [ d ] });
+            expect(type.getEnumerationValues()).to.eql([ d ]);
+          });
+
+          it("should ignore duplicate values", function () {
+            var type = $floatType.create({
+              enumeration: [
+                $float.create(1),
+                $float.create(1)
+              ]
+            });
+            expect(type.getEnumerationValues()).to.eql([ $float.create(1) ]);
+          });
+
         });
 
         it("should use facet `maxExclusive` when given", function () {
           var d = $float.create();
           var type = $floatType.create({ maxExclusive: d });
-          expect(type.maxExclusive).to.equal(d);
+          expect(type.getMaxExclusiveValue()).to.equal(d);
         });
 
         it("should use facet `maxInclusive` when given", function () {
           var d = $float.create();
           var type = $floatType.create({ maxInclusive: d });
-          expect(type.maxInclusive).to.equal(d);
+          expect(type.getMaxInclusiveValue()).to.equal(d);
         });
 
         it("should use facet `minExclusive` when given", function () {
           var d = $float.create();
           var type = $floatType.create({ minExclusive: d });
-          expect(type.minExclusive).to.equal(d);
+          expect(type.getMinExclusiveValue()).to.equal(d);
         });
 
         it("should use facet `minInclusive` when given", function () {
           var d = $float.create();
           var type = $floatType.create({ minInclusive: d });
-          expect(type.minInclusive).to.equal(d);
+          expect(type.getMinInclusiveValue()).to.equal(d);
         });
 
-        it("should ignore duplicate values in facet `enumeration`", function () {
-          var type = $floatType.create({
-            enumeration: [
-              $float.create(1),
-              $float.create(1)
-            ]
+        context("with facet `patterns`", function () {
+
+          it("should use the patterns", function () {
+            var type = $floatType.create({ patterns: [ $pattern.create('.') ] });
+            expect(type.getPatternValues()).to.eql([ $pattern.create('.') ]);
           });
-          expect(type.enumeration).to.eql([ $float.create(1) ]);
-        });
 
-        it("should use facet `patterns` when given", function () {
-          var type = $floatType.create({ patterns: [ $pattern.create('.') ] });
-          expect(type.patterns).to.eql([ $pattern.create('.') ]);
-        });
-
-        it("should ignore duplicate values in facet `patterns`", function () {
-          var type = $floatType.create({
-            patterns: [
-              $pattern.create('.'),
-              $pattern.create('.')
-            ]
+          it("should ignore duplicate patterns based on their source", function () {
+            var type = $floatType.create({
+              patterns: [
+                $pattern.create('.'),
+                $pattern.create('.')
+              ]
+            });
+            expect(type.getPatternValues()).to.eql([ $pattern.create('.') ]);
           });
-          expect(type.patterns).to.eql([ $pattern.create('.') ]);
+
         });
 
+      });
+
+    });
+
+    describe('#getEnumerationValues()', function () {
+
+      it("should return undefined if facet `enumeration` is not defined", function () {
+        var type = $floatType.create();
+        expect(type.getEnumerationValues()).to.be.undefined;
+      });
+
+      it("should return the values of facet `enumeration` when defined", function () {
+        var values = [ $float.create() ];
+        var type = $floatType.create({ enumeration: values });
+        expect(type.getEnumerationValues()).to.eql(values);
+      });
+
+    });
+
+    describe('#getMaxExclusiveValue()', function () {
+
+      it("should return undefined if facet `maxExclusive` is not defined", function () {
+        var type = $floatType.create();
+        expect(type.getMaxExclusiveValue()).to.be.undefined;
+      });
+
+      it("should return the values of facet `maxExclusive` when defined", function () {
+        var value = $float.create();
+        var type = $floatType.create({ maxExclusive: value });
+        expect(type.getMaxExclusiveValue()).to.eql(value);
+      });
+
+    });
+
+    describe('#getMaxInclusiveValue()', function () {
+
+      it("should return undefined if facet `maxInclusive` is not defined", function () {
+        var type = $floatType.create();
+        expect(type.getMaxInclusiveValue()).to.be.undefined;
+      });
+
+      it("should return the values of facet `maxInclusive` when defined", function () {
+        var value = $float.create();
+        var type = $floatType.create({ maxInclusive: value });
+        expect(type.getMaxInclusiveValue()).to.eql(value);
+      });
+
+    });
+
+    describe('#getMinExclusiveValue()', function () {
+
+      it("should return undefined if facet `minExclusive` is not defined", function () {
+        var type = $floatType.create();
+        expect(type.getMinExclusiveValue()).to.be.undefined;
+      });
+
+      it("should return the values of facet `minExclusive` when defined", function () {
+        var value = $float.create();
+        var type = $floatType.create({ minExclusive: value });
+        expect(type.getMinExclusiveValue()).to.eql(value);
+      });
+
+    });
+
+    describe('#getMinInclusiveValue()', function () {
+
+      it("should return undefined if facet `minInclusive` is not defined", function () {
+        var type = $floatType.create();
+        expect(type.getMinInclusiveValue()).to.be.undefined;
+      });
+
+      it("should return the values of facet `minInclusive` when defined", function () {
+        var value = $float.create();
+        var type = $floatType.create({ minInclusive: value });
+        expect(type.getMinInclusiveValue()).to.eql(value);
+      });
+
+    });
+
+    describe('#getPatternValues()', function () {
+
+      it("should return undefined if facet `enumeration` is not defined", function () {
+        var type = $floatType.create();
+        expect(type.getPatternValues()).to.be.undefined;
+      });
+
+      it("should return the values of facet `enumeration` when defined", function () {
+        var patterns = [ $pattern.create('.') ];
+        var type = $floatType.create({ patterns: patterns });
+        expect(type.getPatternValues()).to.eql(patterns);
       });
 
     });

@@ -192,17 +192,65 @@ define([
       }
 
       if (facets.enumeration) {
-        this.enumeration = $util.uniq(facets.enumeration, $util.method('toCanonicalLiteral'));
+        this._enumeration = $util.uniq(facets.enumeration, $util.method('toCanonicalLiteral'));
       }
 
-      this.maxExclusive = facets.maxExclusive;
-      this.maxInclusive = facets.maxInclusive;
-      this.minExclusive = facets.minExclusive;
-      this.minInclusive = facets.minInclusive;
+      this._maxExclusive = facets.maxExclusive;
+      this._maxInclusive = facets.maxInclusive;
+      this._minExclusive = facets.minExclusive;
+      this._minInclusive = facets.minInclusive;
 
       if (facets.patterns) {
-        this.patterns = $util.uniq(facets.patterns, $util.method('toLiteral'));
+        this._patterns = $util.uniq(facets.patterns, $util.method('toLiteral'));
       }
+    },
+
+    /**
+     * @return [array] the values of facet `enumeration` if defined
+     * @return [undefined] if facet `enumeration` is not defined
+     */
+    getEnumerationValues: function () {
+      return this._enumeration;
+    },
+
+    /**
+     * @return [sulfur/schema/double] the value if facet `maxExclusive` when defined
+     * @return [undefined] if facet `maxExclusive` is not defined
+     */
+    getMaxExclusiveValue: function () {
+      return this._maxExclusive;
+    },
+
+    /**
+     * @return [sulfur/schema/double] the value if facet `maxInclusive` when defined
+     * @return [undefined] if facet `maxInclusive` is not defined
+     */
+    getMaxInclusiveValue: function () {
+      return this._maxInclusive;
+    },
+
+    /**
+     * @return [sulfur/schema/double] the value if facet `minExclusive` when defined
+     * @return [undefined] if facet `minExclusive` is not defined
+     */
+    getMinExclusiveValue: function () {
+      return this._minExclusive;
+    },
+
+    /**
+     * @return [sulfur/schema/double] the value if facet `minInclusive` when defined
+     * @return [undefined] if facet `minInclusive` is not defined
+     */
+    getMinInclusiveValue: function () {
+      return this._minInclusive;
+    },
+
+    /**
+     * @return [array] the patterns of facet `patterns` if defined
+     * @return [undefined] if facet `patterns` is not defined
+     */
+    getPatternValues: function () {
+      return this._patterns;
     },
 
     /**
@@ -213,28 +261,24 @@ define([
     validator: function () {
       var validators = [ $validators.prototype.create($double.prototype) ];
 
-      if (this.enumeration) {
-        validators.push($validators.enumeration.create(this.enumeration));
+      if (this._enumeration) {
+        validators.push($validators.enumeration.create(this._enumeration));
       }
 
-      if (this.maxExclusive) {
-        validators.push($validators.maximum.create(this.maxExclusive, { exclusive: true }));
+      if (this._maxExclusive) {
+        validators.push($validators.maximum.create(this._maxExclusive, { exclusive: true }));
+      } else if (this._maxInclusive) {
+        validators.push($validators.maximum.create(this._maxInclusive));
       }
 
-      if (this.maxInclusive) {
-        validators.push($validators.maximum.create(this.maxInclusive));
+      if (this._minExclusive) {
+        validators.push($validators.minimum.create(this._minExclusive, { exclusive: true }));
+      } else if (this._minInclusive) {
+        validators.push($validators.minimum.create(this._minInclusive));
       }
 
-      if (this.minExclusive) {
-        validators.push($validators.minimum.create(this.minExclusive, { exclusive: true }));
-      }
-
-      if (this.minInclusive) {
-        validators.push($validators.minimum.create(this.minInclusive));
-      }
-
-      if (this.patterns) {
-        validators.push($validators.some.create(this.patterns.map(function (_) {
+      if (this._patterns) {
+        validators.push($validators.some.create(this._patterns.map(function (_) {
           return $validators.pattern.create(_);
         })));
       }

@@ -90,10 +90,33 @@ define([
         throw new Error('facet ' + errors[0][0] + ' ' + errors[0][1]);
       }
 
-      this.itemType = itemType;
+      this._itemType = itemType;
 
-      this.maxLength = facets.maxLength;
-      this.minLength = facets.minLength;
+      this._maxLength = facets.maxLength;
+      this._minLength = facets.minLength;
+    },
+
+    /**
+     * @return [#validator()] the item type
+     */
+    getItemType: function () {
+      return this._itemType;
+    },
+
+    /**
+     * @return [number] the value of facet `maxLength` when defined
+     * @return [undefined] when facet `maxLength` is not defined
+     */
+    getMaxLengthValue: function () {
+      return this._maxLength;
+    },
+
+    /**
+     * @return [number] the value of facet `minLength` when defined
+     * @return [undefined] when facet `minLength` is not defined
+     */
+    getMinLengthValue: function () {
+      return this._minLength;
     },
 
     /**
@@ -102,12 +125,12 @@ define([
      * @return [#validate()] the validator
      */
     validator: function () {
-      var validators = [ $validators.each.create(this.itemType.validator()) ];
+      var validators = [ $validators.each.create(this._itemType.validator()) ];
 
-      if ($util.isDefined(this.maxLength) || $util.isDefined(this.minLength)) {
+      if ($util.isDefined(this._maxLength) || $util.isDefined(this._minLength)) {
         validators.push($validators.length.create({
-          max: this.maxLength,
-          min: this.minLength
+          max: this._maxLength,
+          min: this._minLength
         }));
       }
 
