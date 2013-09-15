@@ -9,10 +9,11 @@
 
 define([
   'shared',
-  'sulfur/schema/type/boolean',
+  'sulfur/schema/boolean',
   'sulfur/schema/pattern',
+  'sulfur/schema/type/boolean',
   'sulfur/schema/validators'
-], function ($shared, $booleanType, $pattern, $validators) {
+], function ($shared, $boolean, $pattern, $booleanType, $validators) {
 
   'use strict';
 
@@ -25,20 +26,10 @@ define([
 
       context("with facet `enumeration`", function () {
 
-        it("should accept value 'true'", function () {
-          expect($booleanType.validateFacets({ enumeration: ['true'] })).to.be.true;
-        });
-
-        it("should accept value 'false'", function () {
-          expect($booleanType.validateFacets({ enumeration: ['false'] })).to.be.true;
-        });
-
-        it("should accept value '1'", function () {
-          expect($booleanType.validateFacets({ enumeration: ['1'] })).to.be.true;
-        });
-
-        it("should accept value '0'", function () {
-          expect($booleanType.validateFacets({ enumeration: ['0'] })).to.be.true;
+        it("should accept an array of sulfur/schema/boolean values", function () {
+          expect($booleanType.validateFacets({
+            enumeration: [ $boolean.create(true) ]
+          })).to.be.true;
         });
 
         context("with no values", function () {
@@ -52,7 +43,7 @@ define([
             $booleanType.validateFacets({ enumeration: [] }, errors);
             expect(errors).to.include.something.eql([
               'enumeration',
-              "must specify at least one of 'true', '1', 'false' or '0'"
+              "must specify at least one sulfur/schema/boolean value"
             ]);
           });
 
@@ -61,15 +52,15 @@ define([
         context("with non-boolean values", function () {
 
           it("should reject", function () {
-            expect($booleanType.validateFacets({ enumeration: ['xxx'] })).to.be.false;
+            expect($booleanType.validateFacets({ enumeration: [true] })).to.be.false;
           });
 
           it("should add a validation error", function () {
             var errors = [];
-            $booleanType.validateFacets({ enumeration: ['xxx'] }, errors);
+            $booleanType.validateFacets({ enumeration: [true] }, errors);
             expect(errors).to.include.something.eql([
               'enumeration',
-              "must specify only boolean values 'true', '1', 'false' or '0'"
+              "must specify only sulfur/schema/boolean values"
             ]);
           });
 
@@ -94,7 +85,7 @@ define([
             $booleanType.validateFacets({ patterns: [] }, errors);
             expect(errors).to.include.something.eql([
               'patterns',
-              "must specify at least one XSD pattern"
+              "must specify at least one pattern"
             ]);
           });
 
@@ -111,7 +102,7 @@ define([
             $booleanType.validateFacets({ patterns: ['.'] }, errors);
             expect(errors).to.include.something.eql([
               'patterns',
-              "must specify only XSD patterns"
+              "must specify only patterns"
             ]);
           });
 
@@ -129,34 +120,41 @@ define([
 
       it("should throw any of the validation errors when .validateFacets() returns false", function () {
         expect(bind($booleanType, 'create', { patterns: [] }))
-          .to.throw("facet patterns must specify at least one XSD pattern");
+          .to.throw("facet patterns must specify at least one pattern");
       });
 
       context("when .validateFacets() returns true", function () {
 
         it("should use facet `enumeration` when given", function () {
-          var type = $booleanType.create({ enumeration: ['true'] });
-          expect(type.enumeration).to.eql(['true']);
+          var type = $booleanType.create({
+            enumeration: [ $boolean.create(true) ]
+          });
+          expect(type.enumeration).to.eql([ $boolean.create(true) ]);
         });
 
         it("should ignore duplicate values in facet `enumeration`", function () {
-          var type = $booleanType.create({ enumeration: ['true', 'true'] });
-          expect(type.enumeration).to.eql(['true']);
+          var type = $booleanType.create({
+            enumeration: [
+              $boolean.create(true),
+              $boolean.create(true)
+            ]
+          });
+          expect(type.enumeration).to.eql([ $boolean.create(true) ]);
         });
 
         it("should use facet `patterns` when given", function () {
-          var type = $booleanType.create({ patterns: [$pattern.create('.')] });
-          expect(type.patterns).to.eql([$pattern.create('.')]);
+          var type = $booleanType.create({ patterns: [ $pattern.create('true') ] });
+          expect(type.patterns).to.eql([$pattern.create('true')]);
         });
 
         it("should ignore duplicate patterns in facet `patterns` based on their source", function () {
           var type = $booleanType.create({
             patterns: [
-              $pattern.create('.'),
-              $pattern.create('.')
+              $pattern.create('true'),
+              $pattern.create('true')
             ]
           });
-          expect(type.patterns).to.eql([$pattern.create('.')]);
+          expect(type.patterns).to.eql([ $pattern.create('true') ]);
         });
 
       });
@@ -171,36 +169,34 @@ define([
         expect($validators.all.prototype).to.be.prototypeOf(v);
       });
 
-      it("should include a validator/pattern matching only boolean literals", function () {
+      it("should include a validator/prototype matching sulfur/schema/boolean", function () {
         var type = $booleanType.create();
         var v = type.validator();
         expect(v).to.eql($validators.all.create([
-          $validators.pattern.create(/^(?:true|false|1|0)$/)
+          $validators.prototype.create($boolean.prototype)
         ]));
       });
 
       it("should include a validator/enumeration when facet `enumeration` is defined", function () {
-        var type = $booleanType.create({ enumeration: [ 'true', '1' ] });
+        var type = $booleanType.create({
+          enumeration: [ $boolean.create(true) ]
+        });
         var v = type.validator();
         expect(v).to.eql($validators.all.create([
-          $validators.pattern.create(/^(?:true|false|1|0)$/),
-          $validators.enumeration.create([ 'true', '1' ])
+          $validators.prototype.create($boolean.prototype),
+          $validators.enumeration.create([ $boolean.create(true) ])
         ]));
       });
 
       it("should include a validator/some with validator/pattern when facet `pattern` is defined", function () {
         var type = $booleanType.create({
-          patterns: [
-            $pattern.create('true'),
-            $pattern.create('1')
-          ]
+          patterns: [ $pattern.create('true') ]
         });
         var v = type.validator();
         expect(v).to.eql($validators.all.create([
-          $validators.pattern.create(/^(?:true|false|1|0)$/),
+          $validators.prototype.create($boolean.prototype),
           $validators.some.create([
-            $validators.pattern.create($pattern.create('true')),
-            $validators.pattern.create($pattern.create('1'))
+            $validators.pattern.create($pattern.create('true'))
           ])
         ]));
       });

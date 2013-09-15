@@ -8,10 +8,11 @@
 
 define([
   'sulfur/factory',
+  'sulfur/schema/boolean',
   'sulfur/schema/pattern',
   'sulfur/schema/validators',
   'sulfur/util'
-], function ($factory, $pattern, $validators, $util) {
+], function ($factory, $boolean, $pattern, $validators, $util) {
 
   'use strict';
 
@@ -24,7 +25,7 @@ define([
      * @param [#push()] errors (optional) an object receiving a pair of facet
      *   name and message for each validation error
      *
-     * @option facets [array] enumeration an array of allowed boolean literals
+     * @option facets [array] enumeration an array of allowed boolean values
      * @option facets [array] patterns an array of patterns
      *
      * @return [boolean] whether all facets are valid or not
@@ -35,38 +36,34 @@ define([
         if (facets.enumeration.length === 0) {
           if (errors) {
             errors.push([ 'enumeration',
-              "must specify at least one of 'true', '1', 'false' or '0'" ]);
+              "must specify at least one sulfur/schema/boolean value" ]);
           }
           return false;
         }
-        return facets.enumeration.every(function (value) {
-          if (value === 'true' || value === '1' || value === 'false' || value === '0') {
-            return true;
-          }
+        if (!facets.enumeration.every($util.bind($boolean.prototype, 'isPrototypeOf'))) {
           if (errors) {
             errors.push([ 'enumeration',
-              "must specify only boolean values 'true', '1', 'false' or '0'" ]);
+              "must specify only sulfur/schema/boolean values" ]);
           }
           return false;
-        });
+        }
+        return true;
       }
 
       function validatePatternsFacet(facets, errors) {
         if (facets.patterns.length === 0) {
           if (errors) {
-            errors.push([ 'patterns', "must specify at least one XSD pattern" ]);
+            errors.push([ 'patterns', "must specify at least one pattern" ]);
           }
           return false;
         }
-        return facets.patterns.every(function (pattern) {
-          if ($pattern.prototype.isPrototypeOf(pattern)) {
-            return true;
-          }
+        if (!facets.patterns.every($util.bind($pattern.prototype, 'isPrototypeOf'))) {
           if (errors) {
-            errors.push([ 'patterns', "must specify only XSD patterns" ]);
+            errors.push([ 'patterns', "must specify only patterns" ]);
           }
           return false;
-        });
+        }
+        return true;
       }
 
       var VALIDATORS = [
@@ -91,7 +88,7 @@ define([
      *
      * @param [object] facets (optional) the facets
      *
-     * @option facets [array] enumeration an array of allowed boolean literals
+     * @option facets [array] enumeration an array of allowed boolean values
      * @option facets [array] patterns an array of patterns
      *
      * @throw [Error] when .validateFacets() returns false
@@ -120,31 +117,25 @@ define([
      *
      * @return [#validate()] the validator
      */
-    validator: (function () {
+    validator: function () {
+      var validators = [ $validators.prototype.create($boolean.prototype) ];
 
-      var BOOLEAN_LITERAL_PATTERN = /^(?:true|false|1|0)$/;
+      if (this.enumeration) {
+        validators.push($validators.enumeration.create(this.enumeration));
+      }
 
-      return function () {
-        var validators = [ $validators.pattern.create(BOOLEAN_LITERAL_PATTERN) ];
+      if (this.patterns) {
+        validators.push(
+          $validators.some.create(
+            this.patterns.map(function (pattern) {
+              return $validators.pattern.create(pattern);
+            })
+          )
+        );
+      }
 
-        if (this.enumeration) {
-          validators.push($validators.enumeration.create(this.enumeration));
-        }
-
-        if (this.patterns) {
-          validators.push(
-            $validators.some.create(
-              this.patterns.map(function (pattern) {
-                return $validators.pattern.create(pattern);
-              })
-            )
-          );
-        }
-
-        return $validators.all.create(validators);
-      };
-
-    }())
+      return $validators.all.create(validators);
+    }
 
   });
 
