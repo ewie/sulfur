@@ -210,32 +210,32 @@ define([
 
       it("should use 1 as default year", function () {
         var dt = $dateTime.create();
-        expect(dt.year).to.equal(1);
+        expect(dt.getYear()).to.equal(1);
       });
 
       it("should use 1 as default month", function () {
         var dt = $dateTime.create();
-        expect(dt.month).to.equal(1);
+        expect(dt.getMonth()).to.equal(1);
       });
 
       it("should use 1 as default day", function () {
         var dt = $dateTime.create();
-        expect(dt.day).to.equal(1);
+        expect(dt.getDay()).to.equal(1);
       });
 
       it("should use zero as default hour", function () {
         var dt = $dateTime.create();
-        expect(dt.hour).to.equal(0);
+        expect(dt.getHour()).to.equal(0);
       });
 
       it("should use zero as default minute", function () {
         var dt = $dateTime.create();
-        expect(dt.minute).to.equal(0);
+        expect(dt.getMinute()).to.equal(0);
       });
 
       it("should use zero as default second", function () {
         var dt = $dateTime.create();
-        expect(dt.second).to.eql($decimal.parse('0'));
+        expect(dt.getSecond()).to.eql($decimal.create());
       });
 
       it("should reject year less than 1", function () {
@@ -351,12 +351,12 @@ define([
 
         it("should use zero for timezone hour when not given", function () {
           var dt = $dateTime.create({ tzminute: 0 });
-          expect(dt.tzhour).to.equal(0);
+          expect(dt.getTimezoneHour()).to.equal(0);
         });
 
         it("should use zero for timezone minute when not given", function () {
           var dt = $dateTime.create({ tzhour: 0 });
-          expect(dt.tzminute).to.equal(0);
+          expect(dt.getTimezoneMinute()).to.equal(0);
         });
 
         it("should reject a non-integer timezone hour", function () {
@@ -394,6 +394,88 @@ define([
             .to.throw("timezone hour and minute must be of the same sign for a non-zero hour");
         });
 
+      });
+
+    });
+
+    describe('#getYear()', function () {
+
+      it("should return the year", function () {
+        var dt = $dateTime.create();
+        expect(dt.getYear()).to.equal(1);
+      });
+
+    });
+
+    describe('#getMonth()', function () {
+
+      it("should return the month", function () {
+        var dt = $dateTime.create();
+        expect(dt.getMonth()).to.equal(1);
+      });
+
+    });
+
+    describe('#getDay()', function () {
+
+      it("should return the day", function () {
+        var dt = $dateTime.create();
+        expect(dt.getDay()).to.equal(1);
+      });
+
+    });
+
+    describe('#getHour()', function () {
+
+      it("should return the hour", function () {
+        var dt = $dateTime.create();
+        expect(dt.getHour()).to.equal(0);
+      });
+
+    });
+
+    describe('#getMinute()', function () {
+
+      it("should return the minute", function () {
+        var dt = $dateTime.create();
+        expect(dt.getMinute()).to.equal(0);
+      });
+
+    });
+
+    describe('#getSecond()', function () {
+
+      it("should return the second", function () {
+        var dt = $dateTime.create();
+        expect(dt.getSecond()).to.eql($decimal.create());
+      });
+
+    });
+
+    describe('#getTimezoneHour()', function () {
+
+      it("should return the timezone hour when a timezone is defined", function () {
+        var dt = $dateTime.create({ tzhour: 0 });
+        expect(dt.getTimezoneHour()).to.equal(0);
+      });
+
+      it("should return undefined when no timezone is defined", function () {
+        var dt = $dateTime.create();
+        expect(dt.getTimezoneHour()).to.be.undefined;
+      });
+
+    });
+
+    describe('#getTimezoneMinute()', function () {
+
+      it("should return the timezone minute when a timezone is defined", function () {
+        var dt = $dateTime.create({ tzminute: 0 });
+        expect(dt.getTimezoneMinute()).to.equal(0);
+      });
+
+      it("should return undefined when no timezone is defined", function () {
+        var dt = $dateTime.create();
+        expect(dt.getTimezoneMinute()).to.be.undefined;
       });
 
     });

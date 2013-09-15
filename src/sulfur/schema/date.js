@@ -122,36 +122,38 @@ define([
     /**
      * @return [number] the year
      */
-    get year() {
-      return this._midpoint.year;
+    getYear: function () {
+      return this._midpoint.getYear();
     },
 
     /**
      * @return [number] the month
      */
-    get month() {
-      return this._midpoint.month;
+    getMonth: function () {
+      return this._midpoint.getMonth();
     },
 
     /**
      * @return [number] the day
      */
-    get day() {
-      return this._midpoint.day;
+    getDay: function () {
+      return this._midpoint.getDay();
     },
 
     /**
-     * @return [number] the timezone hour
+     * @return [number] the timezone hour, if a timezone is defined
+     * @return [undefined] if not timezone is defined
      */
-    get tzhour() {
-      return this._midpoint.tzhour;
+    getTimezoneHour: function () {
+      return this._midpoint.getTimezoneHour();
     },
 
     /**
-     * @return [number] the timezone minute
+     * @return [number] the timezone minute, if a timezone is defined
+     * @return [undefined] if not timezone is defined
      */
-    get tzminute() {
-      return this._midpoint.tzminute;
+    getTimezoneMinute: function () {
+      return this._midpoint.getTimezoneMinute();
     },
 
     /**
@@ -204,22 +206,24 @@ define([
         return this;
       }
 
-      if (this.tzhour >= -11 && this.tzhour < 12 || this.tzhour === 12 && this.tzminute === 0) {
+      if (this.getTimezoneHour() >= -11 && this.getTimezoneHour() < 12 ||
+          this.getTimezoneHour() === 12 && this.getTimezoneMinute() === 0)
+      {
         return this;
       }
 
       var dtn = this._midpoint.normalize();
 
       var dtu = $dateTime.create({
-        year: this.year,
-        month: this.month,
-        day: this.day,
+        year: this.getYear(),
+        month: this.getMonth(),
+        day: this.getDay(),
         hour: 12,
         tzhour: 0
       });
 
-      var tzhr = dtu.hour - dtn.hour;
-      var tzmin = dtu.minute - dtn.minute;
+      var tzhr = dtu.getHour() - dtn.getHour();
+      var tzmin = dtu.getMinute() - dtn.getMinute();
 
       // Handle an eventual overflow of the timezone minute.
       if (tzhr > 0 && tzmin < 0) {
@@ -228,9 +232,9 @@ define([
       }
 
       return $.create({
-        year: dtn.year,
-        month: dtn.month,
-        day: dtn.day,
+        year: dtn.getYear(),
+        month: dtn.getMonth(),
+        day: dtn.getDay(),
         tzhour: tzhr,
         tzminute: tzmin
       });

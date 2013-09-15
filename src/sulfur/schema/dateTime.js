@@ -330,22 +330,80 @@ define([
           assertTimezone(tzhour, tzminute);
         }
 
-        this.year = year;
-        this.month = month;
-        this.day = day;
+        this._year = year;
+        this._month = month;
+        this._day = day;
 
-        this.hour = hour;
-        this.minute = minute;
-        this.second = second;
+        this._hour = hour;
+        this._minute = minute;
+        this._second = second;
 
         if ($util.isDefined(tzhour)) {
-          this.tzhour = tzhour;
-          this.tzminute = tzminute;
+          this._tzhour = tzhour;
+          this._tzminute = tzminute;
         }
 
       };
 
     }()),
+
+    /**
+     * @return [number] the year
+     */
+    getYear: function () {
+      return this._year;
+    },
+
+    /**
+     * @return [number] the month
+     */
+    getMonth: function () {
+      return this._month;
+    },
+
+    /**
+     * @return [number] the day
+     */
+    getDay: function () {
+      return this._day;
+    },
+
+    /**
+     * @return [number] the hour
+     */
+    getHour: function () {
+      return this._hour;
+    },
+
+    /**
+     * @return [number] the minute
+     */
+    getMinute: function () {
+      return this._minute;
+    },
+
+    /**
+     * @return [sulfur/schema/decimal] the second
+     */
+    getSecond: function () {
+      return this._second;
+    },
+
+    /**
+     * @return [number] the timezone hour, if a timezone is defined
+     * @return [undefined] if not timezone is defined
+     */
+    getTimezoneHour: function () {
+      return this._tzhour;
+    },
+
+    /**
+     * @return [number] the timezone minute, if a timezone is defined
+     * @return [undefined] if not timezone is defined
+     */
+    getTimezoneMinute: function () {
+      return this._tzminute;
+    },
 
     /**
      * Convert the datetime to its string representation.
@@ -367,35 +425,35 @@ define([
 
       return function () {
 
-        var sec = this.second.toLiteral();
+        var sec = this._second.toLiteral();
         if (sec === '0' || sec.indexOf('.') === 1) {
           sec = '0' + sec;
         }
 
         var s =
-          toString(this.year, 4) + '-' +
-          toString(this.month, 2) + '-' +
-          toString(this.day, 2) + 'T' +
-          toString(this.hour, 2) + ':' +
-          toString(this.minute, 2) + ':' + sec;
+          toString(this._year, 4) + '-' +
+          toString(this._month, 2) + '-' +
+          toString(this._day, 2) + 'T' +
+          toString(this._hour, 2) + ':' +
+          toString(this._minute, 2) + ':' + sec;
 
         if (this.isZulu()) {
           s += 'Z';
         } else if (this.hasTimezone()) {
           var tzhr = 0;
           var tzmin = 0;
-          if (this.tzhour < 0) {
+          if (this._tzhour < 0) {
             s += '-';
-            tzhr = -this.tzhour;
-          } else if (this.tzhour > 0) {
+            tzhr = -this._tzhour;
+          } else if (this._tzhour > 0) {
             s += '+';
-            tzhr = this.tzhour;
-          } else if (this.tzminute < 0) {
+            tzhr = this._tzhour;
+          } else if (this._tzminute < 0) {
             s += '-';
-            tzmin = -this.tzminute;
+            tzmin = -this._tzminute;
           } else {
             s += '+';
-            tzmin = this.tzminute;
+            tzmin = this._tzminute;
           }
           s += toString(tzhr, 2) + ':' + toString(tzmin, 2);
         }
@@ -422,7 +480,7 @@ define([
      * @return [boolean] whether a timezone is defined or not
      */
     hasTimezone: function () {
-      return $util.isDefined(this.tzhour);
+      return $util.isDefined(this._tzhour);
     },
 
     /**
@@ -431,7 +489,7 @@ define([
      * @return [boolean] whether it's UTC or not
      */
     isZulu: function () {
-      return this.tzhour === 0 && this.tzminute === 0;
+      return this._tzhour === 0 && this._tzminute === 0;
     },
 
     /**
@@ -480,21 +538,21 @@ define([
           return this;
         }
 
-        var tzhr = this.tzhour;
-        var tzmin = this.tzminute;
+        var tzhr = this._tzhour;
+        var tzmin = this._tzminute;
 
-        var year = this.year;
-        var month = this.month;
+        var year = this._year;
+        var month = this._month;
 
-        var tmp = this.minute - tzmin;
+        var tmp = this._minute - tzmin;
         var minute = modulo(tmp, 60);
         var carry = quotient(tmp, 60);
 
-        tmp = this.hour - tzhr + carry;
+        tmp = this._hour - tzhr + carry;
         var hour = modulo(tmp, 24);
         carry = quotient(tmp, 24);
 
-        var day = this.day + carry;
+        var day = this._day + carry;
 
         for (;;) {
           if (day < 1) {
@@ -526,7 +584,7 @@ define([
           day: day,
           hour: hour,
           minute: minute,
-          second: this.second,
+          second: this._second,
           tzhour: 0
         });
 
@@ -546,7 +604,7 @@ define([
     cmp: (function () {
 
       // All properties which can be compared numerically.
-      var PROPERTIES = 'year month day hour minute'.split(' ');
+      var PROPERTIES = '_year _month _day _hour _minute'.split(' ');
 
       return function (other) {
 
@@ -563,7 +621,7 @@ define([
           }
         }
 
-        return lhs.second.cmp(rhs.second);
+        return lhs._second.cmp(rhs._second);
 
       };
 
