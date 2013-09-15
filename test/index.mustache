@@ -19,12 +19,9 @@
       (function () {
         'use strict';
 
-        var removeExt = (function () {
-          var extPattern = /\.js$/;
-          return function removeExt(filename) {
-            return filename.replace(extPattern, '');
-          };
-        }());
+        function removeExt(filename) {
+          return filename.replace(/\.js$/, '');
+        }
 
         var files = [];
         {{#serve_files}}files.push(removeExt("../{{src}}"));
