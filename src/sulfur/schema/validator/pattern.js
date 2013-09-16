@@ -25,14 +25,15 @@ define([
     },
 
     /**
-     * Check if a string satisfies the pattern.
+     * Check if a value's string representation satisfies the pattern.
      *
-     * @param [string] value
+     * @param [#toString()] value
      *
-     * @return [boolean] whether `value` satisfies the pattern
+     * @return [boolean] whether the string representation of `value` satisfies
+     *   the pattern
      */
     validate: function (value) {
-      return this._pattern.test(value);
+      return this._pattern.test(value.toString());
     }
 
   });

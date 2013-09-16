@@ -29,12 +29,14 @@ define([
         validator = $patternValidator.create(pattern);
       });
 
-      it("should pass the value to #test() on the used pattern", function () {
+      it("should return the result of calling #test() on the pattern with value#toString() as argument", function () {
         var spy = sinon.spy(pattern, 'test');
-        var value = 'a';
+        var value = { toString: sinon.stub().returns('a') };
         var result = validator.validate(value);
-        expect(spy).to.be.calledWith(value);
-        expect(result).to.equal(spy.getCall(0).returnValue);
+        expect(spy)
+          .to.be.calledOn(pattern)
+          .to.be.calledWith(value.toString.returnValue)
+          .to.have.returned(result);
       });
 
       it("should return true when a value satisfies the pattern", function () {
