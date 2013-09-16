@@ -1,0 +1,193 @@
+/* Copyright (c) 2013, Erik Wienhold
+ * All rights reserved.
+ *
+ * Licensed under the BSD 3-Clause License.
+ */
+
+/* global define */
+/* global afterEach, beforeEach, context, describe, it */
+
+define([
+  'shared',
+  'sulfur/schema/mediaType'
+], function ($shared, $mediaType) {
+
+  'use strict';
+
+  var expect = $shared.expect;
+  var bind = $shared.bind;
+  var sinon = $shared.sinon;
+
+  describe('sulfur/schema/mediaType', function () {
+
+    describe('#initialize', function () {
+
+      var sandbox;
+
+      beforeEach(function () {
+        sandbox = sinon.sandbox.create();
+      });
+
+      afterEach(function () {
+        sandbox.restore();
+      });
+
+      it("should use '*' as default type", function () {
+        var mt = $mediaType.create();
+        expect(mt.getType()).to.be.undefined;
+      });
+
+      it("should use '*' as default subtype", function () {
+        var mt = $mediaType.create();
+        expect(mt.getSubtype()).to.be.undefined;
+      });
+
+      'application audio image text video'.split(' ').forEach(function (type) {
+
+        it("should accept type '" + type + "'", function () {
+          var mt = $mediaType.create(type);
+          expect(mt.getType()).to.equal(type);
+        });
+
+      });
+
+      it("should treat type '*' as wildcard", function () {
+        var mt = $mediaType.create('*');
+        expect(mt.getType()).to.be.undefined;
+      });
+
+      it("should reject an invalid type", function () {
+        expect(bind($mediaType, 'create', 'xxx'))
+          .to.throw("media type must be one of 'application', 'audio', 'image', 'text' or 'video'");
+      });
+
+      it("should accept a subtype", function () {
+        var mt = $mediaType.create('text', 'plain');
+        expect(mt.getSubtype()).to.equal('plain');
+      });
+
+      it("should treat subtype '*' as wildcard", function () {
+        var mt = $mediaType.create('text', '*');
+        expect(mt.getSubtype()).to.be.undefined;
+      });
+
+      it("should reject an invalid subtype when given", function () {
+        var testSpy = sandbox.spy(RegExp.prototype, 'test');
+        var subtype = ' ';
+        expect(bind($mediaType, 'create', 'audio', subtype))
+          .to.throw("invalid subtype");
+        expect(testSpy)
+          .to.be.calledOn(sinon.match(function (r) {
+            return r.source === /^[^\x00-\x20\x7F()<>@,;:\\"/\[\]?.=]+$/.source;
+          }, /^[^\x00-\x20\x7F()<>@,;:\\"/\[\]?.=]+$/))
+          .to.be.calledWith(subtype)
+          .to.have.returned(false);
+      });
+
+      it("should reject an undefined type to be used along a defined subtype", function () {
+        expect(bind($mediaType, 'create', '*', 'plain'))
+          .to.throw("cannot use a defined subtype with an undefined type");
+      });
+
+    });
+
+    describe('#getType()', function () {
+
+      it("should return the type when defined", function () {
+        var mt = $mediaType.create('text');
+        expect(mt.getType()).to.equal('text');
+      });
+
+      it("should return undefined when no type is defined", function () {
+        var mt = $mediaType.create();
+        expect(mt.getType()).to.be.undefined;
+      });
+
+    });
+
+    describe('#getSubtype()', function () {
+
+      it("should return the subtype when defined", function () {
+        var mt = $mediaType.create('image', 'jpeg');
+        expect(mt.getSubtype()).to.equal('jpeg');
+      });
+
+      it("should return undefined when no subtype is defined", function () {
+        var mt = $mediaType.create();
+        expect(mt.getSubtype()).to.be.undefined;
+      });
+
+    });
+
+    describe('#toString()', function () {
+
+      it("should include the specific subtype when defined", function () {
+        var mt = $mediaType.create('text', 'plain');
+        expect(mt.toString()).to.equal('text/plain');
+      });
+
+      it("should use the wildcard '*' when type is not defined", function () {
+        var mt = $mediaType.create();
+        expect(mt.toString()).to.equal('*/*');
+      });
+
+      it("should use the wildcard '*' when subtype is not defined", function () {
+        var mt = $mediaType.create('text');
+        expect(mt.toString()).to.equal('text/*');
+      });
+
+    });
+
+    describe('#matches()', function () {
+
+      it("should return true when LHS' type is undefined", function () {
+        var lhs = $mediaType.create();
+        var rhs = $mediaType.create('text');
+        expect(lhs.matches(rhs)).to.be.true;
+      });
+
+      it("should return true when RHS' type is undefined", function () {
+        var lhs = $mediaType.create('text');
+        var rhs = $mediaType.create();
+        expect(lhs.matches(rhs)).to.be.true;
+      });
+
+      it("should return false when LHS' and RHS' type are different", function () {
+        var lhs = $mediaType.create('audio');
+        var rhs = $mediaType.create('text');
+        expect(lhs.matches(rhs)).to.be.false;
+      });
+
+      context("when LHS' and RHS' type are equal", function () {
+
+        it("should return true when LHS' subtype is undefined", function () {
+          var lhs = $mediaType.create('text');
+          var rhs = $mediaType.create('text', 'plain');
+          expect(lhs.matches(rhs)).to.be.true;
+        });
+
+        it("should return true when RHS' subtype is undefined", function () {
+          var lhs = $mediaType.create('text', 'plain');
+          var rhs = $mediaType.create('text');
+          expect(lhs.matches(rhs)).to.be.true;
+        });
+
+        it("should return true when LHS' and RHS' subtype are equal", function () {
+          var lhs = $mediaType.create('text', 'plain');
+          var rhs = $mediaType.create('text', 'plain');
+          expect(lhs.matches(rhs)).to.be.true;
+        });
+
+        it("should return false when LHS' and RHS' subtype are different", function () {
+          var lhs = $mediaType.create('text', 'plain');
+          var rhs = $mediaType.create('text', 'css');
+          expect(lhs.matches(rhs)).to.be.false;
+        });
+
+      });
+
+    });
+
+  });
+
+});
