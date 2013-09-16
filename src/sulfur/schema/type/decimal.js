@@ -310,7 +310,8 @@ define([
       var validators = [ $validators.prototype.create($decimal.prototype) ];
 
       if (this._enumeration) {
-        validators.push($validators.enumeration.create(this._enumeration));
+        validators.push($validators.enumeration.create(
+          this._enumeration, { testMethod: 'eq' }));
       }
 
       if ($util.isDefined(this._fractionDigits)) {

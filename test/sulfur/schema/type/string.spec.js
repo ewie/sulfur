@@ -350,7 +350,7 @@ define([
         var type = $stringType.create({ enumeration: [ $string.create() ] });
         var v = type.validator();
         expect(v).to.eql($validators.all.create([
-          $validators.enumeration.create([ $string.create() ])
+          $validators.enumeration.create([ $string.create() ], { testMethod: 'eq' })
         ]));
       });
 

@@ -7,8 +7,9 @@
 /* global define */
 
 define([
-  'sulfur/factory'
-], function ($factory) {
+  'sulfur/factory',
+  'sulfur/util'
+], function ($factory, $util) {
 
   'use strict';
 
@@ -18,28 +19,65 @@ define([
      * Initialize the validator with one or more allowed values.
      *
      * @param [array] values
+     * @param [object] options (optional)
+     *
+     * @option options [string] testMethod (optional)
+     *
+     * @throw [Error] if any value does not respond to the test method
      */
-    initialize: function (values) {
-      if (values.length === 0) {
-        throw new Error("must specify at least one value");
+    initialize: (function () {
+
+      function allRespondTo(objects, name) {
+        return objects.every(function (object) {
+          return typeof object[name] === 'function';
+        });
       }
-      this._values = values;
+
+      return function (values, options) {
+        options || (options = {});
+
+        var testMethodName = options.testMethod;
+
+        if (values.length === 0) {
+          throw new Error("must specify at least one value");
+        }
+        if ($util.isDefined(testMethodName) && !allRespondTo(values, testMethodName)) {
+          throw new Error("each allowed value must respond to #" + testMethodName + '()');
+        }
+
+        this._values = values;
+        this._testMethodName = testMethodName;
+      };
+
+    }()),
+
+    /**
+     * @return [string] the name of the test method when defined
+     * @return [undefined] when no test method is defined
+     */
+    getTestMethodName: function () {
+      return this._testMethodName;
     },
 
     /**
-     * Validate a value against all allowed values.
+     * Validate a value against all allowed values by calling the test method
+     * when defined or by using a strict equality check.
      *
      * @param [any] value
      *
-     * @return [boolean] whether `value` strictly equals one of the allowed
-     *   values
+     * @return [boolean] whether `value` satisfies the test method of any
+     *   allowed value or strictly equals one of the these values
      */
     validate: function (value) {
       var fn;
-      if (typeof value.cmp === 'function') {
-        fn = function (validValue) { return value.cmp(validValue) === 0; };
+      if ($util.isDefined(this._testMethodName)) {
+        fn = function (allowedValue) {
+          return allowedValue[this._testMethodName](value);
+        }.bind(this);
       } else {
-        fn = function (validValue) { return validValue === value; };
+        fn = function (allowedValue) {
+          return allowedValue === value;
+        };
       }
       return this._values.some(fn);
     }

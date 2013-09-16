@@ -222,7 +222,7 @@ define([
         var v = type.validator();
         expect(v).to.eql($validators.all.create([
           $validators.prototype.create($boolean.prototype),
-          $validators.enumeration.create([ $boolean.create(true) ])
+          $validators.enumeration.create([ $boolean.create(true) ], { testMethod: 'eq' })
         ]));
       });
 

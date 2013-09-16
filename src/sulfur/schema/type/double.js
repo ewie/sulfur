@@ -262,7 +262,8 @@ define([
       var validators = [ $validators.prototype.create($double.prototype) ];
 
       if (this._enumeration) {
-        validators.push($validators.enumeration.create(this._enumeration));
+        validators.push($validators.enumeration.create(
+          this._enumeration, { testMethod: 'eq' }));
       }
 
       if (this._maxExclusive) {

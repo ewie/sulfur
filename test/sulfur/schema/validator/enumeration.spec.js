@@ -27,6 +27,38 @@ define([
           .to.throw("must specify at least one value");
       });
 
+      context("with option `testMethod`", function () {
+
+        it("should use the value as name of the test method", function () {
+          var v = $enumerationValidator.create(
+            [{ test: function () {} }],
+            { testMethod: 'test' });
+          expect(v.getTestMethodName()).to.equal('test');
+        });
+
+        it("should reject when none of the allowed values responds to the test method", function () {
+          expect(bind($enumerationValidator, 'create', [{}], { testMethod: 'foo' }))
+            .to.throw("each allowed value must respond to #foo()");
+        });
+
+      });
+
+    });
+
+    describe('#getTestMethodName()', function () {
+
+      it("should return the name of the test method when defined", function () {
+        var v = $enumerationValidator.create(
+          [{ matches: function () {} }],
+          { testMethod: 'matches' });
+        expect(v.getTestMethodName()).to.equal('matches');
+      });
+
+      it("should return undefined when the test method name is not defined", function () {
+        var v = $enumerationValidator.create([{}]);
+        expect(v.getTestMethodName()).to.be.undefined;
+      });
+
     });
 
     describe('#validate()', function () {
@@ -34,40 +66,42 @@ define([
       var validator;
       var values;
 
-      context("when the tested value responds to #cmp()", function () {
+      context("when the test method name is defined", function () {
 
         beforeEach(function () {
-          values = [ { dummy: 1 } ];
-          validator = $enumerationValidator.create(values);
+          values = [ { match: sinon.stub().returnsArg(0) } ];
+          validator = $enumerationValidator.create(values, { testMethod: 'match' });
         });
 
-        it("should call #cmp() on the tested value with the asserted value as argument", function () {
-          var value = { cmp: sinon.spy() };
+        it("should call the test method on each allowed value with the tested value as argument", function () {
+          var value = {};
           validator.validate(value);
-          expect(value.cmp).to.be.calledOn(value).and.to.be.calledWith(values[0]);
+          expect(values[0].match)
+            .to.be.calledOn(sinon.match.same(values[0]))
+            .to.be.calledWith(sinon.match.same(value));
         });
 
-        it("should return as soon as #cmp() returns zero", function () {
-          values.push({ dummy: 2 });
-          var value = { cmp: sinon.stub().returns(0) };
+        it("should return as soon as the test method returns true", function () {
+          values.push({ match: sinon.spy() });
+          var value = {};
           validator.validate(value);
-          expect(value.cmp).to.be.calledWith(values[0]);
-          expect(value.cmp).to.not.be.calledWith(values[1]);
+          expect(values[0].match).to.be.called;
+          expect(values[1].match).to.not.be.called;
         });
 
-        it("should return true if #cmp() returns zero for any value", function () {
-          var value = { cmp: sinon.stub().returns(0) };
+        it("should return true if the test method returns true for any value", function () {
+          var value = {};
           expect(validator.validate(value)).to.be.true;
         });
 
-        it("should return false if #cmp() never returns zero for any value", function () {
-          var value = { cmp: sinon.stub().returns(1) };
+        it("should return false if the test method never returns true for any value", function () {
+          var value = false;
           expect(validator.validate(value)).to.be.false;
         });
 
       });
 
-      context("when the tested value does not respond to #cmp()", function () {
+      context("when the test method name is not defined", function () {
 
         beforeEach(function () {
           values = [ 'a', '0' ];

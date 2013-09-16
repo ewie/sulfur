@@ -583,7 +583,7 @@ define([
         var v = type.validator();
         expect(v).to.eql($validators.all.create([
           $validators.prototype.create($date.prototype),
-          $validators.enumeration.create([ $date.create(2000) ])
+          $validators.enumeration.create([ $date.create(2000) ], { testMethod: 'eq' })
         ]));
       });
 
