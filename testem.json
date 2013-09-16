@@ -2,5 +2,5 @@
   "test_page": "test/index.mustache",
   "src_files": ["src/**/*.js", "test/**/*.spec.js"],
   "serve_files": ["test/**/*.spec.js"],
-  "before_tests": "jshint `find src/ -name '*.js'` `find test/ -name '*.js'`"
+  "before_tests": "jshint `find src/ -name '*.js' -mmin -1` `find test/ -name '*.js' -mmin -1`"
 }
