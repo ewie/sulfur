@@ -476,7 +476,7 @@ define([
      *
      * @return [string] the string representation
      */
-    toLiteral: (function () {
+    toString: (function () {
 
       function toString(value, length) {
         var s = value.toString(10);
@@ -488,7 +488,7 @@ define([
 
       return function () {
 
-        var sec = this._second.toLiteral();
+        var sec = this._second.toString();
         if (sec === '0' || sec.indexOf('.') === 1) {
           sec = '0' + sec;
         }

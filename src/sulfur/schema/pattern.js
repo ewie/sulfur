@@ -63,7 +63,7 @@ define([
      *
      * @return [string] the pattern's source
      */
-    toLiteral: function () {
+    toString: function () {
       return this._source;
     },
 

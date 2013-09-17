@@ -106,9 +106,7 @@ define([
       }
 
       if (facets.patterns) {
-        this._patterns = $util.uniq(facets.patterns, function (pattern) {
-          return pattern.toLiteral();
-        });
+        this._patterns = $util.uniq(facets.patterns);
       }
     },
 

@@ -105,7 +105,7 @@ define([
      *
      * @return [string] the string representation
      */
-    toLiteral: function () {
+    toString: function () {
       var s = '';
       if (!this.positive) {
         s += '-';

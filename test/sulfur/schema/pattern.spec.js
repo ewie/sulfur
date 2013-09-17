@@ -68,11 +68,11 @@ define([
 
     });
 
-    describe('#toLiteral()', function () {
+    describe('#toString()', function () {
 
       it("should return the pattern's source", function () {
         var p = $pattern.create('[a-z]');
-        expect(p.toLiteral()).to.equal('[a-z]');
+        expect(p.toString()).to.equal('[a-z]');
       });
 
     });

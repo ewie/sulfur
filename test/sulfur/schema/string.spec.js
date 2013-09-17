@@ -103,7 +103,7 @@ define([
 
       it("should accept a string value", function () {
         var s = $string.create('a');
-        expect(s.getValue()).to.equal('a');
+        expect(s.toString()).to.equal('a');
       });
 
       it("should reject when .isValidLiteral() returns false", function () {
@@ -117,16 +117,16 @@ define([
         var s = $string.create('\u0065\u0301');
         expect(nfcSpy)
           .to.be.calledWith('\u0065\u0301')
-          .and.to.have.returned(s.getValue());
+          .to.have.returned(s.toString());
       });
 
     });
 
-    describe('#getValue()', function () {
+    describe('#toString()', function () {
 
       it("should return the string value", function () {
         var s = $string.create('b');
-        expect(s.getValue()).to.equal('b');
+        expect(s.toString()).to.equal('b');
       });
 
     });

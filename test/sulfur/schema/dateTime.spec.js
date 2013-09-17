@@ -492,21 +492,21 @@ define([
 
     });
 
-    describe('#toLiteral()', function () {
+    describe('#toString()', function () {
 
       it("should pad with zeros", function () {
         var dt = $dateTime.create();
-        expect(dt.toLiteral()).to.equal('0001-01-01T00:00:00');
+        expect(dt.toString()).to.equal('0001-01-01T00:00:00');
       });
 
       it("should include the second's fractional part", function () {
         var dt = $dateTime.create({ second: $decimal.parse('1.2') });
-        expect(dt.toLiteral()).to.equal('0001-01-01T00:00:01.2');
+        expect(dt.toString()).to.equal('0001-01-01T00:00:01.2');
       });
 
       it("should use 'Z' to denote a timezoned datetime", function () {
         var dt = $dateTime.create({ tzhour: 0 });
-        expect(dt.toLiteral()).to.equal('0001-01-01T00:00:00Z');
+        expect(dt.toString()).to.equal('0001-01-01T00:00:00Z');
       });
 
     });

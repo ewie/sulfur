@@ -72,11 +72,11 @@ define(['sulfur/factory'], function ($factory) {
     },
 
     /**
-     * Get the canonical representation.
+     * Get the canonical string representation.
      *
-     * @return [string] the canonical representation
+     * @return [string] the canonical string representation
      */
-    toCanonicalLiteral: function () {
+    toString: function () {
       return this._value ? 'true' : 'false';
     },
 

@@ -225,26 +225,26 @@ define([
 
     });
 
-    describe('#toCanonicalLiteral()', function () {
+    describe('#toString()', function () {
 
       it("should use 'E' as exponent mark", function () {
         var f = $double.create();
-        expect(f.toCanonicalLiteral()).to.equal('0.0E0');
+        expect(f.toString()).to.equal('0.0E0');
       });
 
       it("should use a single digit to the left", function () {
         var f = $double.create(123.456);
-        expect(f.toCanonicalLiteral()).to.equal('1.23456E2');
+        expect(f.toString()).to.equal('1.23456E2');
       });
 
       it("should use a sign for a negative value", function () {
         var f = $double.create(-1);
-        expect(f.toCanonicalLiteral()).to.equal('-1E0');
+        expect(f.toString()).to.equal('-1E0');
       });
 
       it("should use a sign for a negative exponent", function () {
         var f = $double.create(0.1);
-        expect(f.toCanonicalLiteral()).to.equal('1E-1');
+        expect(f.toString()).to.equal('1E-1');
       });
 
     });

@@ -160,7 +160,7 @@ define(['sulfur/factory'], function ($factory) {
      *
      * @return [string] the canonical representation
      */
-    toCanonicalLiteral: function () {
+    toString: function () {
       if (this._value === 0) {
         return '0.0E0';
       }

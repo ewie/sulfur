@@ -64,7 +64,7 @@ define([
      *
      * @return [string]
      */
-    getValue: function () {
+    toString: function () {
       return this._value;
     },
 

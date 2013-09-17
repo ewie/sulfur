@@ -105,16 +105,16 @@ define([
 
     });
 
-    describe('#toCanonicalLiteral()', function () {
+    describe('#toString()', function () {
 
       it("should return 'true' when true", function () {
         var b = $boolean.create(true);
-        expect(b.toCanonicalLiteral()).to.equal('true');
+        expect(b.toString()).to.equal('true');
       });
 
       it("should return 'false' when false", function () {
         var b = $boolean.create(false);
-        expect(b.toCanonicalLiteral()).to.equal('false');
+        expect(b.toString()).to.equal('false');
       });
 
     });

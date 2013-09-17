@@ -174,21 +174,21 @@ define([
 
     });
 
-    describe('#toLiteral()', function () {
+    describe('#toString()', function () {
 
       it("should return the integral digits", function () {
         var d = $decimal.parse('123');
-        expect(d.toLiteral()).to.equal('123');
+        expect(d.toString()).to.equal('123');
       });
 
       it("should include significant fraction digits", function () {
         var d = $decimal.parse('123.456');
-        expect(d.toLiteral()).to.equal('123.456');
+        expect(d.toString()).to.equal('123.456');
       });
 
       it("should use a sign when negative", function () {
         var d = $decimal.parse('-123');
-        expect(d.toLiteral()).to.equal('-123');
+        expect(d.toString()).to.equal('-123');
       });
 
     });

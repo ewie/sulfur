@@ -339,33 +339,33 @@ define([
 
     });
 
-    describe('#toLiteral()', function () {
+    describe('#toString()', function () {
 
       it("should pad with zeros", function () {
         var dt = $date.create();
-        expect(dt.toLiteral()).to.equal('0001-01-01');
+        expect(dt.toString()).to.equal('0001-01-01');
       });
 
       context("with a timezone", function () {
 
         it("should use 'Z' when UTC", function () {
           var dt = $date.create({ tzhour: 0 });
-          expect(dt.toLiteral()).to.equal('0001-01-01Z');
+          expect(dt.toString()).to.equal('0001-01-01Z');
         });
 
         it("should use the recoverable timezone", function () {
           var dt = $date.create({ day: 2, tzhour: 14, tzminute: 17  });
-          expect(dt.toLiteral()).to.equal('0001-01-01-09:43');
+          expect(dt.toString()).to.equal('0001-01-01-09:43');
         });
 
         it("should use '+' for a positive recoverable timezone", function () {
           var dt = $date.create({ day: 2, tzhour: -14, tzminute: -17  });
-          expect(dt.toLiteral()).to.equal('0001-01-03+09:43');
+          expect(dt.toString()).to.equal('0001-01-03+09:43');
         });
 
         it("should use '-' for a negative recoverable timezone", function () {
           var dt = $date.create({ day: 2, tzhour: 14, tzminute: 17  });
-          expect(dt.toLiteral()).to.equal('0001-01-01-09:43');
+          expect(dt.toString()).to.equal('0001-01-01-09:43');
         });
 
       });

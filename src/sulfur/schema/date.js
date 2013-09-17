@@ -158,7 +158,7 @@ define([
      *
      * @return [string] the string representation
      */
-    toLiteral: (function () {
+    toString: (function () {
 
       function toString(value, length) {
         var s = value.toString(10);
