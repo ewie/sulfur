@@ -237,12 +237,12 @@ define([
 
         it("should use zero for timezone hour when not given", function () {
           var dt = $date.create({ tzminute: 0 });
-          expect(dt.getTimezoneHour()).to.equal(0);
+          expect(dt).to.eql($date.create({ tzhour: 0, tzminute: 0 }));
         });
 
         it("should use zero for timezone minute when not given", function () {
           var dt = $date.create({ tzhour: 0 });
-          expect(dt.getTimezoneMinute()).to.equal(0);
+          expect(dt).to.eql($date.create({ tzhour: 0, tzminute: 0 }));
         });
 
         it("should reject a non-integer timezone hour", function () {
@@ -280,6 +280,34 @@ define([
             .to.throw("timezone hour and minute must be of the same sign for a non-zero hour");
         });
 
+        it("should adjust the day to UTC", function () {
+          var dt = $date.create({ day: 3, tzhour: 24 });
+          var x = $date.create({ day: 2, tzhour: 0 });
+          expect(dt).to.eql(x);
+        });
+
+        it("should adjust the month to UTC", function () {
+          var dt = $date.create({ month: 1, day: 31, tzhour: -24 });
+          var x = $date.create({ month: 2, day: 1, tzhour: 0 });
+          expect(dt).to.eql(x);
+        });
+
+        it("should adjust the year to UTC", function () {
+          var dt = $dateTime.create({ year: 2, tzhour: 24 });
+          var x = $dateTime.create({ year: 1, month: 12, day: 31, tzhour: 0 });
+          expect(dt).to.eql(x);
+        });
+
+        it("should throw if year will be less than 1", function () {
+          expect(bind($date, 'create', { tzhour: 13 }))
+            .to.throw("cannot normalize if year will be less than 1");
+        });
+
+        it("should throw if year will be greater than 9999", function () {
+          expect(bind($date, 'create', { year: 9999, month: 12, day: 31, tzhour: -13 }))
+            .to.throw("cannot normalize if year will be greater than 9999");
+        });
+
       });
 
     });
@@ -311,34 +339,6 @@ define([
 
     });
 
-    describe('#getTimezoneHour()', function () {
-
-      it("should return the timezone hour when a timezone is defined", function () {
-        var dt = $date.create({ tzhour: 0 });
-        expect(dt.getTimezoneHour()).to.equal(0);
-      });
-
-      it("should return undefined when no timezone is defined", function () {
-        var dt = $date.create();
-        expect(dt.getTimezoneHour()).to.be.undefined;
-      });
-
-    });
-
-    describe('#getTimezoneMinute()', function () {
-
-      it("should return the timezone minute when a timezone is defined", function () {
-        var dt = $date.create({ tzminute: 0 });
-        expect(dt.getTimezoneMinute()).to.equal(0);
-      });
-
-      it("should return undefined when no timezone is defined", function () {
-        var dt = $date.create();
-        expect(dt.getTimezoneMinute()).to.be.undefined;
-      });
-
-    });
-
     describe('#toLiteral()', function () {
 
       it("should pad with zeros", function () {
@@ -346,54 +346,28 @@ define([
         expect(dt.toLiteral()).to.equal('0001-01-01');
       });
 
-      context("with timezone", function () {
+      context("with a timezone", function () {
 
         it("should use 'Z' when UTC", function () {
           var dt = $date.create({ tzhour: 0 });
           expect(dt.toLiteral()).to.equal('0001-01-01Z');
         });
 
-        it("should use '+' for a positive timezone hour", function () {
-          var dt = $date.create({ tzhour: 1 });
-          expect(dt.toLiteral()).to.equal('0001-01-01+01:00');
+        it("should use the recoverable timezone", function () {
+          var dt = $date.create({ day: 2, tzhour: 14, tzminute: 17  });
+          expect(dt.toLiteral()).to.equal('0001-01-01-09:43');
         });
 
-        it("should use '-' for a negative timezone hour", function () {
-          var dt = $date.create({ tzhour: -1 });
-          expect(dt.toLiteral()).to.equal('0001-01-01-01:00');
+        it("should use '+' for a positive recoverable timezone", function () {
+          var dt = $date.create({ day: 2, tzhour: -14, tzminute: -17  });
+          expect(dt.toLiteral()).to.equal('0001-01-03+09:43');
         });
 
-        it("should use '+' for a positive timezone minute", function () {
-          var dt = $date.create({ tzminute: 1 });
-          expect(dt.toLiteral()).to.equal('0001-01-01+00:01');
+        it("should use '-' for a negative recoverable timezone", function () {
+          var dt = $date.create({ day: 2, tzhour: 14, tzminute: 17  });
+          expect(dt.toLiteral()).to.equal('0001-01-01-09:43');
         });
 
-        it("should use '-' for a negative timezone minute", function () {
-          var dt = $date.create({ tzminute: -1 });
-          expect(dt.toLiteral()).to.equal('0001-01-01-00:01');
-        });
-
-        it("should pad timezone hour and minute with a zero to 2 digits", function () {
-          var dt = $date.create({ tzhour: 1 });
-          expect(dt.toLiteral()).to.equal('0001-01-01+01:00');
-        });
-
-      });
-
-    });
-
-    describe('#toCanonicalLiteral()', function () {
-
-      it("should call #toLiteral() on the result of #normalize()", function () {
-        var dt = $date.create();
-        var normalizeSpy = sandbox.spy($date.prototype, 'normalize');
-        var toLiteralSpy = sandbox.spy($date.prototype, 'toLiteral');
-        var r = dt.toCanonicalLiteral();
-        expect(normalizeSpy).to.be.calledOn(dt);
-        expect(toLiteralSpy)
-          .to.be.calledOn(normalizeSpy.getCall(0).returnValue)
-          .and
-          .to.have.returned(r);
       });
 
     });
@@ -412,136 +386,53 @@ define([
 
     });
 
-    describe('#isZulu()', function () {
+    describe('#getRecoverableTimezone()', function () {
 
-      it("should return false if it has no timezone", function () {
+      it("should return undefined when no timezone is defined", function () {
         var dt = $date.create();
-        expect(dt.isZulu()).to.be.false;
+        expect(dt.getRecoverableTimezone()).to.be.undefined;
       });
 
       context("with a timezone", function () {
 
-        it("should return true if hour and minute are both zero", function () {
+        it("should return 0/0 if already in UTC", function () {
           var dt = $date.create({ tzhour: 0 });
-          expect(dt.isZulu()).to.be.true;
+          expect(dt.getRecoverableTimezone()).to.eql({
+            hour: 0,
+            minute: 0
+          });
         });
 
-        it("should return false if hour is non-zero", function () {
-          var dt = $date.create({ tzhour: 1 });
-          expect(dt.isZulu()).to.be.false;
-        });
-
-        it("should return false if minute is non-zero", function () {
-          var dt = $date.create({ tzminute: 1 });
-          expect(dt.isZulu()).to.be.false;
-        });
-
-      });
-
-    });
-
-    describe('#normalize()', function () {
-
-      it("should return this if there's no timezone", function () {
-        var dt = $date.create();
-        var r = dt.normalize();
-        expect(r).to.equal(dt);
-      });
-
-      context("with a timezone", function () {
-
-        it("should return this if already in UTC", function () {
-          var dt = $date.create({ tzhour: 0 });
-          var r = dt.normalize();
-          expect(r).to.equal(dt);
-        });
-
-        it("should return this when timezone is -11:59", function () {
+        it("should return -11/-59 when timezone is -11:59", function () {
           var dt = $date.create({ tzhour: -11, tzminute: -59 });
-          var r = dt.normalize();
-          expect(r).to.equal(dt);
+          expect(dt.getRecoverableTimezone()).to.eql({
+            hour: -11,
+            minute: -59
+          });
         });
 
-        it("should return this when timezone is +12:00", function () {
+        it("should return 12/00 when timezone is +12:00", function () {
           var dt = $date.create({ tzhour: 12 });
-          var r = dt.normalize();
-          expect(r).to.equal(dt);
+          expect(dt.getRecoverableTimezone()).to.eql({
+            hour: 12,
+            minute: 0
+          });
         });
 
-        context("when greater than +12:00", function () {
-
-          it("should use (24:00-timezone) as recoverable timezone", function () {
-            var dt = $date.create({ day: 2, tzhour: 12, tzminute: 42 });
-            var r = dt.normalize();
-            var x = $date.create({ tzhour: -11, tzminute: -18 });
-            expect(r).to.eql(x);
+        it("should return (24:00-timezone) when timezone is greater than +12:00", function () {
+          var dt = $date.create({ day: 2, tzhour: 12, tzminute: 42 });
+          expect(dt.getRecoverableTimezone()).to.eql({
+            hour: -11,
+            minute: -18
           });
-
-          it("should adjust the day", function () {
-            var dt = $date.create({ day: 3, tzhour: 12, tzminute: 1 });
-            var r = dt.normalize();
-            var x = $date.create({ day: 2, tzhour: -11, tzminute: -59 });
-            expect(r).to.eql(x);
-          });
-
-          it("should adjust the month", function () {
-            var dt = $date.create({ month: 2, day: 1, tzhour: 12, tzminute: 1 });
-            var r = dt.normalize();
-            var x = $date.create({ month: 1, day: 31, tzhour: -11, tzminute: -59 });
-            expect(r).to.eql(x);
-          });
-
-          it("should adjust the year", function () {
-            var dt = $date.create({ year: 2, month: 1, day: 1, tzhour: 12, tzminute: 1 });
-            var r = dt.normalize();
-            var x = $date.create({ year: 1, month: 12, day: 31, tzhour: -11, tzminute: -59 });
-            expect(r).to.eql(x);
-          });
-
         });
 
-        context("when less than -11:59", function () {
-
-          it("should use (timezone+24:00) as recoverable timezone", function () {
-            var dt = $date.create({ tzhour: -12, tzminute: -42 });
-            var r = dt.normalize();
-            var x = $date.create({ day: 2, tzhour: 11, tzminute: 18 });
-            expect(r).to.eql(x);
+        it("should return (timezone+24:00) when timezone is less than -11:59", function () {
+          var dt = $date.create({ tzhour: -12, tzminute: -42 });
+          expect(dt.getRecoverableTimezone()).to.eql({
+            hour: 11,
+            minute: 18
           });
-
-          it("should adjust the day", function () {
-            var dt = $date.create({ day: 3, tzhour: -12 });
-            var r = dt.normalize();
-            var x = $date.create({ day: 4, tzhour: 12 });
-            expect(r).to.eql(x);
-          });
-
-          it("should adjust the month", function () {
-            var dt = $date.create({ month: 1, day: 31, tzhour: -12 });
-            var r = dt.normalize();
-            var x = $date.create({ month: 2, day: 1, tzhour: 12 });
-            expect(r).to.eql(x);
-          });
-
-          it("should adjust the year", function () {
-            var dt = $date.create({ month: 12, day: 31, tzhour: -12 });
-            var r = dt.normalize();
-            var x = $date.create({ year: 2, month: 1, day: 1, tzhour: 12 });
-            expect(r).to.eql(x);
-          });
-
-          it("should throw if year will be less than 1", function () {
-            var dt = $date.create({ tzhour: 13 });
-            expect(bind(dt, 'normalize'))
-              .to.throw("cannot normalize if year will be less than 1");
-          });
-
-          it("should throw if year will be greater than 9999", function () {
-            var dt = $date.create({ year: 9999, month: 12, day: 31, tzhour: -12 });
-            expect(bind(dt, 'normalize'))
-              .to.throw("cannot normalize if year will be greater than 9999");
-          });
-
         });
 
       });

@@ -95,7 +95,10 @@ define([
   $.augment({
 
     /**
-     * @param [object] options
+     * Initialize the date with year, month, day and timezone. Normalizes the
+     * date to UTC.
+     *
+     * @param [object] options (optional)
      *
      * @option options [number] year (default 1)
      * @option options [number] month (default 1)
@@ -141,22 +144,6 @@ define([
     },
 
     /**
-     * @return [number] the timezone hour, if a timezone is defined
-     * @return [undefined] if not timezone is defined
-     */
-    getTimezoneHour: function () {
-      return this._midpoint.getTimezoneHour();
-    },
-
-    /**
-     * @return [number] the timezone minute, if a timezone is defined
-     * @return [undefined] if not timezone is defined
-     */
-    getTimezoneMinute: function () {
-      return this._midpoint.getTimezoneMinute();
-    },
-
-    /**
      * Check if the date defines a timezone.
      *
      * @return [boolean] whether the date defines a timezone or not
@@ -166,53 +153,70 @@ define([
     },
 
     /**
-     * Check if the date is UTC.
+     * Convert this date to its string representation using the recoverable
+     * timezone when defined.
      *
-     * @return [boolean] whether the date is UTC or not
+     * @return [string] the string representation
      */
-    isZulu: function () {
-      return this._midpoint.isZulu();
-    },
+    toLiteral: (function () {
+
+      function toString(value, length) {
+        var s = value.toString(10);
+        while (s.length < length) {
+          s = '0' + s;
+        }
+        return s;
+      }
+
+      return function () {
+        var s =
+          toString(this.getYear(), 4) + '-' +
+          toString(this.getMonth(), 2) + '-' +
+          toString(this.getDay(), 2);
+
+        if (this.hasTimezone()) {
+          var tz = this.getRecoverableTimezone();
+          if (tz.hour === 0 && tz.minute === 0) {
+            s += 'Z';
+          } else {
+            var tzhr;
+            var tzmin;
+            var sign;
+
+            if (tz.hour < 0) {
+              tzhr = -tz.hour;
+              sign = '-';
+            } else if (tz.hour >= 0) {
+              tzhr = tz.hour;
+              sign = '+';
+            }
+            if (tz.minute < 0) {
+              tzmin = -tz.minute;
+            } else if (tz.minute >= 0){
+              tzmin = tz.minute;
+            }
+
+            s += sign + toString(tzhr, 2) + ':' + toString(tzmin, 2);
+          }
+        }
+
+        return s;
+      };
+
+    }()),
 
     /**
-     * Get the literal using the timezone as initialized.
+     * Get the recoverable timezone for this date.
      *
-     * @return [string] the literal
+     * @return [object] the recoverable timezone as object with property `hour`
+     *   and `minute`
      */
-    toLiteral: function () {
-      return this._midpoint.toLiteral().replace('T12:00:00', '');
-    },
-
-    /**
-     * Get the canonical literal, i.e. of the normalized form.
-     *
-     * @return [string] the canonical literal
-     */
-    toCanonicalLiteral: function () {
-      return this.normalize().toLiteral();
-    },
-
-    /**
-     * Normalize the date to use a recoverable timezone.
-     *
-     * @return [sulfur/schema/date] a date with recoverable timezone
-     * @return [this] the date if it has no timezone or its timezone is
-     *   identical to its recoverable timezone
-     *
-     * @throw [Error] if the normalized date would be invalid (1 > year > 9999)
-     */
-    normalize: function () {
+    getRecoverableTimezone: function () {
       if (!this.hasTimezone()) {
-        return this;
+        return;
       }
 
-      if (this.getTimezoneHour() >= -11 && this.getTimezoneHour() < 12 ||
-          this.getTimezoneHour() === 12 && this.getTimezoneMinute() === 0)
-      {
-        return this;
-      }
-
-      var dtn = this._midpoint.normalize();
+      var dtn = this._midpoint;
 
       var dtu = $dateTime.create({
         year: this.getYear(),
@@ -222,22 +226,16 @@ define([
         tzhour: 0
       });
 
-      var tzhr = dtu.getHour() - dtn.getHour();
-      var tzmin = dtu.getMinute() - dtn.getMinute();
+      var tzhour = dtu.getHour() - dtn.getHour();
+      var tzminute = dtu.getMinute() - dtn.getMinute();
 
       // Handle an eventual overflow of the timezone minute.
-      if (tzhr > 0 && tzmin < 0) {
-        tzhr -= 1;
-        tzmin += 60;
+      if (tzhour > 0 && tzminute < 0) {
+        tzhour -= 1;
+        tzminute += 60;
       }
 
-      return $.create({
-        year: dtn.getYear(),
-        month: dtn.getMonth(),
-        day: dtn.getDay(),
-        tzhour: tzhr,
-        tzminute: tzmin
-      });
+      return { hour: tzhour, minute: tzminute };
     },
 
     /**

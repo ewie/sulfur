@@ -197,9 +197,7 @@ define([
       this._minInclusive = facets.minInclusive;
 
       if (facets.enumeration) {
-        this._enumeration = $util.uniq(
-          facets.enumeration.map($util.method('normalize')),
-          $util.method('toLiteral'));
+        this._enumeration = $util.uniq(facets.enumeration, $util.method('toLiteral'));
       }
 
       if (facets.patterns) {

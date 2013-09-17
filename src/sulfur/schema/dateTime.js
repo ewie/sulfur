@@ -125,7 +125,10 @@ define([
   $dateTime.augment({
 
     /**
-     * @param [object] options
+     * Initialize the datetime with year, month, day, hour, minute, second and
+     * a timezone. Normalized the datetime to UTC.
+     *
+     * @param [object] options (optional)
      *
      * @option options [number] year (default 1)
      * @option options [number] month (default 1)
@@ -299,6 +302,85 @@ define([
         return $util.isDefined(options[property]) ? options[property] : default_;
       }
 
+      var normalizeToZulu = (function () {
+
+        function maximumDayInMonth(month, year) {
+          month = modulo2(month, 1, 13);
+          year += quotient2(month, 1, 13);
+          if (month === 2) {
+            return isLeapYear(year) ? 29 : 28;
+          }
+          if (month < 8 && month % 2 === 1 || month >= 8 && month % 2 === 0) {
+            return 31;
+          }
+          return 30;
+        }
+
+        function modulo(a, b) {
+          return a - quotient(a, b) * b;
+        }
+
+        function modulo2(a, min, max) {
+          return modulo(a - min, max - min) + min;
+        }
+
+        function quotient(a, b) {
+          return Math.floor(a/b);
+        }
+
+        function quotient2(a, min, max) {
+          return quotient(a - min, max - min);
+        }
+
+        return function (year, month, day, hour, minute, second, tzhour, tzminute) {
+
+          var tmp = minute - tzminute;
+          minute = modulo(tmp, 60);
+          var carry = quotient(tmp, 60);
+
+          tmp = hour - tzhour + carry;
+          hour = modulo(tmp, 24);
+          carry = quotient(tmp, 24);
+
+          day += carry;
+
+          for (;;) {
+            if (day < 1) {
+              day += maximumDayInMonth(month - 1, year);
+              carry = -1;
+            } else if (day > maximumDayInMonth(month, year)) {
+              day -= maximumDayInMonth(month, year);
+              carry = 1;
+            } else {
+              break;
+            }
+
+            tmp = month + carry;
+            month = modulo2(tmp, 1, 13);
+            year += quotient2(tmp, 1, 13);
+          }
+
+          if (year < 1) {
+            throw new Error("cannot normalize if year will be less than 1");
+          }
+
+          if (year > 9999) {
+            throw new Error("cannot normalize if year will be greater than 9999");
+          }
+
+          return {
+            year: year,
+            month: month,
+            day: day,
+            hour: hour,
+            minute: minute,
+            second: second
+          };
+
+        };
+
+      }());
+
       return function (options) {
 
         options || (options = {});
@@ -321,26 +403,26 @@ define([
           second = $decimal.parse(second);
         }
 
-        var tzhour;
-        var tzminute;
-
         if ($util.isDefined(options.tzhour) || $util.isDefined(options.tzminute)) {
-          tzhour = optionOrDefault(options, 'tzhour', 0);
-          tzminute = optionOrDefault(options, 'tzminute', 0);
+          var tzhour = optionOrDefault(options, 'tzhour', 0);
+          var tzminute = optionOrDefault(options, 'tzminute', 0);
           assertTimezone(tzhour, tzminute);
-        }
-
-        this._year = year;
-        this._month = month;
-        this._day = day;
-
-        this._hour = hour;
-        this._minute = minute;
-        this._second = second;
-
-        if ($util.isDefined(tzhour)) {
-          this._tzhour = tzhour;
-          this._tzminute = tzminute;
+          var n = normalizeToZulu(year, month, day, hour, minute, second, tzhour, tzminute);
+          this._year = n.year;
+          this._month = n.month;
+          this._day = n.day;
+          this._hour = n.hour;
+          this._minute = n.minute;
+          this._second = n.second;
+          this._zulu = true;
+        } else {
+          this._year = year;
+          this._month = month;
+          this._day = day;
+          this._hour = hour;
+          this._minute = minute;
+          this._second = second;
+          this._zulu = false;
         }
 
       };
@@ -390,37 +472,18 @@ define([
     },
 
     /**
-     * @return [number] the timezone hour, if a timezone is defined
-     * @return [undefined] if not timezone is defined
-     */
-    getTimezoneHour: function () {
-      return this._tzhour;
-    },
-
-    /**
-     * @return [number] the timezone minute, if a timezone is defined
-     * @return [undefined] if not timezone is defined
-     */
-    getTimezoneMinute: function () {
-      return this._tzminute;
-    },
-
-    /**
      * Convert the datetime to its string representation.
      *
      * @return [string] the string representation
      */
     toLiteral: (function () {
 
-      function pad(s, n) {
-        while (s.length < n) {
+      function toString(value, length) {
+        var s = value.toString(10);
+        while (s.length < length) {
           s = '0' + s;
         }
         return s;
-      }
-
-      function toString(value, length) {
-        return pad(value.toString(10), length);
       }
 
       return function () {
@@ -437,25 +500,8 @@ define([
           toString(this._hour, 2) + ':' +
           toString(this._minute, 2) + ':' + sec;
 
-        if (this.isZulu()) {
+        if (this.hasTimezone()) {
           s += 'Z';
-        } else if (this.hasTimezone()) {
-          var tzhr = 0;
-          var tzmin = 0;
-          if (this._tzhour < 0) {
-            s += '-';
-            tzhr = -this._tzhour;
-          } else if (this._tzhour > 0) {
-            s += '+';
-            tzhr = this._tzhour;
-          } else if (this._tzminute < 0) {
-            s += '-';
-            tzmin = -this._tzminute;
-          } else {
-            s += '+';
-            tzmin = this._tzminute;
-          }
-          s += toString(tzhr, 2) + ':' + toString(tzmin, 2);
         }
 
         return s;
@@ -465,135 +511,19 @@ define([
     }()),
 
     /**
-     * Convert the datetime to its canonical string representation, i.e. the
-     * string representation of the normalized form.
-     *
-     * @return [string].
-     */
-    toCanonicalLiteral: function () {
-      return this.normalize().toLiteral();
-    },
-
-    /**
      * Check if the datetime defines a timezone.
      *
      * @return [boolean] whether a timezone is defined or not
      */
     hasTimezone: function () {
-      return $util.isDefined(this._tzhour);
+      return this._zulu;
     },
 
     /**
-     * Check if the datetime is UTC.
+     * Compare this datetime on the LHS with another datetime on the RHS.
      *
-     * @return [boolean] whether it's UTC or not
-     */
-    isZulu: function () {
-      return this._tzhour === 0 && this._tzminute === 0;
-    },
-
-    /**
-     * Normalize this datetime by applying the timezone offset resulting in a
-     * UTC datetime.
-     *
-     * @return [sulfur/schema/dateTime] the normalized datetime in UTC
-     * @return [this] the datetime if it has no timezone or already is UTC
-     *
-     * @throw [Error] if the normalized datetime would be invalid
-     *   (1 > year > 9999)
-     */
-    normalize: (function () {
-
-      function maximumDayInMonth(month, year) {
-        month = modulo2(month, 1, 13);
-        year += quotient2(month, 1, 13);
-        if (month === 2) {
-          return isLeapYear(year) ? 29 : 28;
-        }
-        if (month < 8 && month % 2 === 1 || month >= 8 && month % 2 === 0) {
-          return 31;
-        }
-        return 30;
-      }
-
-      function modulo(a, b) {
-        return a - quotient(a, b) * b;
-      }
-
-      function modulo2(a, min, max) {
-        return modulo(a - min, max - min) + min;
-      }
-
-      function quotient(a, b) {
-        return Math.floor(a/b);
-      }
-
-      function quotient2(a, min, max) {
-        return quotient(a - min, max - min);
-      }
-
-      return function () {
-
-        if (!this.hasTimezone() || this.isZulu()) {
-          return this;
-        }
-
-        var tzhr = this._tzhour;
-        var tzmin = this._tzminute;
-
-        var year = this._year;
-        var month = this._month;
-
-        var tmp = this._minute - tzmin;
-        var minute = modulo(tmp, 60);
-        var carry = quotient(tmp, 60);
-
-        tmp = this._hour - tzhr + carry;
-        var hour = modulo(tmp, 24);
-        carry = quotient(tmp, 24);
-
-        var day = this._day + carry;
-
-        for (;;) {
-          if (day < 1) {
-            day += maximumDayInMonth(month - 1, year);
-            carry = -1;
-          } else if (day > maximumDayInMonth(month, year)) {
-            day -= maximumDayInMonth(month, year);
-            carry = 1;
-          } else {
-            break;
-          }
-
-          tmp = month + carry;
-          month = modulo2(tmp, 1, 13);
-          year += quotient2(tmp, 1, 13);
-        }
-
-        if (year < 1) {
-          throw new Error("cannot normalize if year will be less than 1");
-        }
-
-        if (year > 9999) {
-          throw new Error("cannot normalize if year will be greater than 9999");
-        }
-
-        return $dateTime.create({
-          year: year,
-          month: month,
-          day: day,
-          hour: hour,
-          minute: minute,
-          second: this._second,
-          tzhour: 0
-        });
-
-      };
-
-    }()),
-
-    /**
-     * Compare with a datetime as RHS.
+     * Because the DataGridService ignores the timezone of either datetime,
+     * the comparison only considers year, month, day, hour, minute and second.
      *
      * @param [sulfur/schema/dateTime] other the RHS datetime
      *
@@ -608,20 +538,17 @@ define([
 
       return function (other) {
 
-        var lhs = this.normalize();
-        var rhs = other.normalize();
-
         for (var i = 0, p; i < PROPERTIES.length; i += 1) {
           p = PROPERTIES[i];
-          if (lhs[p] < rhs[p]) {
+          if (this[p] < other[p]) {
             return -1;
           }
-          if (lhs[p] > rhs[p]) {
+          if (this[p] > other[p]) {
             return 1;
           }
         }
 
-        return lhs._second.cmp(rhs._second);
+        return this._second.cmp(other._second);
 
       };
 
