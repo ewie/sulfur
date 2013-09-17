@@ -8,11 +8,11 @@
 
 define([
   'sulfur/factory',
-  'sulfur/schema/boolean',
   'sulfur/schema/pattern',
   'sulfur/schema/validators',
+  'sulfur/schema/value/boolean',
   'sulfur/util'
-], function ($factory, $boolean, $pattern, $validators, $util) {
+], function ($factory, $pattern, $validators, $booleanValue, $util) {
 
   'use strict';
 
@@ -36,14 +36,14 @@ define([
         if (facets.enumeration.length === 0) {
           if (errors) {
             errors.push([ 'enumeration',
-              "must specify at least one sulfur/schema/boolean value" ]);
+              "must specify at least one sulfur/schema/value/boolean value" ]);
           }
           return false;
         }
-        if (!facets.enumeration.every($util.bind($boolean.prototype, 'isPrototypeOf'))) {
+        if (!facets.enumeration.every($util.bind($booleanValue.prototype, 'isPrototypeOf'))) {
           if (errors) {
             errors.push([ 'enumeration',
-              "must specify only sulfur/schema/boolean values" ]);
+              "must specify only sulfur/schema/value/boolean values" ]);
           }
           return false;
         }
@@ -132,7 +132,7 @@ define([
      * @return [#validate()] the validator
      */
     validator: function () {
-      var validators = [ $validators.prototype.create($boolean.prototype) ];
+      var validators = [ $validators.prototype.create($booleanValue.prototype) ];
 
       if (this._enumeration) {
         validators.push($validators.enumeration.create(

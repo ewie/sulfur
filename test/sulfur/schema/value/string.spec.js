@@ -9,9 +9,9 @@
 
 define([
   'shared',
-  'sulfur/schema/string',
+  'sulfur/schema/value/string',
   'unorm'
-], function ($shared, $string, $unorm) {
+], function ($shared, $stringValue, $unorm) {
 
   'use strict';
 
@@ -27,7 +27,7 @@ define([
         ranges.forEach(function (range) {
           for (var value = range[0]; value <= range[1]; value += 1) {
             var s = String.fromCharCode(value);
-            expect($string.isValidLiteral(s)).to.equal(result);
+            expect($stringValue.isValidLiteral(s)).to.equal(result);
           }
         });
       }
@@ -35,7 +35,7 @@ define([
       context("with a valid string", function () {
 
         it("should accept an empty string literal", function () {
-          expect($string.isValidLiteral('')).to.be.true;
+          expect($stringValue.isValidLiteral('')).to.be.true;
         });
 
         it("should accept a string with only valid codeunits", function () {
@@ -48,17 +48,17 @@ define([
         });
 
         it("should accept a string with multiple valid codeunits", function () {
-          expect($string.isValidLiteral('abc')).to.be.true;
+          expect($stringValue.isValidLiteral('abc')).to.be.true;
         });
 
       });
 
       it("should reject a string with a lead surrogate but no matching trail surrogate", function () {
-        expect($string.isValidLiteral('\uD800')).to.be.false;
+        expect($stringValue.isValidLiteral('\uD800')).to.be.false;
       });
 
       it("should reject a string with a trail surrogate but no matching lead surrogate", function () {
-        expect($string.isValidLiteral('\uDC00')).to.be.false;
+        expect($stringValue.isValidLiteral('\uDC00')).to.be.false;
       });
 
       it("should reject a string containing a control characters U+0000..U+0008, U+000B, U+000C and U+000E..U+001F", function () {
@@ -70,11 +70,11 @@ define([
       });
 
       it("should reject a string with codeunit U+FFFE", function () {
-        expect($string.isValidLiteral('\uFFFE')).to.be.false;
+        expect($stringValue.isValidLiteral('\uFFFE')).to.be.false;
       });
 
       it("should reject a string with codeunit U+FFFF", function () {
-        expect($string.isValidLiteral('\uFFFF')).to.be.false;
+        expect($stringValue.isValidLiteral('\uFFFF')).to.be.false;
       });
 
     });
@@ -92,29 +92,29 @@ define([
       });
 
       it("should use the empty string as default value", function () {
-        var s = $string.create();
+        var s = $stringValue.create();
         expect(s.getLength()).to.equal(0);
       });
 
       it("should reject a non-string value", function () {
-        expect(bind($string, 'create', 1))
+        expect(bind($stringValue, 'create', 1))
           .to.throw("must be initialized with a string value");
       });
 
       it("should accept a string value", function () {
-        var s = $string.create('a');
+        var s = $stringValue.create('a');
         expect(s.toString()).to.equal('a');
       });
 
       it("should reject when .isValidLiteral() returns false", function () {
-        sandbox.stub($string, 'isValidLiteral').returns(false);
-        expect(bind($string, 'create', ''))
+        sandbox.stub($stringValue, 'isValidLiteral').returns(false);
+        expect(bind($stringValue, 'create', ''))
           .to.throw("invalid string value");
       });
 
       it("should normalize the value to NFC", function () {
         var nfcSpy = sandbox.spy($unorm, 'nfc');
-        var s = $string.create('\u0065\u0301');
+        var s = $stringValue.create('\u0065\u0301');
         expect(nfcSpy)
           .to.be.calledWith('\u0065\u0301')
           .to.have.returned(s.toString());
@@ -125,7 +125,7 @@ define([
     describe('#toString()', function () {
 
       it("should return the string value", function () {
-        var s = $string.create('b');
+        var s = $stringValue.create('b');
         expect(s.toString()).to.equal('b');
       });
 
@@ -134,7 +134,7 @@ define([
     describe('#getLength()', function () {
 
       it("should return the number of UTF-16 codeunits", function () {
-        var s = $string.create('\uD800\uDC00');
+        var s = $stringValue.create('\uD800\uDC00');
         expect(s.getLength()).to.equal(2);
       });
 
@@ -143,14 +143,14 @@ define([
     describe('#eq()', function () {
 
       it("should return true when LHS is equal to RHS", function () {
-        var lhs = $string.create('\u0065\u0301');
-        var rhs = $string.create('\u00E9');
+        var lhs = $stringValue.create('\u0065\u0301');
+        var rhs = $stringValue.create('\u00E9');
         expect(lhs.eq(rhs)).to.be.true;
       });
 
       it("should return false when LHS is not equal to RHS", function () {
-        var lhs = $string.create('a');
-        var rhs = $string.create('b');
+        var lhs = $stringValue.create('a');
+        var rhs = $stringValue.create('b');
         expect(lhs.eq(rhs)).to.be.false;
       });
 

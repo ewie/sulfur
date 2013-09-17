@@ -8,9 +8,9 @@
 
 define([
   'sulfur/factory',
-  'sulfur/schema/decimal',
+  'sulfur/schema/value/decimal',
   'sulfur/util'
-], function ($factory, $decimal, $util) {
+], function ($factory, $decimalValue, $util) {
 
   'use strict';
 
@@ -64,7 +64,7 @@ define([
      *
      * @param [string] s
      *
-     * @return [sulfur/schema/dateTime] the parsed datetime
+     * @return [sulfur/schema/value/dateTime] the parsed datetime
      *
      * @throw [Error] on an invalid string representation or invalid values
      */
@@ -102,7 +102,7 @@ define([
           day: parseDec(m[3]),
           hour: parseDec(m[4]),
           minute: parseDec(m[5]),
-          second: $decimal.parse(m[6])
+          second: $decimalValue.parse(m[6])
         };
         if (m[7] === 'Z') {
           options.tzhour = options.tzminute = 0;
@@ -238,11 +238,11 @@ define([
         }
       }
 
-      var MIN_SECOND = $decimal.create();
-      var MAX_SECOND = $decimal.parse('60');
+      var MIN_SECOND = $decimalValue.create();
+      var MAX_SECOND = $decimalValue.parse('60');
 
       function assertSecond(second) {
-        if (!$decimal.prototype.isPrototypeOf(second)) {
+        if (!$decimalValue.prototype.isPrototypeOf(second)) {
           throw new Error("second must be a decimal");
         }
         if (second.lt(MIN_SECOND)) {
@@ -393,14 +393,14 @@ define([
 
         var hour = optionOrDefault(options, 'hour', 0);
         var minute = optionOrDefault(options, 'minute', 0);
-        var second = optionOrDefault(options, 'second', $decimal.create());
+        var second = optionOrDefault(options, 'second', $decimalValue.create());
 
         assertTime(hour, minute, second);
 
         if (typeof second === 'number') {
-          second = $decimal.parse(second.toString(10));
+          second = $decimalValue.parse(second.toString(10));
         } else if (typeof second === 'string') {
-          second = $decimal.parse(second);
+          second = $decimalValue.parse(second);
         }
 
         if ($util.isDefined(options.tzhour) || $util.isDefined(options.tzminute)) {
@@ -465,7 +465,7 @@ define([
     },
 
     /**
-     * @return [sulfur/schema/decimal] the second
+     * @return [sulfur/schema/value/decimal] the second
      */
     getSecond: function () {
       return this._second;
@@ -525,7 +525,7 @@ define([
      * Because the DataGridService ignores the timezone of either datetime,
      * the comparison only considers year, month, day, hour, minute and second.
      *
-     * @param [sulfur/schema/dateTime] other the RHS datetime
+     * @param [sulfur/schema/value/dateTime] other the RHS datetime
      *
      * @return [-1] if less than `other`
      * @return [0] if equal to `other`
@@ -557,7 +557,7 @@ define([
     /**
      * Check for equality with another datetime.
      *
-     * @param [sulfur/schema/dateTime] other
+     * @param [sulfur/schema/value/dateTime] other
      *
      * @return [boolean] whether equal to `other` or not
      */
@@ -568,7 +568,7 @@ define([
     /**
      * Check if less than another datetime.
      *
-     * @param [sulfur/schema/dateTime] other
+     * @param [sulfur/schema/value/dateTime] other
      *
      * @return [boolean] whether less than `other` or not
      */
@@ -579,7 +579,7 @@ define([
     /**
      * Check if greater than another datetime.
      *
-     * @param [sulfur/schema/dateTime] other
+     * @param [sulfur/schema/value/dateTime] other
      *
      * @return [boolean] whether greater than `other` or not
      */
@@ -590,7 +590,7 @@ define([
     /**
      * Check if less than or equal to another datetime.
      *
-     * @param [sulfur/schema/dateTime] other
+     * @param [sulfur/schema/value/dateTime] other
      *
      * @return [boolean] whether less than or equal `other` or not
      */
@@ -601,7 +601,7 @@ define([
     /**
      * Check if greater than or equal to another datetime.
      *
-     * @param [sulfur/schema/dateTime] other
+     * @param [sulfur/schema/value/dateTime] other
      *
      * @return [boolean] whether greater than or equal to `other` or not
      */

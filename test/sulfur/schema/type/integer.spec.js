@@ -9,18 +9,18 @@
 
 define([
   'shared',
-  'sulfur/schema/integer',
+  'sulfur/schema/pattern',
   'sulfur/schema/type/decimal',
   'sulfur/schema/type/integer',
-  'sulfur/schema/pattern',
-  'sulfur/schema/validators'
+  'sulfur/schema/validators',
+  'sulfur/schema/value/integer'
 ], function (
     $shared,
-    $integer,
+    $pattern,
     $decimalType,
     $integerType,
-    $pattern,
-    $validators
+    $validators,
+    $integerValue
 ) {
 
   'use strict';
@@ -61,9 +61,9 @@ define([
 
       context("with facet `enumeration`", function () {
 
-        it("should accept an array of sulfur/schema/integer values", function () {
+        it("should accept an array of sulfur/schema/value/integer values", function () {
           expect($integerType.validateFacets({
-            enumeration: [ $integer.parse('1') ]
+            enumeration: [ $integerValue.parse('1') ]
           })).to.be.true;
         });
 
@@ -78,7 +78,7 @@ define([
             $integerType.validateFacets({ enumeration: [] }, errors);
             expect(errors).to.include.something.eql([
               'enumeration',
-              "must specify at least one sulfur/schema/integer value"
+              "must specify at least one sulfur/schema/value/integer value"
             ]);
           });
 
@@ -95,7 +95,7 @@ define([
             $integerType.validateFacets({ enumeration: [1] }, errors);
             expect(errors).to.include.something.eql([
               'enumeration',
-              "must specify only sulfur/schema/integer values"
+              "must specify only sulfur/schema/value/integer values"
             ]);
           });
 
@@ -127,9 +127,9 @@ define([
 
       context("with facet `maxExclusive`", function () {
 
-        it("should accept a sulfur/schema/integer value", function () {
+        it("should accept a sulfur/schema/value/integer value", function () {
           expect($integerType.validateFacets({
-            maxExclusive: $integer.parse('3')
+            maxExclusive: $integerValue.parse('3')
           })).to.be.true;
         });
 
@@ -144,7 +144,7 @@ define([
             $integerType.validateFacets({ maxExclusive: 3 }, errors);
             expect(errors).to.include.something.eql([
               'maxExclusive',
-              "must be a sulfur/schema/integer value"
+              "must be a sulfur/schema/value/integer value"
             ]);
           });
 
@@ -154,9 +154,9 @@ define([
 
       context("with facet `maxInclusive`", function () {
 
-        it("should accept a sulfur/schema/integer value", function () {
+        it("should accept a sulfur/schema/value/integer value", function () {
           expect($integerType.validateFacets({
-            maxExclusive: $integer.parse('3')
+            maxExclusive: $integerValue.parse('3')
           })).to.be.true;
         });
 
@@ -171,7 +171,7 @@ define([
             $integerType.validateFacets({ maxInclusive: 3 }, errors);
             expect(errors).to.include.something.eql([
               'maxInclusive',
-              "must be a sulfur/schema/integer value"
+              "must be a sulfur/schema/value/integer value"
             ]);
           });
 
@@ -183,7 +183,7 @@ define([
 
         it("should accept an integer value", function () {
           expect($integerType.validateFacets({
-            minExclusive: $integer.parse('1')
+            minExclusive: $integerValue.parse('1')
           })).to.be.true;
         });
 
@@ -198,7 +198,7 @@ define([
             $integerType.validateFacets({ minExclusive: 1 }, errors);
             expect(errors).to.include.something.eql([
               'minExclusive',
-              "must be a sulfur/schema/integer value"
+              "must be a sulfur/schema/value/integer value"
             ]);
           });
 
@@ -210,7 +210,7 @@ define([
 
         it("should accept an integer value", function () {
           expect($integerType.validateFacets({
-            minInclusive: $integer.parse('1')
+            minInclusive: $integerValue.parse('1')
           })).to.be.true;
         });
 
@@ -225,7 +225,7 @@ define([
             $integerType.validateFacets({ minInclusive: 1 }, errors);
             expect(errors).to.include.something.eql([
               'minInclusive',
-              "must be a sulfur/schema/integer value"
+              "must be a sulfur/schema/value/integer value"
             ]);
           });
 
@@ -243,20 +243,20 @@ define([
         expect($validators.all.prototype).to.be.prototypeOf(v);
       });
 
-      it("should include a validator/prototype matching sulfur/schema/integer", function () {
+      it("should include a validator/prototype matching sulfur/schema/value/integer", function () {
         var type = $integerType.create();
         var v = type.validator();
         expect(v).to.eql($validators.all.create([
-          $validators.prototype.create($integer.prototype)
+          $validators.prototype.create($integerValue.prototype)
         ]));
       });
 
       it("should include a validator/enumeration when facet `enumeration` is defined", function () {
-        var type = $integerType.create({ enumeration: [ $integer.create() ] });
+        var type = $integerType.create({ enumeration: [ $integerValue.create() ] });
         var v = type.validator();
         expect(v).to.eql($validators.all.create([
-          $validators.prototype.create($integer.prototype),
-          $validators.enumeration.create([ $integer.create() ], { testMethod: 'eq' })
+          $validators.prototype.create($integerValue.prototype),
+          $validators.enumeration.create([ $integerValue.create() ], { testMethod: 'eq' })
         ]));
       });
 
@@ -264,7 +264,7 @@ define([
         var type = $integerType.create({ fractionDigits: 0 });
         var v = type.validator();
         expect(v).to.eql($validators.all.create([
-          $validators.prototype.create($integer.prototype),
+          $validators.prototype.create($integerValue.prototype),
           $validators.property.create(
             'countFractionDigits',
             $validators.maximum.create(0)
@@ -273,38 +273,38 @@ define([
       });
 
       it("should include a validator/maximum (exclusive) when facet `maxExclusive` is defined", function () {
-        var type = $integerType.create({ maxExclusive: $integer.create() });
+        var type = $integerType.create({ maxExclusive: $integerValue.create() });
         var v = type.validator();
         expect(v).to.eql($validators.all.create([
-          $validators.prototype.create($integer.prototype),
-          $validators.maximum.create($integer.create(), { exclusive: true })
+          $validators.prototype.create($integerValue.prototype),
+          $validators.maximum.create($integerValue.create(), { exclusive: true })
         ]));
       });
 
       it("should include a validator/maximum (inclusive) when facet `maxInclusive` is defined", function () {
-        var type = $integerType.create({ maxInclusive: $integer.create() });
+        var type = $integerType.create({ maxInclusive: $integerValue.create() });
         var v = type.validator();
         expect(v).to.eql($validators.all.create([
-          $validators.prototype.create($integer.prototype),
-          $validators.maximum.create($integer.create())
+          $validators.prototype.create($integerValue.prototype),
+          $validators.maximum.create($integerValue.create())
         ]));
       });
 
       it("should include a validator/minimum (exclusive) when facet `minExclusive` is defined", function () {
-        var type = $integerType.create({ minExclusive: $integer.create() });
+        var type = $integerType.create({ minExclusive: $integerValue.create() });
         var v = type.validator();
         expect(v).to.eql($validators.all.create([
-          $validators.prototype.create($integer.prototype),
-          $validators.minimum.create($integer.create(), { exclusive: true })
+          $validators.prototype.create($integerValue.prototype),
+          $validators.minimum.create($integerValue.create(), { exclusive: true })
         ]));
       });
 
       it("should include a validator/minimum (inclusive) when facet `minInclusive` is defined", function () {
-        var type = $integerType.create({ minInclusive: $integer.create() });
+        var type = $integerType.create({ minInclusive: $integerValue.create() });
         var v = type.validator();
         expect(v).to.eql($validators.all.create([
-          $validators.prototype.create($integer.prototype),
-          $validators.minimum.create($integer.create())
+          $validators.prototype.create($integerValue.prototype),
+          $validators.minimum.create($integerValue.create())
         ]));
       });
 
@@ -312,7 +312,7 @@ define([
         var type = $integerType.create({ patterns: [ $pattern.create('(0|1[0-9]*)(\\.[0-9]{2})?') ] });
         var v = type.validator();
         expect(v).to.eql($validators.all.create([
-          $validators.prototype.create($integer.prototype),
+          $validators.prototype.create($integerValue.prototype),
           $validators.some.create([ $validators.pattern.create($pattern.create('(0|1[0-9]*)(\\.[0-9]{2})?')) ])
         ]));
       });
@@ -321,7 +321,7 @@ define([
         var type = $integerType.create({ totalDigits: 3 });
         var v = type.validator();
         expect(v).to.eql($validators.all.create([
-          $validators.prototype.create($integer.prototype),
+          $validators.prototype.create($integerValue.prototype),
           $validators.property.create(
             'countDigits',
             $validators.maximum.create(3)

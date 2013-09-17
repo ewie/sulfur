@@ -8,10 +8,10 @@
 
 define([
   'sulfur/schema/type/decimal',
-  'sulfur/schema/integer',
   'sulfur/schema/validators',
+  'sulfur/schema/value/integer',
   'sulfur/util'
-], function ($decimalType, $integer, $validators, $util) {
+], function ($decimalType, $validators, $integerValue, $util) {
 
   'use strict';
 
@@ -20,19 +20,19 @@ define([
     validateFacets: (function () {
 
       function isInteger(x) {
-        return $integer.prototype.isPrototypeOf(x);
+        return $integerValue.prototype.isPrototypeOf(x);
       }
 
       function validateEnumerationFacet(facets, errors) {
         if (facets.enumeration.length === 0) {
           if (errors) {
-            errors.push([ 'enumeration', "must specify at least one sulfur/schema/integer value" ]);
+            errors.push([ 'enumeration', "must specify at least one sulfur/schema/value/integer value" ]);
           }
           return false;
         }
         if (!facets.enumeration.every(isInteger)) {
           if (errors) {
-            errors.push([ 'enumeration', "must specify only sulfur/schema/integer values" ]);
+            errors.push([ 'enumeration', "must specify only sulfur/schema/value/integer values" ]);
           }
           return false;
         }
@@ -44,7 +44,7 @@ define([
           return true;
         }
         if (errors) {
-          errors.push([ 'minInclusive', "must be a sulfur/schema/integer value" ]);
+          errors.push([ 'minInclusive', "must be a sulfur/schema/value/integer value" ]);
         }
         return false;
       }
@@ -54,7 +54,7 @@ define([
           return true;
         }
         if (errors) {
-          errors.push([ 'maxInclusive', "must be a sulfur/schema/integer value" ]);
+          errors.push([ 'maxInclusive', "must be a sulfur/schema/value/integer value" ]);
         }
         return false;
       }
@@ -64,7 +64,7 @@ define([
           return true;
         }
         if (errors) {
-          errors.push([ 'minExclusive', "must be a sulfur/schema/integer value" ]);
+          errors.push([ 'minExclusive', "must be a sulfur/schema/value/integer value" ]);
         }
         return false;
       }
@@ -74,7 +74,7 @@ define([
           return true;
         }
         if (errors) {
-          errors.push([ 'maxExclusive', "must be a sulfur/schema/integer value" ]);
+          errors.push([ 'maxExclusive', "must be a sulfur/schema/value/integer value" ]);
         }
         return false;
       }
@@ -113,7 +113,7 @@ define([
     validator: function () {
       var v = $decimalType.prototype.validator.call(this);
       var validators = [
-        $validators.prototype.create($integer.prototype)
+        $validators.prototype.create($integerValue.prototype)
       ].concat(v._validators.slice(1));
       return $validators.all.create(validators);
     }

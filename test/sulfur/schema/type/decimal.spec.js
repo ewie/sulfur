@@ -9,11 +9,11 @@
 
 define([
   'shared',
-  'sulfur/schema/type/decimal',
-  'sulfur/schema/decimal',
   'sulfur/schema/pattern',
-  'sulfur/schema/validators'
-], function ($shared, $decimalType, $decimal, $pattern, $validators) {
+  'sulfur/schema/type/decimal',
+  'sulfur/schema/validators',
+  'sulfur/schema/value/decimal'
+], function ($shared, $pattern, $decimalType, $validators, $decimalValue) {
 
   'use strict';
 
@@ -27,7 +27,7 @@ define([
       context("with facet `enumeration`", function () {
 
         it("should accept decimal values", function () {
-          expect($decimalType.validateFacets({ enumeration: [ $decimal.parse('1.2') ] })).to.be.true;
+          expect($decimalType.validateFacets({ enumeration: [ $decimalValue.parse('1.2') ] })).to.be.true;
         });
 
         context("with no values", function () {
@@ -145,7 +145,7 @@ define([
       context("with facet `maxExclusive`", function () {
 
         it("should accept decimal values", function () {
-          expect($decimalType.validateFacets({ maxExclusive: $decimal.parse('3.2') })).to.be.true;
+          expect($decimalType.validateFacets({ maxExclusive: $decimalValue.parse('3.2') })).to.be.true;
         });
 
         context("with a non-decimal value", function () {
@@ -169,16 +169,16 @@ define([
 
           it("should reject", function () {
             expect($decimalType.validateFacets({
-              maxExclusive: $decimal.parse('1'),
-              maxInclusive: $decimal.parse('1')
+              maxExclusive: $decimalValue.parse('1'),
+              maxInclusive: $decimalValue.parse('1')
             })).to.be.false;
           });
 
           it("should add a validation error", function () {
             var errors = [];
             $decimalType.validateFacets({
-              maxExclusive: $decimal.parse('1'),
-              maxInclusive: $decimal.parse('1')
+              maxExclusive: $decimalValue.parse('1'),
+              maxInclusive: $decimalValue.parse('1')
             }, errors);
             expect(errors).to.include.something.eql([
               'maxExclusive',
@@ -192,16 +192,16 @@ define([
 
           it("should reject", function () {
             expect($decimalType.validateFacets({
-              maxExclusive: $decimal.parse('1'),
-              minInclusive: $decimal.parse('3')
+              maxExclusive: $decimalValue.parse('1'),
+              minInclusive: $decimalValue.parse('3')
             })).to.be.false;
           });
 
           it("should add a validation error", function () {
             var errors = [];
             $decimalType.validateFacets({
-              maxExclusive: $decimal.parse('1'),
-              minInclusive: $decimal.parse('3')
+              maxExclusive: $decimalValue.parse('1'),
+              minInclusive: $decimalValue.parse('3')
             }, errors);
             expect(errors).to.include.something.eql([
               'maxExclusive',
@@ -215,16 +215,16 @@ define([
 
           it("should reject", function () {
             expect($decimalType.validateFacets({
-              maxExclusive: $decimal.parse('1'),
-              minInclusive: $decimal.parse('1')
+              maxExclusive: $decimalValue.parse('1'),
+              minInclusive: $decimalValue.parse('1')
             })).to.be.false;
           });
 
           it("should add a validation error", function () {
             var errors = [];
             $decimalType.validateFacets({
-              maxExclusive: $decimal.parse('1'),
-              minInclusive: $decimal.parse('1')
+              maxExclusive: $decimalValue.parse('1'),
+              minInclusive: $decimalValue.parse('1')
             }, errors);
             expect(errors).to.include.something.eql([
               'maxExclusive',
@@ -238,16 +238,16 @@ define([
 
           it("should reject", function () {
             expect($decimalType.validateFacets({
-              maxExclusive: $decimal.parse('1'),
-              minExclusive: $decimal.parse('3')
+              maxExclusive: $decimalValue.parse('1'),
+              minExclusive: $decimalValue.parse('3')
             })).to.be.false;
           });
 
           it("should add a validation error", function () {
             var errors = [];
             $decimalType.validateFacets({
-              maxExclusive: $decimal.parse('1'),
-              minExclusive: $decimal.parse('3')
+              maxExclusive: $decimalValue.parse('1'),
+              minExclusive: $decimalValue.parse('3')
             }, errors);
             expect(errors).to.include.something.eql([
               'maxExclusive',
@@ -262,7 +262,7 @@ define([
       context("with facet `maxInclusive`", function () {
 
         it("should accept decimal values", function () {
-          expect($decimalType.validateFacets({ maxInclusive: $decimal.parse('3.2') })).to.be.true;
+          expect($decimalType.validateFacets({ maxInclusive: $decimalValue.parse('3.2') })).to.be.true;
         });
 
         context("with a non-decimal value", function () {
@@ -286,16 +286,16 @@ define([
 
           it("should reject", function () {
             expect($decimalType.validateFacets({
-              maxInclusive: $decimal.parse('1'),
-              minInclusive: $decimal.parse('3')
+              maxInclusive: $decimalValue.parse('1'),
+              minInclusive: $decimalValue.parse('3')
             })).to.be.false;
           });
 
           it("should add a validation error", function () {
             var errors = [];
             $decimalType.validateFacets({
-              maxInclusive: $decimal.parse('1'),
-              minInclusive: $decimal.parse('3')
+              maxInclusive: $decimalValue.parse('1'),
+              minInclusive: $decimalValue.parse('3')
             }, errors);
             expect(errors).to.include.something.eql([
               'maxInclusive',
@@ -309,16 +309,16 @@ define([
 
           it("should reject", function () {
             expect($decimalType.validateFacets({
-              maxInclusive: $decimal.parse('1'),
-              minExclusive: $decimal.parse('3')
+              maxInclusive: $decimalValue.parse('1'),
+              minExclusive: $decimalValue.parse('3')
             })).to.be.false;
           });
 
           it("should add a validation error", function () {
             var errors = [];
             $decimalType.validateFacets({
-              maxInclusive: $decimal.parse('1'),
-              minExclusive: $decimal.parse('3')
+              maxInclusive: $decimalValue.parse('1'),
+              minExclusive: $decimalValue.parse('3')
             }, errors);
             expect(errors).to.include.something.eql([
               'maxInclusive',
@@ -332,16 +332,16 @@ define([
 
           it("should reject", function () {
             expect($decimalType.validateFacets({
-              maxInclusive: $decimal.parse('1'),
-              minExclusive: $decimal.parse('1')
+              maxInclusive: $decimalValue.parse('1'),
+              minExclusive: $decimalValue.parse('1')
             })).to.be.false;
           });
 
           it("should add a validation error", function () {
             var errors = [];
             $decimalType.validateFacets({
-              maxInclusive: $decimal.parse('1'),
-              minExclusive: $decimal.parse('1')
+              maxInclusive: $decimalValue.parse('1'),
+              minExclusive: $decimalValue.parse('1')
             }, errors);
             expect(errors).to.include.something.eql([
               'maxInclusive',
@@ -356,7 +356,7 @@ define([
       context("with facet `minExclusive`", function () {
 
         it("should accept decimal values", function () {
-          expect($decimalType.validateFacets({ minExclusive: $decimal.parse('1.2') })).to.be.true;
+          expect($decimalType.validateFacets({ minExclusive: $decimalValue.parse('1.2') })).to.be.true;
         });
 
         context("with non-decimal values", function () {
@@ -380,16 +380,16 @@ define([
 
           it("should reject", function () {
             expect($decimalType.validateFacets({
-              minExclusive: $decimal.parse('1'),
-              minInclusive: $decimal.parse('1')
+              minExclusive: $decimalValue.parse('1'),
+              minInclusive: $decimalValue.parse('1')
             })).to.be.false;
           });
 
           it("should add a validation error", function () {
             var errors = [];
             $decimalType.validateFacets({
-              minExclusive: $decimal.parse('1'),
-              minInclusive: $decimal.parse('1')
+              minExclusive: $decimalValue.parse('1'),
+              minInclusive: $decimalValue.parse('1')
             }, errors);
             expect(errors).to.include.something.eql([
               'minExclusive',
@@ -404,7 +404,7 @@ define([
       context("with facet `minInclusive`", function () {
 
         it("should accept decimal values", function () {
-          expect($decimalType.validateFacets({ minInclusive: $decimal.parse('1.2') })).to.be.true;
+          expect($decimalType.validateFacets({ minInclusive: $decimalValue.parse('1.2') })).to.be.true;
         });
 
         context("with a non-decimal value", function () {
@@ -563,19 +563,19 @@ define([
 
           it("should use the values", function () {
             var type = $decimalType.create({
-              enumeration: [ $decimal.parse('1') ]
+              enumeration: [ $decimalValue.parse('1') ]
             });
-            expect(type.getEnumerationValues()).to.eql([ $decimal.parse('1') ]);
+            expect(type.getEnumerationValues()).to.eql([ $decimalValue.parse('1') ]);
           });
 
           it("should ignore duplicate values", function () {
             var type = $decimalType.create({
               enumeration: [
-                $decimal.parse('1'),
-                $decimal.parse('1')
+                $decimalValue.parse('1'),
+                $decimalValue.parse('1')
               ]
             });
-            expect(type.getEnumerationValues()).to.eql([ $decimal.parse('1') ]);
+            expect(type.getEnumerationValues()).to.eql([ $decimalValue.parse('1') ]);
           });
 
         });
@@ -587,30 +587,30 @@ define([
 
         it("should use facet `maxExclusive` when given", function () {
           var type = $decimalType.create({
-            maxExclusive: $decimal.parse('1')
+            maxExclusive: $decimalValue.parse('1')
           });
-          expect(type.getMaxExclusiveValue()).to.eql($decimal.parse('1'));
+          expect(type.getMaxExclusiveValue()).to.eql($decimalValue.parse('1'));
         });
 
         it("should use facet `maxInclusive` when given", function () {
           var type = $decimalType.create({
-            maxInclusive: $decimal.parse('1')
+            maxInclusive: $decimalValue.parse('1')
           });
-          expect(type.getMaxInclusiveValue()).to.eql($decimal.parse('1'));
+          expect(type.getMaxInclusiveValue()).to.eql($decimalValue.parse('1'));
         });
 
         it("should use facet `minExclusive` when given", function () {
           var type = $decimalType.create({
-            minExclusive: $decimal.parse('1')
+            minExclusive: $decimalValue.parse('1')
           });
-          expect(type.getMinExclusiveValue()).to.eql($decimal.parse('1'));
+          expect(type.getMinExclusiveValue()).to.eql($decimalValue.parse('1'));
         });
 
         it("should use facet `minInclusive` when given", function () {
           var type = $decimalType.create({
-            minInclusive: $decimal.parse('1')
+            minInclusive: $decimalValue.parse('1')
           });
-          expect(type.getMinInclusiveValue()).to.eql($decimal.parse('1'));
+          expect(type.getMinInclusiveValue()).to.eql($decimalValue.parse('1'));
         });
 
         context("with facet `patterns`", function () {
@@ -651,7 +651,7 @@ define([
       });
 
       it("should return the values of facet `enumeration` when defined", function () {
-        var values = [ $decimal.create() ];
+        var values = [ $decimalValue.create() ];
         var type = $decimalType.create({ enumeration: values });
         expect(type.getEnumerationValues()).to.eql(values);
       });
@@ -680,7 +680,7 @@ define([
       });
 
       it("should return the values of facet `maxExclusive` when defined", function () {
-        var value = $decimal.create();
+        var value = $decimalValue.create();
         var type = $decimalType.create({ maxExclusive: value });
         expect(type.getMaxExclusiveValue()).to.eql(value);
       });
@@ -695,7 +695,7 @@ define([
       });
 
       it("should return the values of facet `maxInclusive` when defined", function () {
-        var value = $decimal.create();
+        var value = $decimalValue.create();
         var type = $decimalType.create({ maxInclusive: value });
         expect(type.getMaxInclusiveValue()).to.eql(value);
       });
@@ -710,7 +710,7 @@ define([
       });
 
       it("should return the values of facet `minExclusive` when defined", function () {
-        var value = $decimal.create();
+        var value = $decimalValue.create();
         var type = $decimalType.create({ minExclusive: value });
         expect(type.getMinExclusiveValue()).to.eql(value);
       });
@@ -725,7 +725,7 @@ define([
       });
 
       it("should return the values of facet `minInclusive` when defined", function () {
-        var value = $decimal.create();
+        var value = $decimalValue.create();
         var type = $decimalType.create({ minInclusive: value });
         expect(type.getMinInclusiveValue()).to.eql(value);
       });
@@ -769,20 +769,20 @@ define([
         expect($validators.all.prototype).to.be.prototypeOf(v);
       });
 
-      it("should include a validator/prototype matching sulfur/schema/decimal", function () {
+      it("should include a validator/prototype matching sulfur/schema/value/decimal", function () {
         var type = $decimalType.create();
         var v = type.validator();
         expect(v).to.eql($validators.all.create([
-          $validators.prototype.create($decimal.prototype)
+          $validators.prototype.create($decimalValue.prototype)
         ]));
       });
 
       it("should include a validator/enumeration when facet `enumeration` is defined", function () {
-        var type = $decimalType.create({ enumeration: [ $decimal.create() ] });
+        var type = $decimalType.create({ enumeration: [ $decimalValue.create() ] });
         var v = type.validator();
         expect(v).to.eql($validators.all.create([
-          $validators.prototype.create($decimal.prototype),
-          $validators.enumeration.create([ $decimal.create() ], { testMethod: 'eq' })
+          $validators.prototype.create($decimalValue.prototype),
+          $validators.enumeration.create([ $decimalValue.create() ], { testMethod: 'eq' })
         ]));
       });
 
@@ -790,7 +790,7 @@ define([
         var type = $decimalType.create({ fractionDigits: 2 });
         var v = type.validator();
         expect(v).to.eql($validators.all.create([
-          $validators.prototype.create($decimal.prototype),
+          $validators.prototype.create($decimalValue.prototype),
           $validators.property.create(
             'countFractionDigits',
             $validators.maximum.create(2)
@@ -799,38 +799,38 @@ define([
       });
 
       it("should include a validator/maximum (exclusive) when facet `maxExclusive` is defined", function () {
-        var type = $decimalType.create({ maxExclusive: $decimal.create() });
+        var type = $decimalType.create({ maxExclusive: $decimalValue.create() });
         var v = type.validator();
         expect(v).to.eql($validators.all.create([
-          $validators.prototype.create($decimal.prototype),
-          $validators.maximum.create($decimal.create(), { exclusive: true })
+          $validators.prototype.create($decimalValue.prototype),
+          $validators.maximum.create($decimalValue.create(), { exclusive: true })
         ]));
       });
 
       it("should include a validator/maximum (inclusive) when facet `maxInclusive` is defined", function () {
-        var type = $decimalType.create({ maxInclusive: $decimal.create() });
+        var type = $decimalType.create({ maxInclusive: $decimalValue.create() });
         var v = type.validator();
         expect(v).to.eql($validators.all.create([
-          $validators.prototype.create($decimal.prototype),
-          $validators.maximum.create($decimal.create())
+          $validators.prototype.create($decimalValue.prototype),
+          $validators.maximum.create($decimalValue.create())
         ]));
       });
 
       it("should include a validator/minimum (exclusive) when facet `minExclusive` is defined", function () {
-        var type = $decimalType.create({ minExclusive: $decimal.create() });
+        var type = $decimalType.create({ minExclusive: $decimalValue.create() });
         var v = type.validator();
         expect(v).to.eql($validators.all.create([
-          $validators.prototype.create($decimal.prototype),
-          $validators.minimum.create($decimal.create(), { exclusive: true })
+          $validators.prototype.create($decimalValue.prototype),
+          $validators.minimum.create($decimalValue.create(), { exclusive: true })
         ]));
       });
 
       it("should include a validator/minimum (inclusive) when facet `minInclusive` is defined", function () {
-        var type = $decimalType.create({ minInclusive: $decimal.create() });
+        var type = $decimalType.create({ minInclusive: $decimalValue.create() });
         var v = type.validator();
         expect(v).to.eql($validators.all.create([
-          $validators.prototype.create($decimal.prototype),
-          $validators.minimum.create($decimal.create())
+          $validators.prototype.create($decimalValue.prototype),
+          $validators.minimum.create($decimalValue.create())
         ]));
       });
 
@@ -838,7 +838,7 @@ define([
         var type = $decimalType.create({ patterns: [ $pattern.create('(0|1[0-9]*)(\\.[0-9]{2})?') ] });
         var v = type.validator();
         expect(v).to.eql($validators.all.create([
-          $validators.prototype.create($decimal.prototype),
+          $validators.prototype.create($decimalValue.prototype),
           $validators.some.create([ $validators.pattern.create($pattern.create('(0|1[0-9]*)(\\.[0-9]{2})?')) ])
         ]));
       });
@@ -847,7 +847,7 @@ define([
         var type = $decimalType.create({ totalDigits: 3 });
         var v = type.validator();
         expect(v).to.eql($validators.all.create([
-          $validators.prototype.create($decimal.prototype),
+          $validators.prototype.create($decimalValue.prototype),
           $validators.property.create(
             'countDigits',
             $validators.maximum.create(3)

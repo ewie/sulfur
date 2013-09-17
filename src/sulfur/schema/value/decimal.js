@@ -147,7 +147,7 @@ define([
     /**
      * Compare with a decimal as RHS.
      *
-     * @param [sulfur/schema/decimal] other the RHS datetime
+     * @param [sulfur/schema/value/decimal] other the RHS datetime
      *
      * @return [-1] if less than `other`
      * @return [0] if equal to `other`
@@ -178,7 +178,7 @@ define([
     /**
      * Check if equal to another decimal.
      *
-     * @param [decimal] other
+     * @param [sulfur/schema/decimal/value/decimal] other
      *
      * @return [boolean] whether both decimals are equal
      */
@@ -189,7 +189,7 @@ define([
     /**
      * Check if the decimal is less than another decimal.
      *
-     * @param [decimal] other
+     * @param [sulfur/schema/decimal/value/decimal] other
      *
      * @return [boolean] whether the decimal is less than the other
      */
@@ -200,7 +200,7 @@ define([
     /**
      * Check if the decimal is greater than another decimal.
      *
-     * @param [decimal] other
+     * @param [sulfur/schema/decimal/value/decimal] other
      *
      * @return [boolean] whether the decimal is greater than the other
      */
@@ -211,7 +211,7 @@ define([
     /**
      * Check if the decimal is less than or equal to another decimal.
      *
-     * @param [decimal] other
+     * @param [sulfur/schema/decimal/value/decimal] other
      *
      * @return [boolean] whether the decimal is less than or equal to the other
      */
@@ -222,7 +222,7 @@ define([
     /**
      * Check if the decimal is greater than or equal to another decimal.
      *
-     * @param [decimal] other
+     * @param [sulfur/schema/decimal/value/decimal] other
      *
      * @return [boolean] whether the decimal is greater than or equal to the other
      */

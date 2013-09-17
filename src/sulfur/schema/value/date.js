@@ -8,8 +8,8 @@
 
 define([
   'sulfur/factory',
-  'sulfur/schema/dateTime'
-], function ($factory, $dateTime) {
+  'sulfur/schema/value/dateTime'
+], function ($factory, $dateTimeValue) {
 
   'use strict';
 
@@ -52,7 +52,7 @@ define([
      *
      * @param [string] s a valid date literal
      *
-     * @return [sulfur/schema/date] the parsed date
+     * @return [sulfur/schema/value/date] the parsed date
      *
      * @throw [Error] if there are syntax errors
      * @throw [Error] if there are semantic errors (invalid date or timezone)
@@ -112,7 +112,7 @@ define([
       options || (options = {});
 
       // Represent the date by using a dateTime with the date's midpoint (noon).
-      this._midpoint = $dateTime.create({
+      this._midpoint = $dateTimeValue.create({
         year: options.year,
         month: options.month,
         day: options.day,
@@ -218,7 +218,7 @@ define([
 
       var dtn = this._midpoint;
 
-      var dtu = $dateTime.create({
+      var dtu = $dateTimeValue.create({
         year: this.getYear(),
         month: this.getMonth(),
         day: this.getDay(),
@@ -241,7 +241,7 @@ define([
     /**
      * Compare with a datetime as RHS.
      *
-     * @param [sulfur/schema/date] other the RHS datetime
+     * @param [sulfur/schema/value/date] other the RHS datetime
      *
      * @return [-1] if less than `other`
      * @return [0] if equal to `other`
@@ -254,7 +254,7 @@ define([
     /**
      * Check for equality with another date.
      *
-     * @param [sulfur/schema/date] other
+     * @param [sulfur/schema/value/date] other
      *
      * @return [boolean] whether equal to `other` or not
      */
@@ -265,7 +265,7 @@ define([
     /**
      * Check if less than another date.
      *
-     * @param [sulfur/schema/date] other
+     * @param [sulfur/schema/value/date] other
      *
      * @return [boolean] whether less than `other` or not
      */
@@ -276,7 +276,7 @@ define([
     /**
      * Check if greater than another date.
      *
-     * @param [sulfur/schema/date] other
+     * @param [sulfur/schema/value/date] other
      *
      * @return [boolean] whether greater than `other` or not
      */
@@ -287,7 +287,7 @@ define([
     /**
      * Check if less than or equal to another date.
      *
-     * @param [sulfur/schema/date] other
+     * @param [sulfur/schema/value/date] other
      *
      * @return [boolean] whether less than or equal `other` or not
      */
@@ -298,7 +298,7 @@ define([
     /**
      * Check if greater than or equal to another date.
      *
-     * @param [sulfur/schema/date] other
+     * @param [sulfur/schema/value/date] other
      *
      * @return [boolean] whether greater than or equal to `other` or not
      */

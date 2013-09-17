@@ -8,11 +8,11 @@
 
 define([
   'sulfur/factory',
-  'sulfur/schema/decimal',
   'sulfur/schema/pattern',
   'sulfur/schema/validators',
+  'sulfur/schema/value/decimal',
   'sulfur/util'
-], function ($factory, $decimal, $pattern, $validators, $util) {
+], function ($factory, $pattern, $validators, $decimalValue, $util) {
 
   'use strict';
 
@@ -27,17 +27,17 @@ define([
      *
      * @option facets [array] enumeration
      * @option facets [number] fractionDigits
-     * @option facets [sulfur/schema/decimal] maxExclusive
-     * @option facets [sulfur/schema/decimal] maxInclusive
-     * @option facets [sulfur/schema/decimal] minExclusive
-     * @option facets [sulfur/schema/decimal] minInclusive
+     * @option facets [sulfur/schema/value/decimal] maxExclusive
+     * @option facets [sulfur/schema/value/decimal] maxInclusive
+     * @option facets [sulfur/schema/value/decimal] minExclusive
+     * @option facets [sulfur/schema/value/decimal] minInclusive
      * @option facets [array] patterns
      * @option facets [number] totalDigits
      */
     validateFacets: (function () {
 
       function isDecimal(x) {
-        return $decimal.prototype.isPrototypeOf(x);
+        return $decimalValue.prototype.isPrototypeOf(x);
       }
 
       function validateEnumerationFacet(facets, errors) {
@@ -208,10 +208,10 @@ define([
      *
      * @option facets [array] enumeration
      * @option facets [number] fractionDigits
-     * @option facets [sulfur/schema/decimal] maxExclusive
-     * @option facets [sulfur/schema/decimal] maxInclusive
-     * @option facets [sulfur/schema/decimal] minExclusive
-     * @option facets [sulfur/schema/decimal] minInclusive
+     * @option facets [sulfur/schema/value/decimal] maxExclusive
+     * @option facets [sulfur/schema/value/decimal] maxInclusive
+     * @option facets [sulfur/schema/value/decimal] minExclusive
+     * @option facets [sulfur/schema/value/decimal] minInclusive
      * @option facets [array] patterns
      * @option facets [number] totalDigits
      *
@@ -259,7 +259,7 @@ define([
     },
 
     /**
-     * @return [sulfur/schema/decimal] the value if facet `maxExclusive` when defined
+     * @return [sulfur/schema/value/decimal] the value if facet `maxExclusive` when defined
      * @return [undefined] if facet `maxExclusive` is not defined
      */
     getMaxExclusiveValue: function () {
@@ -267,7 +267,7 @@ define([
     },
 
     /**
-     * @return [sulfur/schema/decimal] the value if facet `maxInclusive` when defined
+     * @return [sulfur/schema/value/decimal] the value if facet `maxInclusive` when defined
      * @return [undefined] if facet `maxInclusive` is not defined
      */
     getMaxInclusiveValue: function () {
@@ -275,7 +275,7 @@ define([
     },
 
     /**
-     * @return [sulfur/schema/decimal] the value if facet `minExclusive` when defined
+     * @return [sulfur/schema/value/decimal] the value if facet `minExclusive` when defined
      * @return [undefined] if facet `minExclusive` is not defined
      */
     getMinExclusiveValue: function () {
@@ -283,7 +283,7 @@ define([
     },
 
     /**
-     * @return [sulfur/schema/decimal] the value if facet `minInclusive` when defined
+     * @return [sulfur/schema/value/decimal] the value if facet `minInclusive` when defined
      * @return [undefined] if facet `minInclusive` is not defined
      */
     getMinInclusiveValue: function () {
@@ -307,7 +307,7 @@ define([
     },
 
     validator: function () {
-      var validators = [ $validators.prototype.create($decimal.prototype) ];
+      var validators = [ $validators.prototype.create($decimalValue.prototype) ];
 
       if (this._enumeration) {
         validators.push($validators.enumeration.create(

@@ -8,11 +8,11 @@
 
 define([
   'sulfur/factory',
-  'sulfur/schema/double',
   'sulfur/schema/pattern',
   'sulfur/schema/validators',
+  'sulfur/schema/value/double',
   'sulfur/util'
-], function ($factory, $double, $pattern, $validators, $util) {
+], function ($factory, $pattern, $validators, $doubleValue, $util) {
 
   'use strict';
 
@@ -26,10 +26,10 @@ define([
      *   and message for each validation error
      *
      * @option facets [array] enumeration
-     * @option facets [sulfur/schema/double] maxExclusive
-     * @option facets [sulfur/schema/double] maxInclusive
-     * @option facets [sulfur/schema/double] minExclusive
-     * @option facets [sulfur/schema/double] minInclusive
+     * @option facets [sulfur/schema/value/double] maxExclusive
+     * @option facets [sulfur/schema/value/double] maxInclusive
+     * @option facets [sulfur/schema/value/double] minExclusive
+     * @option facets [sulfur/schema/value/double] minInclusive
      * @option facets [array] patterns
      *
      * @return [boolean] whether all facets are valid or not
@@ -37,7 +37,7 @@ define([
     validateFacets: (function () {
 
       function isDouble(x) {
-        return $double.prototype.isPrototypeOf(x);
+        return $doubleValue.prototype.isPrototypeOf(x);
       }
 
       function validateEnumerationFacet(facets, errors) {
@@ -175,10 +175,10 @@ define([
      * @param [object] facets (optional)
      *
      * @option facets [array] enumeration
-     * @option facets [sulfur/schema/double] maxExclusive
-     * @option facets [sulfur/schema/double] maxInclusive
-     * @option facets [sulfur/schema/double] minExclusive
-     * @option facets [sulfur/schema/double] minInclusive
+     * @option facets [sulfur/schema/value/double] maxExclusive
+     * @option facets [sulfur/schema/value/double] maxInclusive
+     * @option facets [sulfur/schema/value/double] minExclusive
+     * @option facets [sulfur/schema/value/double] minInclusive
      * @option facets [array] patterns
      *
      * @throw [Error] if .validateFacets() returns false
@@ -214,7 +214,7 @@ define([
     },
 
     /**
-     * @return [sulfur/schema/double] the value if facet `maxExclusive` when defined
+     * @return [sulfur/schema/value/double] the value if facet `maxExclusive` when defined
      * @return [undefined] if facet `maxExclusive` is not defined
      */
     getMaxExclusiveValue: function () {
@@ -222,7 +222,7 @@ define([
     },
 
     /**
-     * @return [sulfur/schema/double] the value if facet `maxInclusive` when defined
+     * @return [sulfur/schema/value/double] the value if facet `maxInclusive` when defined
      * @return [undefined] if facet `maxInclusive` is not defined
      */
     getMaxInclusiveValue: function () {
@@ -230,7 +230,7 @@ define([
     },
 
     /**
-     * @return [sulfur/schema/double] the value if facet `minExclusive` when defined
+     * @return [sulfur/schema/value/double] the value if facet `minExclusive` when defined
      * @return [undefined] if facet `minExclusive` is not defined
      */
     getMinExclusiveValue: function () {
@@ -238,7 +238,7 @@ define([
     },
 
     /**
-     * @return [sulfur/schema/double] the value if facet `minInclusive` when defined
+     * @return [sulfur/schema/value/double] the value if facet `minInclusive` when defined
      * @return [undefined] if facet `minInclusive` is not defined
      */
     getMinInclusiveValue: function () {
@@ -259,7 +259,7 @@ define([
      * @return [#validate()] the validator
      */
     validator: function () {
-      var validators = [ $validators.prototype.create($double.prototype) ];
+      var validators = [ $validators.prototype.create($doubleValue.prototype) ];
 
       if (this._enumeration) {
         validators.push($validators.enumeration.create(

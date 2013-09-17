@@ -80,7 +80,7 @@ define([
     /**
      * Check this for equality with another string.
      *
-     * @param [sulfur/schema/string] other
+     * @param [sulfur/schema/value/string] other
      *
      * @return [boolean] whether this and `other` are equal or not
      */

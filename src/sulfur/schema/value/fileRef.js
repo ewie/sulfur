@@ -13,7 +13,7 @@ define(['sulfur/factory'], function ($factory) {
   return $factory.derive({
 
     /**
-     * @param [string] id
+     * @param [sulfur/schema/value/string] id
      * @param [sulfur/schema/file] file (optional)
      */
     initialize: function (id, file) {
@@ -22,7 +22,7 @@ define(['sulfur/factory'], function ($factory) {
     },
 
     /**
-     * @return [string] the reference's identifier
+     * @return [sulfur/schema/value/string] the reference's identifier
      */
     getIdentifier: function () {
       return this._id;

@@ -10,9 +10,9 @@
 define([
   'shared',
   'sulfur/schema/file',
-  'sulfur/schema/fileRef',
-  'sulfur/schema/string'
-], function ($shared, $file, $fileRef, $string) {
+  'sulfur/schema/value/fileRef',
+  'sulfur/schema/value/string'
+], function ($shared, $file, $fileRefValue, $stringValue) {
 
   'use strict';
 
@@ -23,15 +23,15 @@ define([
     describe('#initialize()', function () {
 
       it("should accept a sulfur/schema/string as ID", function () {
-        var id = $string.create();
-        var fr = $fileRef.create(id);
+        var id = $stringValue.create();
+        var fr = $fileRefValue.create(id);
         expect(fr.getIdentifier()).to.equal(id);
       });
 
       it("should accept an optional sulfur/schema/file", function () {
-        var id = $string.create();
+        var id = $stringValue.create();
         var file = $file.create();
-        var fr = $fileRef.create(id, file);
+        var fr = $fileRefValue.create(id, file);
         expect(fr.getFile()).to.equal(file);
       });
 
@@ -40,8 +40,8 @@ define([
     describe('#getIdentifier()', function () {
 
       it("should return the ID", function () {
-        var id = $string.create();
-        var fr = $fileRef.create(id);
+        var id = $stringValue.create();
+        var fr = $fileRefValue.create(id);
         expect(fr.getIdentifier()).to.equal(id);
       });
 
@@ -50,15 +50,15 @@ define([
     describe('#getFile()', function () {
 
       it("should return the file when set", function () {
-        var id = $string.create();
+        var id = $stringValue.create();
         var file = $file.create();
-        var fr = $fileRef.create(id, file);
+        var fr = $fileRefValue.create(id, file);
         expect(fr.getFile()).to.equal(file);
       });
 
       it("should return undefined when no file is set", function () {
-        var id = $string.create();
-        var fr = $fileRef.create(id);
+        var id = $stringValue.create();
+        var fr = $fileRefValue.create(id);
         expect(fr.getFile()).to.be.undefined;
       });
 

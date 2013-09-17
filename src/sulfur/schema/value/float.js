@@ -6,11 +6,11 @@
 
 /* global define */
 
-define(['sulfur/schema/double'], function ($double) {
+define(['sulfur/schema/value/double'], function ($doubleValue) {
 
   'use strict';
 
-  var $ = $double.clone({
+  var $ = $doubleValue.clone({
 
     /**
      * Get the maximum finite value.
@@ -37,7 +37,7 @@ define(['sulfur/schema/double'], function ($double) {
     initialize: (function () {
 
       return function (value) {
-        $double.prototype.initialize.call(this, value);
+        $doubleValue.prototype.initialize.call(this, value);
 
         if (this.isFinite()) {
           if (value < -this.factory.getMaxValue()) {

@@ -9,9 +9,9 @@
 
 define([
   'shared',
-  'sulfur/schema/decimal',
-  'sulfur/schema/integer'
-], function ($shared, $decimal, $integer) {
+  'sulfur/schema/value/decimal',
+  'sulfur/schema/value/integer'
+], function ($shared, $decimalValue, $integerValue) {
 
   'use strict';
 
@@ -32,33 +32,33 @@ define([
     });
 
     it("should be derived from sulfur/schema/decimal", function () {
-      expect($decimal).to.be.prototypeOf($integer);
+      expect($decimalValue).to.be.prototypeOf($integerValue);
     });
 
     describe('.isValidLiteral()', function () {
 
       it("should accept integer literals", function () {
-        expect($integer.isValidLiteral('0')).to.be.true;
+        expect($integerValue.isValidLiteral('0')).to.be.true;
       });
 
       it("should accept negative integer literals", function () {
-        expect($integer.isValidLiteral('-1')).to.be.true;
+        expect($integerValue.isValidLiteral('-1')).to.be.true;
       });
 
       it("should accept explicitely positive integer literals", function () {
-        expect($integer.isValidLiteral('+2')).to.be.true;
+        expect($integerValue.isValidLiteral('+2')).to.be.true;
       });
 
       it("should accept insignificant fraction digits", function () {
-        expect($integer.isValidLiteral('0.0')).to.be.true;
+        expect($integerValue.isValidLiteral('0.0')).to.be.true;
       });
 
       it("should reject significant fraction digits", function () {
-        expect($integer.isValidLiteral('0.1')).to.be.false;
+        expect($integerValue.isValidLiteral('0.1')).to.be.false;
       });
 
       it("should reject strings not representing a valid integer", function () {
-        expect($integer.isValidLiteral('123abc')).to.be.false;
+        expect($integerValue.isValidLiteral('123abc')).to.be.false;
       });
 
     });
@@ -66,34 +66,34 @@ define([
     describe('.parse()', function () {
 
       it("should reject strings not representing a decimal number", function () {
-        expect(bind($integer, 'parse', '123abc'))
+        expect(bind($integerValue, 'parse', '123abc'))
           .to.throw('invalid decimal integer "123abc"');
       });
 
       it("should reject strings with any significant fraction digits", function () {
-        expect(bind($integer, 'parse', '1.2'))
+        expect(bind($integerValue, 'parse', '1.2'))
           .to.throw('invalid decimal integer "1.2"');
       });
 
       context("with a valid string", function () {
 
         it("should accept integers", function () {
-          var d = $integer.parse('0');
+          var d = $integerValue.parse('0');
           expect(d.integralDigits).to.equal('0');
         });
 
         it("should accept an optional positive sign", function () {
-          var d = $integer.parse('+1');
+          var d = $integerValue.parse('+1');
           expect(d.positive).to.be.true;
         });
 
         it("should accept negative integers", function () {
-          var d = $integer.parse('-1');
+          var d = $integerValue.parse('-1');
           expect(d.positive).to.be.false;
         });
 
         it("should accept insignifcant fractional digits", function () {
-          expect(bind($integer, 'parse', '0.0')).not.to.throw();
+          expect(bind($integerValue, 'parse', '0.0')).not.to.throw();
         });
 
       });
@@ -103,9 +103,9 @@ define([
     describe('#initialize()', function () {
 
       it("should call sulfur/schema/decimal#initialize()", function () {
-        var decimalInitializeSpy = sandbox.spy($decimal.prototype, 'initialize');
+        var decimalInitializeSpy = sandbox.spy($decimalValue.prototype, 'initialize');
         var value = { integralDigits: '123' };
-        var d = $integer.create(value);
+        var d = $integerValue.create(value);
         expect(decimalInitializeSpy)
           .to.be.calledOn(d)
           .and.be.calledWith(sinon.match.same(value));
@@ -114,12 +114,12 @@ define([
       describe("option `fractionDigits`", function () {
 
         it("should accept insignifcant fractionDigits", function () {
-          var d = $integer.create({ fractionDigits: '000' });
+          var d = $integerValue.create({ fractionDigits: '000' });
           expect(d.fractionDigits).to.equal('');
         });
 
         it("should reject significant fractionDigits", function () {
-          expect(bind($integer, 'create', { fractionDigits: '1' }))
+          expect(bind($integerValue, 'create', { fractionDigits: '1' }))
             .to.throw("fractionDigits must be zero");
         });
 

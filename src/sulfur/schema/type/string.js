@@ -9,10 +9,10 @@
 define([
   'sulfur/factory',
   'sulfur/schema/pattern',
-  'sulfur/schema/string',
   'sulfur/schema/validators',
+  'sulfur/schema/value/string',
   'sulfur/util'
-], function ($factory, $pattern, $string, $validators, $util) {
+], function ($factory, $pattern, $validators, $stringValue, $util) {
 
   'use strict';
 
@@ -38,14 +38,14 @@ define([
         if (facets.enumeration.length === 0) {
           if (errors) {
             errors.push([ 'enumeration',
-              "must specify at least one sulfur/schema/string value" ]);
+              "must specify at least one sulfur/schema/value/string value" ]);
           }
           return false;
         }
-        if (!facets.enumeration.every($util.bind($string.prototype, 'isPrototypeOf'))) {
+        if (!facets.enumeration.every($util.bind($stringValue.prototype, 'isPrototypeOf'))) {
           if (errors) {
             errors.push([ 'enumeration',
-              "must specify only sulfur/schema/string values" ]);
+              "must specify only sulfur/schema/value/string values" ]);
           }
           return false;
         }

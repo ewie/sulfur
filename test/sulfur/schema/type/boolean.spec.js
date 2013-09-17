@@ -9,11 +9,11 @@
 
 define([
   'shared',
-  'sulfur/schema/boolean',
   'sulfur/schema/pattern',
   'sulfur/schema/type/boolean',
-  'sulfur/schema/validators'
-], function ($shared, $boolean, $pattern, $booleanType, $validators) {
+  'sulfur/schema/validators',
+  'sulfur/schema/value/boolean'
+], function ($shared, $pattern, $booleanType, $validators, $booleanValue) {
 
   'use strict';
 
@@ -26,9 +26,9 @@ define([
 
       context("with facet `enumeration`", function () {
 
-        it("should accept an array of sulfur/schema/boolean values", function () {
+        it("should accept an array of sulfur/schema/value/boolean values", function () {
           expect($booleanType.validateFacets({
-            enumeration: [ $boolean.create(true) ]
+            enumeration: [ $booleanValue.create(true) ]
           })).to.be.true;
         });
 
@@ -43,7 +43,7 @@ define([
             $booleanType.validateFacets({ enumeration: [] }, errors);
             expect(errors).to.include.something.eql([
               'enumeration',
-              "must specify at least one sulfur/schema/boolean value"
+              "must specify at least one sulfur/schema/value/boolean value"
             ]);
           });
 
@@ -60,7 +60,7 @@ define([
             $booleanType.validateFacets({ enumeration: [true] }, errors);
             expect(errors).to.include.something.eql([
               'enumeration',
-              "must specify only sulfur/schema/boolean values"
+              "must specify only sulfur/schema/value/boolean values"
             ]);
           });
 
@@ -129,19 +129,19 @@ define([
 
           it("should use the values", function () {
             var type = $booleanType.create({
-              enumeration: [ $boolean.create(true) ]
+              enumeration: [ $booleanValue.create(true) ]
             });
-            expect(type.getEnumerationValues()).to.eql([ $boolean.create(true) ]);
+            expect(type.getEnumerationValues()).to.eql([ $booleanValue.create(true) ]);
           });
 
           it("should ignore duplicate values", function () {
             var type = $booleanType.create({
               enumeration: [
-                $boolean.create(true),
-                $boolean.create(true)
+                $booleanValue.create(true),
+                $booleanValue.create(true)
               ]
             });
-            expect(type.getEnumerationValues()).to.eql([ $boolean.create(true) ]);
+            expect(type.getEnumerationValues()).to.eql([ $booleanValue.create(true) ]);
           });
 
         });
@@ -172,7 +172,7 @@ define([
     describe('#getEnumerationValues()', function () {
 
       it("should return values of facet `enumeration` when defined", function () {
-        var values = [ $boolean.create(true) ];
+        var values = [ $booleanValue.create(true) ];
         var type = $booleanType.create({ enumeration: values });
         expect(type.getEnumerationValues()).to.eql(values);
       });
@@ -207,22 +207,22 @@ define([
         expect($validators.all.prototype).to.be.prototypeOf(v);
       });
 
-      it("should include a validator/prototype matching sulfur/schema/boolean", function () {
+      it("should include a validator/prototype matching sulfur/schema/value/boolean", function () {
         var type = $booleanType.create();
         var v = type.validator();
         expect(v).to.eql($validators.all.create([
-          $validators.prototype.create($boolean.prototype)
+          $validators.prototype.create($booleanValue.prototype)
         ]));
       });
 
       it("should include a validator/enumeration when facet `enumeration` is defined", function () {
         var type = $booleanType.create({
-          enumeration: [ $boolean.create(true) ]
+          enumeration: [ $booleanValue.create(true) ]
         });
         var v = type.validator();
         expect(v).to.eql($validators.all.create([
-          $validators.prototype.create($boolean.prototype),
-          $validators.enumeration.create([ $boolean.create(true) ], { testMethod: 'eq' })
+          $validators.prototype.create($booleanValue.prototype),
+          $validators.enumeration.create([ $booleanValue.create(true) ], { testMethod: 'eq' })
         ]));
       });
 
@@ -232,7 +232,7 @@ define([
         });
         var v = type.validator();
         expect(v).to.eql($validators.all.create([
-          $validators.prototype.create($boolean.prototype),
+          $validators.prototype.create($booleanValue.prototype),
           $validators.some.create([
             $validators.pattern.create($pattern.create('true'))
           ])

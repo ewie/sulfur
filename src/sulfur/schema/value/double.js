@@ -43,7 +43,7 @@ define(['sulfur/factory'], function ($factory) {
      *
      * @param [string] s the string to parse
      *
-     * @return [sulfur/schema/float] a float with the parsed value
+     * @return [sulfur/schema/value/double] a float with the parsed value
      *
      * @throw [Error] if the literal has syntax errors
      * @throw [Error] if the literal value lies outside the valid range
@@ -170,6 +170,8 @@ define(['sulfur/factory'], function ($factory) {
     /**
      * Compare this float as LHS with another float as RHS.
      *
+     * @param [sulfur/schema/value/double] other
+     *
      * @return [-1] if LHS is less than RHS
      * @return [0] if LHS is equal to RHS
      * @return [1] if LHS is greater than RHS
@@ -191,7 +193,7 @@ define(['sulfur/factory'], function ($factory) {
     /**
      * Check for equality with another double.
      *
-     * @param [sulfur/schema/double] other
+     * @param [sulfur/schema/value/double] other
      *
      * @return [boolean] whether equal to `other` or not
      */
@@ -202,7 +204,7 @@ define(['sulfur/factory'], function ($factory) {
     /**
      * Check if less than another double.
      *
-     * @param [sulfur/schema/double] other
+     * @param [sulfur/schema/value/double] other
      *
      * @return [boolean] whether less than `other` or not
      */
@@ -213,7 +215,7 @@ define(['sulfur/factory'], function ($factory) {
     /**
      * Check if greater than another double.
      *
-     * @param [sulfur/schema/double] other
+     * @param [sulfur/schema/value/double] other
      *
      * @return [boolean] whether greater than `other` or not
      */
@@ -224,7 +226,7 @@ define(['sulfur/factory'], function ($factory) {
     /**
      * Check if less than or equal to another double.
      *
-     * @param [sulfur/schema/double] other
+     * @param [sulfur/schema/value/double] other
      *
      * @return [boolean] whether less than or equal `other` or not
      */
@@ -235,7 +237,7 @@ define(['sulfur/factory'], function ($factory) {
     /**
      * Check if greater than or equal to another double.
      *
-     * @param [sulfur/schema/double] other
+     * @param [sulfur/schema/value/double] other
      *
      * @return [boolean] whether greater than or equal to `other` or not
      */

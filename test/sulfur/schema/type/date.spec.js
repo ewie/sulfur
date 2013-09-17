@@ -9,11 +9,11 @@
 
 define([
   'shared',
-  'sulfur/schema/type/date',
-  'sulfur/schema/date',
   'sulfur/schema/pattern',
-  'sulfur/schema/validators'
-], function ($shared, $dateType, $date, $pattern, $validators) {
+  'sulfur/schema/type/date',
+  'sulfur/schema/validators',
+  'sulfur/schema/value/date'
+], function ($shared, $pattern, $dateType, $validators, $dateValue) {
 
   'use strict';
 
@@ -27,7 +27,7 @@ define([
       context("with facet `enumeration`", function () {
 
         it("should accept an array of date values", function () {
-          expect($dateType.validateFacets({ enumeration: [$date.create()] })).to.be.true;
+          expect($dateType.validateFacets({ enumeration: [$dateValue.create()] })).to.be.true;
         });
 
         context("with no values", function () {
@@ -69,7 +69,7 @@ define([
       context("with facet `maxExclusive`", function () {
 
         it("should accept date values", function () {
-          expect($dateType.validateFacets({ maxExclusive: $date.create() })).to.be.true;
+          expect($dateType.validateFacets({ maxExclusive: $dateValue.create() })).to.be.true;
         });
 
         context("with a non-date value", function () {
@@ -93,16 +93,16 @@ define([
 
           it("should reject", function () {
             expect($dateType.validateFacets({
-              maxExclusive: $date.create(),
-              maxInclusive: $date.create()
+              maxExclusive: $dateValue.create(),
+              maxInclusive: $dateValue.create()
             })).to.be.false;
           });
 
           it("should add a validation error", function () {
             var errors = [];
             $dateType.validateFacets({
-              maxExclusive: $date.create(),
-              maxInclusive: $date.create()
+              maxExclusive: $dateValue.create(),
+              maxInclusive: $dateValue.create()
             }, errors);
             expect(errors).to.include.something.eql([
               'maxExclusive',
@@ -116,16 +116,16 @@ define([
 
           it("should reject", function () {
             expect($dateType.validateFacets({
-              maxExclusive: $date.create({ year: 2000 }),
-              minExclusive: $date.create({ year: 2001 })
+              maxExclusive: $dateValue.create({ year: 2000 }),
+              minExclusive: $dateValue.create({ year: 2001 })
             })).to.be.false;
           });
 
           it("should add a validation error", function () {
             var errors = [];
             $dateType.validateFacets({
-              maxExclusive: $date.create({ year: 2000 }),
-              minExclusive: $date.create({ year: 2001 })
+              maxExclusive: $dateValue.create({ year: 2000 }),
+              minExclusive: $dateValue.create({ year: 2001 })
             }, errors);
             expect(errors).to.include.something.eql([
               'maxExclusive',
@@ -139,16 +139,16 @@ define([
 
           it("should reject", function () {
             expect($dateType.validateFacets({
-              maxExclusive: $date.create({ year: 2000 }),
-              minInclusive: $date.create({ year: 2001 })
+              maxExclusive: $dateValue.create({ year: 2000 }),
+              minInclusive: $dateValue.create({ year: 2001 })
             })).to.be.false;
           });
 
           it("should add a validation error", function () {
             var errors = [];
             $dateType.validateFacets({
-              maxExclusive: $date.create({ year: 2000 }),
-              minInclusive: $date.create({ year: 2001 })
+              maxExclusive: $dateValue.create({ year: 2000 }),
+              minInclusive: $dateValue.create({ year: 2001 })
             }, errors);
             expect(errors).to.include.something.eql([
               'maxExclusive',
@@ -162,16 +162,16 @@ define([
 
           it("should reject", function () {
             expect($dateType.validateFacets({
-              maxExclusive: $date.create(),
-              minInclusive: $date.create()
+              maxExclusive: $dateValue.create(),
+              minInclusive: $dateValue.create()
             })).to.be.false;
           });
 
           it("should add a validation error", function () {
             var errors = [];
             $dateType.validateFacets({
-              maxExclusive: $date.create(),
-              minInclusive: $date.create()
+              maxExclusive: $dateValue.create(),
+              minInclusive: $dateValue.create()
             }, errors);
             expect(errors).to.include.something.eql([
               'maxExclusive',
@@ -186,7 +186,7 @@ define([
       context("with facet `maxInclusive`", function () {
 
         it("should accept date values", function () {
-          expect($dateType.validateFacets({ maxInclusive: $date.create() })).to.be.true;
+          expect($dateType.validateFacets({ maxInclusive: $dateValue.create() })).to.be.true;
         });
 
         context("with a non-date value", function () {
@@ -210,16 +210,16 @@ define([
 
           it("should reject", function () {
             expect($dateType.validateFacets({
-              maxInclusive: $date.create({ year: 2000 }),
-              minInclusive: $date.create({ year: 2001 })
+              maxInclusive: $dateValue.create({ year: 2000 }),
+              minInclusive: $dateValue.create({ year: 2001 })
             })).to.be.false;
           });
 
           it("should add a validation error", function () {
             var errors = [];
             $dateType.validateFacets({
-              maxInclusive: $date.create({ year: 2000 }),
-              minInclusive: $date.create({ year: 2001 })
+              maxInclusive: $dateValue.create({ year: 2000 }),
+              minInclusive: $dateValue.create({ year: 2001 })
             }, errors);
             expect(errors).to.include.something.eql([
               'maxInclusive',
@@ -233,16 +233,16 @@ define([
 
           it("should reject", function () {
             expect($dateType.validateFacets({
-              maxInclusive: $date.create({ year: 2000 }),
-              minExclusive: $date.create({ year: 2001 })
+              maxInclusive: $dateValue.create({ year: 2000 }),
+              minExclusive: $dateValue.create({ year: 2001 })
             })).to.be.false;
           });
 
           it("should add a validation error", function () {
             var errors = [];
             $dateType.validateFacets({
-              maxInclusive: $date.create({ year: 2000 }),
-              minExclusive: $date.create({ year: 2001 })
+              maxInclusive: $dateValue.create({ year: 2000 }),
+              minExclusive: $dateValue.create({ year: 2001 })
             }, errors);
             expect(errors).to.include.something.eql([
               'maxInclusive',
@@ -256,16 +256,16 @@ define([
 
           it("should reject", function () {
             expect($dateType.validateFacets({
-              maxInclusive: $date.create(),
-              minExclusive: $date.create()
+              maxInclusive: $dateValue.create(),
+              minExclusive: $dateValue.create()
             })).to.be.false;
           });
 
           it("should add a validation error", function () {
             var errors = [];
             $dateType.validateFacets({
-              maxInclusive: $date.create(),
-              minExclusive: $date.create()
+              maxInclusive: $dateValue.create(),
+              minExclusive: $dateValue.create()
             }, errors);
             expect(errors).to.include.something.eql([
               'maxInclusive',
@@ -280,7 +280,7 @@ define([
       context("with facet `minExclusive`", function () {
 
         it("should accept date values", function () {
-          expect($dateType.validateFacets({ minExclusive: $date.create() })).to.be.true;
+          expect($dateType.validateFacets({ minExclusive: $dateValue.create() })).to.be.true;
         });
 
         context("with a non-date value", function () {
@@ -304,16 +304,16 @@ define([
 
           it("should reject", function () {
             expect($dateType.validateFacets({
-              minExclusive: $date.create(),
-              minInclusive: $date.create()
+              minExclusive: $dateValue.create(),
+              minInclusive: $dateValue.create()
             })).to.be.false;
           });
 
           it("should add a validation error", function () {
             var errors = [];
             $dateType.validateFacets({
-              minExclusive: $date.create(),
-              minInclusive: $date.create()
+              minExclusive: $dateValue.create(),
+              minInclusive: $dateValue.create()
             }, errors);
             expect(errors).to.include.something.eql([
               'minExclusive',
@@ -328,7 +328,7 @@ define([
       context("with facet `minInclusive`", function () {
 
         it("should accept date values", function () {
-          expect($dateType.validateFacets({ minInclusive: $date.create() })).to.be.true;
+          expect($dateType.validateFacets({ minInclusive: $dateValue.create() })).to.be.true;
         });
 
         context("with a non-date value", function () {
@@ -410,42 +410,42 @@ define([
         context("with facet `enumeration`", function () {
 
           it("should use the values", function () {
-            var dt = $date.create();
+            var dt = $dateValue.create();
             var type = $dateType.create({ enumeration: [ dt ] });
             expect(type.getEnumerationValues()).to.eql([ dt ]);
           });
 
           it("should ignore duplicate values their canonical representation", function () {
             var values = [
-              $date.create({ day: 2, tzhour: 24 }),
-              $date.create({ day: 1, tzhour: 0 })
+              $dateValue.create({ day: 2, tzhour: 24 }),
+              $dateValue.create({ day: 1, tzhour: 0 })
             ];
             var type = $dateType.create({ enumeration: values });
-            expect(type.getEnumerationValues()).to.eql([ $date.create({ day: 1, tzhour: 0 }) ]);
+            expect(type.getEnumerationValues()).to.eql([ $dateValue.create({ day: 1, tzhour: 0 }) ]);
           });
 
         });
 
         it("should use facet `maxExclusive` when given", function () {
-          var dt = $date.create();
+          var dt = $dateValue.create();
           var type = $dateType.create({ maxExclusive: dt });
           expect(type.getMaxExclusiveValue()).to.equal(dt);
         });
 
         it("should use facet `maxInclusive` when given", function () {
-          var dt = $date.create();
+          var dt = $dateValue.create();
           var type = $dateType.create({ maxInclusive: dt });
           expect(type.getMaxInclusiveValue()).to.equal(dt);
         });
 
         it("should use facet `minExclusive` when given", function () {
-          var dt = $date.create();
+          var dt = $dateValue.create();
           var type = $dateType.create({ minExclusive: dt });
           expect(type.getMinExclusiveValue()).to.equal(dt);
         });
 
         it("should use facet `minInclusive` when given", function () {
-          var dt = $date.create();
+          var dt = $dateValue.create();
           var type = $dateType.create({ minInclusive: dt });
           expect(type.getMinInclusiveValue()).to.equal(dt);
         });
@@ -480,7 +480,7 @@ define([
       });
 
       it("should return the values of facet `enumeration` when defined", function () {
-        var values = [ $date.create() ];
+        var values = [ $dateValue.create() ];
         var type = $dateType.create({ enumeration: values });
         expect(type.getEnumerationValues()).to.eql(values);
       });
@@ -495,7 +495,7 @@ define([
       });
 
       it("should return the values of facet `maxExclusive` when defined", function () {
-        var value = $date.create();
+        var value = $dateValue.create();
         var type = $dateType.create({ maxExclusive: value });
         expect(type.getMaxExclusiveValue()).to.eql(value);
       });
@@ -510,7 +510,7 @@ define([
       });
 
       it("should return the values of facet `maxInclusive` when defined", function () {
-        var value = $date.create();
+        var value = $dateValue.create();
         var type = $dateType.create({ maxInclusive: value });
         expect(type.getMaxInclusiveValue()).to.eql(value);
       });
@@ -525,7 +525,7 @@ define([
       });
 
       it("should return the values of facet `minExclusive` when defined", function () {
-        var value = $date.create();
+        var value = $dateValue.create();
         var type = $dateType.create({ minExclusive: value });
         expect(type.getMinExclusiveValue()).to.eql(value);
       });
@@ -540,7 +540,7 @@ define([
       });
 
       it("should return the values of facet `minInclusive` when defined", function () {
-        var value = $date.create();
+        var value = $dateValue.create();
         var type = $dateType.create({ minInclusive: value });
         expect(type.getMinInclusiveValue()).to.eql(value);
       });
@@ -570,56 +570,56 @@ define([
         expect($validators.all.prototype).to.be.prototypeOf(v);
       });
 
-      it("should include a validator/prototype matching sulfur/schema/date", function () {
+      it("should include a validator/prototype matching sulfur/schema/value/date", function () {
         var type = $dateType.create();
         var v = type.validator();
         expect(v).to.eql($validators.all.create([
-          $validators.prototype.create($date.prototype)
+          $validators.prototype.create($dateValue.prototype)
         ]));
       });
 
       it("should include a validator/enumeration when facet `enumeration` is defined", function () {
-        var type = $dateType.create({ enumeration: [ $date.create(2000) ] });
+        var type = $dateType.create({ enumeration: [ $dateValue.create(2000) ] });
         var v = type.validator();
         expect(v).to.eql($validators.all.create([
-          $validators.prototype.create($date.prototype),
-          $validators.enumeration.create([ $date.create(2000) ], { testMethod: 'eq' })
+          $validators.prototype.create($dateValue.prototype),
+          $validators.enumeration.create([ $dateValue.create(2000) ], { testMethod: 'eq' })
         ]));
       });
 
       it("should include a validator/maximum (exclusive) when facet `maxExclusive` is defined", function () {
-        var type = $dateType.create({ maxExclusive: $date.create(2000) });
+        var type = $dateType.create({ maxExclusive: $dateValue.create(2000) });
         var v = type.validator();
         expect(v).to.eql($validators.all.create([
-          $validators.prototype.create($date.prototype),
-          $validators.maximum.create($date.create(2000), { exclusive: true })
+          $validators.prototype.create($dateValue.prototype),
+          $validators.maximum.create($dateValue.create(2000), { exclusive: true })
         ]));
       });
 
       it("should include a validator/maximum (inclusive) when facet `maxInclusive` is defined", function () {
-        var type = $dateType.create({ maxInclusive: $date.create(2000) });
+        var type = $dateType.create({ maxInclusive: $dateValue.create(2000) });
         var v = type.validator();
         expect(v).to.eql($validators.all.create([
-          $validators.prototype.create($date.prototype),
-          $validators.maximum.create($date.create(2000))
+          $validators.prototype.create($dateValue.prototype),
+          $validators.maximum.create($dateValue.create(2000))
         ]));
       });
 
       it("should include a validator/minimum (exclusive) when facet `minExclusive` is defined", function () {
-        var type = $dateType.create({ minExclusive: $date.create(2000) });
+        var type = $dateType.create({ minExclusive: $dateValue.create(2000) });
         var v = type.validator();
         expect(v).to.eql($validators.all.create([
-          $validators.prototype.create($date.prototype),
-          $validators.minimum.create($date.create(2000), { exclusive: true })
+          $validators.prototype.create($dateValue.prototype),
+          $validators.minimum.create($dateValue.create(2000), { exclusive: true })
         ]));
       });
 
       it("should include a validator/minimum (inclusive) when facet `minInclusive` is defined", function () {
-        var type = $dateType.create({ minInclusive: $date.create(2000) });
+        var type = $dateType.create({ minInclusive: $dateValue.create(2000) });
         var v = type.validator();
         expect(v).to.eql($validators.all.create([
-          $validators.prototype.create($date.prototype),
-          $validators.minimum.create($date.create(2000))
+          $validators.prototype.create($dateValue.prototype),
+          $validators.minimum.create($dateValue.create(2000))
         ]));
       });
 
@@ -627,7 +627,7 @@ define([
         var type = $dateType.create({ patterns: [ $pattern.create('19.*') ] });
         var v = type.validator();
         expect(v).to.eql($validators.all.create([
-          $validators.prototype.create($date.prototype),
+          $validators.prototype.create($dateValue.prototype),
           $validators.some.create([ $validators.pattern.create($pattern.create('19.*')) ])
         ]));
       });

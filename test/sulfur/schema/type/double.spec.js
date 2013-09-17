@@ -9,11 +9,11 @@
 
 define([
   'shared',
-  'sulfur/schema/double',
   'sulfur/schema/pattern',
   'sulfur/schema/type/double',
-  'sulfur/schema/validators'
-], function ($shared, $double, $pattern, $doubleType, $validators) {
+  'sulfur/schema/validators',
+  'sulfur/schema/value/double'
+], function ($shared, $pattern, $doubleType, $validators, $doubleValue) {
 
   'use strict';
 
@@ -28,7 +28,7 @@ define([
 
         it("should accept an array of double values", function () {
           expect($doubleType.validateFacets({
-            enumeration: [ $double.create() ]
+            enumeration: [ $doubleValue.create() ]
           })).to.be.true;
         });
 
@@ -71,7 +71,7 @@ define([
       context("with facet `maxExclusive`", function () {
 
         it("should accept a double value", function () {
-          expect($doubleType.validateFacets({ maxExclusive: $double.create() })).to.be.true;
+          expect($doubleType.validateFacets({ maxExclusive: $doubleValue.create() })).to.be.true;
         });
 
         context("with a non-double value", function () {
@@ -95,16 +95,16 @@ define([
 
           it("should reject", function () {
             expect($doubleType.validateFacets({
-              maxExclusive: $double.create(),
-              maxInclusive: $double.create()
+              maxExclusive: $doubleValue.create(),
+              maxInclusive: $doubleValue.create()
             })).to.be.false;
           });
 
           it("should add a validation error", function () {
             var errors = [];
             $doubleType.validateFacets({
-              maxExclusive: $double.create(),
-              maxInclusive: $double.create()
+              maxExclusive: $doubleValue.create(),
+              maxInclusive: $doubleValue.create()
             }, errors);
             expect(errors).to.include.something.eql([
               'maxExclusive',
@@ -118,16 +118,16 @@ define([
 
           it("should reject", function () {
             expect($doubleType.validateFacets({
-              maxExclusive: $double.create(1),
-              minExclusive: $double.create(2)
+              maxExclusive: $doubleValue.create(1),
+              minExclusive: $doubleValue.create(2)
             })).to.be.false;
           });
 
           it("should add a validation error", function () {
             var errors = [];
             $doubleType.validateFacets({
-              maxExclusive: $double.create(1),
-              minExclusive: $double.create(2)
+              maxExclusive: $doubleValue.create(1),
+              minExclusive: $doubleValue.create(2)
             }, errors);
             expect(errors).to.include.something.eql([
               'maxExclusive',
@@ -141,16 +141,16 @@ define([
 
           it("should reject", function () {
             expect($doubleType.validateFacets({
-              maxExclusive: $double.create(1),
-              minInclusive: $double.create(2)
+              maxExclusive: $doubleValue.create(1),
+              minInclusive: $doubleValue.create(2)
             })).to.be.false;
           });
 
           it("should add a validation error", function () {
             var errors = [];
             $doubleType.validateFacets({
-              maxExclusive: $double.create(1),
-              minInclusive: $double.create(2)
+              maxExclusive: $doubleValue.create(1),
+              minInclusive: $doubleValue.create(2)
             }, errors);
             expect(errors).to.include.something.eql([
               'maxExclusive',
@@ -164,16 +164,16 @@ define([
 
           it("should reject", function () {
             expect($doubleType.validateFacets({
-              maxExclusive: $double.create(),
-              minInclusive: $double.create()
+              maxExclusive: $doubleValue.create(),
+              minInclusive: $doubleValue.create()
             })).to.be.false;
           });
 
           it("should add a validation error", function () {
             var errors = [];
             $doubleType.validateFacets({
-              maxExclusive: $double.create(),
-              minInclusive: $double.create()
+              maxExclusive: $doubleValue.create(),
+              minInclusive: $doubleValue.create()
             }, errors);
             expect(errors).to.include.something.eql([
               'maxExclusive',
@@ -188,7 +188,7 @@ define([
       context("with facet `maxInclusive`", function () {
 
         it("should accept a double value", function () {
-          expect($doubleType.validateFacets({ maxInclusive: $double.create() })).to.be.true;
+          expect($doubleType.validateFacets({ maxInclusive: $doubleValue.create() })).to.be.true;
         });
 
         context("with a non-double value", function () {
@@ -212,16 +212,16 @@ define([
 
           it("should reject", function () {
             expect($doubleType.validateFacets({
-              maxInclusive: $double.create(1),
-              minExclusive: $double.create(2)
+              maxInclusive: $doubleValue.create(1),
+              minExclusive: $doubleValue.create(2)
             })).to.be.false;
           });
 
           it("should add a validation error", function () {
             var errors = [];
             $doubleType.validateFacets({
-              maxInclusive: $double.create(1),
-              minExclusive: $double.create(2)
+              maxInclusive: $doubleValue.create(1),
+              minExclusive: $doubleValue.create(2)
             }, errors);
             expect(errors).to.include.something.eql([
               'maxInclusive',
@@ -235,16 +235,16 @@ define([
 
           it("should reject", function () {
             expect($doubleType.validateFacets({
-              maxInclusive: $double.create(),
-              minExclusive: $double.create()
+              maxInclusive: $doubleValue.create(),
+              minExclusive: $doubleValue.create()
             })).to.be.false;
           });
 
           it("should add a validation error", function () {
             var errors = [];
             $doubleType.validateFacets({
-              maxInclusive: $double.create(),
-              minExclusive: $double.create()
+              maxInclusive: $doubleValue.create(),
+              minExclusive: $doubleValue.create()
             }, errors);
             expect(errors).to.include.something.eql([
               'maxInclusive',
@@ -258,16 +258,16 @@ define([
 
           it("should reject", function () {
             expect($doubleType.validateFacets({
-              maxInclusive: $double.create(1),
-              minInclusive: $double.create(2)
+              maxInclusive: $doubleValue.create(1),
+              minInclusive: $doubleValue.create(2)
             })).to.be.false;
           });
 
           it("should add a validation error", function () {
             var errors = [];
             $doubleType.validateFacets({
-              maxInclusive: $double.create(1),
-              minInclusive: $double.create(2)
+              maxInclusive: $doubleValue.create(1),
+              minInclusive: $doubleValue.create(2)
             }, errors);
             expect(errors).to.include.something.eql([
               'maxInclusive',
@@ -282,7 +282,7 @@ define([
       context("with facet `minExclusive`", function () {
 
         it("should accept a double value", function () {
-          expect($doubleType.validateFacets({ minExclusive: $double.create() })).to.be.true;
+          expect($doubleType.validateFacets({ minExclusive: $doubleValue.create() })).to.be.true;
         });
 
         context("with a non-double value", function () {
@@ -306,16 +306,16 @@ define([
 
           it("should reject", function () {
             expect($doubleType.validateFacets({
-              minExclusive: $double.create(),
-              minInclusive: $double.create()
+              minExclusive: $doubleValue.create(),
+              minInclusive: $doubleValue.create()
             })).to.be.false;
           });
 
           it("should add a validation error", function () {
             var errors = [];
             $doubleType.validateFacets({
-              minExclusive: $double.create(),
-              minInclusive: $double.create()
+              minExclusive: $doubleValue.create(),
+              minInclusive: $doubleValue.create()
             }, errors);
             expect(errors).to.include.something.eql([
               'minExclusive',
@@ -330,7 +330,7 @@ define([
       context("with facet `minInclusive`", function () {
 
         it("should accept a double value", function () {
-          expect($doubleType.validateFacets({ minInclusive: $double.create() })).to.be.true;
+          expect($doubleType.validateFacets({ minInclusive: $doubleValue.create() })).to.be.true;
         });
 
         context("with a non-double value", function () {
@@ -414,7 +414,7 @@ define([
         context("with facet `enumeration`", function () {
 
           it("should use the values", function () {
-            var d = $double.create();
+            var d = $doubleValue.create();
             var type = $doubleType.create({ enumeration: [ d ] });
             expect(type.getEnumerationValues()).to.eql([ d ]);
           });
@@ -422,35 +422,35 @@ define([
           it("should ignore duplicate values", function () {
             var type = $doubleType.create({
               enumeration: [
-                $double.create(1),
-                $double.create(1)
+                $doubleValue.create(1),
+                $doubleValue.create(1)
               ]
             });
-            expect(type.getEnumerationValues()).to.eql([ $double.create(1) ]);
+            expect(type.getEnumerationValues()).to.eql([ $doubleValue.create(1) ]);
           });
 
         });
 
         it("should use facet `maxExclusive` when given", function () {
-          var d = $double.create();
+          var d = $doubleValue.create();
           var type = $doubleType.create({ maxExclusive: d });
           expect(type.getMaxExclusiveValue()).to.equal(d);
         });
 
         it("should use facet `maxInclusive` when given", function () {
-          var d = $double.create();
+          var d = $doubleValue.create();
           var type = $doubleType.create({ maxInclusive: d });
           expect(type.getMaxInclusiveValue()).to.equal(d);
         });
 
         it("should use facet `minExclusive` when given", function () {
-          var d = $double.create();
+          var d = $doubleValue.create();
           var type = $doubleType.create({ minExclusive: d });
           expect(type.getMinExclusiveValue()).to.equal(d);
         });
 
         it("should use facet `minInclusive` when given", function () {
-          var d = $double.create();
+          var d = $doubleValue.create();
           var type = $doubleType.create({ minInclusive: d });
           expect(type.getMinInclusiveValue()).to.equal(d);
         });
@@ -486,7 +486,7 @@ define([
       });
 
       it("should return the values of facet `enumeration` when defined", function () {
-        var values = [ $double.create() ];
+        var values = [ $doubleValue.create() ];
         var type = $doubleType.create({ enumeration: values });
         expect(type.getEnumerationValues()).to.eql(values);
       });
@@ -501,7 +501,7 @@ define([
       });
 
       it("should return the values of facet `maxExclusive` when defined", function () {
-        var value = $double.create();
+        var value = $doubleValue.create();
         var type = $doubleType.create({ maxExclusive: value });
         expect(type.getMaxExclusiveValue()).to.eql(value);
       });
@@ -516,7 +516,7 @@ define([
       });
 
       it("should return the values of facet `maxInclusive` when defined", function () {
-        var value = $double.create();
+        var value = $doubleValue.create();
         var type = $doubleType.create({ maxInclusive: value });
         expect(type.getMaxInclusiveValue()).to.eql(value);
       });
@@ -531,7 +531,7 @@ define([
       });
 
       it("should return the values of facet `minExclusive` when defined", function () {
-        var value = $double.create();
+        var value = $doubleValue.create();
         var type = $doubleType.create({ minExclusive: value });
         expect(type.getMinExclusiveValue()).to.eql(value);
       });
@@ -546,7 +546,7 @@ define([
       });
 
       it("should return the values of facet `minInclusive` when defined", function () {
-        var value = $double.create();
+        var value = $doubleValue.create();
         var type = $doubleType.create({ minInclusive: value });
         expect(type.getMinInclusiveValue()).to.eql(value);
       });
@@ -580,52 +580,52 @@ define([
         var type = $doubleType.create();
         var v = type.validator();
         expect(v).to.eql($validators.all.create([
-          $validators.prototype.create($double.prototype)
+          $validators.prototype.create($doubleValue.prototype)
         ]));
       });
 
       it("should include a validator/enumeration when facet `enumeration` is defined", function () {
-        var type = $doubleType.create({ enumeration: [ $double.create(1) ] });
+        var type = $doubleType.create({ enumeration: [ $doubleValue.create(1) ] });
         var v = type.validator();
         expect(v).to.eql($validators.all.create([
-          $validators.prototype.create($double.prototype),
-          $validators.enumeration.create([ $double.create(1) ], { testMethod: 'eq' })
+          $validators.prototype.create($doubleValue.prototype),
+          $validators.enumeration.create([ $doubleValue.create(1) ], { testMethod: 'eq' })
         ]));
       });
 
       it("should include a validator/maximum (exclusive) when facet `maxExclusive` is defined", function () {
-        var type = $doubleType.create({ maxExclusive: $double.create(1) });
+        var type = $doubleType.create({ maxExclusive: $doubleValue.create(1) });
         var v = type.validator();
         expect(v).to.eql($validators.all.create([
-          $validators.prototype.create($double.prototype),
-          $validators.maximum.create($double.create(1), { exclusive: true })
+          $validators.prototype.create($doubleValue.prototype),
+          $validators.maximum.create($doubleValue.create(1), { exclusive: true })
         ]));
       });
 
       it("should include a validator/maximum (inclusive) when facet `maxInclusive` is defined", function () {
-        var type = $doubleType.create({ maxInclusive: $double.create(1) });
+        var type = $doubleType.create({ maxInclusive: $doubleValue.create(1) });
         var v = type.validator();
         expect(v).to.eql($validators.all.create([
-          $validators.prototype.create($double.prototype),
-          $validators.maximum.create($double.create(1))
+          $validators.prototype.create($doubleValue.prototype),
+          $validators.maximum.create($doubleValue.create(1))
         ]));
       });
 
       it("should include a validator/minimum (exclusive) when facet `minExclusive` is defined", function () {
-        var type = $doubleType.create({ minExclusive: $double.create(1) });
+        var type = $doubleType.create({ minExclusive: $doubleValue.create(1) });
         var v = type.validator();
         expect(v).to.eql($validators.all.create([
-          $validators.prototype.create($double.prototype),
-          $validators.minimum.create($double.create(1), { exclusive: true })
+          $validators.prototype.create($doubleValue.prototype),
+          $validators.minimum.create($doubleValue.create(1), { exclusive: true })
         ]));
       });
 
       it("should include a validator/minimum (inclusive) when facet `minInclusive` is defined", function () {
-        var type = $doubleType.create({ minInclusive: $double.create(1) });
+        var type = $doubleType.create({ minInclusive: $doubleValue.create(1) });
         var v = type.validator();
         expect(v).to.eql($validators.all.create([
-          $validators.prototype.create($double.prototype),
-          $validators.minimum.create($double.create(1))
+          $validators.prototype.create($doubleValue.prototype),
+          $validators.minimum.create($doubleValue.create(1))
         ]));
       });
 
@@ -633,7 +633,7 @@ define([
         var type = $doubleType.create({ patterns: [ $pattern.create('[0-9]\\.[0-9]{2}') ] });
         var v = type.validator();
         expect(v).to.eql($validators.all.create([
-          $validators.prototype.create($double.prototype),
+          $validators.prototype.create($doubleValue.prototype),
           $validators.some.create([ $validators.pattern.create($pattern.create('[0-9]\\.[0-9]{2}')) ])
         ]));
       });

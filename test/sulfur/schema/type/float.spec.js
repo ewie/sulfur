@@ -9,11 +9,11 @@
 
 define([
   'shared',
-  'sulfur/schema/float',
   'sulfur/schema/pattern',
   'sulfur/schema/type/float',
-  'sulfur/schema/validators'
-], function ($shared, $float, $pattern, $floatType, $validators) {
+  'sulfur/schema/validators',
+  'sulfur/schema/value/float'
+], function ($shared, $pattern, $floatType, $validators, $floatValue) {
 
   'use strict';
 
@@ -28,7 +28,7 @@ define([
 
         it("should accept an array of float values", function () {
           expect($floatType.validateFacets({
-            enumeration: [ $float.create() ]
+            enumeration: [ $floatValue.create() ]
           })).to.be.true;
         });
 
@@ -71,7 +71,7 @@ define([
       context("with facet `maxExclusive`", function () {
 
         it("should accept a float value", function () {
-          expect($floatType.validateFacets({ maxExclusive: $float.create() })).to.be.true;
+          expect($floatType.validateFacets({ maxExclusive: $floatValue.create() })).to.be.true;
         });
 
         context("with a non-float value", function () {
@@ -95,16 +95,16 @@ define([
 
           it("should reject", function () {
             expect($floatType.validateFacets({
-              maxExclusive: $float.create(),
-              maxInclusive: $float.create()
+              maxExclusive: $floatValue.create(),
+              maxInclusive: $floatValue.create()
             })).to.be.false;
           });
 
           it("should add a validation error", function () {
             var errors = [];
             $floatType.validateFacets({
-              maxExclusive: $float.create(),
-              maxInclusive: $float.create()
+              maxExclusive: $floatValue.create(),
+              maxInclusive: $floatValue.create()
             }, errors);
             expect(errors).to.include.something.eql([
               'maxExclusive',
@@ -118,16 +118,16 @@ define([
 
           it("should reject", function () {
             expect($floatType.validateFacets({
-              maxExclusive: $float.create(1),
-              minExclusive: $float.create(2)
+              maxExclusive: $floatValue.create(1),
+              minExclusive: $floatValue.create(2)
             })).to.be.false;
           });
 
           it("should add a validation error", function () {
             var errors = [];
             $floatType.validateFacets({
-              maxExclusive: $float.create(1),
-              minExclusive: $float.create(2)
+              maxExclusive: $floatValue.create(1),
+              minExclusive: $floatValue.create(2)
             }, errors);
             expect(errors).to.include.something.eql([
               'maxExclusive',
@@ -141,16 +141,16 @@ define([
 
           it("should reject", function () {
             expect($floatType.validateFacets({
-              maxExclusive: $float.create(1),
-              minInclusive: $float.create(2)
+              maxExclusive: $floatValue.create(1),
+              minInclusive: $floatValue.create(2)
             })).to.be.false;
           });
 
           it("should add a validation error", function () {
             var errors = [];
             $floatType.validateFacets({
-              maxExclusive: $float.create(1),
-              minInclusive: $float.create(2)
+              maxExclusive: $floatValue.create(1),
+              minInclusive: $floatValue.create(2)
             }, errors);
             expect(errors).to.include.something.eql([
               'maxExclusive',
@@ -164,16 +164,16 @@ define([
 
           it("should reject", function () {
             expect($floatType.validateFacets({
-              maxExclusive: $float.create(),
-              minInclusive: $float.create()
+              maxExclusive: $floatValue.create(),
+              minInclusive: $floatValue.create()
             })).to.be.false;
           });
 
           it("should add a validation error", function () {
             var errors = [];
             $floatType.validateFacets({
-              maxExclusive: $float.create(),
-              minInclusive: $float.create()
+              maxExclusive: $floatValue.create(),
+              minInclusive: $floatValue.create()
             }, errors);
             expect(errors).to.include.something.eql([
               'maxExclusive',
@@ -188,7 +188,7 @@ define([
       context("with facet `maxInclusive`", function () {
 
         it("should accept a float value", function () {
-          expect($floatType.validateFacets({ maxInclusive: $float.create() })).to.be.true;
+          expect($floatType.validateFacets({ maxInclusive: $floatValue.create() })).to.be.true;
         });
 
         context("with a non-float value", function () {
@@ -212,16 +212,16 @@ define([
 
           it("should reject", function () {
             expect($floatType.validateFacets({
-              maxInclusive: $float.create(1),
-              minExclusive: $float.create(2)
+              maxInclusive: $floatValue.create(1),
+              minExclusive: $floatValue.create(2)
             })).to.be.false;
           });
 
           it("should add a validation error", function () {
             var errors = [];
             $floatType.validateFacets({
-              maxInclusive: $float.create(1),
-              minExclusive: $float.create(2)
+              maxInclusive: $floatValue.create(1),
+              minExclusive: $floatValue.create(2)
             }, errors);
             expect(errors).to.include.something.eql([
               'maxInclusive',
@@ -235,16 +235,16 @@ define([
 
           it("should reject", function () {
             expect($floatType.validateFacets({
-              maxInclusive: $float.create(),
-              minExclusive: $float.create()
+              maxInclusive: $floatValue.create(),
+              minExclusive: $floatValue.create()
             })).to.be.false;
           });
 
           it("should add a validation error", function () {
             var errors = [];
             $floatType.validateFacets({
-              maxInclusive: $float.create(),
-              minExclusive: $float.create()
+              maxInclusive: $floatValue.create(),
+              minExclusive: $floatValue.create()
             }, errors);
             expect(errors).to.include.something.eql([
               'maxInclusive',
@@ -258,16 +258,16 @@ define([
 
           it("should reject", function () {
             expect($floatType.validateFacets({
-              maxInclusive: $float.create(1),
-              minInclusive: $float.create(2)
+              maxInclusive: $floatValue.create(1),
+              minInclusive: $floatValue.create(2)
             })).to.be.false;
           });
 
           it("should add a validation error", function () {
             var errors = [];
             $floatType.validateFacets({
-              maxInclusive: $float.create(1),
-              minInclusive: $float.create(2)
+              maxInclusive: $floatValue.create(1),
+              minInclusive: $floatValue.create(2)
             }, errors);
             expect(errors).to.include.something.eql([
               'maxInclusive',
@@ -282,7 +282,7 @@ define([
       context("with facet `minExclusive`", function () {
 
         it("should accept a float value", function () {
-          expect($floatType.validateFacets({ minExclusive: $float.create() })).to.be.true;
+          expect($floatType.validateFacets({ minExclusive: $floatValue.create() })).to.be.true;
         });
 
         context("with a non-float value", function () {
@@ -306,16 +306,16 @@ define([
 
           it("should reject", function () {
             expect($floatType.validateFacets({
-              minExclusive: $float.create(),
-              minInclusive: $float.create()
+              minExclusive: $floatValue.create(),
+              minInclusive: $floatValue.create()
             })).to.be.false;
           });
 
           it("should add a validation error", function () {
             var errors = [];
             $floatType.validateFacets({
-              minExclusive: $float.create(),
-              minInclusive: $float.create()
+              minExclusive: $floatValue.create(),
+              minInclusive: $floatValue.create()
             }, errors);
             expect(errors).to.include.something.eql([
               'minExclusive',
@@ -330,7 +330,7 @@ define([
       context("with facet `minInclusive`", function () {
 
         it("should accept a float value", function () {
-          expect($floatType.validateFacets({ minInclusive: $float.create() })).to.be.true;
+          expect($floatType.validateFacets({ minInclusive: $floatValue.create() })).to.be.true;
         });
 
         context("with a non-float value", function () {
@@ -414,7 +414,7 @@ define([
         context("with facet `enumeration`", function () {
 
           it("should use the values", function () {
-            var d = $float.create();
+            var d = $floatValue.create();
             var type = $floatType.create({ enumeration: [ d ] });
             expect(type.getEnumerationValues()).to.eql([ d ]);
           });
@@ -422,35 +422,35 @@ define([
           it("should ignore duplicate values", function () {
             var type = $floatType.create({
               enumeration: [
-                $float.create(1),
-                $float.create(1)
+                $floatValue.create(1),
+                $floatValue.create(1)
               ]
             });
-            expect(type.getEnumerationValues()).to.eql([ $float.create(1) ]);
+            expect(type.getEnumerationValues()).to.eql([ $floatValue.create(1) ]);
           });
 
         });
 
         it("should use facet `maxExclusive` when given", function () {
-          var d = $float.create();
+          var d = $floatValue.create();
           var type = $floatType.create({ maxExclusive: d });
           expect(type.getMaxExclusiveValue()).to.equal(d);
         });
 
         it("should use facet `maxInclusive` when given", function () {
-          var d = $float.create();
+          var d = $floatValue.create();
           var type = $floatType.create({ maxInclusive: d });
           expect(type.getMaxInclusiveValue()).to.equal(d);
         });
 
         it("should use facet `minExclusive` when given", function () {
-          var d = $float.create();
+          var d = $floatValue.create();
           var type = $floatType.create({ minExclusive: d });
           expect(type.getMinExclusiveValue()).to.equal(d);
         });
 
         it("should use facet `minInclusive` when given", function () {
-          var d = $float.create();
+          var d = $floatValue.create();
           var type = $floatType.create({ minInclusive: d });
           expect(type.getMinInclusiveValue()).to.equal(d);
         });
@@ -486,7 +486,7 @@ define([
       });
 
       it("should return the values of facet `enumeration` when defined", function () {
-        var values = [ $float.create() ];
+        var values = [ $floatValue.create() ];
         var type = $floatType.create({ enumeration: values });
         expect(type.getEnumerationValues()).to.eql(values);
       });
@@ -501,7 +501,7 @@ define([
       });
 
       it("should return the values of facet `maxExclusive` when defined", function () {
-        var value = $float.create();
+        var value = $floatValue.create();
         var type = $floatType.create({ maxExclusive: value });
         expect(type.getMaxExclusiveValue()).to.eql(value);
       });
@@ -516,7 +516,7 @@ define([
       });
 
       it("should return the values of facet `maxInclusive` when defined", function () {
-        var value = $float.create();
+        var value = $floatValue.create();
         var type = $floatType.create({ maxInclusive: value });
         expect(type.getMaxInclusiveValue()).to.eql(value);
       });
@@ -531,7 +531,7 @@ define([
       });
 
       it("should return the values of facet `minExclusive` when defined", function () {
-        var value = $float.create();
+        var value = $floatValue.create();
         var type = $floatType.create({ minExclusive: value });
         expect(type.getMinExclusiveValue()).to.eql(value);
       });
@@ -546,7 +546,7 @@ define([
       });
 
       it("should return the values of facet `minInclusive` when defined", function () {
-        var value = $float.create();
+        var value = $floatValue.create();
         var type = $floatType.create({ minInclusive: value });
         expect(type.getMinInclusiveValue()).to.eql(value);
       });
@@ -580,52 +580,52 @@ define([
         var type = $floatType.create();
         var v = type.validator();
         expect(v).to.eql($validators.all.create([
-          $validators.prototype.create($float.prototype)
+          $validators.prototype.create($floatValue.prototype)
         ]));
       });
 
       it("should include a validator/enumeration when facet `enumeration` is defined", function () {
-        var type = $floatType.create({ enumeration: [ $float.create(1) ] });
+        var type = $floatType.create({ enumeration: [ $floatValue.create(1) ] });
         var v = type.validator();
         expect(v).to.eql($validators.all.create([
-          $validators.prototype.create($float.prototype),
-          $validators.enumeration.create([ $float.create(1) ], { testMethod: 'eq' })
+          $validators.prototype.create($floatValue.prototype),
+          $validators.enumeration.create([ $floatValue.create(1) ], { testMethod: 'eq' })
         ]));
       });
 
       it("should include a validator/maximum (exclusive) when facet `maxExclusive` is defined", function () {
-        var type = $floatType.create({ maxExclusive: $float.create(1) });
+        var type = $floatType.create({ maxExclusive: $floatValue.create(1) });
         var v = type.validator();
         expect(v).to.eql($validators.all.create([
-          $validators.prototype.create($float.prototype),
-          $validators.maximum.create($float.create(1), { exclusive: true })
+          $validators.prototype.create($floatValue.prototype),
+          $validators.maximum.create($floatValue.create(1), { exclusive: true })
         ]));
       });
 
       it("should include a validator/maximum (inclusive) when facet `maxInclusive` is defined", function () {
-        var type = $floatType.create({ maxInclusive: $float.create(1) });
+        var type = $floatType.create({ maxInclusive: $floatValue.create(1) });
         var v = type.validator();
         expect(v).to.eql($validators.all.create([
-          $validators.prototype.create($float.prototype),
-          $validators.maximum.create($float.create(1))
+          $validators.prototype.create($floatValue.prototype),
+          $validators.maximum.create($floatValue.create(1))
         ]));
       });
 
       it("should include a validator/minimum (exclusive) when facet `minExclusive` is defined", function () {
-        var type = $floatType.create({ minExclusive: $float.create(1) });
+        var type = $floatType.create({ minExclusive: $floatValue.create(1) });
         var v = type.validator();
         expect(v).to.eql($validators.all.create([
-          $validators.prototype.create($float.prototype),
-          $validators.minimum.create($float.create(1), { exclusive: true })
+          $validators.prototype.create($floatValue.prototype),
+          $validators.minimum.create($floatValue.create(1), { exclusive: true })
         ]));
       });
 
       it("should include a validator/minimum (inclusive) when facet `minInclusive` is defined", function () {
-        var type = $floatType.create({ minInclusive: $float.create(1) });
+        var type = $floatType.create({ minInclusive: $floatValue.create(1) });
         var v = type.validator();
         expect(v).to.eql($validators.all.create([
-          $validators.prototype.create($float.prototype),
-          $validators.minimum.create($float.create(1))
+          $validators.prototype.create($floatValue.prototype),
+          $validators.minimum.create($floatValue.create(1))
         ]));
       });
 
@@ -633,7 +633,7 @@ define([
         var type = $floatType.create({ patterns: [ $pattern.create('[0-9]\\.[0-9]{2}') ] });
         var v = type.validator();
         expect(v).to.eql($validators.all.create([
-          $validators.prototype.create($float.prototype),
+          $validators.prototype.create($floatValue.prototype),
           $validators.some.create([ $validators.pattern.create($pattern.create('[0-9]\\.[0-9]{2}')) ])
         ]));
       });
