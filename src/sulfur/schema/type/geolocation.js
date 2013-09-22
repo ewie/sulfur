@@ -8,15 +8,27 @@
 
 define([
   'sulfur/factory',
+  'sulfur/schema/facet/maxExclusive',
+  'sulfur/schema/facet/maxInclusive',
+  'sulfur/schema/facet/minExclusive',
+  'sulfur/schema/facet/minInclusive',
   'sulfur/schema/type/double',
-  'sulfur/schema/validators',
+  'sulfur/schema/validator/all',
+  'sulfur/schema/validator/property',
+  'sulfur/schema/validator/prototype',
   'sulfur/schema/value/double',
   'sulfur/schema/value/geolocation',
   'sulfur/util'
 ], function (
     $factory,
-    $doubleValueType,
-    $validators,
+    $maxExclusiveFacet,
+    $maxInclusiveFacet,
+    $minExclusiveFacet,
+    $minInclusiveFacet,
+    $doubleType,
+    $allValidator,
+    $propertyValidator,
+    $prototypeValidator,
     $doubleValue,
     $geolocationValue,
     $util
@@ -24,26 +36,37 @@ define([
 
   'use strict';
 
-  var DEFAULT_LONGITUDE_TYPE = $doubleValueType.create({
-    minInclusive: $doubleValue.create(-180),
-    maxInclusive: $doubleValue.create(180)
-  });
+  var MIN_LONGITUDE = $doubleValue.create(-180);
+  var MAX_LONGITUDE = $doubleValue.create(180);
 
-  var DEFAULT_LATITUDE_TYPE = $doubleValueType.create({
-    minInclusive: $doubleValue.create(-90),
-    maxInclusive: $doubleValue.create(90)
-  });
+  var MIN_LATITUDE = $doubleValue.create(-90);
+  var MAX_LATITUDE = $doubleValue.create(90);
+
+  var DEFAULT_LONGITUDE_TYPE = $doubleType.create([
+    $minInclusiveFacet.create(MIN_LONGITUDE),
+    $maxInclusiveFacet.create(MAX_LONGITUDE)
+  ]);
+
+  var DEFAULT_LATITUDE_TYPE = $doubleType.create([
+    $minInclusiveFacet.create(MIN_LATITUDE),
+    $maxInclusiveFacet.create(MAX_LATITUDE)
+  ]);
+
+  function getFacetValue(type, facetName) {
+    var facet = type.getStandardFacet(facetName);
+    return facet && facet.getValue();
+  }
 
   function assertPropertyType(name, type, min, max) {
-    if (!$doubleValueType.prototype.isPrototypeOf(type)) {
+    if (!$doubleType.prototype.isPrototypeOf(type)) {
       throw new Error(name + " type must be a sulfur/schema/type/double");
     }
-    var value = type.getMinExclusiveValue() || type.getMinInclusiveValue();
+    var value = getFacetValue(type, 'minExclusive') || getFacetValue(type, 'minInclusive');
     if (value && value.lt(min)) {
       throw new Error(name + " type must not allow values outside [" +
         min.getValue() + ", " + max.getValue() + "]");
     }
-    value = type.getMaxExclusiveValue() || type.getMaxInclusiveValue();
+    value = getFacetValue(type, 'maxExclusive') || getFacetValue(type, 'maxInclusive');
     if (value && value.gt(max)) {
       throw new Error(name + " type must not allow values outside [" +
         min.getValue() + ", " + max.getValue() + "]");
@@ -52,17 +75,13 @@ define([
 
   function getLongitudeType(type) {
     $util.isUndefined(type) && (type = DEFAULT_LONGITUDE_TYPE);
-    assertPropertyType('longitude', type,
-      DEFAULT_LONGITUDE_TYPE.getMinInclusiveValue(),
-      DEFAULT_LONGITUDE_TYPE.getMaxInclusiveValue());
+    assertPropertyType('longitude', type, MIN_LONGITUDE, MAX_LONGITUDE);
     return type;
   }
 
   function getLatitudeType(type) {
     $util.isUndefined(type) && (type = DEFAULT_LATITUDE_TYPE);
-    assertPropertyType('latitude', type,
-      DEFAULT_LATITUDE_TYPE.getMinInclusiveValue(),
-      DEFAULT_LATITUDE_TYPE.getMaxInclusiveValue());
+    assertPropertyType('latitude', type, MIN_LATITUDE, MAX_LATITUDE);
     return type;
   }
 
@@ -110,13 +129,13 @@ define([
     /**
      * @return [#validate()] the validator
      */
-    validator: function () {
-      return $validators.all.create([
-        $validators.prototype.create($geolocationValue.prototype),
-        $validators.property.create('getLongitude',
-          this._longitude.validator()),
-        $validators.property.create('getLatitude',
-          this._latitude.validator())
+    createValidator: function () {
+      return $allValidator.create([
+        $prototypeValidator.create($geolocationValue.prototype),
+        $propertyValidator.create('getLongitude',
+          this._longitude.createValidator()),
+        $propertyValidator.create('getLatitude',
+          this._latitude.createValidator())
       ]);
     }
 

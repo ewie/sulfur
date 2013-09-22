@@ -139,6 +139,28 @@ define([
 
     });
 
+    describe('.sort()', function () {
+
+      it("should sort an array", function () {
+        var values = [3, 1, 2];
+        expect($util.sort(values)).to.eql([1, 2, 3]);
+      });
+
+      it("should not modify the original array", function () {
+        var values = [5, 7, 6];
+        var copy = [].concat(values);
+        $util.sort(values);
+        expect(values).to.eql(copy);
+      });
+
+      it("should accept a comparison function", function () {
+        var sortSpy = sinon.spy(Array.prototype, 'sort');
+        var cmpfn = function () {};
+        $util.sort([], cmpfn);
+        expect(sortSpy).to.be.calledWith(sinon.match.same(cmpfn));
+      });
+
+    });
 
     describe('.uniq()', function () {
 

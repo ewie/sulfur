@@ -5,151 +5,94 @@
  */
 
 /* global define */
-/* global context, describe, it */
+/* global afterEach, beforeEach, describe, it */
 
 define([
   'shared',
+  'sulfur/schema/facet/mediaType',
   'sulfur/schema/mediaType',
+  'sulfur/schema/type/_simple',
   'sulfur/schema/type/fileRef',
-  'sulfur/schema/validators'
-], function ($shared, $mediaType, $fileRefType, $validators) {
+  'sulfur/schema/validator/all',
+  'sulfur/schema/validator/presence',
+  'sulfur/schema/validator/property',
+  'sulfur/schema/validator/prototype',
+  'sulfur/schema/value/fileRef'
+], function (
+    $shared,
+    $mediaTypeFacet,
+    $mediaType,
+    $_simpleType,
+    $fileRefType,
+    $allValidator,
+    $presenceValidator,
+    $propertyValidator,
+    $prototypeValidator,
+    $fileRefValue
+) {
 
   'use strict';
 
   var expect = $shared.expect;
-  var bind = $shared.bind;
+  var sinon = $shared.sinon;
 
   describe('sulfur/schema/type/fileRef', function () {
 
-    describe('.validateFacets()', function () {
+    it("should be derived from sulfur/schema/type/_simple", function () {
+      expect($_simpleType).to.be.prototypeOf($fileRefType);
+    });
 
-      it("should return true when no facets are given", function () {
-        expect($fileRefType.validateFacets({})).to.be.true;
-      });
+    describe('.getLegalFacets()', function () {
 
-      context("with facet `mediaTypes`", function () {
-
-        it("should accept an array of sulfur/schema/mediaTypes values", function () {
-          expect($fileRefType.validateFacets({
-            mediaTypes: [ $mediaType.create() ]
-          })).to.be.true;
-        });
-
-        context("with an empty array", function () {
-
-          it("should reject", function () {
-            expect($fileRefType.validateFacets({ mediaTypes: [] })).to.be.false;
-          });
-
-          it("should add a validation error", function () {
-            var errors = [];
-            $fileRefType.validateFacets({ mediaTypes: [] }, errors);
-            expect(errors).to.include.something.eql([
-              'mediaTypes',
-              "must specify at least one sulfur/schema/mediaType value"
-            ]);
-          });
-
-        });
-
-        context("with a value not of type sulfur/schema/mediaType", function () {
-
-          it("should reject", function () {
-            expect($fileRefType.validateFacets({ mediaTypes: [''] })).to.be.false;
-          });
-
-          it("should add a validation error", function () {
-            var errors = [];
-            $fileRefType.validateFacets({ mediaTypes: [''] }, errors);
-            expect(errors).to.include.something.eql([
-              'mediaTypes',
-              "must specify only sulfur/schema/mediaType values"
-            ]);
-          });
-
-        });
-
+      it("should include sulfur/schema/facet/mediaType", function () {
+        expect($fileRefType.getLegalFacets()).to.include($mediaTypeFacet);
       });
 
     });
 
-    describe('#initialize()', function () {
+    describe('.getValueType()', function () {
 
-      it("should be callable without facets", function () {
-        expect(bind($fileRefType, 'create')).to.not.throw();
-      });
-
-      it("should throw when .validateFacets() returns false", function () {
-        expect(bind($fileRefType, 'create', { mediaTypes: [] }))
-          .to.throw("facet mediaTypes must specify at least one sulfur/schema/mediaType value");
-      });
-
-      context("when .validateFacets() returns true", function () {
-
-        context("with facet `mediaTypes`", function () {
-
-          it("should use the media types", function () {
-            var mediaTypes = [ $mediaType.create('application', 'pdf') ];
-            var type = $fileRefType.create({ mediaTypes: mediaTypes });
-            expect(type.getMediaTypeValues()).to.eql(mediaTypes);
-          });
-
-          it("should ignore duplicate media types", function () {
-            var mediaTypes = [
-              $mediaType.create('image'),
-              $mediaType.create('image')
-            ];
-            var type = $fileRefType.create({ mediaTypes: mediaTypes });
-            expect(type.getMediaTypeValues()).to.eql([
-              $mediaType.create('image')
-            ]);
-          });
-
-        });
-
+      it("should be sulfur/schema/value/fileRef", function () {
+        expect($fileRefType.getValueType()).to.equal($fileRefValue);
       });
 
     });
 
-    describe('#getMediaTypeValues()', function () {
+    describe('#createValidator()', function () {
 
-      it("should return the values of facet `mediaTypes` when defined", function () {
-        var mediaTypes = [ $mediaType.create('text', 'plain') ];
-        var type = $fileRefType.create({ mediaTypes: mediaTypes });
-        expect(type.getMediaTypeValues()).to.eql(mediaTypes);
+      var sandbox;
+
+      beforeEach(function () {
+        sandbox = sinon.sandbox.create();
       });
 
-      it("should return undefined when facet `mediaTypes` is not defined", function () {
+      afterEach(function () {
+        sandbox.restore();
+      });
+
+      it("should return sulfur/schema/type/_simple#createValidator() when facet 'mediaType' is not defined", function () {
+        var spy = sandbox.spy($_simpleType.prototype, 'createValidator');
         var type = $fileRefType.create();
-        expect(type.getMediaTypeValues()).to.be.undefined;
+        var v = type.createValidator();
+        expect(spy).to.have.returned(sinon.match.same(v));
       });
 
-    });
-
-    describe('#validator()', function () {
-
-      it("should return a validator/all", function () {
-        var type = $fileRefType.create();
-        var v = type.validator();
-        expect($validators.all.prototype).to.be.prototypeOf(v);
-      });
-
-      it("should include a validator/prototype matching sulfur/schema/fileRef", function () {
-        var type = $fileRefType.create();
-        var v = type.validator();
-        expect(v).to.eql($validators.all.create([
-          $validators.prototype.create($mediaType.prototype)
-        ]));
-      });
-
-      it("should include a validator/enumeration when facet `mediaTypes` is defined", function () {
-        var mediaTypes = [ $mediaType.create('image', 'jpeg') ];
-        var type = $fileRefType.create({ mediaTypes: mediaTypes });
-        var v = type.validator();
-        expect(v).to.eql($validators.all.create([
-          $validators.prototype.create($mediaType.prototype),
-          $validators.enumeration.create(mediaTypes, { testMethod: 'matches' })
-        ]));
+      it("should use a validator/presence on 'getFile' with a validator/property on 'getMediaType' wrapping the validator of facet 'mediaType' when defined", function () {
+        var facets = [ $mediaTypeFacet.create([ $mediaType.create() ]) ];
+        var type = $fileRefType.create(facets);
+        var v = type.createValidator();
+        expect(v).to.eql(
+          $allValidator.create([
+            $prototypeValidator.create(type.getValueType().prototype),
+            $presenceValidator.create(
+              'getFile',
+              $propertyValidator.create(
+                'getMediaType',
+                facets[0].createValidator()
+              )
+            )
+          ])
+        );
       });
 
     });

@@ -26,22 +26,22 @@ define(['sulfur/factory'], function ($factory) {
   return $factory.derive({
 
     /**
-     * @param [function] keyfn (default #toString()) a key function
+     * @param [function] key (default #toString()) a key function
      * @param [array] items (optional) initial items to be inserted
      */
     initialize: (function () {
 
       var DEFAULT_KEY_FN = function (x) { return x.toString(); };
 
-      return function (keyfn, items) {
-        if (typeof keyfn === 'function') {
-          this.keyfn = keyfn;
+      return function (key, items) {
+        if (typeof key === 'function') {
+          this._key = key;
         } else {
-          this.keyfn = DEFAULT_KEY_FN;
-          items = keyfn;
+          this._key = DEFAULT_KEY_FN;
+          items = key;
         }
-        this.index = {};
-        this.items = [];
+        this._index = {};
+        this._items = [];
         if (items) {
           items.forEach(function (item) {
             this.insert(item);
@@ -51,17 +51,35 @@ define(['sulfur/factory'], function ($factory) {
 
     }()),
 
+    countItems: function () {
+      return this._items.length;
+    },
+
+    isEmpty: function () {
+      return this.countItems() === 0;
+    },
+
     /**
-     * Check if an item can be safely inserted into the map, i.e. the item's
-     * key is not associated with an item.
+     * Get an item's key.
      *
      * @param [any] item
      *
-     * @return [boolean] whether `item` can be safely inserted or not
+     * @return [string] the item's key
      */
-    canBeInserted: function (item) {
-      var key = sanitizeKey(this.keyfn(item));
-      return !this.index.hasOwnProperty(key);
+    getKey: function (item) {
+      return this._key(item);
+    },
+
+    /**
+     * Check if the map associates a key with an item.
+     *
+     * @param [string] key the key to check
+     *
+     * @return [boolean] whether the key is associated with an item or not
+     */
+    containsKey: function (key) {
+      var newkey = sanitizeKey(key);
+      return this._index.hasOwnProperty(newkey);
     },
 
     /**
@@ -72,9 +90,9 @@ define(['sulfur/factory'], function ($factory) {
      * @return [boolean] whether the map contains the item, based on strict
      *   equality, or not
      */
-    contains: function (item) {
-      var candidateItem = this.getByKey(this.keyfn(item));
-      return item === candidateItem;
+    containsItem: function (item) {
+      var candidateItem = this.getItemByKey(this.getKey(item));
+      return candidateItem ? candidateItem === item : false;
     },
 
     /**
@@ -83,11 +101,23 @@ define(['sulfur/factory'], function ($factory) {
      * @return [any] the item associated with the key
      * @return [undefined] if no item is associated with the key
      */
-    getByKey: function (key) {
+    getItemByKey: function (key) {
       key = sanitizeKey(key);
-      if (this.index.hasOwnProperty(key)) {
-        return this.items[this.index[key]];
+      if (this._index.hasOwnProperty(key)) {
+        return this._index[key];
       }
+    },
+
+    /**
+     * Check if an item can be safely inserted into the map, i.e. the item's
+     * key is not associated with an item.
+     *
+     * @param [any] item
+     *
+     * @return [boolean] whether `item` can be safely inserted or not
+     */
+    canBeInserted: function (item) {
+      return !this.containsKey(this.getKey(item));
     },
 
     /**
@@ -97,12 +127,12 @@ define(['sulfur/factory'], function ($factory) {
      *   with another item
      */
     insert: function (item) {
-      var key = sanitizeKey(this.keyfn(item));
-      if (this.index.hasOwnProperty(key)) {
-        throw new Error('key "' + key + '" is already associated with an item');
+      if (!this.canBeInserted(item)) {
+        throw new Error('key "' + this.getKey(item) + '" is already associated with an item');
       }
-      this.index[key] = this.items.length;
-      this.items.push(item);
+      var key = sanitizeKey(this.getKey(item));
+      this._index[key] = item;
+      this._items.push(item);
     },
 
     /**
@@ -111,7 +141,7 @@ define(['sulfur/factory'], function ($factory) {
      * @return [array] the items
      */
     toArray: function () {
-      return this.items;
+      return this._items;
     }
 
   });

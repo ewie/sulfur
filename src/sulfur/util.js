@@ -87,6 +87,18 @@ define(['sulfur/util/orderedMap'], function ($orderedMap) {
     },
 
     /**
+     * Sort an array without modifying the original array.
+     *
+     * @param [array] ary the array to sort
+     * @param [function] fn (optional) a custom comparison function
+     *
+     * @return [array] a new sorted array
+     */
+    sort: function (ary, fn) {
+      return [].concat(ary).sort(fn);
+    },
+
+    /**
      * Remove duplicate elements from an array by using a string key.
      *
      * @param [array] elements

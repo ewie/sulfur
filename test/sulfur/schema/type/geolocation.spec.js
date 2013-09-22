@@ -9,16 +9,28 @@
 
 define([
   'shared',
+  'sulfur/schema/facet/maxExclusive',
+  'sulfur/schema/facet/maxInclusive',
+  'sulfur/schema/facet/minExclusive',
+  'sulfur/schema/facet/minInclusive',
   'sulfur/schema/type/double',
   'sulfur/schema/type/geolocation',
-  'sulfur/schema/validators',
+  'sulfur/schema/validator/all',
+  'sulfur/schema/validator/property',
+  'sulfur/schema/validator/prototype',
   'sulfur/schema/value/double',
   'sulfur/schema/value/geolocation'
 ], function (
     $shared,
+    $maxExclusiveFacet,
+    $maxInclusiveFacet,
+    $minExclusiveFacet,
+    $minInclusiveFacet,
     $doubleType,
     $geolocationType,
-    $validators,
+    $allValidator,
+    $propertyValidator,
+    $prototypeValidator,
     $doubleValue,
     $geolocationValue
 ) {
@@ -34,18 +46,20 @@ define([
 
       it("should use a default longitude type", function () {
         var type = $geolocationType.create();
-        expect(type.getLongitudeType()).to.eql($doubleType.create({
-          minInclusive: $doubleValue.create(-180),
-          maxInclusive: $doubleValue.create(180)
-        }));
+        expect(type.getLongitudeType()).to.eql(
+          $doubleType.create([
+            $minInclusiveFacet.create($doubleValue.create(-180)),
+            $maxInclusiveFacet.create($doubleValue.create(180))
+          ]));
       });
 
       it("should use a default latitude type", function () {
         var type = $geolocationType.create();
-        expect(type.getLatitudeType()).to.eql($doubleType.create({
-          minInclusive: $doubleValue.create(-90),
-          maxInclusive: $doubleValue.create(90)
-        }));
+        expect(type.getLatitudeType()).to.eql(
+          $doubleType.create([
+            $minInclusiveFacet.create($doubleValue.create(-90)),
+            $maxInclusiveFacet.create($doubleValue.create(90))
+          ]));
       });
 
       context("with a custom longitude type", function () {
@@ -62,33 +76,33 @@ define([
         });
 
         it("should reject facet `minExclusive` with a value less than -180", function () {
-          var lngType = $doubleType.create({
-            minExclusive: $doubleValue.create(-181)
-          });
+          var lngType = $doubleType.create([
+            $minExclusiveFacet.create($doubleValue.create(-181))
+          ]);
           expect(bind($geolocationType, 'create', { longitude: lngType }))
             .to.throw("longitude type must not allow values outside [-180, 180]");
         });
 
         it("should reject facet `minInclusive` with a value is less than -180", function () {
-          var lngType = $doubleType.create({
-            minInclusive: $doubleValue.create(-181)
-          });
+          var lngType = $doubleType.create([
+            $minInclusiveFacet.create($doubleValue.create(-181))
+          ]);
           expect(bind($geolocationType, 'create', { longitude: lngType }))
             .to.throw("longitude type must not allow values outside [-180, 180]");
         });
 
         it("should reject facet `maxExclusive` with a value greater than 180", function () {
-          var lngType = $doubleType.create({
-            maxExclusive: $doubleValue.create(181)
-          });
+          var lngType = $doubleType.create([
+            $maxExclusiveFacet.create($doubleValue.create(181))
+          ]);
           expect(bind($geolocationType, 'create', { longitude: lngType }))
             .to.throw("longitude type must not allow values outside [-180, 180]");
         });
 
         it("should reject facet `maxInclusive` with a value is less than 180", function () {
-          var lngType = $doubleType.create({
-            maxInclusive: $doubleValue.create(181)
-          });
+          var lngType = $doubleType.create([
+            $maxInclusiveFacet.create($doubleValue.create(181))
+          ]);
           expect(bind($geolocationType, 'create', { longitude: lngType }))
             .to.throw("longitude type must not allow values outside [-180, 180]");
         });
@@ -109,33 +123,33 @@ define([
         });
 
         it("should reject facet `minExclusive` with a value less than -90", function () {
-          var latType = $doubleType.create({
-            minExclusive: $doubleValue.create(-91)
-          });
+          var latType = $doubleType.create([
+            $minExclusiveFacet.create($doubleValue.create(-91))
+          ]);
           expect(bind($geolocationType, 'create', { latitude: latType }))
             .to.throw("latitude type must not allow values outside [-90, 90]");
         });
 
         it("should reject facet `minInclusive` with a value is less than -90", function () {
-          var latType = $doubleType.create({
-            minInclusive: $doubleValue.create(-91)
-          });
+          var latType = $doubleType.create([
+            $minInclusiveFacet.create($doubleValue.create(-91))
+          ]);
           expect(bind($geolocationType, 'create', { latitude: latType }))
             .to.throw("latitude type must not allow values outside [-90, 90]");
         });
 
         it("should reject facet `maxExclusive` with a value greater than 90", function () {
-          var latType = $doubleType.create({
-            maxExclusive: $doubleValue.create(91)
-          });
+          var latType = $doubleType.create([
+            $maxExclusiveFacet.create($doubleValue.create(91))
+          ]);
           expect(bind($geolocationType, 'create', { latitude: latType }))
             .to.throw("latitude type must not allow values outside [-90, 90]");
         });
 
         it("should reject facet `maxInclusive` with a value is less than 90", function () {
-          var latType = $doubleType.create({
-            maxInclusive: $doubleValue.create(91)
-          });
+          var latType = $doubleType.create([
+            $maxInclusiveFacet.create($doubleValue.create(91))
+          ]);
           expect(bind($geolocationType, 'create', { latitude: latType }))
             .to.throw("latitude type must not allow values outside [-90, 90]");
         });
@@ -148,10 +162,11 @@ define([
 
       it("should return the longitude type", function () {
         var type = $geolocationType.create();
-        expect(type.getLongitudeType()).to.eql($doubleType.create({
-          minInclusive: $doubleValue.create(-180),
-          maxInclusive: $doubleValue.create(180)
-        }));
+        expect(type.getLongitudeType()).to.eql(
+          $doubleType.create([
+            $minInclusiveFacet.create($doubleValue.create(-180)),
+            $maxInclusiveFacet.create($doubleValue.create(180))
+          ]));
       });
 
     });
@@ -160,25 +175,26 @@ define([
 
       it("should return the latitude type", function () {
         var type = $geolocationType.create();
-        expect(type.getLatitudeType()).to.eql($doubleType.create({
-          minInclusive: $doubleValue.create(-90),
-          maxInclusive: $doubleValue.create(90)
-        }));
+        expect(type.getLatitudeType()).to.eql(
+          $doubleType.create([
+            $minInclusiveFacet.create($doubleValue.create(-90)),
+            $maxInclusiveFacet.create($doubleValue.create(90))
+          ]));
       });
 
     });
 
-    describe('#validator()', function () {
+    describe('#createValidator()', function () {
 
       it("should return the validator", function () {
         var type = $geolocationType.create();
-        var v = type.validator();
-        expect(v).to.eql($validators.all.create([
-          $validators.prototype.create($geolocationValue.prototype),
-          $validators.property.create('getLongitude',
-            type.getLongitudeType().validator()),
-          $validators.property.create('getLatitude',
-            type.getLatitudeType().validator())
+        var v = type.createValidator();
+        expect(v).to.eql($allValidator.create([
+          $prototypeValidator.create($geolocationValue.prototype),
+          $propertyValidator.create('getLongitude',
+            type.getLongitudeType().createValidator()),
+          $propertyValidator.create('getLatitude',
+            type.getLatitudeType().createValidator())
         ]));
       });
 

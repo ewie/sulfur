@@ -8,114 +8,32 @@
 
 define([
   'sulfur/schema/type/decimal',
-  'sulfur/schema/validators',
-  'sulfur/schema/value/integer',
-  'sulfur/util'
-], function ($decimalType, $validators, $integerValue, $util) {
+  'sulfur/schema/value/integer'
+], function ($decimalType, $integerValue) {
 
   'use strict';
 
   var $ = $decimalType.clone({
 
-    validateFacets: (function () {
-
-      function isInteger(x) {
-        return $integerValue.prototype.isPrototypeOf(x);
-      }
-
-      function validateEnumerationFacet(facets, errors) {
-        if (facets.enumeration.length === 0) {
-          if (errors) {
-            errors.push([ 'enumeration', "must specify at least one sulfur/schema/value/integer value" ]);
-          }
-          return false;
-        }
-        if (!facets.enumeration.every(isInteger)) {
-          if (errors) {
-            errors.push([ 'enumeration', "must specify only sulfur/schema/value/integer values" ]);
-          }
-          return false;
-        }
-        return true;
-      }
-
-      function validateMinInclusiveFacet(facets, errors) {
-        if (isInteger(facets.minInclusive)) {
-          return true;
-        }
-        if (errors) {
-          errors.push([ 'minInclusive', "must be a sulfur/schema/value/integer value" ]);
-        }
-        return false;
-      }
-
-      function validateMaxInclusiveFacet(facets, errors) {
-        if (isInteger(facets.maxInclusive)) {
-          return true;
-        }
-        if (errors) {
-          errors.push([ 'maxInclusive', "must be a sulfur/schema/value/integer value" ]);
-        }
-        return false;
-      }
-
-      function validateMinExclusiveFacet(facets, errors) {
-        if (isInteger(facets.minExclusive)) {
-          return true;
-        }
-        if (errors) {
-          errors.push([ 'minExclusive', "must be a sulfur/schema/value/integer value" ]);
-        }
-        return false;
-      }
-
-      function validateMaxExclusiveFacet(facets, errors) {
-        if (isInteger(facets.maxExclusive)) {
-          return true;
-        }
-        if (errors) {
-          errors.push([ 'maxExclusive', "must be a sulfur/schema/value/integer value" ]);
-        }
-        return false;
-      }
-
-      function validateFractionDigitsFacet(facets, errors) {
-        if (facets.fractionDigits === 0) {
-          return true;
-        }
-        if (errors) {
-          errors.push([ 'fractionDigits', "must be zero" ]);
-        }
-        return false;
-      }
-
-      var VALIDATORS = [
-        [ 'enumeration', validateEnumerationFacet ],
-        [ 'fractionDigits', validateFractionDigitsFacet ],
-        [ 'maxExclusive', validateMaxExclusiveFacet ],
-        [ 'maxInclusive', validateMaxInclusiveFacet ],
-        [ 'minExclusive', validateMinExclusiveFacet ],
-        [ 'minInclusive', validateMinInclusiveFacet ]
-      ];
-
-      return function (facets, errors) {
-        return VALIDATORS.every(function (_) {
-          return $util.isUndefined(facets[_[0]]) || _[1](facets, errors);
-        }) && $decimalType.validateFacets(facets, errors);
-      };
-
-    }())
+    getValueType: function () {
+      return $integerValue;
+    }
 
   });
 
   $.augment({
 
-    validator: function () {
-      var v = $decimalType.prototype.validator.call(this);
-      var validators = [
-        $validators.prototype.create($integerValue.prototype)
-      ].concat(v._validators.slice(1));
-      return $validators.all.create(validators);
+    validateFacets: function () {
+      if (!$decimalType.prototype.validateFacets.call(this)) {
+        return false;
+      }
+      if (this.getFacets()) {
+        var fractionDigitsFacet = this.getStandardFacet('fractionDigits');
+        if (fractionDigitsFacet && fractionDigitsFacet.getValue() !== 0) {
+          return false;
+        }
+      }
+      return true;
     }
 
   });
