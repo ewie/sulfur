@@ -7,10 +7,10 @@
 /* global define */
 
 define([
-  'sulfur/factory',
+  'sulfur/schema/value/_simple',
   'sulfur/schema/value/decimal',
   'sulfur/util'
-], function ($factory, $decimalValue, $util) {
+], function ($_simpleValue, $decimalValue, $util) {
 
   'use strict';
 
@@ -39,7 +39,7 @@ define([
     return year % 400 === 0 || year % 100 !== 0 && year % 4 === 0;
   }
 
-  var $dateTime = $factory.clone({
+  var $ = $_simpleValue.clone({
 
     /**
      * Check if a string represents a valid dateTime according to XML Schema 1.0
@@ -122,7 +122,7 @@ define([
 
   });
 
-  $dateTime.augment({
+  $.augment({
 
     /**
      * Initialize the datetime with year, month, day, hour, minute, second and
@@ -611,6 +611,6 @@ define([
 
   });
 
-  return $dateTime;
+  return $;
 
 });

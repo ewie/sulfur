@@ -99,13 +99,8 @@ define([
 
     createValidator: function () {
       var validators = [];
-      if (this._base) {
-        validators.push(this._base.createValidator());
-      } else {
-        validators.push($prototypeValidator.create(this.getValueType().prototype));
-      }
       if (this._facets) {
-        this._facets.toArray().reduce(function (validators, facet) {
+        validators = this._facets.toArray().reduce(function (validators, facet) {
           validators.push(facet.createValidator());
           return validators;
         }, validators);

@@ -10,16 +10,8 @@
 define([
   'shared',
   'sulfur/schema/type/_faceted',
-  'sulfur/schema/validator/all',
-  'sulfur/schema/validator/property',
-  'sulfur/schema/validator/prototype',
-], function (
-    $shared,
-    $_facetedType,
-    $allValidator,
-    $propertyValidator,
-    $prototypeValidator
-) {
+  'sulfur/schema/validator/all'
+], function ($shared, $_facetedType, $allValidator) {
 
   'use strict';
 
@@ -338,34 +330,22 @@ define([
         });
       });
 
-      it("should return a validator/all", function () {
-        var type = $derivedType.create();
-        var v = type.createValidator();
-        expect($allValidator.prototype).to.be.prototypeOf(v);
-      });
-
-      it("should include a validator/prototype with the value type's prototype", function () {
-        var type = $derivedType.create();
-        var v = type.createValidator();
-        expect(v).to.eql($allValidator.create([
-          $prototypeValidator.create(type.getValueType().prototype)
-        ]));
-      });
-
-      it("should include each facet's validator", function () {
+      it("should return a validator/all using each facet's validator", function () {
+        var facetsValidator = {};
         var facets = [
           {
             getNamespace: function () { return 'urn:foo'; },
             getName: function () { return 'bar'; },
-            createValidator: function () {}
+            createValidator: function () { return facetsValidator; }
           }
         ];
         var type = $derivedType.create(facets);
         var v = type.createValidator();
-        expect(v).to.eql($allValidator.create([
-          $prototypeValidator.create(type.getValueType().prototype),
-          facets[0].createValidator()
-        ]));
+        expect(v).to.eql(
+          $allValidator.create([
+            facets[0].createValidator()
+          ])
+        );
       });
 
     });

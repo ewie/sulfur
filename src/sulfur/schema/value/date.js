@@ -7,9 +7,9 @@
 /* global define */
 
 define([
-  'sulfur/factory',
+  'sulfur/schema/value/_simple',
   'sulfur/schema/value/dateTime'
-], function ($factory, $dateTimeValue) {
+], function ($_simpleValue, $dateTimeValue) {
 
   'use strict';
 
@@ -29,7 +29,7 @@ define([
    *     instance defines a timezone
    */
 
-  var $ = $factory.clone({
+  var $ = $_simpleValue.clone({
 
     /**
      * Check if a string represents a valid date literal.

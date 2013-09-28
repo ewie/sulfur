@@ -7,14 +7,14 @@
 /* global define */
 
 define([
-  'sulfur/factory',
+  'sulfur/schema/value/_simple',
   'sulfur/util',
   'unorm'
-], function ($factory, $util, $unorm) {
+], function ($_simpleValue, $util, $unorm) {
 
   'use strict';
 
-  var $ = $factory.clone({
+  var $ = $_simpleValue.clone({
 
     /**
      * Check if a string contains only valid codeunits.

@@ -9,9 +9,10 @@
 
 define([
   'shared',
+  'sulfur/schema/value/_simple',
   'sulfur/schema/value/date',
   'sulfur/schema/value/dateTime'
-], function ($shared, $dateValue, $dateTimeValue) {
+], function ($shared, $_simpleValue, $dateValue, $dateTimeValue) {
 
   'use strict';
 
@@ -29,6 +30,10 @@ define([
 
     afterEach(function () {
       sandbox.restore();
+    });
+
+    it("should be derived from sulfur/schema/value/_simple", function () {
+      expect($_simpleValue).to.be.prototypeOf($dateValue);
     });
 
     describe('.isValidLiteral()', function () {
@@ -293,8 +298,8 @@ define([
         });
 
         it("should adjust the year to UTC", function () {
-          var dt = $dateTimeValue.create({ year: 2, tzhour: 24 });
-          var x = $dateTimeValue.create({ year: 1, month: 12, day: 31, tzhour: 0 });
+          var dt = $dateValue.create({ year: 2, tzhour: 24 });
+          var x = $dateValue.create({ year: 1, month: 12, day: 31, tzhour: 0 });
           expect(dt).to.eql(x);
         });
 

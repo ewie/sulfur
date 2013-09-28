@@ -6,11 +6,11 @@
 
 /* global define */
 
-define(['sulfur/factory'], function ($factory) {
+define(['sulfur/schema/value/_simple'], function ($_simpleValue) {
 
   'use strict';
 
-  return $factory.derive({
+  return $_simpleValue.derive({
 
     /**
      * @param [sulfur/schema/value/string] id

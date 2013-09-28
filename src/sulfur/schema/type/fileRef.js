@@ -10,15 +10,19 @@ define([
   'sulfur/schema/facet/mediaType',
   'sulfur/schema/mediaType',
   'sulfur/schema/type/_simple',
+  'sulfur/schema/validator/all',
   'sulfur/schema/validator/presence',
   'sulfur/schema/validator/property',
+  'sulfur/schema/validator/prototype',
   'sulfur/schema/value/fileRef'
 ], function (
     $mediaTypeFacet,
     $mediaType,
     $_simpleType,
+    $allValidator,
     $presenceValidator,
     $propertyValidator,
+    $prototypeValidator,
     $fileRefValue
 ) {
 
@@ -40,16 +44,20 @@ define([
 
     createValidator: function () {
       var validator = $_simpleType.prototype.createValidator.call(this);
-      if (this.hasFacet($mediaTypeFacet.getName(), $mediaTypeFacet.getNamespace())) {
-        validator._validators[1] = $presenceValidator.create(
+      var mediaTypeFacet = this.getFacet($mediaTypeFacet.getName(), $mediaTypeFacet.getNamespace());
+      if (!mediaTypeFacet) {
+        return validator;
+      }
+      return $allValidator.create([
+        $prototypeValidator.create(this.getValueType().prototype),
+        $presenceValidator.create(
           'getFile',
           $propertyValidator.create(
             'getMediaType',
-            validator._validators[1]
+            mediaTypeFacet.createValidator()
           )
-        );
-      }
-      return validator;
+        )
+      ]);
     }
 
   });

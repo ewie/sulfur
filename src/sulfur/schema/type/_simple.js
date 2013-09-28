@@ -9,7 +9,8 @@
 define([
   'sulfur/schema/type/_faceted',
   'sulfur/schema/validator/all',
-], function ($_facetedType, $allValidator) {
+  'sulfur/schema/validator/prototype'
+], function ($_facetedType, $allValidator, $prototypeValidator) {
 
   'use strict';
 
@@ -42,14 +43,19 @@ define([
 
     createValidator: function () {
       var facetsValidator = $_facetedType.prototype.createValidator.call(this);
+      var validators;
       if (this._base) {
-        return $allValidator.create([
+        validators = [
           this._base.createValidator(),
           facetsValidator
-        ]);
+        ];
       } else {
-        return facetsValidator;
+        validators = [
+          $prototypeValidator.create(this.getValueType().prototype),
+          facetsValidator
+        ];
       }
+      return $allValidator.create(validators);
     }
 
   });

@@ -9,8 +9,9 @@
 
 define([
   'shared',
+  'sulfur/schema/value/_simple',
   'sulfur/schema/value/double'
-],function ($shared, $doubleValue) {
+],function ($shared, $_simpleValue, $doubleValue) {
 
   'use strict';
 
@@ -28,6 +29,10 @@ define([
 
     afterEach(function () {
       sandbox.restore();
+    });
+
+    it("should be derived from sulfur/schema/value/_simple", function () {
+      expect($_simpleValue).to.be.prototypeOf($doubleValue);
     });
 
     describe('.isValidLiteral()', function () {

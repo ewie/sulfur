@@ -9,8 +9,9 @@
 
 define([
   'shared',
+  'sulfur/schema/value/_simple',
   'sulfur/schema/value/boolean'
-], function ($shared, $booleanValue) {
+], function ($shared, $_simpleValue, $booleanValue) {
 
   'use strict';
 
@@ -18,6 +19,10 @@ define([
   var bind = $shared.bind;
 
   describe('sulfur/schema/boolean', function () {
+
+    it("should be derived from sulfur/schema/value/_simple", function () {
+      expect($_simpleValue).to.be.prototypeOf($booleanValue);
+    });
 
     describe('.isValidLiteral()', function () {
 

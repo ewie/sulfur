@@ -7,9 +7,9 @@
 /* global define */
 
 define([
-  'sulfur/factory',
+  'sulfur/schema/value/_simple',
   'sulfur/util'
-], function ($factory, $util) {
+], function ($_simpleValue, $util) {
 
   'use strict';
 
@@ -28,7 +28,7 @@ define([
    */
   var LITERAL_PATTERN = /^([+-])?([0-9]+)(?:\.([0-9]+))?$/;
 
-  var $ = $factory.clone({
+  var $ = $_simpleValue.clone({
 
     /**
      * Check if a string represents a valid decimal value.

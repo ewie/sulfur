@@ -9,9 +9,10 @@
 
 define([
   'shared',
+  'sulfur/schema/value/_simple',
   'sulfur/schema/value/string',
   'unorm'
-], function ($shared, $stringValue, $unorm) {
+], function ($shared, $_simpleValue, $stringValue, $unorm) {
 
   'use strict';
 
@@ -20,6 +21,10 @@ define([
   var sinon = $shared.sinon;
 
   describe('sulfur/schema/string', function () {
+
+    it("should be derived from sulfur/schema/value/_simple", function () {
+      expect($_simpleValue).to.be.prototypeOf($stringValue);
+    });
 
     describe('.isValidLiteral()', function () {
 

@@ -10,15 +10,20 @@
 define([
   'shared',
   'sulfur/schema/file',
+  'sulfur/schema/value/_simple',
   'sulfur/schema/value/fileRef',
   'sulfur/schema/value/string'
-], function ($shared, $file, $fileRefValue, $stringValue) {
+], function ($shared, $file, $_simpleValue, $fileRefValue, $stringValue) {
 
   'use strict';
 
   var expect = $shared.expect;
 
   describe('sulfur/schema/fileRef', function () {
+
+    it("should be derived from sulfur/schema/value/_simple", function () {
+      expect($_simpleValue).to.be.prototypeOf($fileRefValue);
+    });
 
     describe('#initialize()', function () {
 

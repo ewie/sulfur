@@ -77,7 +77,7 @@ define([
         expect(spy).to.have.returned(sinon.match.same(v));
       });
 
-      it("should use a validator/presence on 'getFile' with a validator/property on 'getMediaType' wrapping the validator of facet 'mediaType' when defined", function () {
+      it("should use a validator/all using a validator/prototype matching sulfur/schema/valud/fileRef, and a validator/presence on 'getFile' with a validator/property on 'getMediaType' wrapping the validator of facet 'mediaType' when defined", function () {
         var facets = [ $mediaTypeFacet.create([ $mediaType.create() ]) ];
         var type = $fileRefType.create(facets);
         var v = type.createValidator();

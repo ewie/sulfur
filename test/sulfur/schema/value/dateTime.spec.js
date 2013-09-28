@@ -9,9 +9,10 @@
 
 define([
   'shared',
+  'sulfur/schema/value/_simple',
   'sulfur/schema/value/dateTime',
   'sulfur/schema/value/decimal'
-], function ($shared, $dateTimeValue, $decimalValue) {
+], function ($shared, $_simpleValue, $dateTimeValue, $decimalValue) {
 
   'use strict';
 
@@ -29,6 +30,10 @@ define([
 
     afterEach(function () {
       sandbox.restore();
+    });
+
+    it("should be derived from sulfur/schema/value/_simple", function () {
+      expect($_simpleValue).to.be.prototypeOf($dateTimeValue);
     });
 
     describe('.isValidLiteral()', function () {

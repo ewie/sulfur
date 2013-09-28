@@ -11,8 +11,15 @@ define([
   'shared',
   'sulfur/schema/type/_faceted',
   'sulfur/schema/type/_simple',
-  'sulfur/schema/validator/all'
-], function ($shared, $_facetedType, $_simpleType, $allValidator) {
+  'sulfur/schema/validator/all',
+  'sulfur/schema/validator/prototype'
+], function (
+    $shared,
+    $_facetedType,
+    $_simpleType,
+    $allValidator,
+    $prototypeValidator
+) {
 
   'use strict';
 
@@ -107,7 +114,7 @@ define([
         });
       });
 
-      it("should return a validator/all with the base type's validator and the facets validator when a base type is defined", function () {
+      it("should return a validator/all with the base type's validator, and the facets validator when a base type is defined", function () {
         var base = $derivedType.create();
         var type = $derivedType.create(undefined, base);
         var v = type.createValidator();
@@ -117,9 +124,13 @@ define([
         ]));
       });
 
-      it("should return the facets validator when no base is defined", function () {
+      it("should return a validator/all using a validator/prototype with the value type's prototype, and the facets validator when no base is defined", function () {
         var type = $derivedType.create();
-        expect(type.createValidator()).to.eql($_facetedType.prototype.createValidator.call(type));
+        var v = type.createValidator();
+        expect(v).to.eql($allValidator.create([
+          $prototypeValidator.create(type.getValueType().prototype),
+          $_facetedType.prototype.createValidator.call(type)
+        ]));
       });
 
     });
