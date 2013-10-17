@@ -17,7 +17,7 @@ define(['sulfur/schema/value/decimal'], function ($decimalValue) {
    *   $1 optional sign
    *   $2 integral digits
    */
-  var LITERAL_PATTERN = /^([+-]?)([0-9]+)(?:\.0+)?$/;
+  var LITERAL_PATTERN = /^[\x09\x0A\x0D\x20]*([+-]?)([0-9]+)(?:\.0+)?[\x09\x0A\x0D\x20]*$/;
 
   var $ = $decimalValue.clone({
 

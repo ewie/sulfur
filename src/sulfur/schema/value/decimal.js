@@ -26,7 +26,7 @@ define([
    *   $2 integral digits
    *   $3 optional fraction digits
    */
-  var LITERAL_PATTERN = /^([+-])?([0-9]+)(?:\.([0-9]+))?$/;
+  var LITERAL_PATTERN = /^[\x09\x0A\x0D\x20]*([+-])?([0-9]+)(?:\.([0-9]+))?[\x09\x0A\x0D\x20]*$/;
 
   var $ = $_simpleValue.clone({
 

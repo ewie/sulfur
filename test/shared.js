@@ -37,11 +37,18 @@ define([
     return fn.bind.apply(fn, [obj].concat(args));
   }
 
+  function returns(x) {
+    return function () {
+      return x;
+    };
+  }
+
   return {
     expect: expect,
     sinon: sinon,
     bind: bind,
-    descriptor: Object.getOwnPropertyDescriptor
+    descriptor: Object.getOwnPropertyDescriptor,
+    returns: returns,
   };
 
 });

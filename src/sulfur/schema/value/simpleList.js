@@ -7,42 +7,48 @@
 /* global define */
 
 define([
-  'sulfur/factory',
-  'sulfur/schema/value/_simple',
+  'sulfur/schema/value/list',
   'sulfur/util'
-], function ($factory, $_simpleValue, $util) {
+], function ($listValue, $util) {
 
   'use strict';
 
-  return $factory.derive({
+  function normalize(s) {
+    return s.replace(/[\x09\x0A\x0D\x20]+/g, ' ').replace(/^\x20|\x20$/g, '');
+  }
 
-    initialize: function (itemValueType, items) {
-      if (!$_simpleValue.isPrototypeOf(itemValueType)) {
-        throw new Error("expecting an item value type derived from sulfur/schema/value/_simple");
-      }
-      if (items && !items.every($util.bind(itemValueType.prototype, 'isPrototypeOf'))) {
-        throw new Error("expecting only items of the given item value type");
-      }
-      this._itemValueType = itemValueType;
-      this._items = items || [];
+  /**
+   * @abstract
+   *
+   * @implement .getItemValueType()
+   */
+  var $ = $listValue.clone({
+
+    typed: function (itemValueType) {
+      return this.clone({
+        getItemValueType: $util.returns(itemValueType)
+      });
     },
 
-    getItemValueType: function () {
-      return this._itemValueType;
-    },
-
-    getLength: function () {
-      return this._items.length;
-    },
-
-    toArray: function () {
-      return this._items;
-    },
-
-    toString: function () {
-      return this._items.map($util.method('toString')).join(' ');
+    parse: function (s) {
+      var itemValueType = this.getItemValueType();
+      var values = normalize(s).split(' ').map(function (s) {
+        return itemValueType.parse(s);
+      });
+      return this.create(values);
     }
 
   });
+
+  $.augment({
+
+    toString: function () {
+      var s = this._values.map($util.method('toString')).join(' ');
+      return normalize(s);
+    }
+
+  });
+
+  return $;
 
 });

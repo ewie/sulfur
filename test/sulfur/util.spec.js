@@ -139,6 +139,16 @@ define([
 
     });
 
+    describe('.returns()', function () {
+
+      it("should return a function returning the given value", function () {
+        var x = {};
+        var fn = $util.returns(x);
+        expect(fn()).to.equal(x);
+      });
+
+    });
+
     describe('.sort()', function () {
 
       it("should sort an array", function () {

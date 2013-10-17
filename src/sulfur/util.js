@@ -87,6 +87,19 @@ define(['sulfur/util/orderedMap'], function ($orderedMap) {
     },
 
     /**
+     * Create a function returning a given value.
+     *
+     * @param [any] x a value to be returned by the function
+     *
+     * @return [function] a function returning the given value
+     */
+    returns: function (x) {
+      return function () {
+        return x;
+      };
+    },
+
+    /**
      * Sort an array without modifying the original array.
      *
      * @param [array] ary the array to sort

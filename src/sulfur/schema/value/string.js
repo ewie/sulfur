@@ -78,6 +78,49 @@ define([
     },
 
     /**
+     * @param [string] mode the normalization mode ("collapse", "preserve" or "replace")
+     *
+     * @return [sulfur/schema/value/string] a string with normalized white space
+     *
+     * @throw [Error] when an invalid normalization mode is given
+     */
+    normalizeWhiteSpace: function (mode) {
+      switch (mode) {
+      case 'collapse':
+        return this.collapseWhiteSpace();
+      case 'preserve':
+        return this;
+      case 'replace':
+        return this.replaceWhiteSpace();
+      default:
+        throw new Error('unexpected normalization mode "' + mode + '", ' +
+          'expecting either "collapse", "preserve" or "replace"');
+      }
+    },
+
+    /**
+     * Replace every sequence of white space characters with a single space,
+     * and remove leading and trailing white space.
+     *
+     * @return [sulfur/schema/value/string] a string with collapsed white space
+     */
+    collapseWhiteSpace: function () {
+      var s = this._value.replace(/[\x09\x0A\x0D\x20]+/g, ' ')
+        .replace(/^\x20|\x20$/g, '');
+      return $.create(s);
+    },
+
+    /**
+     * Replace every white space character with a single space.
+     *
+     * @return [sulfur/schema/value/string] a string with replaced white space
+     */
+    replaceWhiteSpace: function () {
+      var s = this._value.replace(/[\x09\x0A\x0D\x20]/g, ' ');
+      return $.create(s);
+    },
+
+    /**
      * Check this for equality with another string.
      *
      * @param [sulfur/schema/value/string] other

@@ -63,6 +63,11 @@ define([
           .to.throw('invalid literal "123abc"');
       });
 
+      it("should ignore leading and trailing white space", function () {
+        var f = $doubleValue.parse('\x09\x0A\x0D 0 \x09\x0A\x0D');
+        expect(f).to.eql($doubleValue.create());
+      });
+
       it("should parse NaN", function () {
         var f = $doubleValue.parse('NaN');
         expect(f.isNaN()).to.be.true;

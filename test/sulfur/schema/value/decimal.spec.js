@@ -37,6 +37,10 @@ define([
 
     describe('.isValidLiteral()', function () {
 
+      it("should ignore leading and trailing white space", function () {
+        expect($decimalValue.isValidLiteral('\x09\x0A\x0D 0 \x09\x0A\x0D')).to.be.true;
+      });
+
       it("should accept integer literals", function () {
         expect($decimalValue.isValidLiteral('0')).to.be.true;
       });
@@ -67,6 +71,11 @@ define([
       });
 
       context("with a valid string", function () {
+
+        it("should ignore leading and trailing white space", function () {
+          var d = $decimalValue.parse('\x09\x0A\x0D 0 \x09\x0A\x0D');
+          expect(d).to.eql($decimalValue.create());
+        });
 
         it("should accept integers", function () {
           var d = $decimalValue.parse('0');

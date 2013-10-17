@@ -21,7 +21,7 @@ define(['sulfur/schema/value/_simple'], function ($_simpleValue) {
      */
     isValidLiteral: (function () {
 
-      var LITERAL_PATTERN = /^(?:true|false|1|0)$/;
+      var LITERAL_PATTERN = /^[\x09\x0A\x0D\x20]*(?:true|false|1|0)[\x09\x0A\x0D\x20]*$/;
 
       return function (s) {
         return LITERAL_PATTERN.test(s);
@@ -40,7 +40,7 @@ define(['sulfur/schema/value/_simple'], function ($_simpleValue) {
       if (!this.isValidLiteral(s)) {
         throw new Error('invalid boolean literal "' + s + '"');
       }
-      var value = s === 'true' || s === '1';
+      var value = /true|1/.test(s);
       return this.create(value);
     }
 

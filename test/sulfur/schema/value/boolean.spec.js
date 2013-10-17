@@ -42,6 +42,10 @@ define([
         expect($booleanValue.isValidLiteral('0')).to.be.true;
       });
 
+      it("should ignore leading and trailing white space", function () {
+        expect($booleanValue.isValidLiteral('\x09\x0A\x0D true \x09\x0A\x0D')).to.be.true;
+      });
+
       it("should reject an invalid literal", function () {
         expect($booleanValue.isValidLiteral('')).to.be.false;
       });
@@ -68,6 +72,11 @@ define([
       it("should parse '0' as false", function () {
         var b = $booleanValue.parse('0');
         expect(b.getValue()).to.be.false;
+      });
+
+      it("should ignore leading and trailing white space", function () {
+        var b = $booleanValue.parse('\x09\x0A\x0D true \x09\x0A\x0D');
+        expect(b.getValue()).to.be.true;
       });
 
       it("should reject an invalid literal", function () {

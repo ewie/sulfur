@@ -5,86 +5,68 @@
  */
 
 /* global define */
-/* global describe, it */
+/* global beforeEach, describe, it */
 
 define([
   'shared',
-  'sulfur/schema/value/_simple',
+  'sulfur/schema/value/list',
   'sulfur/schema/value/simpleList'
-], function ($shared, $_simpleValue, $simpleListValue) {
+], function ($shared, $listValue, $simpleListValue) {
 
   'use strict';
 
   var expect = $shared.expect;
-  var bind = $shared.bind;
   var sinon = $shared.sinon;
+  var returns = $shared.returns;
 
   describe('sulfur/schema/value/simpleList', function () {
 
-    describe('#initialize()', function () {
+    it("should be derived from sulfur/schema/value/list", function () {
+      expect($listValue).to.be.prototypeOf($simpleListValue);
+    });
 
-      it("should reject an item value type which is not derived from sulfur/schema/value/_simple", function () {
-        var itemValueType = {};
-        expect(bind($simpleListValue, 'create', itemValueType))
-          .to.throw("expecting an item value type derived from sulfur/schema/value/_simple");
-      });
+    describe('.typed()', function () {
 
-      it("should reject items which are not of the given item value type", function () {
-        var itemValueType = $_simpleValue.clone();
-        var items = [ {} ];
-        expect(bind($simpleListValue, 'create', itemValueType, items))
-          .to.throw("expecting only items of the given item value type");
-      });
-
-      it("should initialize the item value type", function () {
-        var itemValueType = $_simpleValue.clone();
-        var list = $simpleListValue.create(itemValueType);
-        expect(list.getItemValueType()).to.equal(itemValueType);
-      });
-
-      it("should initialize with items", function () {
-        var itemValueType = $_simpleValue.clone();
-        var items = [ itemValueType.create() ];
-        var list = $simpleListValue.create(itemValueType, items);
-        expect(list.toArray()).to.equal(items);
-      });
-
-      it("should use an empty array when no items are given", function () {
-        var itemValueType = $_simpleValue.clone();
-        var list = $simpleListValue.create(itemValueType);
-        expect(list.getLength()).to.equal(0);
+      it("should clone and use the given value type as item value type", function () {
+        var valueType = {};
+        var simpleList = $simpleListValue.typed(valueType);
+        expect($simpleListValue).to.be.prototypeOf(simpleList);
+        expect(simpleList.getItemValueType()).to.equal(valueType);
       });
 
     });
 
-    describe('#getItemValueType()', function () {
+    describe('.parse()', function () {
 
-      it("should return the items' value type", function () {
-        var itemValueType = $_simpleValue.clone();
-        var list = $simpleListValue.create(itemValueType);
-        expect(list.getItemValueType()).to.equal(itemValueType);
+      var simpleList;
+      var valueType;
+
+      beforeEach(function () {
+        valueType = {
+          parse: function (s) {
+            return { s: s };
+          }
+        };
+        simpleList = $simpleListValue.typed(valueType);
       });
 
-    });
-
-    describe('#getLength()', function () {
-
-      it("should return the number of items", function () {
-        var itemValueType = $_simpleValue.clone();
-        var items = [ itemValueType.create() ];
-        var list = $simpleListValue.create(itemValueType, items);
-        expect(list.toArray()).to.equal(items);
+      it("should parse a space separated sequence of literals", function () {
+        var spy = sinon.spy(valueType, 'parse');
+        var list = simpleList.parse('1 2  3');
+        expect(spy.getCall(0).args[0]).to.equal('1');
+        expect(spy.getCall(1).args[0]).to.equal('2');
+        expect(spy.getCall(2).args[0]).to.equal('3');
+        expect(list).to.eql(
+          simpleList.create(
+            [ spy.getCall(0).returnValue,
+              spy.getCall(1).returnValue,
+              spy.getCall(2).returnValue
+            ]));
       });
 
-    });
-
-    describe('#toArray()', function () {
-
-      it("should return an array of items", function () {
-        var itemValueType = $_simpleValue.clone();
-        var items = [ itemValueType.create() ];
-        var list = $simpleListValue.create(itemValueType, items);
-        expect(list.toArray()).to.equal(items);
+      it("should ignore leading and trailing whitespace", function () {
+        var list = simpleList.parse('\x09\x0A\x0D 1 \x09\x0A\x0D');
+        expect(list).to.eql(simpleList.create([ valueType.parse('1') ]));
       });
 
     });
@@ -92,22 +74,30 @@ define([
     describe('#toString()', function () {
 
       it("should return the canonical string representation", function () {
-        var itemValueType = $_simpleValue.derive({
-          initialize: function (x) { this._x = x; },
-          toString: function () { return this._x; }
-        });
         var items = [
-          itemValueType.create('x'),
-          itemValueType.create('y')
+          { toString: returns('x') },
+          { toString: returns('y') }
         ];
         var spies = items.map(function (item) {
           return sinon.spy(item, 'toString');
         });
-        var list = $simpleListValue.create(itemValueType, items);
+        var list = $simpleListValue.create(items);
         var s = list.toString();
         expect(s).to.equal('x y');
         expect(spies[0]).to.be.calledOn(items[0]);
         expect(spies[1]).to.be.calledOn(items[1]);
+      });
+
+      it("should collapse white space", function () {
+        var items = [
+          { toString: returns(' a\x09b') },
+          { toString: returns('c\x0Ad') },
+          { toString: returns('e\x0Df') },
+          { toString: returns('g  h ') }
+        ];
+        var list = $simpleListValue.create(items);
+        var s = list.toString();
+        expect(s).to.equal('a b c d e f g h');
       });
 
     });

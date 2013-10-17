@@ -145,6 +145,70 @@ define([
 
     });
 
+    describe('#normalizeWhiteSpace()', function () {
+
+      var s;
+
+      beforeEach(function () {
+        s = $stringValue.create();
+      });
+
+      it("should delegate to #collapseWhiteSpace() when mode is 'collapse'", function () {
+        var spy = sinon.spy(s, 'collapseWhiteSpace');
+        var n = s.normalizeWhiteSpace('collapse');
+        expect(spy).to.have.returned(sinon.match.same(n));
+      });
+
+      it("should delegate to #replaceWhiteSpace() when mode is 'replace'", function () {
+        var spy = sinon.spy(s, 'replaceWhiteSpace');
+        var n = s.normalizeWhiteSpace('replace');
+        expect(spy).to.have.returned(sinon.match.same(n));
+      });
+
+      it("should return this string when mode is 'preserve'", function () {
+        expect(s.normalizeWhiteSpace('preserve')).to.equal(s);
+      });
+
+      it("should reject a mode other than 'collapse', 'preserve' or 'replace'", function () {
+        expect(bind(s, 'normalizeWhiteSpace', 'xxx'))
+          .to.throw('unexpected normalization mode "xxx", ' +
+            'expecting either "collapse", "preserve" or "replace"');
+      });
+
+    });
+
+    describe('#collapseWhiteSpace()', function () {
+
+      it("should remove leading white space", function () {
+        var s = $stringValue.create('\x09\x0A\x0D x');
+        var n = s.collapseWhiteSpace();
+        expect(n.toString()).to.equal('x');
+      });
+
+      it("should remove trailing white space", function () {
+        var s = $stringValue.create('y \x09\x0A\x0D');
+        var n = s.collapseWhiteSpace();
+        expect(n.toString()).to.equal('y');
+      });
+
+      it("should replace every white space sequence with a single space", function () {
+        var s = $stringValue.create('1 \x09\x0A\x0D 2 \x09\x0A\x0D 3');
+        var n = s.collapseWhiteSpace();
+        expect(n.toString()).to.equal('1 2 3');
+      });
+
+    });
+
+    describe('#replaceWhiteSpace()', function () {
+
+      it("should replace each white space character with a single space", function () {
+        var s = $stringValue.create('1 \x09\x0A\x0D 2 \x09\x0A\x0D 3');
+        var n = s.replaceWhiteSpace();
+        expect(n.toString()).to.equal('1     2     3');
+      });
+
+    });
+
     describe('#eq()', function () {
 
       it("should return true when LHS is equal to RHS", function () {

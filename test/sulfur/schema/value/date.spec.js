@@ -52,6 +52,11 @@ define([
 
     describe('.parse()', function () {
 
+      it("should ignore leading and trailing white space", function () {
+        var dt = $dateValue.parse('\x09\x0A\x0D 0001-01-01 \x09\x0A\x0D');
+        expect(dt).to.eql($dateValue.create());
+      });
+
       it("should accept a valid date literal", function () {
         var spy = sandbox.spy($dateValue.prototype, 'initialize');
         var dt = $dateValue.parse('0001-02-03');

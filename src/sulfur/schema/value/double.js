@@ -50,7 +50,7 @@ define(['sulfur/schema/value/_simple'], function ($_simpleValue) {
      */
     parse: (function () {
 
-      var LITERAL_PATTERN = /^(?:NaN|-?INF|[+-]?[0-9]+(?:\.[0-9]+)?(?:[Ee][+-]?[0-9]+)?)$/;
+      var LITERAL_PATTERN = /^[\x09\x0A\x0D\x20]*(?:NaN|-?INF|[+-]?[0-9]+(?:\.[0-9]+)?(?:[Ee][+-]?[0-9]+)?)[\x09\x0A\x0D\x20]*$/;
 
       return function (s) {
         if (!LITERAL_PATTERN.test(s)) {
@@ -92,17 +92,13 @@ define(['sulfur/schema/value/_simple'], function ($_simpleValue) {
      *
      * @throw [Error] if `value` is not a number
      */
-    initialize: (function () {
-
-      return function (value) {
-        typeof value === 'undefined' && (value = 0);
-        if (typeof value !== 'number') {
-          throw new Error("must be initialized with a proper number");
-        }
-        this._value = value;
-      };
-
-    }()),
+    initialize: function (value) {
+      typeof value === 'undefined' && (value = 0);
+      if (typeof value !== 'number') {
+        throw new Error("must be initialized with a proper number");
+      }
+      this._value = value;
+    },
 
     /**
      * Get the represented value.
