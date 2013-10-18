@@ -7,19 +7,24 @@
 /* global define */
 
 define([
-  'sulfur/schema/facet/_standard',
+  'sulfur/schema/facet',
+  'sulfur/schema/qname',
+  'sulfur/schema/type/simple/restricted',
   'sulfur/schema/validator/maximum',
   'sulfur/schema/validator/property',
   'sulfur/util'
-], function ($_standardFacet, $maximumValidator, $propertyValidator, $util) {
+], function ($facet, $qname, $restrictedType, $maximumValidator, $propertyValidator, $util) {
 
   'use strict';
 
-  var $ = $_standardFacet.clone({
+  var $ = $facet.clone({
 
-    getName: function () {
-      return 'totalDigits';
-    }
+    getQName: $util.returns(
+      $qname.create('totalDigits', 'http://www.w3.org/2001/XMLSchema')),
+
+    isShadowingLowerRestrictions: $util.returns(true),
+
+    getMutualExclusiveFacets: $util.returns([])
 
   });
 
@@ -29,7 +34,15 @@ define([
       if (!$util.isInteger(value) || value < 1) {
         throw new Error("expecting a positive integer less than 2^53");
       }
-      $_standardFacet.prototype.initialize.call(this, value);
+      $facet.prototype.initialize.call(this, value);
+    },
+
+    isRestrictionOf: function (type) {
+      var totalDigitsFacet = this.factory.getEffectiveFacet(type);
+      if (totalDigitsFacet) {
+        return this.getValue() <= totalDigitsFacet.getValue();
+      }
+      return true;
     },
 
     validate: function () {

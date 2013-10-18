@@ -9,22 +9,24 @@
 
 define([
   'shared',
-  'sulfur/schema/facet/_standard',
+  'sulfur/schema/facet',
   'sulfur/schema/facet/maxExclusive',
   'sulfur/schema/facet/maxInclusive',
   'sulfur/schema/facet/minExclusive',
   'sulfur/schema/facet/minInclusive',
-  'sulfur/schema/type/_faceted',
+  'sulfur/schema/facets',
+  'sulfur/schema/qname',
   'sulfur/schema/validator/minimum',
-  'sulfur/schema/value/integer'
+  'sulfur/schema/value/simple/integer'
 ], function (
     $shared,
-    $_standardFacet,
+    $facet,
     $maxExclusiveFacet,
     $maxInclusiveFacet,
     $minExclusiveFacet,
     $minInclusiveFacet,
-    $_facetedType,
+    $facets,
+    $qname,
     $minimumValidator,
     $integerValue
 ) {
@@ -32,30 +34,69 @@ define([
   'use strict';
 
   var expect = $shared.expect;
+  var sinon = $shared.sinon;
+  var returns = $shared.returns;
 
   describe('sulfur/schema/facet/minExclusive', function () {
 
-    it("should be derived from sulfur/schema/facet/_standard", function () {
-      expect($_standardFacet).to.be.prototypeOf($minExclusiveFacet);
+    it("should be derived from sulfur/schema/facet", function () {
+      expect($facet).to.be.prototypeOf($minExclusiveFacet);
     });
 
-    describe('.getName()', function () {
+    describe('.getQName()', function () {
 
-      it("should return 'minExclusive'", function () {
-        expect($minExclusiveFacet.getName()).to.equal('minExclusive');
+      it("should return {http://www.w3.org/2001/XMLSchema}minExclusive", function () {
+        expect($minExclusiveFacet.getQName())
+          .to.eql($qname.create('minExclusive', 'http://www.w3.org/2001/XMLSchema'));
       });
 
     });
 
-    describe('.getEffectiveValue()', function () {
+    describe('.isShadowingLowerRestrictions()', function () {
 
-      it("should return the largest value", function () {
-        var values = [
-          $integerValue.parse('2'),
-          $integerValue.parse('1')
-        ];
-        expect($minExclusiveFacet.getEffectiveValue(values)).to.eql(
-          $integerValue.parse('2'));
+      it("should return false", function () {
+        expect($minExclusiveFacet.isShadowingLowerRestrictions()).to.be.true;
+      });
+
+    });
+
+    describe('.getMutualExclusiveFacets()', function () {
+
+      it("should return sulfur/schema/facet/minInclusive", function () {
+        expect($minExclusiveFacet.getMutualExclusiveFacets())
+          .to.eql([ $minInclusiveFacet ]);
+      });
+
+    });
+
+    describe('#isRestrictionOf()', function () {
+
+      var facet;
+      var validator;
+      var value;
+      var type;
+
+      beforeEach(function () {
+        validator = { validate: function () {} };
+        type = { createValidator: returns(validator) };
+        value = {};
+        facet = $minExclusiveFacet.create(value);
+      });
+
+      it("should check the value using the validator of the given type", function () {
+        var spy = sinon.spy(validator, 'validate');
+        facet.isRestrictionOf(type);
+        expect(spy).to.be.calledWith(sinon.match.same(value));
+      });
+
+      it("should return true when the value satisfies the validator", function () {
+        sinon.stub(validator, 'validate').returns(true);
+        expect(facet.isRestrictionOf(type)).to.be.true;
+      });
+
+      it("should return false when the value does not satisfy the validator", function () {
+        sinon.stub(validator, 'validate').returns(false);
+        expect(facet.isRestrictionOf(type)).to.be.false;
       });
 
     });
@@ -70,13 +111,15 @@ define([
       });
 
       it("should return true when valid", function () {
-        type = $_facetedType.create();
+        var dummyFacet = { getQName: returns($qname.create('x', 'urn:y')) };
+        type = $facets.create([ dummyFacet ]);
         type.getValueType = function () { return $integerValue; };
         expect(facet.validate(type)).to.be.true;
       });
 
       it("should return false when the value is not of the given type", function () {
-        type = $_facetedType.create();
+        var dummyFacet = { getQName: returns($qname.create('x', 'urn:y')) };
+        type = $facets.create([ dummyFacet ]);
         type.getValueType = function () { return { prototype: {} }; };
         expect(facet.validate(type)).to.be.false;
       });
@@ -84,7 +127,7 @@ define([
       context("with a sulfur/schema/facet/minInclusive", function () {
 
         beforeEach(function () {
-          type = $_facetedType.create([ $minInclusiveFacet.create() ]);
+          type = $facets.create([ $minInclusiveFacet.create() ]);
           type.getValueType = function () { return $integerValue; };
         });
 
@@ -103,7 +146,7 @@ define([
       context("with a value greater than sulfur/schema/facet/maxExclusive when given", function () {
 
         beforeEach(function () {
-          type = $_facetedType.create([
+          type = $facets.create([
             $maxExclusiveFacet.create($integerValue.parse('-1'))
           ]);
           type.getValueType = function () { return $integerValue; };
@@ -124,7 +167,7 @@ define([
       context("with a value greater than sulfur/schema/facet/maxInclusive when given", function () {
 
         beforeEach(function () {
-          type = $_facetedType.create([
+          type = $facets.create([
             $maxInclusiveFacet.create($integerValue.parse('-1'))
           ]);
           type.getValueType = function () { return $integerValue; };
@@ -145,7 +188,7 @@ define([
       context("with a value equal to sulfur/schema/facet/maxInclusive when given", function () {
 
         beforeEach(function () {
-          type = $_facetedType.create([
+          type = $facets.create([
             $maxInclusiveFacet.create($integerValue.create())
           ]);
           type.getValueType = function () { return $integerValue; };

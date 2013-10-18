@@ -1,0 +1,88 @@
+/* Copyright (c) 2013, Erik Wienhold
+ * All rights reserved.
+ *
+ * Licensed under the BSD 3-Clause License.
+ */
+
+/* global define */
+/* global describe, it */
+
+define([
+  'shared',
+  'sulfur/schema/element'
+], function ($shared, $element) {
+
+  'use strict';
+
+  var expect = $shared.expect;
+
+  describe('sulfur/schema/element', function () {
+
+    describe('#initialize()', function () {
+
+      var name = 'name';
+      var type = {};
+
+      it("should initialize the element with the given name", function () {
+        var element = $element.create(name, type);
+        expect(element.getName()).to.equal(name);
+      });
+
+      it("should initialize the element with the given type", function () {
+        var element = $element.create(name, type);
+        expect(element.getType()).to.equal(type);
+      });
+
+      it("should initialize the element as optional when specified", function () {
+        var element = $element.create(name, type, { optional: true });
+        expect(element.isOptional()).to.be.true;
+      });
+
+      it("should initialize the element as mandatory when specified", function () {
+        var element = $element.create(name, type, { optional: false });
+        expect(element.isOptional()).to.be.false;
+      });
+
+      it("should initialize the element as mandatory by default", function () {
+        var element = $element.create(name, type);
+        expect(element.isOptional()).to.be.false;
+      });
+
+    });
+
+    describe('#getName()', function () {
+
+      it("should return the element's name", function () {
+        var element = $element.create('foo');
+        expect(element.getName()).to.equal('foo');
+      });
+
+    });
+
+    describe('#getType()', function () {
+
+      it("should return the element's type", function () {
+        var type = {};
+        var element = $element.create('', type);
+        expect(element.getType()).to.equal(type);
+      });
+
+    });
+
+    describe('#isOptional()', function () {
+
+      it("should return true when optional", function () {
+        var element = $element.create('', {}, { optional: true });
+        expect(element.isOptional()).to.be.true;
+      });
+
+      it("should return false when mandatory", function () {
+        var element = $element.create('', {}, { optional: false });
+        expect(element.isOptional()).to.be.false;
+      });
+
+    });
+
+  });
+
+});

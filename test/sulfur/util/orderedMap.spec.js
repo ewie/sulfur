@@ -56,11 +56,11 @@ define([
 
     });
 
-    describe('#countItems()', function () {
+    describe('#getSize()', function () {
 
       it("should return the number of inserted items", function () {
         var map = $orderedMap.create(['']);
-        expect(map.countItems()).to.equal(1);
+        expect(map.getSize()).to.equal(1);
       });
 
     });

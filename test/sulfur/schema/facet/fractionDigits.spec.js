@@ -5,18 +5,26 @@
  */
 
 /* global define */
-/* global afterEach, beforeEach, describe, it */
+/* global afterEach, beforeEach, context, describe, it */
 
 define([
   'shared',
-  'sulfur/schema/facet/_standard',
+  'sulfur/schema/facet',
   'sulfur/schema/facet/fractionDigits',
+  'sulfur/schema/facets',
+  'sulfur/schema/qname',
+  'sulfur/schema/type/simple/primitive',
+  'sulfur/schema/type/simple/restricted',
   'sulfur/schema/validator/maximum',
   'sulfur/schema/validator/property'
 ], function (
     $shared,
-    $_standardFacet,
+    $facet,
     $fractionDigitsFacet,
+    $facets,
+    $qname,
+    $primitiveType,
+    $restrictedType,
     $maximumValidator,
     $propertyValidator
 ) {
@@ -24,19 +32,37 @@ define([
   'use strict';
 
   var expect = $shared.expect;
-  var bind = $shared.bind;
   var sinon = $shared.sinon;
+  var bind = $shared.bind;
 
   describe('sulfur/schema/facet/fractionDigits', function () {
 
-    it("should be derived from sulfur/schema/facet/_standard", function () {
-      expect($_standardFacet).to.be.prototypeOf($fractionDigitsFacet);
+    it("should be derived from sulfur/schema/facet", function () {
+      expect($facet).to.be.prototypeOf($fractionDigitsFacet);
     });
 
-    describe('.getName()', function () {
+    describe('.getQName()', function () {
 
-      it("should return 'fractionDigits'", function () {
-        expect($fractionDigitsFacet.getName()).to.equal('fractionDigits');
+      it("should return {http://www.w3.org/2001/XMLSchema}fractionDigits", function () {
+        expect($fractionDigitsFacet.getQName())
+          .to.eql($qname.create('fractionDigits',
+            'http://www.w3.org/2001/XMLSchema'));
+      });
+
+    });
+
+    describe('.isShadowingLowerRestrictions()', function () {
+
+      it("should return true", function () {
+        expect($fractionDigitsFacet.isShadowingLowerRestrictions()).to.be.true;
+      });
+
+    });
+
+    describe('.getMutualExclusiveFacets()', function () {
+
+      it("should return an empty array", function () {
+        expect($fractionDigitsFacet.getMutualExclusiveFacets()).to.eql([]);
       });
 
     });
@@ -53,8 +79,8 @@ define([
         sandbox.restore();
       });
 
-      it("should call sulfur/schema/facet/_standard#initialize()", function () {
-        var spy = sandbox.spy($_standardFacet.prototype, 'initialize');
+      it("should call sulfur/schema/facet#initialize()", function () {
+        var spy = sandbox.spy($facet.prototype, 'initialize');
         var facet = $fractionDigitsFacet.create(0);
         expect(spy).to.be.calledOn(facet).to.be.calledWith(0);
       });
@@ -82,6 +108,45 @@ define([
       it("should reject a negative value", function () {
         expect(bind($fractionDigitsFacet, 'create', -1))
           .to.throw("expecting a non-negative integer less than 2^53");
+      });
+
+    });
+
+    describe('#isRestrictionOf()', function () {
+
+      it("should return true when the type does not define facet 'fractionDigits'", function () {
+        var type = $primitiveType.create({});
+        var facet = $fractionDigitsFacet.create(0);
+        expect(facet.isRestrictionOf(type)).to.be.true;
+      });
+
+      context("when the type has effective facet 'fractionDigits'", function () {
+
+        var type;
+
+        beforeEach(function () {
+          var base = $primitiveType.create({
+            facets: $facets.create([ $fractionDigitsFacet ])
+          });
+          type = $restrictedType.create(base,
+            $facets.create([ $fractionDigitsFacet.create(1) ]));
+        });
+
+        it("should return true when the value is less than the type facet's value", function () {
+          var facet = $fractionDigitsFacet.create(0);
+          expect(facet.isRestrictionOf(type)).to.be.true;
+        });
+
+        it("should return true when the value is equal to the type facet's value", function () {
+          var facet = $fractionDigitsFacet.create(1);
+          expect(facet.isRestrictionOf(type)).to.be.true;
+        });
+
+        it("should return false when the value is greater than the type facet's value", function () {
+          var facet = $fractionDigitsFacet.create(2);
+          expect(facet.isRestrictionOf(type)).to.be.false;
+        });
+
       });
 
     });

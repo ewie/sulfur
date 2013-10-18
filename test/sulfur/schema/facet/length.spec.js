@@ -9,20 +9,26 @@
 
 define([
   'shared',
-  'sulfur/schema/facet/_standard',
+  'sulfur/schema/facet',
   'sulfur/schema/facet/length',
   'sulfur/schema/facet/maxLength',
   'sulfur/schema/facet/minLength',
-  'sulfur/schema/type/_faceted',
+  'sulfur/schema/facets',
+  'sulfur/schema/qname',
+  'sulfur/schema/type/simple/primitive',
+  'sulfur/schema/type/simple/restricted',
   'sulfur/schema/validator/equal',
   'sulfur/schema/validator/property'
 ], function (
     $shared,
-    $_standardFacet,
+    $facet,
     $lengthFacet,
     $maxLengthFacet,
     $minLengthFacet,
-    $_facetedType,
+    $facets,
+    $qname,
+    $primitiveType,
+    $restrictedType,
     $equalValidator,
     $propertyValidator
 ) {
@@ -30,19 +36,38 @@ define([
   'use strict';
 
   var expect = $shared.expect;
-  var bind = $shared.bind;
   var sinon = $shared.sinon;
+  var bind = $shared.bind;
+  var returns = $shared.returns;
 
   describe('sulfur/schema/facet/length', function () {
 
-    it("should be derived from sulfur/schema/facet/_standard", function () {
-      expect($_standardFacet).to.be.prototypeOf($lengthFacet);
+    it("should be derived from sulfur/schema/facet", function () {
+      expect($facet).to.be.prototypeOf($lengthFacet);
     });
 
-    describe('.getName()', function () {
+    describe('.getQName()', function () {
 
-      it("should return 'length'", function () {
-        expect($lengthFacet.getName()).to.equal('length');
+      it("should return {http://www.w3.org/2001/XMLSchema}length", function () {
+        expect($lengthFacet.getQName())
+          .to.eql($qname.create('length', 'http://www.w3.org/2001/XMLSchema'));
+      });
+
+    });
+
+    describe('.isShadowingLowerRestrictions()', function () {
+
+      it("should return true", function () {
+        expect($lengthFacet.isShadowingLowerRestrictions()).to.be.true;
+      });
+
+    });
+
+    describe('.getMutualExclusiveFacets()', function () {
+
+      it("should return sulfur/schema/facet/maxLength and sulfur/schema/facet/minLength", function () {
+        expect($lengthFacet.getMutualExclusiveFacets())
+          .to.eql([ $maxLengthFacet, $minLengthFacet ]);
       });
 
     });
@@ -59,8 +84,8 @@ define([
         sandbox.restore();
       });
 
-      it("should call sulfur/schema/facet/_standard#initialize()", function () {
-        var spy = sandbox.spy($_standardFacet.prototype, 'initialize');
+      it("should call sulfur/schema/facet#initialize()", function () {
+        var spy = sandbox.spy($facet.prototype, 'initialize');
         var facet = $lengthFacet.create(0);
         expect(spy).to.be.calledOn(facet).to.be.calledWith(0);
       });
@@ -92,14 +117,107 @@ define([
 
     });
 
+    describe('#isRestrictionOf()', function () {
+
+      it("should return true when the type does not define no facet 'length', 'maxLength' or 'minLength'", function () {
+        var type = $primitiveType.create({});
+        var facet = $lengthFacet.create(0);
+        expect(facet.isRestrictionOf(type)).to.be.true;
+      });
+
+      context("when the type has effective facet 'length'", function () {
+
+        var type;
+
+        beforeEach(function () {
+          var base = $primitiveType.create({
+            facets: $facets.create([ $lengthFacet ])
+          });
+          type = $restrictedType.create(base,
+            $facets.create([ $lengthFacet.create(0) ]));
+        });
+
+        it("should return true when the value is equal to the type facet's value", function () {
+          var facet = $lengthFacet.create(0);
+          expect(facet.isRestrictionOf(type)).to.be.true;
+        });
+
+        it("should return false when the value is not equal to the type facet's value", function () {
+          var facet = $lengthFacet.create(1);
+          expect(facet.isRestrictionOf(type)).to.be.false;
+        });
+
+      });
+
+      context("when the type has effective facet 'maxLength'", function () {
+
+        var type;
+
+        beforeEach(function () {
+          var base = $primitiveType.create({
+            facets: $facets.create([ $maxLengthFacet ])
+          });
+          type = $restrictedType.create(base,
+            $facets.create([ $maxLengthFacet.create(1) ]));
+        });
+
+        it("should return true when the value is less than the type facet's value", function () {
+          var facet = $lengthFacet.create(0);
+          expect(facet.isRestrictionOf(type)).to.be.true;
+        });
+
+        it("should return true when the value is equal to the type facet's value", function () {
+          var facet = $lengthFacet.create(1);
+          expect(facet.isRestrictionOf(type)).to.be.true;
+        });
+
+        it("should return false when the value is greater than the type facet's value", function () {
+          var facet = $lengthFacet.create(2);
+          expect(facet.isRestrictionOf(type)).to.be.false;
+        });
+
+      });
+
+      context("when the type has effective facet 'minLength'", function () {
+
+        var type;
+
+        beforeEach(function () {
+          var base = $primitiveType.create({
+            facets: $facets.create([ $minLengthFacet ])
+          });
+          type = $restrictedType.create(base,
+            $facets.create([ $minLengthFacet.create(1) ]));
+        });
+
+        it("should return false when the value is less than the type facet's value", function () {
+          var facet = $lengthFacet.create(0);
+          expect(facet.isRestrictionOf(type)).to.be.false;
+        });
+
+        it("should return true when the value is equal to the type facet's value", function () {
+          var facet = $lengthFacet.create(1);
+          expect(facet.isRestrictionOf(type)).to.be.true;
+        });
+
+        it("should return true when the value is greater than the type facet's value", function () {
+          var facet = $lengthFacet.create(2);
+          expect(facet.isRestrictionOf(type)).to.be.true;
+        });
+
+      });
+
+    });
+
     describe('#validate()', function () {
 
       var facet;
       var facets;
 
       beforeEach(function () {
+        var dummyFacet = { getQName: returns($qname.create('x', 'urn:y')) };
         facet = $lengthFacet.create(0);
-        facets = $_facetedType.create();
+        facets = $facets.create([ dummyFacet ]);
       });
 
       it("should return true when valid", function () {
@@ -109,7 +227,7 @@ define([
       context("with a sulfur/schema/facet/maxLength", function () {
 
         beforeEach(function () {
-          facets = $_facetedType.create([ $maxLengthFacet.create() ]);
+          facets = $facets.create([ $maxLengthFacet.create() ]);
         });
 
         it("should reject", function () {
@@ -127,7 +245,7 @@ define([
       context("with a sulfur/schema/facet/minLength", function () {
 
         beforeEach(function () {
-          facets = $_facetedType.create([ $minLengthFacet.create() ]);
+          facets = $facets.create([ $minLengthFacet.create() ]);
         });
 
         it("should reject", function () {

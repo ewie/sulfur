@@ -7,19 +7,45 @@
 /* global define */
 
 define([
-  'sulfur/schema/facet/_standard',
+  'require',
+  'sulfur/schema/facet',
+  'sulfur/schema/qname',
   'sulfur/schema/validator/equal',
   'sulfur/schema/validator/property',
   'sulfur/util'
-], function ($_standardFacet, $equalValidator, $propertyValidator, $util) {
+], function (
+    require,
+    $facet,
+    $qname,
+    $equalValidator,
+    $propertyValidator,
+    $util
+) {
 
   'use strict';
 
-  var $ = $_standardFacet.clone({
+  function requireFacet(name) {
+    return function () {
+      return require('sulfur/schema/facet/' + name);
+    };
+  }
 
-    getName: function () {
-      return 'length';
-    }
+  var requireMaxLengthFacet = requireFacet('maxLength');
+  var requireMinLengthFacet = requireFacet('minLength');
+
+  var $ = $facet.clone({
+
+    getQName: $util.returns(
+      $qname.create('length', 'http://www.w3.org/2001/XMLSchema')),
+
+    isShadowingLowerRestrictions: $util.returns(true),
+
+    getMutualExclusiveFacets: $util.once(function () {
+      return [
+        requireMaxLengthFacet(),
+        requireMinLengthFacet()
+      ];
+    })
 
   });
 
@@ -34,17 +60,36 @@ define([
       if (!$util.isInteger(value) || value < 0) {
         throw new Error("expecting a non-negative integer less than 2^53");
       }
-      $_standardFacet.prototype.initialize.call(this, value);
+      $facet.prototype.initialize.call(this, value);
+    },
+
+    isRestrictionOf: function (type) {
+      var lengthFacet = this.factory.getEffectiveFacet(type);
+      if (lengthFacet && this.getValue() !== lengthFacet.getValue()) {
+        return false;
+      }
+
+      var maxLengthFacet = requireMaxLengthFacet().getEffectiveFacet(type);
+      if (maxLengthFacet && this.getValue() > maxLengthFacet.getValue()) {
+        return false;
+      }
+
+      var minLengthFacet = requireMinLengthFacet().getEffectiveFacet(type);
+      if (minLengthFacet && this.getValue() < minLengthFacet.getValue()) {
+        return false;
+      }
+
+      return true;
     },
 
     validate: function (type, errors) {
-      if (type.hasStandardFacet('maxLength')) {
+      if (type.hasFacet(requireMaxLengthFacet().getQName())) {
         if (errors) {
           errors.push("cannot be used along with facet 'maxLength'");
         }
         return false;
       }
-      if (type.hasStandardFacet('minLength')) {
+      if (type.hasFacet(requireMinLengthFacet().getQName())) {
         if (errors) {
           errors.push("cannot be used along with facet 'minLength'");
         }

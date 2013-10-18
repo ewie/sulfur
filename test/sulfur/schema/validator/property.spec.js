@@ -16,17 +16,50 @@ define([
 
   var expect = $shared.expect;
   var sinon = $shared.sinon;
+  var returns = $shared.returns;
 
   describe('sulfur/schema/validator/property', function () {
+
+    describe('#getPropertyName()', function () {
+
+      it("should return the property name", function () {
+        var name = 'foo';
+        var validator = $propertyValidator.create(name);
+        expect(validator.getPropertyName()).to.equal(name);
+      });
+
+    });
+
+    describe('#getArguments()', function () {
+
+      it("should return an array with arguments to the property", function () {
+        var args = [];
+        var validator = $propertyValidator.create('', {}, args);
+        expect(validator.getArguments()).to.eql(args);
+      });
+
+    });
+
+    describe('#getValidator()', function () {
+
+      it("should return the subvalidator", function () {
+        var subvalidator = {};
+        var validator = $propertyValidator.create('', subvalidator);
+        expect(validator.getValidator()).to.equal(subvalidator);
+      });
+
+    });
 
     describe('#validate()', function () {
 
       var validator;
       var subvalidator;
+      var argument;
 
       beforeEach(function () {
         subvalidator = { validate: function () {} };
-        validator = $propertyValidator.create('foo', subvalidator);
+        argument = {};
+        validator = $propertyValidator.create('foo', subvalidator, [ argument ]);
       });
 
       context("when the property is not callable", function () {
@@ -62,8 +95,15 @@ define([
         var value;
 
         beforeEach(function () {
-          var v = {};
-          value = { foo: function () { return v; } };
+          value = { foo: returns({}) };
+        });
+
+        it("should call the property with the arguments", function () {
+          var spy = sinon.spy(value, 'foo');
+          validator.validate(value);
+          expect(spy)
+            .to.be.calledOn(sinon.match.same(value))
+            .to.be.calledWith(sinon.match.same(argument));
         });
 
         it("should call #validate() on the subvalidator with the property result", function () {

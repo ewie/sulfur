@@ -38,7 +38,7 @@ define([
 
         it("should reject when none of the allowed values responds to the test method", function () {
           expect(bind($enumerationValidator, 'create', [{}], { testMethod: 'foo' }))
-            .to.throw("each allowed value must respond to #foo()");
+            .to.throw('each allowed value must respond to method "foo"');
         });
 
       });

@@ -7,11 +7,20 @@
 /* global define */
 
 define([
-  'sulfur/schema/facet/_any',
+  'sulfur',
+  'sulfur/schema/facet',
+  'sulfur/schema/qname',
   'sulfur/schema/mediaType',
   'sulfur/schema/validator/enumeration',
   'sulfur/util'
-], function ($_anyFacet, $mediaType, $enumerationValidator, $util) {
+], function (
+    $sulfur,
+    $facet,
+    $qname,
+    $mediaType,
+    $enumerationValidator,
+    $util
+) {
 
   'use strict';
 
@@ -19,15 +28,14 @@ define([
     return $mediaType.prototype.isPrototypeOf(x);
   }
 
-  var $ = $_anyFacet.clone({
+  var $ = $facet.clone({
 
-    getName: function () {
-      return 'mediaType';
-    },
+    getQName: $util.returns(
+      $qname.create('mediaType', $sulfur.getNamespaceURI())),
 
-    getNamespace: function () {
-      return 'https://vsr.informatik.tu-chemnitz.de/projects/2013/sulfur';
-    }
+    isShadowingLowerRestrictions: $util.returns(true),
+
+    getMutualExclusiveFacets: $util.returns([])
 
   });
 
@@ -41,7 +49,20 @@ define([
         throw new Error("expecting only sulfur/schema/mediaType values");
       }
       value = $util.uniq(value);
-      $_anyFacet.prototype.initialize.call(this, value);
+      $facet.prototype.initialize.call(this, value);
+    },
+
+    isRestrictionOf: function (type) {
+      var mediaTypeFacet = this.factory.getEffectiveFacet(type);
+      if (!mediaTypeFacet) {
+        return true;
+      }
+      var baseMediaTypes = mediaTypeFacet.getValue();
+      return this.getValue().every(function (mediaType) {
+        return baseMediaTypes.some(function (baseMediaType) {
+          return baseMediaType.matches(mediaType);
+        });
+      });
     },
 
     validate: function () {

@@ -9,15 +9,23 @@
 
 define([
   'shared',
-  'sulfur/schema/facet/_standard',
+  'sulfur/schema/facet',
   'sulfur/schema/facet/enumeration',
+  'sulfur/schema/facets',
+  'sulfur/schema/qname',
+  'sulfur/schema/type/simple/primitive',
+  'sulfur/schema/type/simple/restricted',
   'sulfur/schema/validator/enumeration',
-  'sulfur/schema/value/integer',
-  'sulfur/schema/value/string'
+  'sulfur/schema/value/simple/integer',
+  'sulfur/schema/value/simple/string'
 ], function (
     $shared,
-    $_standardFacet,
+    $facet,
     $enumerationFacet,
+    $facets,
+    $qname,
+    $primitiveType,
+    $restrictedType,
     $enumerationValidator,
     $integerValue,
     $stringValue
@@ -26,19 +34,38 @@ define([
   'use strict';
 
   var expect = $shared.expect;
-  var bind = $shared.bind;
   var sinon = $shared.sinon;
+  var bind = $shared.bind;
+  var returns = $shared.returns;
 
   describe('sulfur/schema/facet/enumeration', function () {
 
-    it("should be derived from sulfur/schema/facet/_standard", function () {
-      expect($_standardFacet).to.be.prototypeOf($enumerationFacet);
+    it("should be derived from sulfur/schema/facet", function () {
+      expect($facet).to.be.prototypeOf($enumerationFacet);
     });
 
-    describe('.getName()', function () {
+    describe('.getQName()', function () {
 
-      it("should return 'enumeration'", function () {
-        expect($enumerationFacet.getName()).to.equal('enumeration');
+      it("should return {http://www.w3.org/2001/XMLSchema}enumeration", function () {
+        expect($enumerationFacet.getQName())
+          .to.eql($qname.create('enumeration',
+            'http://www.w3.org/2001/XMLSchema'));
+      });
+
+    });
+
+    describe('.isShadowingLowerRestrictions()', function () {
+
+      it("should return true", function () {
+        expect($enumerationFacet.isShadowingLowerRestrictions()).to.be.true;
+      });
+
+    });
+
+    describe('.getMutualExclusiveFacets()', function () {
+
+      it("should return an empty array", function () {
+        expect($enumerationFacet.getMutualExclusiveFacets()).to.eql([]);
       });
 
     });
@@ -55,8 +82,8 @@ define([
         sandbox.restore();
       });
 
-      it("should call sulfur/schema/facet/_standard#initialize()", function () {
-        var spy = sandbox.spy($_standardFacet.prototype, 'initialize');
+      it("should call sulfur/schema/facet#initialize()", function () {
+        var spy = sandbox.spy($facet.prototype, 'initialize');
         var values = [ 'foo' ];
         var facet = $enumerationFacet.create(values);
         expect(spy).to.be.calledOn(facet).to.be.calledWith(values);
@@ -74,6 +101,41 @@ define([
       it("should reject an empty array", function () {
         expect(bind($enumerationFacet, 'create', []))
           .to.throw("must provide at least one value");
+      });
+
+    });
+
+    describe('#isRestrictionOf()', function () {
+
+      var facet;
+      var values;
+      var validator;
+      var type;
+
+      beforeEach(function () {
+        validator = { validate: function () {} };
+        type = { createValidator: returns(validator) };
+        values = [ $stringValue.create('a') ];
+        facet = $enumerationFacet.create(values);
+      });
+
+      it("should check each value using the validator of the given type", function () {
+        var spy = sinon.spy(validator, 'validate');
+        facet.isRestrictionOf(type);
+        expect(spy.callCount).to.eql(values.length);
+        values.forEach(function (value, i) {
+          expect(spy.getCall(i).args[0]).to.equal(value);
+        });
+      });
+
+      it("should return true when all values satisfy the validator", function () {
+        sinon.stub(validator, 'validate').returns(true);
+        expect(facet.isRestrictionOf(type)).to.be.true;
+      });
+
+      it("should return false when any value does not satisfy the validator", function () {
+        sinon.stub(validator, 'validate').returns(false);
+        expect(facet.isRestrictionOf(type)).to.be.false;
       });
 
     });

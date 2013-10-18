@@ -7,31 +7,70 @@
 /* global define */
 
 define([
-  'sulfur/schema/facet/_standard',
+  'require',
+  'sulfur/schema/facet',
+  'sulfur/schema/qname',
+  'sulfur/schema/type/simple/restricted',
   'sulfur/schema/validator/maximum',
-  'sulfur/schema/validator/property'
-], function ($_standardFacet, $maximumValidator, $propertyValidator) {
+  'sulfur/schema/validator/property',
+  'sulfur/util'
+], function (
+    require,
+    $facet,
+    $qname,
+    $restrictedType,
+    $maximumValidator,
+    $propertyValidator,
+    $util
+) {
 
   'use strict';
 
-  var $ = $_standardFacet.clone({
+  function requireFacet(name) {
+    return function () {
+      return require('sulfur/schema/facet/' + name);
+    };
+  }
 
-    getName: function () {
-      return 'maxLength';
-    }
+  var requireLengthFacet = requireFacet('length');
+  var requireMinLengthFacet = requireFacet('minLength');
+
+  var $ = $facet.clone({
+
+    getQName: $util.returns(
+      $qname.create('maxLength', 'http://www.w3.org/2001/XMLSchema')),
+
+    isShadowingLowerRestrictions: $util.returns(true),
+
+    getMutualExclusiveFacets: $util.once(function () {
+      return [ requireLengthFacet() ];
+    })
 
   });
 
   $.augment({
 
-    validate: function (type, errors) {
-      if (type.hasStandardFacet('length')) {
-        if (errors) {
-          errors.push("cannot be used along with facet 'length'");
-        }
+    isRestrictionOf: function (type) {
+      var lengthFacet = requireLengthFacet().getEffectiveFacet(type);
+      if (lengthFacet) {
         return false;
       }
-      var minLengthFacet = type.getStandardFacet('minLength');
+
+      var maxLengthFacet = this.factory.getEffectiveFacet(type);
+      if (maxLengthFacet && this.getValue() > maxLengthFacet.getValue()) {
+        return false;
+      }
+
+      var minLengthFacet = requireMinLengthFacet().getEffectiveFacet(type);
+      if (minLengthFacet && this.getValue() < minLengthFacet.getValue()) {
+        return false;
+      }
+
+      return true;
+    },
+
+    validate: function (type, errors) {
+      var minLengthFacet = type.getFacet(requireMinLengthFacet().getQName());
       if (minLengthFacet && this._value < minLengthFacet.getValue()) {
         if (errors) {
           errors.push("must not be less than facet 'minLength'");

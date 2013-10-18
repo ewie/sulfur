@@ -51,12 +51,12 @@ define(['sulfur/factory'], function ($factory) {
 
     }()),
 
-    countItems: function () {
+    getSize: function () {
       return this._items.length;
     },
 
     isEmpty: function () {
-      return this.countItems() === 0;
+      return this.getSize() === 0;
     },
 
     /**
@@ -128,7 +128,8 @@ define(['sulfur/factory'], function ($factory) {
      */
     insert: function (item) {
       if (!this.canBeInserted(item)) {
-        throw new Error('key "' + this.getKey(item) + '" is already associated with an item');
+        throw new Error('key "' + this.getKey(item) + '" ' +
+          'is already associated with an item');
       }
       var key = sanitizeKey(this.getKey(item));
       this._index[key] = item;

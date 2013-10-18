@@ -5,7 +5,7 @@
  */
 
 /* global define */
-/* global describe, it */
+/* global beforeEach, describe, it */
 
 define([
   'shared',
@@ -19,18 +19,32 @@ define([
 
   describe('sulfur/schema/validator/prototype', function () {
 
+    var validator;
+    var prototype;
+
+    beforeEach(function () {
+      prototype = {};
+      validator = $prototypeValidator.create(prototype);
+    });
+
+    describe('#getPrototype()', function () {
+
+      it("should return the prototype object", function () {
+        expect(validator.getPrototype()).to.equal(prototype);
+      });
+
+    });
+
     describe('#validate()', function () {
 
       it("should return #isPrototypeOf() on the prototype passing the object", function () {
-        var prototype = {};
         var object = {};
         var isPrototypeOfSpy = sinon.spy(prototype, 'isPrototypeOf');
-        var validator = $prototypeValidator.create(prototype);
         var result = validator.validate(object);
         expect(isPrototypeOfSpy)
           .to.be.calledOn(prototype)
-          .and.to.be.calledWith(object)
-          .and.to.have.returned(result);
+          .to.be.calledWith(object)
+          .to.have.returned(result);
       });
 
     });

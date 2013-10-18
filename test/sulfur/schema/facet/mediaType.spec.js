@@ -5,46 +5,65 @@
  */
 
 /* global define */
-/* global afterEach, beforeEach, describe, it */
+/* global afterEach, beforeEach, context, describe, it */
 
 define([
   'shared',
-  'sulfur/schema/facet/_any',
+  'sulfur',
+  'sulfur/schema/facet',
   'sulfur/schema/facet/mediaType',
   'sulfur/schema/mediaType',
+  'sulfur/schema/facets',
+  'sulfur/schema/qname',
+  'sulfur/schema/type/simple/primitive',
+  'sulfur/schema/type/simple/restricted',
   'sulfur/schema/validator/enumeration'
 ], function (
     $shared,
-    $_anyFacet,
+    $sulfur,
+    $facet,
     $mediaTypeFacet,
     $mediaType,
+    $facets,
+    $qname,
+    $primitiveType,
+    $restrictedType,
     $enumerationValidator
 ) {
 
   'use strict';
 
   var expect = $shared.expect;
-  var bind = $shared.bind;
   var sinon = $shared.sinon;
+  var bind = $shared.bind;
 
   describe('sulfur/schema/facet/mediaType', function () {
 
-    it("should be derived from sulfur/schema/facet/_any", function () {
-      expect($_anyFacet).to.be.prototypeOf($mediaTypeFacet);
+    it("should be derived from sulfur/schema/facet", function () {
+      expect($facet).to.be.prototypeOf($mediaTypeFacet);
     });
 
-    describe('.getName()', function () {
+    describe('.getQName()', function () {
 
-      it("should return 'mediaType'", function () {
-        expect($mediaTypeFacet.getName()).to.equal('mediaType');
+      it("should return {" + $sulfur.getNamespaceURI() + "}mediaType", function () {
+        expect($mediaTypeFacet.getQName())
+          .to.eql($qname.create('mediaType', $sulfur.getNamespaceURI()));
       });
 
     });
 
-    describe('.getNamespace()', function () {
+    describe('.isShadowingLowerRestrictions()', function () {
 
-      it("should return 'https://vsr.informatik.tu-chemnitz.de/projects/2013/sulfur'", function () {
-        expect($mediaTypeFacet.getNamespace()).to.equal('https://vsr.informatik.tu-chemnitz.de/projects/2013/sulfur');
+      it("should return true", function () {
+        expect($mediaTypeFacet.isShadowingLowerRestrictions()).to.be.true;
+      });
+
+    });
+
+    describe('.getMutualExclusiveFacets()', function () {
+
+      it("should return an empty array", function () {
+        expect($mediaTypeFacet.getMutualExclusiveFacets()).to.eql([]);
       });
 
     });
@@ -61,8 +80,8 @@ define([
         sandbox.restore();
       });
 
-      it("should call sulfur/schema/facet/_any#initialize() with the value", function () {
-        var spy = sandbox.spy($_anyFacet.prototype, 'initialize');
+      it("should call sulfur/schema/facet#initialize() with the value", function () {
+        var spy = sandbox.spy($facet.prototype, 'initialize');
         var value = [ $mediaType.create() ];
         var facet = $mediaTypeFacet.create(value);
         expect(spy).to.be.calledOn(facet).to.be.calledWith(value);
@@ -86,6 +105,43 @@ define([
         var value = [ {} ];
         expect(bind($mediaTypeFacet, 'create', value))
           .to.throw("expecting only sulfur/schema/mediaType values");
+      });
+
+    });
+
+    describe('#isRestrictionOf()', function () {
+
+      it("should return true when the type does not define facet 'mediaType'", function () {
+        var type = $primitiveType.create({});
+        var facet = $mediaTypeFacet.create([ $mediaType.create() ]);
+        expect(facet.isRestrictionOf(type)).to.be.true;
+      });
+
+      context("when the type has effective facet 'mediaType'", function () {
+
+        var type;
+
+        beforeEach(function () {
+          var base = $primitiveType.create({
+            facets: $facets.create([ $mediaTypeFacet ])
+          });
+          type = $restrictedType.create(base,
+            $facets.create([
+              $mediaTypeFacet.create([ $mediaType.create('text') ])
+            ])
+          );
+        });
+
+        it("should return true when all media types are matched by any media type of the type's facet", function () {
+          var facet = $mediaTypeFacet.create([ $mediaType.create('text', 'plain') ]);
+          expect(facet.isRestrictionOf(type)).to.be.true;
+        });
+
+        it("should return false when any media type is not matched by any media type of the type's facet", function () {
+          var facet = $mediaTypeFacet.create([ $mediaType.create('audio') ]);
+          expect(facet.isRestrictionOf(type)).to.be.false;
+        });
+
       });
 
     });

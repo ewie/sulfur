@@ -7,43 +7,57 @@
 /* global define */
 
 define([
-  'sulfur/schema/facet/_standard',
+  'require',
+  'sulfur/schema/facet',
+  'sulfur/schema/qname',
   'sulfur/schema/validator/maximum',
   'sulfur/util'
-], function ($_standardFacet, $maximumValidator, $util) {
+], function (require, $facet, $qname, $maximumValidator, $util) {
 
   'use strict';
 
-  var $ = $_standardFacet.clone({
+  function requireFacet(name) {
+    return function () {
+      return require('sulfur/schema/facet/' + name);
+    };
+  }
 
-    getName: function () {
-      return 'maxExclusive';
-    },
+  var requireMinExclusiveFacet = requireFacet('minExclusive');
+  var requireMaxInclusiveFacet = requireFacet('maxInclusive');
+  var requireMinInclusiveFacet = requireFacet('minInclusive');
 
-    getEffectiveValue: function (values) {
-      values = $util.sort(values, function (x, y) {
-        return x.cmp(y);
-      });
-      return values[0];
-    }
+  var $ = $facet.clone({
+
+    getQName: $util.returns(
+      $qname.create('maxExclusive', 'http://www.w3.org/2001/XMLSchema')),
+
+    isShadowingLowerRestrictions: $util.returns(true),
+
+    getMutualExclusiveFacets: $util.once(function () {
+      return [ requireMaxInclusiveFacet() ];
+    })
 
   });
 
   $.augment({
+
+    isRestrictionOf: function (type) {
+      return type.createValidator().validate(this.getValue());
+    },
 
     validate: function (type, errors) {
       if (!type.getValueType().prototype.isPrototypeOf(this.getValue())) {
         return false;
       }
 
-      if (type.hasStandardFacet('maxInclusive')) {
+      if (type.hasFacet(requireMaxInclusiveFacet().getQName())) {
         if (errors) {
           errors.push("cannot be used along with facet 'maxInclusive'");
         }
         return false;
       }
 
-      var minExclusiveFacet = type.getStandardFacet('minExclusive');
+      var minExclusiveFacet = type.getFacet(requireMinExclusiveFacet().getQName());
       if (minExclusiveFacet && this.getValue().lt(minExclusiveFacet.getValue())) {
         if (errors) {
           errors.push("must be greater than or equal to facet 'minExclusive'");
@@ -51,7 +65,7 @@ define([
         return false;
       }
 
-      var minInclusiveFacet = type.getStandardFacet('minInclusive');
+      var minInclusiveFacet = type.getFacet(requireMinInclusiveFacet().getQName());
       if (minInclusiveFacet && this.getValue().lteq(minInclusiveFacet.getValue())) {
         if (errors) {
           errors.push("must be greater than facet 'minInclusive'");

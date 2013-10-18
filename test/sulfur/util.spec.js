@@ -57,6 +57,61 @@ define([
 
     });
 
+    describe('.bipart()', function () {
+
+      it("should pass each array item and index to a predicate function", function () {
+        var predicate = sinon.spy();
+        var ary = [{}, {}, {}];
+        $util.bipart(ary, predicate);
+        ary.forEach(function (item, i) {
+          var call = predicate.getCall(i);
+          expect(call.args[0]).to.equal(item);
+          expect(call.args[1]).to.equal(i);
+        });
+      });
+
+      it("should put all items for which a predicate evaluates truthy in an array under property 'true'", function () {
+        var predicate = function (n) { return n % 2; };
+        var ary = [1, 2, 3];
+        var part = $util.bipart(ary, predicate);
+        expect(part.true).to.eql([ 1, 3 ]);
+      });
+
+      it("should put all items for which a predicate evaluates falsy in an array under property 'false'", function () {
+        var predicate = function (n) { return n % 2; };
+        var ary = [1, 2, 3];
+        var part = $util.bipart(ary, predicate);
+        expect(part.false).to.eql([ 2 ]);
+      });
+
+    });
+
+    describe('.first()', function () {
+
+      it("should pass each array item and index to a predicate function", function () {
+        var predicate = sinon.spy();
+        var ary = [{}, {}, {}];
+        $util.first(ary, predicate);
+        ary.forEach(function (item, i) {
+          var call = predicate.getCall(i);
+          expect(call.args[0]).to.equal(item);
+          expect(call.args[1]).to.equal(i);
+        });
+      });
+
+      it("should return undefined when no item satisfies the predicate", function () {
+        expect($util.first([1], function () {})).to.be.undefined;
+      });
+
+      it("should return the first item for which a predicate evaluates truthy", function () {
+        var predicate = function (x) { return x.n % 2; };
+        var ary = [0, 1, 2].map(function (n) { return { n: n }; });
+        var x = $util.first(ary, predicate);
+        expect(x).to.equal(ary[1]);
+      });
+
+    });
+
     describe('.isDefined()', function () {
 
       it("should return true when the argument is not undefined", function () {
@@ -135,6 +190,33 @@ define([
           expect(fn(obj)).to.equal(result);
         });
 
+      });
+
+    });
+
+    describe('.once()', function () {
+
+      it("should return a function calling the given function on the first call", function () {
+        var obj = {};
+        var arg = {};
+        var f = sinon.stub().returns({});
+        var g = $util.once(f);
+        var r = g.call(obj, arg);
+        expect(f)
+          .to.be.calledOn(sinon.match.same(obj))
+          .to.be.calledWith(sinon.match.same(arg))
+          .to.have.returned(sinon.match.same(r));
+      });
+
+      it("should return the result of the given function on future calls", function () {
+        var f = sinon.stub().returns({});
+        var g = $util.once(f);
+        // XXX invoke with .call() otherwise mocha detects global leak in
+        //   variable "top" under Firefox (probably caused by third party code)
+        var r = g.call({});
+        var q = g.call({});
+        expect(f).to.be.calledOnce;
+        expect(r).to.equal(q);
       });
 
     });

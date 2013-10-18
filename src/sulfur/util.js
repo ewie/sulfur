@@ -30,6 +30,23 @@ define(['sulfur/util/orderedMap'], function ($orderedMap) {
       return fn.bind.apply(fn, [obj].concat(args));
     },
 
+    bipart: function (ary, fn) {
+      return ary.reduce(function (part, item, i) {
+        var p = part[fn(item, i) ? 'true' : 'false'];
+        p.push(item);
+        return part;
+      }, { true: [], false: [] });
+    },
+
+    first: function (ary, fn) {
+      for (var i = 0; i < ary.length; i += 1) {
+        var x = ary[i];
+        if (fn(x, i)) {
+          return x;
+        }
+      }
+    },
+
     /**
      * Check if a value is not undefined.
      *
@@ -83,6 +100,18 @@ define(['sulfur/util/orderedMap'], function ($orderedMap) {
     method: function (name) {
       return function (obj) {
         return obj[name]();
+      };
+    },
+
+    once: function (fn) {
+      var called;
+      var result;
+      return function () {
+        if (!called) {
+          called = true;
+          result = fn.apply(this, arguments);
+        }
+        return result;
       };
     },
 

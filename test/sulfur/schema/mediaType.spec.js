@@ -20,6 +20,21 @@ define([
 
   describe('sulfur/schema/mediaType', function () {
 
+    describe('.parse()', function () {
+
+      it("should split the string at the first forward slash", function () {
+        var s = 'image/jpeg';
+        var mt = $mediaType.parse(s);
+        expect(mt).to.eql($mediaType.create('image', 'jpeg'));
+      });
+
+      it("should reject when the string contains no forward slash", function () {
+        expect(bind($mediaType, 'parse', 'xxx'))
+          .to.throw("expecting a string representing a valid media type");
+      });
+
+    });
+
     describe('#initialize', function () {
 
       var sandbox;
@@ -140,25 +155,37 @@ define([
 
     describe('#matches()', function () {
 
+      it("should return true when LHS' and RHS' type is undefined", function () {
+        var lhs = $mediaType.create();
+        var rhs = $mediaType.create();
+        expect(lhs.matches(rhs)).to.be.true;
+      });
+
       it("should return true when LHS' type is undefined", function () {
         var lhs = $mediaType.create();
         var rhs = $mediaType.create('text');
         expect(lhs.matches(rhs)).to.be.true;
       });
 
-      it("should return true when RHS' type is undefined", function () {
+      it("should return false when RHS' type is undefined", function () {
         var lhs = $mediaType.create('text');
         var rhs = $mediaType.create();
-        expect(lhs.matches(rhs)).to.be.true;
+        expect(lhs.matches(rhs)).to.be.false;
       });
 
-      it("should return false when LHS' and RHS' type are different", function () {
+      it("should return false when LHS' and RHS' type is different", function () {
         var lhs = $mediaType.create('audio');
         var rhs = $mediaType.create('text');
         expect(lhs.matches(rhs)).to.be.false;
       });
 
-      context("when LHS' and RHS' type are equal", function () {
+      context("when LHS' and RHS' type is defined and equal", function () {
+
+        it("should return true when LHS' and RHS' subtype is undefined", function () {
+          var lhs = $mediaType.create('text');
+          var rhs = $mediaType.create('text');
+          expect(lhs.matches(rhs)).to.be.true;
+        });
 
         it("should return true when LHS' subtype is undefined", function () {
           var lhs = $mediaType.create('text');
@@ -166,10 +193,10 @@ define([
           expect(lhs.matches(rhs)).to.be.true;
         });
 
-        it("should return true when RHS' subtype is undefined", function () {
+        it("should return false when RHS' subtype is undefined", function () {
           var lhs = $mediaType.create('text', 'plain');
           var rhs = $mediaType.create('text');
-          expect(lhs.matches(rhs)).to.be.true;
+          expect(lhs.matches(rhs)).to.be.false;
         });
 
         it("should return true when LHS' and RHS' subtype are equal", function () {

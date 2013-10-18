@@ -42,7 +42,7 @@ define([
           throw new Error("must specify at least one value");
         }
         if ($util.isDefined(testMethodName) && !allRespondTo(values, testMethodName)) {
-          throw new Error("each allowed value must respond to #" + testMethodName + '()');
+          throw new Error('each allowed value must respond to method "' + testMethodName + '"');
         }
 
         this._values = values;

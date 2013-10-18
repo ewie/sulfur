@@ -9,16 +9,18 @@
 
 define([
   'shared',
-  'sulfur/schema/facet/_standard',
+  'sulfur/schema/facet',
   'sulfur/schema/facet/pattern',
   'sulfur/schema/pattern',
+  'sulfur/schema/qname',
   'sulfur/schema/validator/pattern',
   'sulfur/schema/validator/some'
 ], function (
     $shared,
-    $_standardFacet,
+    $facet,
     $patternFacet,
     $pattern,
+    $qname,
     $patternValidator,
     $someValidator
 ) {
@@ -30,14 +32,31 @@ define([
 
   describe('sulfur/schema/facet/pattern', function () {
 
-    it("should be derived from sulfur/schema/facet/_standard", function () {
-      expect($_standardFacet).to.be.prototypeOf($patternFacet);
+    it("should be derived from sulfur/schema/facet", function () {
+      expect($facet).to.be.prototypeOf($patternFacet);
     });
 
-    describe('.getName()', function () {
+    describe('.getQName()', function () {
 
-      it("should return 'pattern'", function () {
-        expect($patternFacet.getName()).to.equal('pattern');
+      it("should return {http://www.w3.org/2001/XMLSchema}pattern", function () {
+        expect($patternFacet.getQName())
+          .to.eql($qname.create('pattern', 'http://www.w3.org/2001/XMLSchema'));
+      });
+
+    });
+
+    describe('.isShadowingLowerRestrictions()', function () {
+
+      it("should return false", function () {
+        expect($patternFacet.isShadowingLowerRestrictions()).to.be.false;
+      });
+
+    });
+
+    describe('.getMutualExclusiveFacets()', function () {
+
+      it("should return an empty array", function () {
+        expect($patternFacet.getMutualExclusiveFacets()).to.eql([]);
       });
 
     });
@@ -61,6 +80,15 @@ define([
       it("should reject values not of type sulfur/schema/pattern", function () {
         expect(bind($patternFacet, 'create', ['']))
           .to.throw("expecting only sulfur/schema/pattern values");
+      });
+
+    });
+
+    describe('#isRestrictionOf()', function () {
+
+      it("should return undefined", function () {
+        var facet = $patternFacet.create([ $pattern.create('') ]);
+        expect(facet.isRestrictionOf()).to.be.undefined;
       });
 
     });

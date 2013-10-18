@@ -22,6 +22,13 @@ define(['sulfur/factory'], function ($factory) {
     },
 
     /**
+     * @return [object] the prototype to match
+     */
+    getPrototype: function () {
+      return this._prototype;
+    },
+
+    /**
      * Check if an object derives from the required prototype.
      *
      * @param [object] obj the object to check
