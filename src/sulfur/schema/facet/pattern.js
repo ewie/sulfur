@@ -14,24 +14,24 @@ define([
   'sulfur/schema/validator/some',
   'sulfur/util'
 ], function (
-    $facet,
-    $pattern,
-    $qname,
-    $patternValidator,
-    $someValidator,
-    $util
+    Facet,
+    Pattern,
+    QName,
+    PatternValidator,
+    SomeValidator,
+    util
 ) {
 
   'use strict';
 
-  var $ = $facet.clone({
+  var $ = Facet.clone({
 
-    getQName: $util.returns(
-      $qname.create('pattern', 'http://www.w3.org/2001/XMLSchema')),
+    getQName: util.returns(
+      QName.create('pattern', 'http://www.w3.org/2001/XMLSchema')),
 
-    isShadowingLowerRestrictions: $util.returns(false),
+    isShadowingLowerRestrictions: util.returns(false),
 
-    getMutualExclusiveFacets: $util.returns([])
+    getMutualExclusiveFacets: util.returns([])
 
   });
 
@@ -41,19 +41,19 @@ define([
       if (values.length === 0) {
         throw new Error("expecting at least one sulfur/schema/pattern");
       }
-      if (!values.every($util.bind($pattern.prototype, 'isPrototypeOf'))) {
+      if (!values.every(util.bind(Pattern.prototype, 'isPrototypeOf'))) {
         throw new Error("expecting only sulfur/schema/pattern values");
       }
-      $facet.prototype.initialize.call(this, $util.uniq(values));
+      Facet.prototype.initialize.call(this, util.uniq(values));
     },
 
-    isRestrictionOf: $util.returns(undefined),
+    isRestrictionOf: util.returns(undefined),
 
-    validate: $util.returns(true),
+    validate: util.returns(true),
 
     createValidator: function () {
-      return $someValidator.create(this.getValue().map(function (pattern) {
-        return $patternValidator.create(pattern);
+      return SomeValidator.create(this.getValue().map(function (pattern) {
+        return PatternValidator.create(pattern);
       }));
     }
 

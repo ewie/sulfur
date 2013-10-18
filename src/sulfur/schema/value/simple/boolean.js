@@ -6,11 +6,11 @@
 
 /* global define */
 
-define(['sulfur/factory'], function ($factory) {
+define(['sulfur/factory'], function (Factory) {
 
   'use strict';
 
-  var $ = $factory.clone({
+  var $ = Factory.clone({
 
     /**
      * Check if a string represents a boolean literal.

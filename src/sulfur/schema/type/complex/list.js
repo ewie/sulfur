@@ -15,18 +15,18 @@ define([
   'sulfur/schema/validator/property',
   'sulfur/util'
 ], function (
-    $factory,
-    $allValidator,
-    $eachValidator,
-    $maximumValidator,
-    $minimumValidator,
-    $propertyValidator,
-    $util
+    Factory,
+    AllValidator,
+    EachValidator,
+    MaximumValidator,
+    MinimumValidator,
+    PropertyValidator,
+    util
 ) {
 
   'use strict';
 
-  return $factory.derive({
+  return Factory.derive({
 
     initialize: function (element, options) {
       this._element = element;
@@ -48,18 +48,18 @@ define([
 
     createValidator: function () {
       var validators = [
-        $propertyValidator.create('toArray',
-          $eachValidator.create(this._element.getType().createValidator()))
+        PropertyValidator.create('toArray',
+          EachValidator.create(this._element.getType().createValidator()))
       ];
-      if ($util.isDefined(this._maxLength)) {
-        validators.push($propertyValidator.create('getLength',
-          $maximumValidator.create(this._maxLength)));
+      if (util.isDefined(this._maxLength)) {
+        validators.push(PropertyValidator.create('getLength',
+          MaximumValidator.create(this._maxLength)));
       }
-      if ($util.isDefined(this._minLength)) {
-        validators.push($propertyValidator.create('getLength',
-          $minimumValidator.create(this._minLength)));
+      if (util.isDefined(this._minLength)) {
+        validators.push(PropertyValidator.create('getLength',
+          MinimumValidator.create(this._minLength)));
       }
-      return $allValidator.create(validators);
+      return AllValidator.create(validators);
     }
 
   });

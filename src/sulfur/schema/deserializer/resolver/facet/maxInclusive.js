@@ -9,21 +9,21 @@
 define([
   'sulfur/schema/facet/maxInclusive',
   'sulfur/util'
-], function ($maxInclusiveFacet, $util) {
+], function (MaxInclusiveFacet, util) {
 
   'use strict';
 
   return {
 
-    getFacet: $util.returns($maxInclusiveFacet),
+    getFacet: util.returns(MaxInclusiveFacet),
 
     parseValue: function (s, p) {
       return p.parse(s);
     },
 
     createFacet: function (values) {
-      values = $util.sort(values, function (x, y) { return x.cmp(y); });
-      return $maxInclusiveFacet.create(values[0]);
+      values = util.sort(values, function (x, y) { return x.cmp(y); });
+      return MaxInclusiveFacet.create(values[0]);
     }
 
   };

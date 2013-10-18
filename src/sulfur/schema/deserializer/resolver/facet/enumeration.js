@@ -9,20 +9,20 @@
 define([
   'sulfur/schema/facet/enumeration',
   'sulfur/util'
-], function ($enumerationFacet, $util) {
+], function (EnumerationFacet, util) {
 
   'use strict';
 
   return {
 
-    getFacet: $util.returns($enumerationFacet),
+    getFacet: util.returns(EnumerationFacet),
 
     parseValue: function (s, p) {
       return p.parse(s);
     },
 
     createFacet: function (values) {
-      return $enumerationFacet.create(values);
+      return EnumerationFacet.create(values);
     }
 
   };

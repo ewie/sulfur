@@ -21,38 +21,38 @@ define([
   'sulfur/schema/type/simple/primitive/float',
   'sulfur/schema/value/simple/float'
 ], function (
-    $shared,
-    $enumerationFacet,
-    $maxExclusiveFacet,
-    $maxInclusiveFacet,
-    $minExclusiveFacet,
-    $minInclusiveFacet,
-    $patternFacet,
-    $facets,
-    $qname,
-    $primitiveType,
-    $floatType,
-    $floatValue
+    shared,
+    EnumerationFacet,
+    MaxExclusiveFacet,
+    MaxInclusiveFacet,
+    MinExclusiveFacet,
+    MinInclusiveFacet,
+    PatternFacet,
+    Facets,
+    QName,
+    PrimitiveType,
+    FloatType,
+    FloatValue
 ) {
 
   'use strict';
 
-  var expect = $shared.expect;
+  var expect = shared.expect;
 
   describe('sulfur/schema/type/simple/primitive/float', function () {
 
     it("should be a sulfur/schema/type/simple/primitive", function () {
-      expect($floatType).to.eql(
-        $primitiveType.create({
-          qname: $qname.create('float', 'http://www.w3.org/2001/XMLSchema'),
-          valueType: $floatValue,
-          facets: $facets.create([
-            $enumerationFacet,
-            $maxExclusiveFacet,
-            $maxInclusiveFacet,
-            $minExclusiveFacet,
-            $minInclusiveFacet,
-            $patternFacet
+      expect(FloatType).to.eql(
+        PrimitiveType.create({
+          qname: QName.create('float', 'http://www.w3.org/2001/XMLSchema'),
+          valueType: FloatValue,
+          facets: Facets.create([
+            EnumerationFacet,
+            MaxExclusiveFacet,
+            MaxInclusiveFacet,
+            MinExclusiveFacet,
+            MinInclusiveFacet,
+            PatternFacet
           ])
         })
       );

@@ -10,12 +10,12 @@
 define([
   'shared',
   'sulfur/schema/elements'
-], function ($shared, $elements) {
+], function (shared, Elements) {
 
   'use strict';
 
-  var expect = $shared.expect;
-  var bind = $shared.bind;
+  var expect = shared.expect;
+  var bind = shared.bind;
 
   describe('sulfur/schema/elements', function () {
 
@@ -25,12 +25,12 @@ define([
         var element = {
           getName: function () { return 'foo'; }
         };
-        var elements = $elements.create([ element ]);
+        var elements = Elements.create([ element ]);
         expect(elements.getElement('foo')).to.equal(element);
       });
 
       it("should reject an empty array of elements", function () {
-        expect(bind($elements, 'create', []))
+        expect(bind(Elements, 'create', []))
           .to.throw("expecting one or more elements");
       });
 
@@ -43,7 +43,7 @@ define([
             getName: function () { return 'x'; }
           }
         ];
-        expect(bind($elements, 'create', elements))
+        expect(bind(Elements, 'create', elements))
           .to.throw('element with duplicate name "x"');
       });
 
@@ -58,7 +58,7 @@ define([
         element = {
           getName: function () { return 'bar'; }
         };
-        elements = $elements.create([ element ]);
+        elements = Elements.create([ element ]);
       });
 
       it("should return the element with the given name when existent", function () {
@@ -77,7 +77,7 @@ define([
         var element = {
           getName: function () { return 'foo'; }
         };
-        var elements = $elements.create([ element ]);
+        var elements = Elements.create([ element ]);
         expect(elements.getSize()).to.equal(1);
       });
 
@@ -94,7 +94,7 @@ define([
             getName: function () { return 'y'; }
           }
         ];
-        var elements = $elements.create(els);
+        var elements = Elements.create(els);
         expect(elements.toArray()).to.eql(els);
       });
 

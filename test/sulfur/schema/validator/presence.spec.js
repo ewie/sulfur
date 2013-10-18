@@ -10,12 +10,12 @@
 define([
   'shared',
   'sulfur/schema/validator/presence'
-], function ($shared, $presenceValidator) {
+], function (shared, PresenceValidator) {
 
   'use strict';
 
-  var expect = $shared.expect;
-  var sinon = $shared.sinon;
+  var expect = shared.expect;
+  var sinon = shared.sinon;
 
   describe('sulfur/schema/validator/presence', function () {
 
@@ -26,7 +26,7 @@ define([
 
       beforeEach(function () {
         subvalidator = { validate: function () {} };
-        validator = $presenceValidator.create('foo', subvalidator);
+        validator = PresenceValidator.create('foo', subvalidator);
       });
 
       it("should return true when the property value is undefined", function () {

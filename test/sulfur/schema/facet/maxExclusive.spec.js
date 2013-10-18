@@ -21,37 +21,37 @@ define([
   'sulfur/schema/validator/maximum',
   'sulfur/schema/value/simple/integer'
 ], function (
-    $shared,
-    $facet,
-    $maxExclusiveFacet,
-    $maxInclusiveFacet,
-    $minExclusiveFacet,
-    $minInclusiveFacet,
-    $facets,
-    $qname,
-    $primitiveType,
-    $restrictedType,
-    $maximumValidator,
-    $integerValue
+    shared,
+    Facet,
+    MaxExclusiveFacet,
+    MaxInclusiveFacet,
+    MinExclusiveFacet,
+    MinInclusiveFacet,
+    Facets,
+    QName,
+    PrimitiveType,
+    RestrictedType,
+    MaximumValidator,
+    IntegerValue
 ) {
 
   'use strict';
 
-  var expect = $shared.expect;
-  var sinon = $shared.sinon;
-  var returns = $shared.returns;
+  var expect = shared.expect;
+  var sinon = shared.sinon;
+  var returns = shared.returns;
 
   describe('sulfur/schema/facet/maxExclusive', function () {
 
     it("should be derived from sulfur/schema/facet", function () {
-      expect($facet).to.be.prototypeOf($maxExclusiveFacet);
+      expect(Facet).to.be.prototypeOf(MaxExclusiveFacet);
     });
 
     describe('.getQName()', function () {
 
       it("should return {http://www.w3.org/2001/XMLSchema}maxExclusive", function () {
-        expect($maxExclusiveFacet.getQName())
-          .to.eql($qname.create('maxExclusive', 'http://www.w3.org/2001/XMLSchema'));
+        expect(MaxExclusiveFacet.getQName())
+          .to.eql(QName.create('maxExclusive', 'http://www.w3.org/2001/XMLSchema'));
       });
 
     });
@@ -59,7 +59,7 @@ define([
     describe('.isShadowingLowerRestrictions()', function () {
 
       it("should return true", function () {
-        expect($maxExclusiveFacet.isShadowingLowerRestrictions()).to.be.true;
+        expect(MaxExclusiveFacet.isShadowingLowerRestrictions()).to.be.true;
       });
 
     });
@@ -67,8 +67,8 @@ define([
     describe('.getMutualExclusiveFacets()', function () {
 
       it("should return sulfur/schema/facet/maxInclusive", function () {
-        expect($maxExclusiveFacet.getMutualExclusiveFacets())
-          .to.eql([ $maxInclusiveFacet ]);
+        expect(MaxExclusiveFacet.getMutualExclusiveFacets())
+          .to.eql([ MaxInclusiveFacet ]);
       });
 
     });
@@ -84,7 +84,7 @@ define([
         validator = { validate: function () {} };
         type = { createValidator: returns(validator) };
         value = {};
-        facet = $maxExclusiveFacet.create(value);
+        facet = MaxExclusiveFacet.create(value);
       });
 
       it("should check the value using the validator of the given type", function () {
@@ -111,19 +111,19 @@ define([
       var type;
 
       beforeEach(function () {
-        facet = $maxExclusiveFacet.create($integerValue.create());
+        facet = MaxExclusiveFacet.create(IntegerValue.create());
       });
 
       it("should return true when valid", function () {
-        var dummyFacet = { getQName: returns($qname.create('x', 'urn:y')) };
-        type = $facets.create([ dummyFacet ]);
-        type.getValueType = function () { return $integerValue; };
+        var dummyFacet = { getQName: returns(QName.create('x', 'urn:y')) };
+        type = Facets.create([ dummyFacet ]);
+        type.getValueType = function () { return IntegerValue; };
         expect(facet.validate(type)).to.be.true;
       });
 
       it("should return false when the value is not of the given type", function () {
-        var dummyFacet = { getQName: returns($qname.create('x', 'urn:y')) };
-        type = $facets.create([ dummyFacet ]);
+        var dummyFacet = { getQName: returns(QName.create('x', 'urn:y')) };
+        type = Facets.create([ dummyFacet ]);
         type.getValueType = function () { return { prototype: {} }; };
         expect(facet.validate(type)).to.be.false;
       });
@@ -131,8 +131,8 @@ define([
       context("with a sulfur/schema/facet/maxInclusive", function () {
 
         beforeEach(function () {
-          type = $facets.create([ $maxInclusiveFacet.create() ]);
-          type.getValueType = function () { return $integerValue; };
+          type = Facets.create([ MaxInclusiveFacet.create() ]);
+          type.getValueType = function () { return IntegerValue; };
         });
 
         it("should reject", function () {
@@ -150,10 +150,10 @@ define([
       context("with a value less than sulfur/schema/facet/minExclusive when given", function () {
 
         beforeEach(function () {
-          type = $facets.create([
-            $minExclusiveFacet.create($integerValue.parse('2'))
+          type = Facets.create([
+            MinExclusiveFacet.create(IntegerValue.parse('2'))
           ]);
-          type.getValueType = function () { return $integerValue; };
+          type.getValueType = function () { return IntegerValue; };
         });
 
         it("should reject", function () {
@@ -171,10 +171,10 @@ define([
       context("with a value less than sulfur/schema/facet/minInclusive when given", function () {
 
         beforeEach(function () {
-          type = $facets.create([
-            $minInclusiveFacet.create($integerValue.parse('2'))
+          type = Facets.create([
+            MinInclusiveFacet.create(IntegerValue.parse('2'))
           ]);
-          type.getValueType = function () { return $integerValue; };
+          type.getValueType = function () { return IntegerValue; };
         });
 
         it("should reject", function () {
@@ -192,10 +192,10 @@ define([
       context("with a value equal to sulfur/schema/facet/minInclusive when given", function () {
 
         beforeEach(function () {
-          type = $facets.create([
-            $minInclusiveFacet.create($integerValue.create())
+          type = Facets.create([
+            MinInclusiveFacet.create(IntegerValue.create())
           ]);
-          type.getValueType = function () { return $integerValue; };
+          type.getValueType = function () { return IntegerValue; };
         });
 
         it("should reject", function () {
@@ -215,10 +215,10 @@ define([
     describe('#createValidator()', function () {
 
       it("should return a validator/maximum matching exclusively", function () {
-        var facet = $maxExclusiveFacet.create(0);
+        var facet = MaxExclusiveFacet.create(0);
         var v = facet.createValidator();
         expect(v).to.eql(
-          $maximumValidator.create(facet.getValue(), { exclusive: true })
+          MaximumValidator.create(facet.getValue(), { exclusive: true })
         );
       });
 

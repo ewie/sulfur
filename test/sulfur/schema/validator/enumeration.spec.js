@@ -10,34 +10,34 @@
 define([
   'shared',
   'sulfur/schema/validator/enumeration'
-], function ($shared, $enumerationValidator) {
+], function (shared, EnumerationValidator) {
 
   'use strict';
 
-  var expect = $shared.expect;
-  var bind = $shared.bind;
-  var sinon = $shared.sinon;
+  var expect = shared.expect;
+  var bind = shared.bind;
+  var sinon = shared.sinon;
 
   describe('sulfur/schema/validator/enumeration', function () {
 
     describe('#initialize', function () {
 
       it("should reject an empty array", function () {
-        expect(bind($enumerationValidator, 'create', []))
+        expect(bind(EnumerationValidator, 'create', []))
           .to.throw("must specify at least one value");
       });
 
       context("with option `testMethod`", function () {
 
         it("should use the value as name of the test method", function () {
-          var v = $enumerationValidator.create(
+          var v = EnumerationValidator.create(
             [{ test: function () {} }],
             { testMethod: 'test' });
           expect(v.getTestMethodName()).to.equal('test');
         });
 
         it("should reject when none of the allowed values responds to the test method", function () {
-          expect(bind($enumerationValidator, 'create', [{}], { testMethod: 'foo' }))
+          expect(bind(EnumerationValidator, 'create', [{}], { testMethod: 'foo' }))
             .to.throw('each allowed value must respond to method "foo"');
         });
 
@@ -48,14 +48,14 @@ define([
     describe('#getTestMethodName()', function () {
 
       it("should return the name of the test method when defined", function () {
-        var v = $enumerationValidator.create(
+        var v = EnumerationValidator.create(
           [{ matches: function () {} }],
           { testMethod: 'matches' });
         expect(v.getTestMethodName()).to.equal('matches');
       });
 
       it("should return undefined when the test method name is not defined", function () {
-        var v = $enumerationValidator.create([{}]);
+        var v = EnumerationValidator.create([{}]);
         expect(v.getTestMethodName()).to.be.undefined;
       });
 
@@ -70,7 +70,7 @@ define([
 
         beforeEach(function () {
           values = [ { match: sinon.stub().returnsArg(0) } ];
-          validator = $enumerationValidator.create(values, { testMethod: 'match' });
+          validator = EnumerationValidator.create(values, { testMethod: 'match' });
         });
 
         it("should call the test method on each allowed value with the tested value as argument", function () {
@@ -105,7 +105,7 @@ define([
 
         beforeEach(function () {
           values = [ 'a', '0' ];
-          validator = $enumerationValidator.create(values);
+          validator = EnumerationValidator.create(values);
         });
 
         it("should check for strict equality", function () {

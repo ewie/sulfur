@@ -22,20 +22,20 @@ define([
   'sulfur/schema/regex/ranges',
   'sulfur/unicode'
 ], function (
-  $factory,
-  $any,
-  $block,
-  $branch,
-  $category,
-  $codepoint,
-  $class,
-  $codeunit,
-  $group,
-  $pattern,
-  $piece,
-  $range,
-  $ranges,
-  $unicode
+  Factory,
+  Any,
+  Block,
+  Branch,
+  Category,
+  Codepoint,
+  Class,
+  Codeunit,
+  Group,
+  Pattern,
+  Piece,
+  Range,
+  Ranges,
+  Unicode
 ) {
 
   'use strict';
@@ -54,31 +54,31 @@ define([
   }
 
   function isPattern(obj) {
-    return isObjectOf(obj, $pattern);
+    return isObjectOf(obj, Pattern);
   }
 
   function isCodepoint(obj) {
-    return isObjectOf(obj, $codepoint);
+    return isObjectOf(obj, Codepoint);
   }
 
   function isClass(obj) {
-    return isObjectOf(obj, $class);
+    return isObjectOf(obj, Class);
   }
 
   function isGroup(obj) {
-    return isObjectOf(obj, $group);
+    return isObjectOf(obj, Group);
   }
 
   function isAny(obj) {
-    return isObjectOf(obj, $any);
+    return isObjectOf(obj, Any);
   }
 
   function isBlock(obj) {
-    return isObjectOf(obj, $block);
+    return isObjectOf(obj, Block);
   }
 
   function isCategory(obj) {
-    return isObjectOf(obj, $category);
+    return isObjectOf(obj, Category);
   }
 
   function translatePattern(pattern) {
@@ -104,7 +104,7 @@ define([
       return branches;
     }, []);
 
-    return $pattern.create(branches);
+    return Pattern.create(branches);
   }
 
   function translateBranch(branch) {
@@ -112,7 +112,7 @@ define([
       return translatePiece(piece);
     });
 
-    return $branch.create(pieces);
+    return Branch.create(pieces);
   }
 
   function translatePiece(piece) {
@@ -134,38 +134,38 @@ define([
     } else {
       throw new Error("not yet implemented");
     }
-    return $piece.create(atom, piece.quant);
+    return Piece.create(atom, piece.quant);
   }
 
   function translateCodepoint(character) {
-    var pair = $unicode.encodeToSurrogatePair(character.value);
+    var pair = Unicode.encodeToSurrogatePair(character.value);
     if (pair) {
-      return $pattern.create(
-        [$branch.create(
-           [$piece.create(
-              $codeunit.create(pair[0])),
-            $piece.create(
-              $codeunit.create(pair[1]))
+      return Pattern.create(
+        [Branch.create(
+           [Piece.create(
+              Codeunit.create(pair[0])),
+            Piece.create(
+              Codeunit.create(pair[1]))
            ])
         ]);
     } else {
-      return $codeunit.create(character.value);
+      return Codeunit.create(character.value);
     }
   }
 
   function translateAny() {
-    return $group.create([
-      $codeunit.create(0xA),
-      $codeunit.create(0xD)
+    return Group.create([
+      Codeunit.create(0xA),
+      Codeunit.create(0xD)
     ], { positive: false });
   }
 
   function translateBlock(block) {
-    var range = $unicode.getBlockRange(block.name);
-    return $group.create([
-      $range.create(
-        $codeunit.create(range[0]),
-        $codeunit.create(range[1]))
+    var range = Unicode.getBlockRange(block.name);
+    return Group.create([
+      Range.create(
+        Codeunit.create(range[0]),
+        Codeunit.create(range[1]))
     ], { positive: block.positive });
   }
 
@@ -173,35 +173,35 @@ define([
     var name = category.name;
 
     var ranges;
-    if ($unicode.isValidCategory(name)) {
-      ranges = $unicode.getCategoryRanges(name);
+    if (Unicode.isValidCategory(name)) {
+      ranges = Unicode.getCategoryRanges(name);
     } else {
-      ranges = $unicode.getCategoryGroupRanges(name);
+      ranges = Unicode.getCategoryGroupRanges(name);
     }
 
     var items = ranges.reduce(function (items, range) {
       var d = range[1] - range[0];
       if (d === 0) {
-        items.push($codeunit.create(range[0]));
+        items.push(Codeunit.create(range[0]));
       } else if (d === 1) {
         items.push(
-          $codeunit.create(range[0]),
-          $codeunit.create(range[1]));
+          Codeunit.create(range[0]),
+          Codeunit.create(range[1]));
       } else {
         items.push(
-          $range.create(
-            $codeunit.create(range[0]),
-            $codeunit.create(range[1])));
+          Range.create(
+            Codeunit.create(range[0]),
+            Codeunit.create(range[1])));
       }
       return items;
     }, []);
 
-    return $group.create(items, { positive: category.positive });
+    return Group.create(items, { positive: category.positive });
   }
 
   function resolveCodepointItem(codepoint) {
     var value = codepoint.value;
-    var pair = $unicode.encodeToSurrogatePair(value);
+    var pair = Unicode.encodeToSurrogatePair(value);
     if (pair) {
       return [
         [ pair[0], pair[0] ],
@@ -217,8 +217,8 @@ define([
   function resolveRangeItem(range) {
     var start = range.start.value;
     var end = range.end.value;
-    var startPair = $unicode.encodeToSurrogatePair(start);
-    var endPair = $unicode.encodeToSurrogatePair(end);
+    var startPair = Unicode.encodeToSurrogatePair(start);
+    var endPair = Unicode.encodeToSurrogatePair(end);
     var ranges = [];
     if (startPair && endPair) {
       ranges.push(
@@ -236,21 +236,21 @@ define([
   }
 
   function invertRanges(ranges) {
-    return $ranges.create(ranges).invert().array;
+    return Ranges.create(ranges).invert().array;
   }
 
   function resolveBlockItem(block) {
-    var ranges = [ $unicode.getBlockRange(block.name) ];
+    var ranges = [ Unicode.getBlockRange(block.name) ];
     return block.positive ? ranges : invertRanges(ranges);
   }
 
   function resolveCategoryItem(category) {
     var name = category.name;
     var ranges;
-    if ($unicode.isValidCategory(name)) {
-      ranges = $unicode.getCategoryRanges(name);
-    } else if ($unicode.isValidCategoryGroup(name)) {
-      ranges = $unicode.getCategoryGroupRanges(name);
+    if (Unicode.isValidCategory(name)) {
+      ranges = Unicode.getCategoryRanges(name);
+    } else if (Unicode.isValidCategoryGroup(name)) {
+      ranges = Unicode.getCategoryGroupRanges(name);
     }
     return category.positive ? ranges : invertRanges(ranges);
   }
@@ -258,7 +258,7 @@ define([
 
   function resolveItemsToRanges(group) {
     var ranges = group.items.reduce(function (ranges, item) {
-      if (isObjectOf(item, $range)) {
+      if (isObjectOf(item, Range)) {
         ranges = ranges.concat(resolveRangeItem(item));
       } else if (isCodepoint(item)) {
         ranges = ranges.concat(resolveCodepointItem(item));
@@ -274,7 +274,7 @@ define([
       return ranges;
     }, []);
 
-    return $ranges.create(ranges);
+    return Ranges.create(ranges);
   }
 
   function resolveGroupToRanges(group) {
@@ -312,21 +312,21 @@ define([
     var items = ranges.array.reduce(function (items, range) {
       var d = range[1] - range[0];
       if (d === 0) {
-        items.push($codeunit.create(range[0]));
+        items.push(Codeunit.create(range[0]));
       } else if (d === 1) {
         items.push(
-          $codeunit.create(range[0]),
-          $codeunit.create(range[1]));
+          Codeunit.create(range[0]),
+          Codeunit.create(range[1]));
       } else {
         items.push(
-          $range.create(
-            $codeunit.create(range[0]),
-            $codeunit.create(range[1])));
+          Range.create(
+            Codeunit.create(range[0]),
+            Codeunit.create(range[1])));
       }
       return items;
     }, []);
 
-    return $group.create(items, { positive: positive });
+    return Group.create(items, { positive: positive });
   }
 
   function resolveClassItem(class_) {
@@ -340,24 +340,24 @@ define([
     var ranges, positive;
 
     switch (class_.name) {
-    case $class.SPACE:
+    case Class.SPACE:
       ranges = [ [0x9, 0xA], [0xD, 0xD], [0x20, 0x20] ];
       positive = class_.positive;
       break;
-    case $class.DIGIT:
-      ranges = $unicode.getCategoryRanges('Nd');
+    case Class.DIGIT:
+      ranges = Unicode.getCategoryRanges('Nd');
       positive = class_.positive;
       break;
-    case $class.WORD:
+    case Class.WORD:
       ranges = resolveWordClass();
       positive = !class_.positive;
       break;
-    case $class.CHAR:
-      ranges = $unicode.getXmlNameCharRanges();
+    case Class.CHAR:
+      ranges = Unicode.getXmlNameCharRanges();
       positive = class_.positive;
       break;
-    case $class.INITIAL:
-      ranges = $unicode.getXmlNameStartCharRanges();
+    case Class.INITIAL:
+      ranges = Unicode.getXmlNameStartCharRanges();
       positive = class_.positive;
       break;
     default:
@@ -374,31 +374,31 @@ define([
 
     var items = ranges.reduce(function (items, range) {
       if (range[0] === range[1]) {
-        items.push($codeunit.create(range[0]));
+        items.push(Codeunit.create(range[0]));
       } else if (range[0] === (range[1] - 1)) {
         items.push(
-          $codeunit.create(range[0]),
-          $codeunit.create(range[1]));
+          Codeunit.create(range[0]),
+          Codeunit.create(range[1]));
       } else {
         items.push(
-          $range.create(
-            $codeunit.create(range[0]),
-            $codeunit.create(range[1])));
+          Range.create(
+            Codeunit.create(range[0]),
+            Codeunit.create(range[1])));
       }
       return items;
     }, []);
 
-    return $group.create(items, { positive: positive });
+    return Group.create(items, { positive: positive });
   }
 
   function resolveWordClass() {
-    var cRanges = $unicode.getCategoryGroupRanges('C');
-    var pRanges = $unicode.getCategoryGroupRanges('P');
-    var zRanges = $unicode.getCategoryGroupRanges('Z');
-    return $ranges.create(cRanges.concat(pRanges, zRanges)).array;
+    var cRanges = Unicode.getCategoryGroupRanges('C');
+    var pRanges = Unicode.getCategoryGroupRanges('P');
+    var zRanges = Unicode.getCategoryGroupRanges('Z');
+    return Ranges.create(cRanges.concat(pRanges, zRanges)).array;
   }
 
-  return $factory.derive({
+  return Factory.derive({
     translate: function (pattern) {
       return translatePattern(pattern);
     }

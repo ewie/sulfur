@@ -12,11 +12,11 @@ define([
   'sulfur/schema/regex/compiler',
   'sulfur/schema/regex/parser',
   'sulfur/schema/regex/translator'
-], function ($shared, $compiler, $parser, $translator) {
+], function (shared, Compiler, Parser, Translator) {
 
   'use strict';
 
-  var expect = $shared.expect;
+  var expect = shared.expect;
 
   function forEachInRange(ranges, fn) {
     ranges.forEach(function (range) {
@@ -29,8 +29,8 @@ define([
   describe('sulfur/schema/regex/compiler', function () {
 
     var parse = (function () {
-      var parser = $parser.create();
-      var translator = $translator.create();
+      var parser = Parser.create();
+      var translator = Translator.create();
       return function parse(source) {
         return translator.translate(parser.parse(source));
       };
@@ -39,7 +39,7 @@ define([
     var compiler;
 
     beforeEach(function () {
-      compiler = $compiler.create();
+      compiler = Compiler.create();
     });
 
     describe('#compile()', function () {

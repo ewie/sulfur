@@ -9,7 +9,7 @@
 define([
   'sulfur/factory',
   'sulfur/util/orderedMap'
-], function ($factory, $orderedMap) {
+], function (Factory, OrderedMap) {
 
   'use strict';
 
@@ -17,7 +17,7 @@ define([
     return facet.getQName().toString();
   }
 
-  return $factory.derive({
+  return Factory.derive({
 
     initialize: function (facets) {
       if (facets.length === 0) {
@@ -30,7 +30,7 @@ define([
         }
         index.insert(facet);
         return index;
-      }, $orderedMap.create(keyfn));
+      }, OrderedMap.create(keyfn));
     },
 
     hasFacet: function (qname) {

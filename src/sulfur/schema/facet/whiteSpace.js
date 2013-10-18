@@ -10,18 +10,18 @@ define([
   'sulfur/schema/facet',
   'sulfur/schema/qname',
   'sulfur/util'
-], function ($facet, $qname, $util) {
+], function (Facet, QName, util) {
 
   'use strict';
 
-  var $ = $facet.clone({
+  var $ = Facet.clone({
 
-    getQName: $util.returns(
-      $qname.create('whiteSpace', 'http://www.w3.org/2001/XMLSchema')),
+    getQName: util.returns(
+      QName.create('whiteSpace', 'http://www.w3.org/2001/XMLSchema')),
 
-    isShadowingLowerRestrictions: $util.returns(true),
+    isShadowingLowerRestrictions: util.returns(true),
 
-    getMutualExclusiveFacets: $util.returns([])
+    getMutualExclusiveFacets: util.returns([])
 
   });
 
@@ -31,7 +31,7 @@ define([
       if (value !== 'collapse' && value !== 'preserve' && value !== 'replace') {
         throw new Error('expecting either "collapse", "preserve" or "replace"');
       }
-      $facet.prototype.initialize.call(this, value);
+      Facet.prototype.initialize.call(this, value);
     },
 
     isRestrictionOf: function (type) {

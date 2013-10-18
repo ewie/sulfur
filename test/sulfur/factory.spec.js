@@ -10,13 +10,13 @@
 define([
   'shared',
   'sulfur/factory'
-], function ($shared, $factory) {
+], function (shared, Factory) {
 
   'use strict';
 
-  var expect = $shared.expect;
-  var sinon = $shared.sinon;
-  var descriptor = $shared.descriptor;
+  var expect = shared.expect;
+  var sinon = shared.sinon;
+  var descriptor = shared.descriptor;
 
   describe('sulfur/factory', function () {
 
@@ -33,11 +33,11 @@ define([
     describe('.prototype', function () {
 
       it("should define property 'factory' which is not configurable, enumerable nor writable", function () {
-        var property = Object.getOwnPropertyDescriptor($factory.prototype, 'factory');
+        var property = Object.getOwnPropertyDescriptor(Factory.prototype, 'factory');
         expect(property).to.eql({
           configurable: false,
           enumerable: false,
-          value: $factory,
+          value: Factory,
           writable: false
         });
       });
@@ -47,27 +47,27 @@ define([
     describe('.create()', function () {
 
       it("should create an object using .prototype as prototype", function () {
-        var obj = $factory.create();
-        expect($factory.prototype).to.be.prototypeOf(obj);
+        var obj = Factory.create();
+        expect(Factory.prototype).to.be.prototypeOf(obj);
       });
 
       it("should call .initialize() on the new object", function () {
-        var spy = sandbox.spy($factory.prototype, 'initialize');
-        var obj = $factory.create();
+        var spy = sandbox.spy(Factory.prototype, 'initialize');
+        var obj = Factory.create();
         expect(spy).to.be.calledOn(obj);
       });
 
       it("should pass all arguments to .initialize()", function () {
-        var spy = sandbox.spy($factory.prototype, 'initialize');
+        var spy = sandbox.spy(Factory.prototype, 'initialize');
         var a = {};
         var b = {};
-        $factory.create(a, b);
+        Factory.create(a, b);
         expect(spy).to.be.calledWithExactly(a, b);
       });
 
       it("should make the factory available through the property 'factory'", function () {
-        var obj = $factory.create();
-        expect(obj.factory).to.equal($factory);
+        var obj = Factory.create();
+        expect(obj.factory).to.equal(Factory);
       });
 
     });
@@ -75,17 +75,17 @@ define([
     describe('.clone()', function () {
 
       it("should create a new factory inheriting from this factory", function () {
-        var obj = $factory.clone();
-        expect($factory).to.be.prototypeOf(obj);
+        var obj = Factory.clone();
+        expect(Factory).to.be.prototypeOf(obj);
       });
 
       it("should derive .prototype", function () {
-        var obj = $factory.clone();
-        expect($factory.prototype).to.be.prototypeOf(obj.prototype);
+        var obj = Factory.clone();
+        expect(Factory.prototype).to.be.prototypeOf(obj.prototype);
       });
 
       it("should define prototype property 'factory' which is not configurable, enumerable nor writable", function () {
-        var obj = $factory.clone();
+        var obj = Factory.clone();
         var property = Object.getOwnPropertyDescriptor(obj.prototype, 'factory');
         expect(property).to.eql({
           configurable: false,
@@ -96,15 +96,15 @@ define([
       });
 
       it("should call .extend on the new factory", function () {
-        var spy = sandbox.spy($factory, 'extend');
-        var obj = $factory.clone();
+        var spy = sandbox.spy(Factory, 'extend');
+        var obj = Factory.clone();
         expect(spy).to.be.calledOn(obj);
       });
 
       it("should pass all objects to .extend", function () {
-        var spy = sandbox.spy($factory, 'extend');
+        var spy = sandbox.spy(Factory, 'extend');
         var a = {};
-        $factory.clone(a);
+        Factory.clone(a);
         expect(spy).to.be.calledWithExactly(a);
       });
 
@@ -112,15 +112,15 @@ define([
 
         it("should invoke that function on the new object", function () {
           var spy = sandbox.spy();
-          var obj = $factory.clone(spy);
+          var obj = Factory.clone(spy);
           expect(spy).to.be.calledOn(obj);
         });
 
         it("should pass the base object and all extension objects to that function", function () {
           var spy = sandbox.spy();
           var ext = {};
-          $factory.clone(ext, spy);
-          expect(spy).to.be.calledWithExactly($factory, ext);
+          Factory.clone(ext, spy);
+          expect(spy).to.be.calledWithExactly(Factory, ext);
         });
 
         context("when that function returns something", function () {
@@ -128,8 +128,8 @@ define([
           it("should use the return value as rightmost extension", function () {
             var ext = {};
             var fn = function () { return ext; };
-            var spy = sandbox.spy($factory, 'extend');
-            $factory.clone(fn);
+            var spy = sandbox.spy(Factory, 'extend');
+            Factory.clone(fn);
             expect(spy).to.be.calledWithExactly(ext);
           });
 
@@ -142,31 +142,31 @@ define([
     describe('.derive()', function () {
 
       it("should create a new factory inheriting from this factory", function () {
-        var obj = $factory.derive();
-        expect($factory).to.be.prototypeOf(obj);
+        var obj = Factory.derive();
+        expect(Factory).to.be.prototypeOf(obj);
       });
 
       it("should derive .prototype", function () {
-        var obj = $factory.derive();
-        expect($factory.prototype).to.be.prototypeOf(obj.prototype);
+        var obj = Factory.derive();
+        expect(Factory.prototype).to.be.prototypeOf(obj.prototype);
       });
 
       it("should call .clone", function () {
-        var spy = sandbox.spy($factory, 'clone');
-        $factory.derive();
+        var spy = sandbox.spy(Factory, 'clone');
+        Factory.derive();
         expect(spy).to.be.called;
       });
 
       it("should call .augment() on the new factory", function () {
-        var spy = sandbox.spy($factory, 'augment');
-        var obj = $factory.derive();
+        var spy = sandbox.spy(Factory, 'augment');
+        var obj = Factory.derive();
         expect(spy).to.be.calledOn(obj);
       });
 
       it("should pass all mixins to .augment()", function () {
         var a = {};
-        var spy = sandbox.spy($factory, 'augment');
-        $factory.derive(a);
+        var spy = sandbox.spy(Factory, 'augment');
+        Factory.derive(a);
         expect(spy).to.be.calledWithExactly(a);
       });
 
@@ -174,15 +174,15 @@ define([
 
         it("should call the function on the objd object", function () {
           var spy = sandbox.spy();
-          var obj = $factory.derive(spy);
+          var obj = Factory.derive(spy);
           expect(spy).to.be.calledOn(obj);
         });
 
         it("should receive the original object and all mixins as arguments", function () {
           var spy = sandbox.spy();
           var a = {};
-          $factory.derive(a, spy);
-          expect(spy).to.be.calledWithExactly($factory, a);
+          Factory.derive(a, spy);
+          expect(spy).to.be.calledWithExactly(Factory, a);
         });
 
         context("when the function returns an object", function () {
@@ -190,8 +190,8 @@ define([
           it("should use that object as the rightmost mixin", function () {
             var a = {};
             var fn = function () { return a; };
-            var spy = sandbox.spy($factory, 'augment');
-            $factory.derive(fn);
+            var spy = sandbox.spy(Factory, 'augment');
+            Factory.derive(fn);
             expect(spy).to.be.calledWithExactly(a);
           });
 
@@ -206,7 +206,7 @@ define([
       var obj;
 
       beforeEach(function () {
-        obj = $factory.clone();
+        obj = Factory.clone();
       });
 
       it("should return this", function () {
@@ -260,7 +260,7 @@ define([
       var obj;
 
       beforeEach(function () {
-        obj = $factory.derive();
+        obj = Factory.derive();
       });
 
       it("should return this", function () {

@@ -8,7 +8,7 @@
 
 define([
   'sulfur/factory'
-], function ($factory) {
+], function (Factory) {
 
   'use strict';
 
@@ -141,7 +141,7 @@ define([
     return index - offset;
   }
 
-  var $ = $factory.derive({
+  var $ = Factory.derive({
     /**
      * Initialize the range collection with an array of ranges that will be
      * sorted and disjoined and be made available as #array.

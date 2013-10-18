@@ -10,7 +10,7 @@ define([
   'sulfur/factory',
   'sulfur/schema/validator/all',
   'sulfur/util'
-], function ($factory, $allValidator, $util) {
+], function (Factory, AllValidator, util) {
 
   'use strict';
 
@@ -25,7 +25,7 @@ define([
    *
    * @api private
    */
-  var $ = $factory.clone({
+  var $ = Factory.clone({
 
     getEffectiveFacets: (function () {
 
@@ -69,7 +69,7 @@ define([
       if (this.isShadowingLowerRestrictions() || facets.length === 1) {
         return facets[0].createValidator();
       }
-      return $allValidator.create(facets.map($util.method('createValidator')));
+      return AllValidator.create(facets.map(util.method('createValidator')));
     }
 
   });

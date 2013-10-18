@@ -11,13 +11,13 @@ define([
   'shared',
   'sulfur/schema/value/simple/string',
   'unorm'
-], function ($shared, $stringValue, $unorm) {
+], function (shared, StringValue, Unorm) {
 
   'use strict';
 
-  var expect = $shared.expect;
-  var bind = $shared.bind;
-  var sinon = $shared.sinon;
+  var expect = shared.expect;
+  var bind = shared.bind;
+  var sinon = shared.sinon;
 
   describe('sulfur/schema/value/simple/string', function () {
 
@@ -27,7 +27,7 @@ define([
         ranges.forEach(function (range) {
           for (var value = range[0]; value <= range[1]; value += 1) {
             var s = String.fromCharCode(value);
-            expect($stringValue.isValidLiteral(s)).to.equal(result);
+            expect(StringValue.isValidLiteral(s)).to.equal(result);
           }
         });
       }
@@ -35,7 +35,7 @@ define([
       context("with a valid string", function () {
 
         it("should accept an empty string literal", function () {
-          expect($stringValue.isValidLiteral('')).to.be.true;
+          expect(StringValue.isValidLiteral('')).to.be.true;
         });
 
         it("should accept a string with only valid codeunits", function () {
@@ -48,17 +48,17 @@ define([
         });
 
         it("should accept a string with multiple valid codeunits", function () {
-          expect($stringValue.isValidLiteral('abc')).to.be.true;
+          expect(StringValue.isValidLiteral('abc')).to.be.true;
         });
 
       });
 
       it("should reject a string with a lead surrogate but no matching trail surrogate", function () {
-        expect($stringValue.isValidLiteral('\uD800')).to.be.false;
+        expect(StringValue.isValidLiteral('\uD800')).to.be.false;
       });
 
       it("should reject a string with a trail surrogate but no matching lead surrogate", function () {
-        expect($stringValue.isValidLiteral('\uDC00')).to.be.false;
+        expect(StringValue.isValidLiteral('\uDC00')).to.be.false;
       });
 
       it("should reject a string containing a control characters U+0000..U+0008, U+000B, U+000C and U+000E..U+001F", function () {
@@ -70,11 +70,11 @@ define([
       });
 
       it("should reject a string with codeunit U+FFFE", function () {
-        expect($stringValue.isValidLiteral('\uFFFE')).to.be.false;
+        expect(StringValue.isValidLiteral('\uFFFE')).to.be.false;
       });
 
       it("should reject a string with codeunit U+FFFF", function () {
-        expect($stringValue.isValidLiteral('\uFFFF')).to.be.false;
+        expect(StringValue.isValidLiteral('\uFFFF')).to.be.false;
       });
 
     });
@@ -92,29 +92,29 @@ define([
       });
 
       it("should use the empty string as default value", function () {
-        var s = $stringValue.create();
+        var s = StringValue.create();
         expect(s.getLength()).to.equal(0);
       });
 
       it("should reject a non-string value", function () {
-        expect(bind($stringValue, 'create', 1))
+        expect(bind(StringValue, 'create', 1))
           .to.throw("must be initialized with a string value");
       });
 
       it("should accept a string value", function () {
-        var s = $stringValue.create('a');
+        var s = StringValue.create('a');
         expect(s.toString()).to.equal('a');
       });
 
       it("should reject when .isValidLiteral() returns false", function () {
-        sandbox.stub($stringValue, 'isValidLiteral').returns(false);
-        expect(bind($stringValue, 'create', ''))
+        sandbox.stub(StringValue, 'isValidLiteral').returns(false);
+        expect(bind(StringValue, 'create', ''))
           .to.throw("invalid string value");
       });
 
       it("should normalize the value to NFC", function () {
-        var nfcSpy = sandbox.spy($unorm, 'nfc');
-        var s = $stringValue.create('\u0065\u0301');
+        var nfcSpy = sandbox.spy(Unorm, 'nfc');
+        var s = StringValue.create('\u0065\u0301');
         expect(nfcSpy)
           .to.be.calledWith('\u0065\u0301')
           .to.have.returned(s.toString());
@@ -125,7 +125,7 @@ define([
     describe('#toString()', function () {
 
       it("should return the string value", function () {
-        var s = $stringValue.create('b');
+        var s = StringValue.create('b');
         expect(s.toString()).to.equal('b');
       });
 
@@ -134,7 +134,7 @@ define([
     describe('#getLength()', function () {
 
       it("should return the number of UTF-16 codeunits", function () {
-        var s = $stringValue.create('\uD800\uDC00');
+        var s = StringValue.create('\uD800\uDC00');
         expect(s.getLength()).to.equal(2);
       });
 
@@ -145,7 +145,7 @@ define([
       var s;
 
       beforeEach(function () {
-        s = $stringValue.create();
+        s = StringValue.create();
       });
 
       it("should delegate to #collapseWhiteSpace() when mode is 'collapse'", function () {
@@ -175,19 +175,19 @@ define([
     describe('#collapseWhiteSpace()', function () {
 
       it("should remove leading white space", function () {
-        var s = $stringValue.create('\x09\x0A\x0D x');
+        var s = StringValue.create('\x09\x0A\x0D x');
         var n = s.collapseWhiteSpace();
         expect(n.toString()).to.equal('x');
       });
 
       it("should remove trailing white space", function () {
-        var s = $stringValue.create('y \x09\x0A\x0D');
+        var s = StringValue.create('y \x09\x0A\x0D');
         var n = s.collapseWhiteSpace();
         expect(n.toString()).to.equal('y');
       });
 
       it("should replace every white space sequence with a single space", function () {
-        var s = $stringValue.create('1 \x09\x0A\x0D 2 \x09\x0A\x0D 3');
+        var s = StringValue.create('1 \x09\x0A\x0D 2 \x09\x0A\x0D 3');
         var n = s.collapseWhiteSpace();
         expect(n.toString()).to.equal('1 2 3');
       });
@@ -197,7 +197,7 @@ define([
     describe('#replaceWhiteSpace()', function () {
 
       it("should replace each white space character with a single space", function () {
-        var s = $stringValue.create('1 \x09\x0A\x0D 2 \x09\x0A\x0D 3');
+        var s = StringValue.create('1 \x09\x0A\x0D 2 \x09\x0A\x0D 3');
         var n = s.replaceWhiteSpace();
         expect(n.toString()).to.equal('1     2     3');
       });
@@ -207,14 +207,14 @@ define([
     describe('#eq()', function () {
 
       it("should return true when LHS is equal to RHS", function () {
-        var lhs = $stringValue.create('\u0065\u0301');
-        var rhs = $stringValue.create('\u00E9');
+        var lhs = StringValue.create('\u0065\u0301');
+        var rhs = StringValue.create('\u00E9');
         expect(lhs.eq(rhs)).to.be.true;
       });
 
       it("should return false when LHS is not equal to RHS", function () {
-        var lhs = $stringValue.create('a');
-        var rhs = $stringValue.create('b');
+        var lhs = StringValue.create('a');
+        var rhs = StringValue.create('b');
         expect(lhs.eq(rhs)).to.be.false;
       });
 

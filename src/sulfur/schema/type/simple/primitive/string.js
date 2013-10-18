@@ -20,31 +20,31 @@ define([
   'sulfur/schema/validator/all',
   'sulfur/schema/validator/property'
 ], function (
-    $enumerationFacet,
-    $lengthFacet,
-    $maxLengthFacet,
-    $minLengthFacet,
-    $patternFacet,
-    $whiteSpaceFacet,
-    $facets,
-    $qname,
-    $primitiveType,
-    $stringValue,
-    $allValidator,
-    $propertyValidator
+    EnumerationFacet,
+    LengthFacet,
+    MaxLengthFacet,
+    MinLengthFacet,
+    PatternFacet,
+    WhiteSpaceFacet,
+    Facets,
+    QName,
+    PrimitiveType,
+    StringValue,
+    AllValidator,
+    PropertyValidator
 ) {
 
   'use strict';
 
   var validatableFacets = [
-    $enumerationFacet,
-    $lengthFacet,
-    $maxLengthFacet,
-    $minLengthFacet,
-    $patternFacet,
+    EnumerationFacet,
+    LengthFacet,
+    MaxLengthFacet,
+    MinLengthFacet,
+    PatternFacet,
   ];
 
-  var $stringType = $primitiveType.derive({
+  var StringType = PrimitiveType.derive({
 
     createRestrictionValidator: (function () {
 
@@ -57,19 +57,19 @@ define([
           return validators;
         }, []);
 
-        return $allValidator.create(facetValidators);
+        return AllValidator.create(facetValidators);
       }
 
       return function (restriction) {
         var subvalidator = createFacetsValidator(restriction);
 
-        var whiteSpaceFacet = $whiteSpaceFacet.getEffectiveFacet(restriction);
+        var whiteSpaceFacet = WhiteSpaceFacet.getEffectiveFacet(restriction);
         var value = whiteSpaceFacet ? whiteSpaceFacet.getValue() : 'preserve';
         if (value !== 'preserve') {
-          subvalidator = $propertyValidator.create(value + 'WhiteSpace', subvalidator);
+          subvalidator = PropertyValidator.create(value + 'WhiteSpace', subvalidator);
         }
 
-        return $allValidator.create([
+        return AllValidator.create([
           this.createValidator(),
           subvalidator
         ]);
@@ -79,10 +79,10 @@ define([
 
   });
 
-  return $stringType.create({
-    qname: $qname.create('string', 'http://www.w3.org/2001/XMLSchema'),
-    valueType: $stringValue,
-    facets: $facets.create(validatableFacets.concat([ $whiteSpaceFacet ]))
+  return StringType.create({
+    qname: QName.create('string', 'http://www.w3.org/2001/XMLSchema'),
+    valueType: StringValue,
+    facets: Facets.create(validatableFacets.concat([ WhiteSpaceFacet ]))
   });
 
 });

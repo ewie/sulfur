@@ -9,21 +9,21 @@
 define([
   'sulfur/schema/facet/maxLength',
   'sulfur/util'
-], function ($maxLengthFacet, $util) {
+], function (MaxLengthFacet, util) {
 
   'use strict';
 
   return {
 
-    getFacet: $util.returns($maxLengthFacet),
+    getFacet: util.returns(MaxLengthFacet),
 
     parseValue: function (s) {
       return parseInt(s, 10);
     },
 
     createFacet: function (values) {
-      values = $util.sort(values, function (x, y) { return x - y; });
-      return $maxLengthFacet.create(values[0]);
+      values = util.sort(values, function (x, y) { return x - y; });
+      return MaxLengthFacet.create(values[0]);
     }
 
   };

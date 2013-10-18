@@ -13,19 +13,19 @@ define([
   'sulfur/schema/type/simple/primitive',
   'sulfur/schema/value/simple/boolean'
 ], function (
-    $patternFacet,
-    $facets,
-    $qname,
-    $primitiveType,
-    $booleanValue
+    PatternFacet,
+    Facets,
+    QName,
+    PrimitiveType,
+    BooleanValue
 ) {
 
   'use strict';
 
-  return $primitiveType.create({
-    qname: $qname.create('boolean', 'http://www.w3.org/2001/XMLSchema'),
-    valueType: $booleanValue,
-    facets: $facets.create([ $patternFacet ])
+  return PrimitiveType.create({
+    qname: QName.create('boolean', 'http://www.w3.org/2001/XMLSchema'),
+    valueType: BooleanValue,
+    facets: Facets.create([ PatternFacet ])
   });
 
 });

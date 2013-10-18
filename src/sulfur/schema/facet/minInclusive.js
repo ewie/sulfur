@@ -12,7 +12,7 @@ define([
   'sulfur/schema/qname',
   'sulfur/schema/validator/minimum',
   'sulfur/util'
-], function (require, $facet, $qname, $minimumValidator, $util) {
+], function (require, Facet, QName, MinimumValidator, util) {
 
   'use strict';
 
@@ -26,14 +26,14 @@ define([
   var requireMaxInclusiveFacet = requireFacet('maxInclusive');
   var requireMinExclusiveFacet = requireFacet('minExclusive');
 
-  var $ = $facet.clone({
+  var $ = Facet.clone({
 
-    getQName: $util.returns(
-      $qname.create('minInclusive', 'http://www.w3.org/2001/XMLSchema')),
+    getQName: util.returns(
+      QName.create('minInclusive', 'http://www.w3.org/2001/XMLSchema')),
 
-    isShadowingLowerRestrictions: $util.returns(true),
+    isShadowingLowerRestrictions: util.returns(true),
 
-    getMutualExclusiveFacets: $util.once(function () {
+    getMutualExclusiveFacets: util.once(function () {
       return [ requireMinExclusiveFacet() ];
     })
 
@@ -77,7 +77,7 @@ define([
     },
 
     createValidator: function () {
-      return $minimumValidator.create(this.getValue());
+      return MinimumValidator.create(this.getValue());
     }
 
   });

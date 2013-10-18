@@ -16,14 +16,14 @@ define([
   'sulfur/util',
   'sulfur/util/orderedMap'
 ], function (
-    $factory,
-    $element,
-    $elements,
-    $listType,
-    $primitiveType,
-    $restrictedType,
-    $util,
-    $orderedMap
+    Factory,
+    Element,
+    Elements,
+    ListType,
+    PrimitiveType,
+    RestrictedType,
+    util,
+    OrderedMap
 ) {
 
   'use strict';
@@ -35,14 +35,14 @@ define([
     return type.getQName().toString();
   }
 
-  return $factory.derive({
+  return Factory.derive({
 
     initialize: function (types) {
       if (!types.length) {
         throw new Error("expecting an array of one or more types");
       }
       this._typeIndex = types.reduce(function (index, type) {
-        if (!$primitiveType.prototype.isPrototypeOf(type)) {
+        if (!PrimitiveType.prototype.isPrototypeOf(type)) {
           throw new Error("expecting only sulfur/schema/type/complex types");
         }
         var qname = index.getKey(type);
@@ -51,7 +51,7 @@ define([
         }
         index.insert(type);
         return index;
-      }, $orderedMap.create(keyfn));
+      }, OrderedMap.create(keyfn));
     },
 
     resolveQualifiedName: function (qname) {
@@ -98,11 +98,11 @@ define([
         }
 
         var name = element.getAttribute('name');
-        return $element.create(name, type, { optional: minOccurs === 0 });
+        return Element.create(name, type, { optional: minOccurs === 0 });
       }
 
       function findCompatibleType(types, elements) {
-        var part = $util.bipart(elements, $util.method('isOptional'));
+        var part = util.bipart(elements, util.method('isOptional'));
         var optionalElements = part.true;
         var mandatoryElements = part.false;
 
@@ -119,7 +119,7 @@ define([
         // With no optional elements, use the first matched type that does not
         // define additional elements.
         if (optionalElements.length === 0) {
-          return $util.first(types, function (type) {
+          return util.first(types, function (type) {
             return type.getAllowedElements().getSize() === mandatoryElements.length;
           });
         }
@@ -145,7 +145,7 @@ define([
           return Math.max(max, score);
         }, 0);
 
-        return $util.first(types, function (type, i) {
+        return util.first(types, function (type, i) {
           if (scores[i] === maxScore) {
             return type;
           }
@@ -175,7 +175,7 @@ define([
           throw new Error("incompatible complex type");
         }
 
-        return $restrictedType.create(type, $elements.create(elements));
+        return RestrictedType.create(type, Elements.create(elements));
       }
 
       function getOccurs(element, name) {
@@ -212,7 +212,7 @@ define([
 
         itemElement = resolveElement(itemElement, resolver);
 
-        return $listType.create(itemElement, {
+        return ListType.create(itemElement, {
           maxLength: getOccurs(sequence, 'max'),
           minLength: getOccurs(sequence, 'min')
         });

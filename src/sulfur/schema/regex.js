@@ -11,7 +11,7 @@ define([
   'sulfur/schema/regex/compiler',
   'sulfur/schema/regex/parser',
   'sulfur/schema/regex/translator'
-], function ($factory, $compiler, $parser, $translator) {
+], function (Factory, Compiler, Parser, Translator) {
 
   'use strict';
 
@@ -57,7 +57,7 @@ define([
    *     these do not represent valid characters)
    */
 
-  var $ = $factory.clone({
+  var $ = Factory.clone({
     /**
      * Parse a regular expression as defined by XML Schema 1.0
      *
@@ -68,7 +68,7 @@ define([
      * @return [regex] a syntax tree representing the parsed regular expression
      */
     parse: function (source) {
-      var parser = $parser.create();
+      var parser = Parser.create();
       var pattern = parser.parse(source);
       return this.create(pattern);
     },
@@ -106,7 +106,7 @@ define([
      * @return [regex] the translated regular expression tree
      */
     translate: function () {
-      var translator = $translator.create();
+      var translator = Translator.create();
       var pattern = translator.translate(this.pattern);
       return this.factory.create(pattern);
     },
@@ -147,7 +147,7 @@ define([
      * @return [RegExp] an executable JavaScript regular expression
      */
     compile: function () {
-      var compiler = $compiler.create();
+      var compiler = Compiler.create();
       return compiler.compile(this.pattern);
     }
 

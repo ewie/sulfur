@@ -19,36 +19,36 @@ define([
   'sulfur/schema/value/simple/integer',
   'sulfur/schema/value/simple/string'
 ], function (
-    $shared,
-    $facet,
-    $enumerationFacet,
-    $facets,
-    $qname,
-    $primitiveType,
-    $restrictedType,
-    $enumerationValidator,
-    $integerValue,
-    $stringValue
+    shared,
+    Facet,
+    EnumerationFacet,
+    Facets,
+    QName,
+    PrimitiveType,
+    RestrictedType,
+    EnumerationValidator,
+    IntegerValue,
+    StringValue
 ) {
 
   'use strict';
 
-  var expect = $shared.expect;
-  var sinon = $shared.sinon;
-  var bind = $shared.bind;
-  var returns = $shared.returns;
+  var expect = shared.expect;
+  var sinon = shared.sinon;
+  var bind = shared.bind;
+  var returns = shared.returns;
 
   describe('sulfur/schema/facet/enumeration', function () {
 
     it("should be derived from sulfur/schema/facet", function () {
-      expect($facet).to.be.prototypeOf($enumerationFacet);
+      expect(Facet).to.be.prototypeOf(EnumerationFacet);
     });
 
     describe('.getQName()', function () {
 
       it("should return {http://www.w3.org/2001/XMLSchema}enumeration", function () {
-        expect($enumerationFacet.getQName())
-          .to.eql($qname.create('enumeration',
+        expect(EnumerationFacet.getQName())
+          .to.eql(QName.create('enumeration',
             'http://www.w3.org/2001/XMLSchema'));
       });
 
@@ -57,7 +57,7 @@ define([
     describe('.isShadowingLowerRestrictions()', function () {
 
       it("should return true", function () {
-        expect($enumerationFacet.isShadowingLowerRestrictions()).to.be.true;
+        expect(EnumerationFacet.isShadowingLowerRestrictions()).to.be.true;
       });
 
     });
@@ -65,7 +65,7 @@ define([
     describe('.getMutualExclusiveFacets()', function () {
 
       it("should return an empty array", function () {
-        expect($enumerationFacet.getMutualExclusiveFacets()).to.eql([]);
+        expect(EnumerationFacet.getMutualExclusiveFacets()).to.eql([]);
       });
 
     });
@@ -83,9 +83,9 @@ define([
       });
 
       it("should call sulfur/schema/facet#initialize()", function () {
-        var spy = sandbox.spy($facet.prototype, 'initialize');
+        var spy = sandbox.spy(Facet.prototype, 'initialize');
         var values = [ 'foo' ];
-        var facet = $enumerationFacet.create(values);
+        var facet = EnumerationFacet.create(values);
         expect(spy).to.be.calledOn(facet).to.be.calledWith(values);
       });
 
@@ -94,12 +94,12 @@ define([
           { toString: function () { return 'x'; } },
           { toString: function () { return 'x'; } }
         ];
-        var facet = $enumerationFacet.create(values);
+        var facet = EnumerationFacet.create(values);
         expect(facet.getValue()).to.eql(values.slice(0, 1));
       });
 
       it("should reject an empty array", function () {
-        expect(bind($enumerationFacet, 'create', []))
+        expect(bind(EnumerationFacet, 'create', []))
           .to.throw("must provide at least one value");
       });
 
@@ -115,8 +115,8 @@ define([
       beforeEach(function () {
         validator = { validate: function () {} };
         type = { createValidator: returns(validator) };
-        values = [ $stringValue.create('a') ];
-        facet = $enumerationFacet.create(values);
+        values = [ StringValue.create('a') ];
+        facet = EnumerationFacet.create(values);
       });
 
       it("should check each value using the validator of the given type", function () {
@@ -145,16 +145,16 @@ define([
       var facet;
 
       beforeEach(function () {
-        facet = $enumerationFacet.create([ $stringValue.create('') ]);
+        facet = EnumerationFacet.create([ StringValue.create('') ]);
       });
 
       it("should return true when all values are of the given type", function () {
-        var type = { getValueType: function () { return $stringValue; } };
+        var type = { getValueType: function () { return StringValue; } };
         expect(facet.validate(type)).to.be.true;
       });
 
       it("should return false when any value is not of the given type", function () {
-        var type = { getValueType: function () { return $integerValue; } };
+        var type = { getValueType: function () { return IntegerValue; } };
         expect(facet.validate(type)).to.be.false;
       });
 
@@ -163,10 +163,10 @@ define([
     describe('#createValidator()', function () {
 
       it("should return a validator/enumeration with the facets values and #eq() as test method", function () {
-        var facet = $enumerationFacet.create([{ eq: function () {} }]);
+        var facet = EnumerationFacet.create([{ eq: function () {} }]);
         var v = facet.createValidator();
         expect(v).to.eql(
-          $enumerationValidator.create(
+          EnumerationValidator.create(
             facet.getValue(),
             { testMethod: 'eq' }
           )

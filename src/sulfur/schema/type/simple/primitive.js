@@ -10,11 +10,11 @@ define([
   'sulfur/factory',
   'sulfur/schema/validator/all',
   'sulfur/schema/validator/prototype'
-], function ($factory, $allValidator, $prototypeValidator) {
+], function (Factory, AllValidator, PrototypeValidator) {
 
   'use strict';
 
-  return $factory.derive({
+  return Factory.derive({
 
     initialize: function (options) {
       this._valueType = options.valueType;
@@ -39,7 +39,7 @@ define([
     },
 
     createValidator: function () {
-      return $prototypeValidator.create(this.getValueType().prototype);
+      return PrototypeValidator.create(this.getValueType().prototype);
     },
 
     createRestrictionValidator: function (restriction) {
@@ -51,7 +51,7 @@ define([
         }
         return validators;
       }, [ this.createValidator() ]);
-      return $allValidator.create(validators);
+      return AllValidator.create(validators);
     }
 
   });

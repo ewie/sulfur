@@ -16,28 +16,28 @@ define([
   'sulfur/schema/type/simple/restricted',
   'sulfur/schema/validator/all'
 ], function (
-    $shared,
-    $facet,
-    $facets,
-    $qname,
-    $primitiveType,
-    $restrictedType,
-    $allValidator
+    shared,
+    Facet,
+    Facets,
+    QName,
+    PrimitiveType,
+    RestrictedType,
+    AllValidator
 ) {
 
   'use strict';
 
-  var expect = $shared.expect;
-  var sinon = $shared.sinon;
-  var bind = $shared.bind;
-  var returns = $shared.returns;
+  var expect = shared.expect;
+  var sinon = shared.sinon;
+  var bind = shared.bind;
+  var returns = shared.returns;
 
   describe('sulfur/schema/facet', function () {
 
     function mockFacet(qname, options) {
       options || (options = {});
       var shadowing = typeof options.shadowing === 'undefined' ? true : options.shadowing;
-      var facet = $facet.clone({
+      var facet = Facet.clone({
         getQName: returns(qname),
         getMutualExclusiveFacets: returns(options.mutex || []),
         isShadowingLowerRestrictions: returns(shadowing)
@@ -49,60 +49,60 @@ define([
       return facet;
     }
 
-    var $derivedFacet;
-    var $mutexFacet;
+    var DerivedFacet;
+    var MutexFacet;
     var facet;
 
     beforeEach(function () {
-      $mutexFacet = mockFacet($qname.create('xxx', 'urn:void'));
-      $derivedFacet = mockFacet($qname.create('foo', 'urn:void'),
-        { mutex: [ $mutexFacet ] });
-      facet = $derivedFacet.create();
+      MutexFacet = mockFacet(QName.create('xxx', 'urn:void'));
+      DerivedFacet = mockFacet(QName.create('foo', 'urn:void'),
+        { mutex: [ MutexFacet ] });
+      facet = DerivedFacet.create();
     });
 
     describe('.getEffectiveFacets()', function () {
 
       it("should return undefined when no facet of this factory is defined in any restriction step", function () {
-        var dummyFacet = mockFacet($qname.create('x', 'urn:y'));
-        var base = $primitiveType.create({
-          facets: $facets.create([ dummyFacet ])
+        var dummyFacet = mockFacet(QName.create('x', 'urn:y'));
+        var base = PrimitiveType.create({
+          facets: Facets.create([ dummyFacet ])
         });
-        var restriction = $restrictedType.create(base,
-          $facets.create([ dummyFacet.create() ]));
-        expect($derivedFacet.getEffectiveFacets(restriction)).to.be.undefined;
+        var restriction = RestrictedType.create(base,
+          Facets.create([ dummyFacet.create() ]));
+        expect(DerivedFacet.getEffectiveFacets(restriction)).to.be.undefined;
       });
 
       it("should return undefined when a mutual exclusive facet is defined in a higher restriction step", function () {
-        var base = $primitiveType.create({
-          facets: $facets.create([ $mutexFacet ])
+        var base = PrimitiveType.create({
+          facets: Facets.create([ MutexFacet ])
         });
-        var restriction = $restrictedType.create(base,
-          $facets.create([ $mutexFacet.create() ]));
-        expect($derivedFacet.getEffectiveFacets(restriction)).to.be.undefined;
+        var restriction = RestrictedType.create(base,
+          Facets.create([ MutexFacet.create() ]));
+        expect(DerivedFacet.getEffectiveFacets(restriction)).to.be.undefined;
       });
 
       context("when no mutual exclusive facet is defined in a higher restriction step", function () {
 
         it("should return an array containing only the most restrictive facet when shadowing", function () {
-          var base = $primitiveType.create({
-            facets: $facets.create([ $derivedFacet ])
+          var base = PrimitiveType.create({
+            facets: Facets.create([ DerivedFacet ])
           });
-          var restriction = $restrictedType.create(base,
-            $facets.create([ facet ]));
-          expect($derivedFacet.getEffectiveFacets(restriction)).to.eql([ facet ]);
+          var restriction = RestrictedType.create(base,
+            Facets.create([ facet ]));
+          expect(DerivedFacet.getEffectiveFacets(restriction)).to.eql([ facet ]);
         });
 
         it("should return the facets of all restriction steps when not shadowing", function () {
-          var nonShadowingFacet = mockFacet($qname.create('x', 'urn:y'), { shadowing: false });
-          var primitive = $primitiveType.create({
-            facets: $facets.create([ nonShadowingFacet ])
+          var nonShadowingFacet = mockFacet(QName.create('x', 'urn:y'), { shadowing: false });
+          var primitive = PrimitiveType.create({
+            facets: Facets.create([ nonShadowingFacet ])
           });
           var baseFacet = nonShadowingFacet.create();
-          var base = $restrictedType.create(primitive,
-            $facets.create([ baseFacet ]));
+          var base = RestrictedType.create(primitive,
+            Facets.create([ baseFacet ]));
           var facet = nonShadowingFacet.create();
-          var restriction = $restrictedType.create(base,
-            $facets.create([ facet ]));
+          var restriction = RestrictedType.create(base,
+            Facets.create([ facet ]));
           expect(nonShadowingFacet.getEffectiveFacets(restriction))
             .to.eql([ facet, baseFacet ]);
         });
@@ -173,7 +173,7 @@ define([
             return sinon.spy(instance, 'createValidator');
           });
           var v = facet.createConjunctionValidator(instances);
-          expect($allValidator.prototype).to.be.prototypeOf(v);
+          expect(AllValidator.prototype).to.be.prototypeOf(v);
           spies.forEach(function (spy, i) {
             expect(spy).to.have.returned(sinon.match.same(v.getValidators()[i]));
           });
@@ -187,7 +187,7 @@ define([
 
       it("should initialize with a value", function () {
         var value = {};
-        var facet = $facet.create(value);
+        var facet = Facet.create(value);
         expect(facet.getValue()).to.equal(value);
       });
 
@@ -196,7 +196,7 @@ define([
     describe('#getQName()', function () {
 
       it("should return the value of .getQName()", function () {
-        var spy = sinon.spy($derivedFacet, 'getQName');
+        var spy = sinon.spy(DerivedFacet, 'getQName');
         expect(spy).to.have.returned(facet.getQName());
       });
 
@@ -205,7 +205,7 @@ define([
     describe('#isShadowingLowerRestrictions()', function () {
 
       it("should return the value of .isShadowingLowerRestrictions()", function () {
-        var spy = sinon.spy($derivedFacet, 'isShadowingLowerRestrictions');
+        var spy = sinon.spy(DerivedFacet, 'isShadowingLowerRestrictions');
         expect(spy).to.have.returned(facet.isShadowingLowerRestrictions());
       });
 
@@ -215,7 +215,7 @@ define([
 
       it("should return the facet value", function () {
         var value = {};
-        var facet = $facet.create(value);
+        var facet = Facet.create(value);
         expect(facet.getValue()).to.equal(value);
       });
 

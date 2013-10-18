@@ -23,27 +23,27 @@ define([
   'sulfur/schema/validator/each',
   'sulfur/schema/validator/property'
 ], function (
-    $shared,
-    $enumerationFacet,
-    $lengthFacet,
-    $maxLengthFacet,
-    $minLengthFacet,
-    $patternFacet,
-    $facets,
-    $pattern,
-    $listType,
-    $restrictedType,
-    $simpleListValue,
-    $allValidator,
-    $eachValidator,
-    $propertyValidator
+    shared,
+    EnumerationFacet,
+    LengthFacet,
+    MaxLengthFacet,
+    MinLengthFacet,
+    PatternFacet,
+    Facets,
+    Pattern,
+    ListType,
+    RestrictedType,
+    SimpleListValue,
+    AllValidator,
+    EachValidator,
+    PropertyValidator
 ) {
 
   'use strict';
 
-  var expect = $shared.expect;
-  var sinon = $shared.sinon;
-  var returns = $shared.returns;
+  var expect = shared.expect;
+  var sinon = shared.sinon;
+  var returns = shared.returns;
 
   describe('sulfur/schema/type/simple/list', function () {
 
@@ -61,7 +61,7 @@ define([
 
       it("should return the item type", function () {
         var itemType = { getValueType: returns({}) };
-        var type = $listType.create(itemType);
+        var type = ListType.create(itemType);
         expect(type.getItemType()).to.equal(itemType);
       });
 
@@ -71,15 +71,15 @@ define([
 
       it("should return a sulfur/schema/value/simpleList using the item type's value type", function () {
         var itemType = { getValueType: returns({}) };
-        var listType = $listType.create(itemType);
+        var listType = ListType.create(itemType);
         var listValue = listType.getValueType();
-        expect($simpleListValue).to.be.prototypeOf(listValue);
+        expect(SimpleListValue).to.be.prototypeOf(listValue);
         expect(listValue.getItemValueType()).to.equal(itemType.getValueType());
       });
 
       it("should return the same object on future calls", function () {
         var itemType = { getValueType: returns({}) };
-        var listType = $listType.create(itemType);
+        var listType = ListType.create(itemType);
         expect(listType.getValueType()).to.equal(listType.getValueType());
       });
 
@@ -88,18 +88,18 @@ define([
     describe('#getAllowedFacets()', function () {
 
       [
-        $enumerationFacet,
-        $lengthFacet,
-        $maxLengthFacet,
-        $minLengthFacet,
-        $patternFacet
+        EnumerationFacet,
+        LengthFacet,
+        MaxLengthFacet,
+        MinLengthFacet,
+        PatternFacet
       ].forEach(function (facet) {
 
         var qname = facet.getQName();
 
         it("should include facet " + qname, function () {
           var itemType = { getValueType: returns({}) };
-          var type = $listType.create(itemType);
+          var type = ListType.create(itemType);
           expect(type.getAllowedFacets().getFacet(qname)).to.equal(facet);
         });
 
@@ -111,7 +111,7 @@ define([
 
       it("should return true when the other type is the same sulfur/schema/type/simple/list", function () {
         var itemType = { getValueType: returns({}) };
-        var type = $listType.create(itemType);
+        var type = ListType.create(itemType);
         expect(type.isRestrictionOf(type)).to.be.true;
       });
 
@@ -128,8 +128,8 @@ define([
             getValueType: returns({})
           };
           otherItemType = { getValueType: returns({}) };
-          type = $listType.create(itemType);
-          other = $listType.create(otherItemType);
+          type = ListType.create(itemType);
+          other = ListType.create(otherItemType);
         });
 
         it("should return true when the item type is a restriction of the other item type", function () {
@@ -161,14 +161,14 @@ define([
           createValidator: returns({ validate: returns() }),
           getValueType: returns({})
         };
-        type = $listType.create(itemType);
+        type = ListType.create(itemType);
       });
 
       it("should return a sulfur/schema/validator/property on 'toArray' using a sulfur/schema/validator/each using the item type's validator", function () {
         var v = type.createValidator();
         expect(v).to.eql(
-          $propertyValidator.create('toArray',
-            $eachValidator.create(type.getItemType().createValidator())));
+          PropertyValidator.create('toArray',
+            EachValidator.create(type.getItemType().createValidator())));
       });
 
     });
@@ -182,71 +182,71 @@ define([
           createValidator: returns({ validate: returns() }),
           getValueType: returns({})
         };
-        type = $listType.create(itemType);
+        type = ListType.create(itemType);
       });
 
       it("should return a sulfur/schema/validator/all", function () {
-        var restriction = $restrictedType.create(type,
-          $facets.create([ $lengthFacet.create(0) ]));
+        var restriction = RestrictedType.create(type,
+          Facets.create([ LengthFacet.create(0) ]));
         var v = type.createRestrictionValidator(restriction);
-        expect($allValidator.prototype).to.be.prototypeOf(v);
+        expect(AllValidator.prototype).to.be.prototypeOf(v);
       });
 
       it("should include this type's validator", function () {
-        var restriction = $restrictedType.create(type,
-          $facets.create([ $lengthFacet.create(0) ]));
+        var restriction = RestrictedType.create(type,
+          Facets.create([ LengthFacet.create(0) ]));
         var v = type.createRestrictionValidator(restriction);
         expect(v.getValidators())
           .to.include.something.eql(type.createValidator());
       });
 
       it("should include the validator of facet 'enumeration' when effective", function () {
-        var facet = $enumerationFacet.create([ $simpleListValue.create() ]);
-        var restriction = $restrictedType.create(type,
-          $facets.create([ facet ]));
+        var facet = EnumerationFacet.create([ SimpleListValue.create() ]);
+        var restriction = RestrictedType.create(type,
+          Facets.create([ facet ]));
         var v = type.createRestrictionValidator(restriction);
         expect(v.getValidators())
           .to.include.something.eql(facet.createValidator());
       });
 
       it("should include the validator of facet 'length' when effective", function () {
-        var facet = $lengthFacet.create(0);
-        var restriction = $restrictedType.create(type,
-          $facets.create([ facet ]));
+        var facet = LengthFacet.create(0);
+        var restriction = RestrictedType.create(type,
+          Facets.create([ facet ]));
         var v = type.createRestrictionValidator(restriction);
         expect(v.getValidators())
           .to.include.something.eql(facet.createValidator());
       });
 
       it("should include the validator of facet 'maxLength' when effective", function () {
-        var facet = $maxLengthFacet.create(0);
-        var restriction = $restrictedType.create(type,
-          $facets.create([ facet ]));
+        var facet = MaxLengthFacet.create(0);
+        var restriction = RestrictedType.create(type,
+          Facets.create([ facet ]));
         var v = type.createRestrictionValidator(restriction);
         expect(v.getValidators())
           .to.include.something.eql(facet.createValidator());
       });
 
       it("should include the validator of facet 'minLength' when effective", function () {
-        var facet = $minLengthFacet.create(0);
-        var restriction = $restrictedType.create(type,
-          $facets.create([ facet ]));
+        var facet = MinLengthFacet.create(0);
+        var restriction = RestrictedType.create(type,
+          Facets.create([ facet ]));
         var v = type.createRestrictionValidator(restriction);
         expect(v.getValidators())
           .to.include.something.eql(facet.createValidator());
       });
 
       it("should include the validator of facet 'pattern' when effective", function () {
-        var baseFacet = $patternFacet.create([ $pattern.create('\\d*') ]);
-        var base = $restrictedType.create(type,
-          $facets.create([ baseFacet ]));
-        var facet = $patternFacet.create([ $pattern.create('\\d+') ]);
-        var restriction = $restrictedType.create(base,
-          $facets.create([ facet ]));
+        var baseFacet = PatternFacet.create([ Pattern.create('\\d*') ]);
+        var base = RestrictedType.create(type,
+          Facets.create([ baseFacet ]));
+        var facet = PatternFacet.create([ Pattern.create('\\d+') ]);
+        var restriction = RestrictedType.create(base,
+          Facets.create([ facet ]));
         var v = type.createRestrictionValidator(restriction);
         expect(v.getValidators())
           .to.include.something.eql(
-            $patternFacet.createConjunctionValidator([ facet, baseFacet ]));
+            PatternFacet.createConjunctionValidator([ facet, baseFacet ]));
       });
 
     });

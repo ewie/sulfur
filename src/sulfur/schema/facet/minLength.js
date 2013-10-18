@@ -16,12 +16,12 @@ define([
   'sulfur/util'
 ], function (
     require,
-    $facet,
-    $qname,
-    $restrictedType,
-    $minimumValidator,
-    $propertyValidator,
-    $util
+    Facet,
+    QName,
+    RestrictedType,
+    MinimumValidator,
+    PropertyValidator,
+    util
 ) {
 
   'use strict';
@@ -35,14 +35,14 @@ define([
   var requireLengthFacet = requireFacet('length');
   var requireMaxLengthFacet = requireFacet('maxLength');
 
-  var $ = $facet.clone({
+  var $ = Facet.clone({
 
-    getQName: $util.returns(
-      $qname.create('minLength', 'http://www.w3.org/2001/XMLSchema')),
+    getQName: util.returns(
+      QName.create('minLength', 'http://www.w3.org/2001/XMLSchema')),
 
-    isShadowingLowerRestrictions: $util.returns(true),
+    isShadowingLowerRestrictions: util.returns(true),
 
-    getMutualExclusiveFacets: $util.once(function () {
+    getMutualExclusiveFacets: util.once(function () {
       return [ requireLengthFacet() ];
     })
 
@@ -81,9 +81,9 @@ define([
     },
 
     createValidator: function () {
-      return $propertyValidator.create(
+      return PropertyValidator.create(
         'getLength',
-        $minimumValidator.create(this.getValue())
+        MinimumValidator.create(this.getValue())
       );
     }
 

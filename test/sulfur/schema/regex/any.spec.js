@@ -10,16 +10,16 @@
 define([
   'shared',
   'sulfur/schema/regex/any'
-], function ($shared, $any) {
+], function (shared, Any) {
 
   'use strict';
 
-  var expect = $shared.expect;
+  var expect = shared.expect;
 
   describe('sulfur/schema/regex/any', function () {
 
     it("should exist", function () {
-      expect($any).to.exist;
+      expect(Any).to.exist;
     });
 
   });

@@ -6,7 +6,7 @@
 
 /* global define */
 
-define(['sulfur/util/orderedMap'], function ($orderedMap) {
+define(['sulfur/util/orderedMap'], function (OrderedMap) {
 
   'use strict';
 
@@ -151,7 +151,7 @@ define(['sulfur/util/orderedMap'], function ($orderedMap) {
      *   element's key
      */
     uniq: function (elements, key) {
-      var map = $orderedMap.create(key);
+      var map = OrderedMap.create(key);
       elements.forEach(function (element) {
         if (map.canBeInserted(element)) {
           map.insert(element);

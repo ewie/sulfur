@@ -8,7 +8,7 @@
 
 define([
   'sulfur/factory'
-], function ($factory) {
+], function (Factory) {
 
   'use strict';
 
@@ -24,7 +24,7 @@ define([
    * A multi character escape using a character class.
    */
 
-  var $ = $factory.derive({
+  var $ = Factory.derive({
     /**
      * @param [string] name of the character class
      * @param [boolean] whether to match codepoints of that class or the inverse

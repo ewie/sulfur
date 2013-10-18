@@ -8,7 +8,7 @@
 
 define([
   'sulfur/factory'
-], function ($factory) {
+], function (Factory) {
 
   'use strict';
 
@@ -17,7 +17,7 @@ define([
    * occurrences. The maximum may be unlimited.
    */
 
-  return $factory.derive({
+  return Factory.derive({
     /**
      * @param [number] min
      * @param [number] max (default `min`) use Number.POSITIVE_INFINITY for an

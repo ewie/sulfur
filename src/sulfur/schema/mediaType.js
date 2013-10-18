@@ -9,14 +9,14 @@
 define([
   'sulfur/factory',
   'sulfur/util'
-], function ($factory, $util) {
+], function (Factory, util) {
 
   'use strict';
 
   var TYPE_PATTERN = /^(?:application|audio|image|text|video)$/;
   var SUBTYPE_PATTERN = /^[^\x00-\x20\x7F()<>@,;:\\"/\[\]?.=]+$/;
 
-  var $ = $factory.clone({
+  var $ = Factory.clone({
 
     parse: function (s) {
       var p = s.indexOf('/');
@@ -88,13 +88,13 @@ define([
      * @return [boolean] whether LHS matches RHS or not
      */
     matches: function (other) {
-      if ($util.isUndefined(this._type)) {
+      if (util.isUndefined(this._type)) {
         return true;
       }
       if (this._type !== other._type) {
         return false;
       }
-      if ($util.isUndefined(this._subtype)) {
+      if (util.isUndefined(this._subtype)) {
         return true;
       }
       return this._subtype === other._subtype;

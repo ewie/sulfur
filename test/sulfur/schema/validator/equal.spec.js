@@ -10,28 +10,28 @@
 define([
   'shared',
   'sulfur/schema/validator/equal'
-], function ($shared, $equalValidator) {
+], function (shared, EqualValidator) {
 
   'use strict';
 
-  var expect = $shared.expect;
+  var expect = shared.expect;
 
   describe('sulfur/schema/validator/equal', function () {
 
     describe('#validate()', function () {
 
       it("should return true when the value is equal to the expected value", function () {
-        var validator = $equalValidator.create(true);
+        var validator = EqualValidator.create(true);
         expect(validator.validate(true)).to.be.true;
       });
 
       it("should return false when the value is not equal to the expected value", function () {
-        var validator = $equalValidator.create(true);
+        var validator = EqualValidator.create(true);
         expect(validator.validate(false)).to.be.false;
       });
 
       it("should test for strict equality", function () {
-        var validator = $equalValidator.create(0);
+        var validator = EqualValidator.create(0);
         expect(validator.validate('0')).to.be.false;
       });
 

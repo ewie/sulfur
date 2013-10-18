@@ -6,7 +6,7 @@
 
 /* global define */
 
-define(['sulfur/factory'], function ($factory) {
+define(['sulfur/factory'], function (Factory) {
 
   'use strict';
 
@@ -16,7 +16,7 @@ define(['sulfur/factory'], function ($factory) {
     };
   }
 
-  return $factory.derive({
+  return Factory.derive({
 
     initialize: function (document) {
       this._document = document;

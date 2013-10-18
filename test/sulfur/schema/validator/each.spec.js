@@ -10,12 +10,12 @@
 define([
   'shared',
   'sulfur/schema/validator/each'
-], function ($shared, $eachValidator) {
+], function (shared, EachValidator) {
 
   'use strict';
 
-  var expect = $shared.expect;
-  var sinon = $shared.sinon;
+  var expect = shared.expect;
+  var sinon = shared.sinon;
 
   describe('sulfur/schema/validator/each', function () {
 
@@ -28,7 +28,7 @@ define([
         itemValidator = {
           validate: function (x) { return x; }
         };
-        validator = $eachValidator.create(itemValidator);
+        validator = EachValidator.create(itemValidator);
       });
 
       it("should call the item validator's #validate() for each item", function () {

@@ -7,18 +7,18 @@
 /* global define */
 /* global describe, it */
 
-define(['shared', 'sulfur'], function ($shared, $sulfur) {
+define(['shared', 'sulfur'], function (shared, sulfur) {
 
   'use strict';
 
-  var expect = $shared.expect;
+  var expect = shared.expect;
 
   describe('sulfur', function () {
 
     describe('.getNamespaceURI()', function () {
 
       it("should return 'https://vsr.informatik.tu-chemnitz.de/projects/2013/sulfur'", function () {
-        expect($sulfur.getNamespaceURI()).to.equal('https://vsr.informatik.tu-chemnitz.de/projects/2013/sulfur');
+        expect(sulfur.getNamespaceURI()).to.equal('https://vsr.informatik.tu-chemnitz.de/projects/2013/sulfur');
       });
 
     });

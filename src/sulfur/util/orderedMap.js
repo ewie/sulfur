@@ -6,7 +6,7 @@
 
 /* global define */
 
-define(['sulfur/factory'], function ($factory) {
+define(['sulfur/factory'], function (Factory) {
 
   'use strict';
 
@@ -23,7 +23,7 @@ define(['sulfur/factory'], function ($factory) {
 
   }());
 
-  return $factory.derive({
+  return Factory.derive({
 
     /**
      * @param [function] key (default #toString()) a key function

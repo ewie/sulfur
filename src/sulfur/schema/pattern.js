@@ -9,7 +9,7 @@
 define([
   'sulfur/factory',
   'sulfur/schema/regex'
-], function ($factory, $regex) {
+], function (Factory, Regex) {
 
   'use strict';
 
@@ -18,7 +18,7 @@ define([
    * Provides a simple interface to match a string against the pattern.
    */
 
-  var $ = $factory.clone({
+  var $ = Factory.clone({
 
     /**
      * Check if a string represents a valid XSD pattern.
@@ -29,7 +29,7 @@ define([
      */
     isValidLiteral: function (s) {
       try {
-        $regex.parse(s);
+        Regex.parse(s);
       } catch (e) {
         return false;
       }
@@ -50,7 +50,7 @@ define([
     initialize: function (source) {
       var compiledPattern;
       try {
-        compiledPattern = $regex.compile(source);
+        compiledPattern = Regex.compile(source);
       } catch (e) {
         throw new Error('invalid pattern "' + source + '" (error: ' + e.message + ')');
       }

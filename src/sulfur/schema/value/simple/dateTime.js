@@ -10,7 +10,7 @@ define([
   'sulfur/factory',
   'sulfur/schema/value/simple/decimal',
   'sulfur/util'
-], function ($factory, $decimalValue, $util) {
+], function (Factory, DecimalValue, util) {
 
   'use strict';
 
@@ -39,7 +39,7 @@ define([
     return year % 400 === 0 || year % 100 !== 0 && year % 4 === 0;
   }
 
-  var $ = $factory.clone({
+  var $ = Factory.clone({
 
     /**
      * Check if a string represents a valid dateTime according to XML Schema 1.0
@@ -102,7 +102,7 @@ define([
           day: parseDec(m[3]),
           hour: parseDec(m[4]),
           minute: parseDec(m[5]),
-          second: $decimalValue.parse(m[6])
+          second: DecimalValue.parse(m[6])
         };
         if (m[7] === 'Z') {
           options.tzhour = options.tzminute = 0;
@@ -155,7 +155,7 @@ define([
       }
 
       function assertYear(year) {
-        if (!$util.isInteger(year)) {
+        if (!util.isInteger(year)) {
           throw new Error("year must be an integer");
         }
 
@@ -169,7 +169,7 @@ define([
       }
 
       function assertMonth(month) {
-        if (!$util.isInteger(month)) {
+        if (!util.isInteger(month)) {
           throw new Error("month must be an integer");
         }
 
@@ -183,7 +183,7 @@ define([
       }
 
       function assertDay(day, month, year) {
-        if (!$util.isInteger(day)) {
+        if (!util.isInteger(day)) {
           throw new Error("day must be an integer");
         }
 
@@ -211,7 +211,7 @@ define([
       }
 
       function assertHour(hour) {
-        if (!$util.isInteger(hour)) {
+        if (!util.isInteger(hour)) {
           throw new Error("hour must be an integer");
         }
 
@@ -225,7 +225,7 @@ define([
       }
 
       function assertMinute(minute) {
-        if (!$util.isInteger(minute)) {
+        if (!util.isInteger(minute)) {
           throw new Error("minute must be an integer");
         }
 
@@ -238,11 +238,11 @@ define([
         }
       }
 
-      var MIN_SECOND = $decimalValue.create();
-      var MAX_SECOND = $decimalValue.parse('60');
+      var MIN_SECOND = DecimalValue.create();
+      var MAX_SECOND = DecimalValue.parse('60');
 
       function assertSecond(second) {
-        if (!$decimalValue.prototype.isPrototypeOf(second)) {
+        if (!DecimalValue.prototype.isPrototypeOf(second)) {
           throw new Error("second must be a decimal");
         }
         if (second.lt(MIN_SECOND)) {
@@ -254,7 +254,7 @@ define([
       }
 
       function assertTimezoneHour(hour) {
-        if (!$util.isInteger(hour)) {
+        if (!util.isInteger(hour)) {
           throw new Error("timezone hour must be an integer");
         }
         if (hour > 99) {
@@ -266,7 +266,7 @@ define([
       }
 
       function assertTimezoneMinute(minute) {
-        if (!$util.isInteger(minute)) {
+        if (!util.isInteger(minute)) {
           throw new Error("timezone minute must be an integer");
         }
         if (minute > 99) {
@@ -299,7 +299,7 @@ define([
       }
 
       function optionOrDefault(options, property, default_) {
-        return $util.isDefined(options[property]) ? options[property] : default_;
+        return util.isDefined(options[property]) ? options[property] : default_;
       }
 
       var normalizeToZulu = (function () {
@@ -393,17 +393,17 @@ define([
 
         var hour = optionOrDefault(options, 'hour', 0);
         var minute = optionOrDefault(options, 'minute', 0);
-        var second = optionOrDefault(options, 'second', $decimalValue.create());
+        var second = optionOrDefault(options, 'second', DecimalValue.create());
 
         assertTime(hour, minute, second);
 
         if (typeof second === 'number') {
-          second = $decimalValue.parse(second.toString(10));
+          second = DecimalValue.parse(second.toString(10));
         } else if (typeof second === 'string') {
-          second = $decimalValue.parse(second);
+          second = DecimalValue.parse(second);
         }
 
-        if ($util.isDefined(options.tzhour) || $util.isDefined(options.tzminute)) {
+        if (util.isDefined(options.tzhour) || util.isDefined(options.tzminute)) {
           var tzhour = optionOrDefault(options, 'tzhour', 0);
           var tzminute = optionOrDefault(options, 'tzminute', 0);
           assertTimezone(tzhour, tzminute);

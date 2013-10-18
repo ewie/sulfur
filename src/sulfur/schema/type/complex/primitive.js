@@ -11,11 +11,11 @@ define([
   'sulfur/schema/validator/all',
   'sulfur/schema/validator/property',
   'sulfur/schema/validator/prototype'
-], function ($factory, $allValidator, $propertyValidator, $prototypeValidator) {
+], function (Factory, AllValidator, PropertyValidator, PrototypeValidator) {
 
   'use strict';
 
-  return $factory.derive({
+  return Factory.derive({
 
     initialize: function (options) {
       this._qname = options.qname;
@@ -37,14 +37,14 @@ define([
     },
 
     createValidator: function () {
-      var validators = [ $prototypeValidator.create(this._valueType.prototype) ];
+      var validators = [ PrototypeValidator.create(this._valueType.prototype) ];
       this._allowedElements.toArray().reduce(function (validators, element) {
-        var validator = $propertyValidator.create('getValue',
+        var validator = PropertyValidator.create('getValue',
           element.getType().createValidator(), [ element.getName() ]);
         validators.push(validator);
         return validators;
       }, validators);
-      return $allValidator.create(validators);
+      return AllValidator.create(validators);
     }
 
   });

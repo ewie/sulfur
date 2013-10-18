@@ -10,20 +10,20 @@ define([
   'sulfur/schema/facet/pattern',
   'sulfur/schema/pattern',
   'sulfur/util'
-], function ($patternFacet, $pattern, $util) {
+], function (PatternFacet, Pattern, util) {
 
   'use strict';
 
   return {
 
-    getFacet: $util.returns($patternFacet),
+    getFacet: util.returns(PatternFacet),
 
     parseValue: function (s) {
-      return $pattern.create(s);
+      return Pattern.create(s);
     },
 
     createFacet: function (values) {
-      return $patternFacet.create(values);
+      return PatternFacet.create(values);
     }
 
   };

@@ -12,12 +12,12 @@ define([
   'sulfur/schema/value/complex',
   'sulfur/schema/value/simple/integer',
   'sulfur/schema/value/simple/string'
-], function ($shared, $_complexValue, $integerValue, $stringValue) {
+], function (shared, $_complexValue, IntegerValue, StringValue) {
 
   'use strict';
 
-  var expect = $shared.expect;
-  var bind = $shared.bind;
+  var expect = shared.expect;
+  var bind = shared.bind;
 
   describe('sulfur/schema/value/_complex', function () {
 
@@ -25,7 +25,7 @@ define([
 
       it("should initialize with an array of name/value pairs", function () {
         var values = [
-          [ 'foo', $stringValue.create() ]
+          [ 'foo', StringValue.create() ]
         ];
         var type = $_complexValue.create(values);
         expect(type.getValue('foo')).to.equal(values[0][1]);
@@ -33,8 +33,8 @@ define([
 
       it("should reject duplicate names", function () {
         var values = [
-          [ 'foo', $stringValue.create() ],
-          [ 'foo', $stringValue.create() ]
+          [ 'foo', StringValue.create() ],
+          [ 'foo', StringValue.create() ]
         ];
         expect(bind($_complexValue, 'create', values))
           .to.throw('duplicate name "foo"');
@@ -48,7 +48,7 @@ define([
       var values;
 
       beforeEach(function () {
-        values = [ [ 'foo', $stringValue.create() ] ];
+        values = [ [ 'foo', StringValue.create() ] ];
         type = $_complexValue.create(values);
       });
 

@@ -9,13 +9,13 @@
 define([
   'sulfur/factory',
   'sulfur/schema/qname'
-], function ($factory, $qname) {
+], function (Factory, QName) {
 
   'use strict';
 
   var NS = { xs: 'http://www.w3.org/2001/XMLSchema' };
 
-  return $factory.derive({
+  return Factory.derive({
 
     /**
      * @param [array] typeResolvers an array of type resolvers used in the
@@ -115,7 +115,7 @@ define([
         prefix = qname.substr(0, p);
         name = qname.substr(p + 1);
       }
-      return $qname.create(name, this.resolvePrefix(prefix, element));
+      return QName.create(name, this.resolvePrefix(prefix, element));
     },
 
     resolvePrefix: function (prefix, element) {

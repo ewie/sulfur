@@ -20,27 +20,27 @@ define([
   'sulfur/schema/validator/property',
   'sulfur/util'
 ], function (
-    $factory,
-    $enumerationFacet,
-    $lengthFacet,
-    $maxLengthFacet,
-    $minLengthFacet,
-    $patternFacet,
-    $facets,
-    $simpleListValue,
-    $allValidator,
-    $eachValidator,
-    $propertyValidator,
-    $util
+    Factory,
+    EnumerationFacet,
+    LengthFacet,
+    MaxLengthFacet,
+    MinLengthFacet,
+    PatternFacet,
+    Facets,
+    SimpleListValue,
+    AllValidator,
+    EachValidator,
+    PropertyValidator,
+    util
 ) {
 
   'use strict';
 
-  return $factory.derive({
+  return Factory.derive({
 
     initialize: function (itemType) {
       this._itemType = itemType;
-      this._valueType = $simpleListValue.typed(this._itemType.getValueType());
+      this._valueType = SimpleListValue.typed(this._itemType.getValueType());
     },
 
     getItemType: function () {
@@ -51,13 +51,13 @@ define([
       return this._valueType;
     },
 
-    getAllowedFacets: $util.returns(
-      $facets.create(
-        [ $enumerationFacet,
-          $lengthFacet,
-          $maxLengthFacet,
-          $minLengthFacet,
-          $patternFacet
+    getAllowedFacets: util.returns(
+      Facets.create(
+        [ EnumerationFacet,
+          LengthFacet,
+          MaxLengthFacet,
+          MinLengthFacet,
+          PatternFacet
         ])),
 
     isRestrictionOf: function (other) {
@@ -65,8 +65,8 @@ define([
     },
 
     createValidator: function () {
-      return $propertyValidator.create('toArray',
-        $eachValidator.create(this._itemType.createValidator()));
+      return PropertyValidator.create('toArray',
+        EachValidator.create(this._itemType.createValidator()));
     },
 
     createRestrictionValidator: function (restriction) {
@@ -78,7 +78,7 @@ define([
         }
         return validators;
       }, [ this.createValidator() ]);
-      return $allValidator.create(validators);
+      return AllValidator.create(validators);
     }
 
   });

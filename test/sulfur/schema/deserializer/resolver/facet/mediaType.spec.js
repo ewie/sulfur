@@ -12,19 +12,19 @@ define([
   'sulfur/schema/facet/mediaType',
   'sulfur/schema/deserializer/resolver/facet/mediaType',
   'sulfur/schema/mediaType'
-], function ($shared, $mediaTypeFacet, $mediaTypeFacetResolver, $mediaType) {
+], function (shared, MediaTypeFacet, MediaTypeFacetResolver, MediaType) {
 
   'use strict';
 
-  var expect = $shared.expect;
-  var sinon = $shared.sinon;
+  var expect = shared.expect;
+  var sinon = shared.sinon;
 
   describe('sulfur/schema/deserializer/resolver/facet/mediaType', function () {
 
     describe('.getFacet()', function () {
 
       it("should return sulfur/schema/facet/mediaType", function () {
-        expect($mediaTypeFacetResolver.getFacet()).to.equal($mediaTypeFacet);
+        expect(MediaTypeFacetResolver.getFacet()).to.equal(MediaTypeFacet);
       });
 
     });
@@ -42,9 +42,9 @@ define([
       });
 
       it("should pass the given string to sulfur/schema/mediaType.parse()", function () {
-        var spy = sandbox.stub($mediaType, 'parse').returns({});
+        var spy = sandbox.stub(MediaType, 'parse').returns({});
         var s = 'foo';
-        var value = $mediaTypeFacetResolver.parseValue(s);
+        var value = MediaTypeFacetResolver.parseValue(s);
         expect(spy)
           .to.be.calledWith(s)
           .to.have.returned(sinon.match.same(value));
@@ -55,9 +55,9 @@ define([
     describe('.createFacet()', function () {
 
       it("should return a sulfur/schema/facet/mediaType with the given values", function () {
-        var values = [ $mediaType.create('text', 'plain') ];
-        expect($mediaTypeFacetResolver.createFacet(values))
-          .to.eql($mediaTypeFacet.create(values));
+        var values = [ MediaType.create('text', 'plain') ];
+        expect(MediaTypeFacetResolver.createFacet(values))
+          .to.eql(MediaTypeFacet.create(values));
       });
 
     });

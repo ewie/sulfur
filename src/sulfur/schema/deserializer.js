@@ -12,13 +12,13 @@ define([
   'sulfur/schema/deserializer/resolver',
   'sulfur/schema/element',
   'sulfur/util/xpath'
-], function ($factory, $schema, $resolver, $element, $xpath) {
+], function (Factory, Schema, Resolver, Element, XPath) {
 
   'use strict';
 
   var XSD_NAMESPACE = 'http://www.w3.org/2001/XMLSchema';
 
-  return $factory.derive({
+  return Factory.derive({
 
     initialize: function (typeResolvers) {
       this._typeResolvers = typeResolvers;
@@ -35,8 +35,8 @@ define([
         throw new Error("expecting an XML Schema document");
       }
 
-      var xpath = $xpath.create(document);
-      var resolver = $resolver.create(this._typeResolvers, xpath);
+      var xpath = XPath.create(document);
+      var resolver = Resolver.create(this._typeResolvers, xpath);
 
       var ns = { xs: XSD_NAMESPACE };
       var roots = xpath.all('xs:element', root, ns);
@@ -65,10 +65,10 @@ define([
               break;
             }
           }
-          elements.push($element.create(el.getAttribute('name'), type));
+          elements.push(Element.create(el.getAttribute('name'), type));
         }
         if (compatible) {
-          return $schema.create(_root.getAttribute('name'), elements);
+          return Schema.create(_root.getAttribute('name'), elements);
         }
       }
 

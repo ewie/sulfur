@@ -21,30 +21,30 @@ define([
   'sulfur/schema/regex/translator',
   'sulfur/unicode'
 ], function (
-  $shared,
-  $branch,
-  $codeunit,
-  $group,
-  $parser,
-  $pattern,
-  $piece,
-  $quant,
-  $range,
-  $ranges,
-  $translator,
-  $unicode
+  shared,
+  Branch,
+  Codeunit,
+  Group,
+  Parser,
+  Pattern,
+  Piece,
+  Quant,
+  Range,
+  Ranges,
+  Translator,
+  Unicode
 ) {
 
   'use strict';
 
-  var expect = $shared.expect;
+  var expect = shared.expect;
 
   describe('sulfur/schema/regex/translater', function () {
 
     describe('#translate()', function () {
 
       var parse = (function () {
-        var parser = $parser.create();
+        var parser = Parser.create();
         return function parse(source) {
           return parser.parse(source);
         };
@@ -53,16 +53,16 @@ define([
       function rangesToGroupItems(ranges) {
         return ranges.reduce(function (items, range) {
           if (range[0] === range[1]) {
-            items.push($codeunit.create(range[0]));
+            items.push(Codeunit.create(range[0]));
           } else if (range[0] === (range[1] - 1)) {
             items.push(
-              $codeunit.create(range[0]),
-              $codeunit.create(range[1]));
+              Codeunit.create(range[0]),
+              Codeunit.create(range[1]));
           } else {
             items.push(
-              $range.create(
-                $codeunit.create(range[0]),
-                $codeunit.create(range[1])));
+              Range.create(
+                Codeunit.create(range[0]),
+                Codeunit.create(range[1])));
           }
           return items;
         }, []);
@@ -70,16 +70,16 @@ define([
 
       function translateCategories() {
         var ranges = Array.prototype.map.call(arguments, function (name) {
-          return $unicode.getCategoryGroupRanges(name);
+          return Unicode.getCategoryGroupRanges(name);
         });
         ranges = [].concat.apply([], ranges);
-        return $ranges.create(ranges).array;
+        return Ranges.create(ranges).array;
       }
 
       var translator;
 
       beforeEach(function () {
-        translator = $translator.create();
+        translator = Translator.create();
       });
 
       context("characters", function () {
@@ -88,10 +88,10 @@ define([
 
           it("should translate them to a surrogate pair", function () {
             var r = translator.translate(parse('&#x10000;'));
-            var x = $pattern.create(
-              [$branch.create(
-                [$piece.create($codeunit.create(0xD800)),
-                 $piece.create($codeunit.create(0xDC00))
+            var x = Pattern.create(
+              [Branch.create(
+                [Piece.create(Codeunit.create(0xD800)),
+                 Piece.create(Codeunit.create(0xDC00))
                 ])
               ]);
             expect(r).to.eql(x);
@@ -103,9 +103,9 @@ define([
 
           it("should translate them to its codepoint value", function () {
             var r = translator.translate(parse('&#x20;'));
-            var x = $pattern.create(
-              [$branch.create(
-                [$piece.create($codeunit.create(0x20))
+            var x = Pattern.create(
+              [Branch.create(
+                [Piece.create(Codeunit.create(0x20))
                 ])
               ]);
             expect(r).to.eql(x);
@@ -121,8 +121,8 @@ define([
 
           it("should remove the pattern", function () {
             var r = translator.translate(parse('()'));
-            var x = $pattern.create(
-              [$branch.create([])
+            var x = Pattern.create(
+              [Branch.create([])
               ]);
             expect(r).to.eql(x);
           });
@@ -133,10 +133,10 @@ define([
 
           it("should merge its only branch's pieces in the outer branch", function () {
             var r = translator.translate(parse('(a)'));
-            var x = $pattern.create(
-              [$branch.create(
-                [$piece.create(
-                  $codeunit.create(0x61))
+            var x = Pattern.create(
+              [Branch.create(
+                [Piece.create(
+                  Codeunit.create(0x61))
                 ])
               ]);
             expect(r).to.eql(x);
@@ -150,21 +150,21 @@ define([
 
             it("should keep sub patterns", function () {
               var r = translator.translate(parse('(a|b)c'));
-              var x = $pattern.create(
-                [$branch.create(
-                  [$piece.create(
-                    $pattern.create(
-                     [$branch.create(
-                       [$piece.create(
-                         $codeunit.create(0x61))
+              var x = Pattern.create(
+                [Branch.create(
+                  [Piece.create(
+                    Pattern.create(
+                     [Branch.create(
+                       [Piece.create(
+                         Codeunit.create(0x61))
                        ]),
-                      $branch.create(
-                       [$piece.create(
-                         $codeunit.create(0x62))
+                      Branch.create(
+                       [Piece.create(
+                         Codeunit.create(0x62))
                        ])
                      ])),
-                   $piece.create(
-                     $codeunit.create(0x63))
+                   Piece.create(
+                     Codeunit.create(0x63))
                   ])
                 ]);
               expect(r).to.eql(x);
@@ -178,14 +178,14 @@ define([
 
               it("should flatten the pattern by merging the branches into the outer pattern", function () {
                 var r = translator.translate(parse('(a|b)'));
-                var x = $pattern.create(
-                  [$branch.create(
-                    [$piece.create(
-                      $codeunit.create(0x61))
+                var x = Pattern.create(
+                  [Branch.create(
+                    [Piece.create(
+                      Codeunit.create(0x61))
                     ]),
-                   $branch.create(
-                    [$piece.create(
-                      $codeunit.create(0x62))
+                   Branch.create(
+                    [Piece.create(
+                      Codeunit.create(0x62))
                     ])
                   ]);
                 expect(r).to.eql(x);
@@ -197,20 +197,20 @@ define([
 
               it("should keep sub patterns", function () {
                 var r = translator.translate(parse('(a|b)+'));
-                var x = $pattern.create(
-                  [$branch.create(
-                    [$piece.create(
-                      $pattern.create(
-                       [$branch.create(
-                         [$piece.create(
-                           $codeunit.create(0x61))
+                var x = Pattern.create(
+                  [Branch.create(
+                    [Piece.create(
+                      Pattern.create(
+                       [Branch.create(
+                         [Piece.create(
+                           Codeunit.create(0x61))
                          ]),
-                        $branch.create(
-                         [$piece.create(
-                           $codeunit.create(0x62))
+                        Branch.create(
+                         [Piece.create(
+                           Codeunit.create(0x62))
                          ])
                        ]),
-                      $quant.create(1, Number.POSITIVE_INFINITY))
+                      Quant.create(1, Number.POSITIVE_INFINITY))
                     ])
                   ]);
                 expect(r).to.eql(x);
@@ -226,11 +226,11 @@ define([
 
       it("should keep quantifiers", function () {
         var r = translator.translate(parse('a{1,3}'));
-        var x = $pattern.create(
-          [$branch.create(
-            [$piece.create(
-              $codeunit.create(0x61),
-              $quant.create(1, 3))
+        var x = Pattern.create(
+          [Branch.create(
+            [Piece.create(
+              Codeunit.create(0x61),
+              Quant.create(1, 3))
             ])
           ]);
         expect(r).to.eql(x);
@@ -240,12 +240,12 @@ define([
 
         it("should translate wildcards", function () {
           var r = translator.translate(parse('.'));
-          var x = $pattern.create(
-            [$branch.create(
-              [$piece.create(
-                $group.create(
-                 [$codeunit.create(0xA),
-                  $codeunit.create(0xD),
+          var x = Pattern.create(
+            [Branch.create(
+              [Piece.create(
+                Group.create(
+                 [Codeunit.create(0xA),
+                  Codeunit.create(0xD),
                  ], { positive: false }))
               ])
             ]);
@@ -253,72 +253,72 @@ define([
         });
 
         it("should translate \\c", function () {
-          var items = rangesToGroupItems($unicode.getXmlNameCharRanges());
+          var items = rangesToGroupItems(Unicode.getXmlNameCharRanges());
           var r = translator.translate(parse('\\c'));
-          var x = $pattern.create(
-            [$branch.create(
-              [$piece.create(
-                $group.create(items))
+          var x = Pattern.create(
+            [Branch.create(
+              [Piece.create(
+                Group.create(items))
               ])
             ]);
           expect(r).to.eql(x);
         });
 
         it("should translate \\C", function () {
-          var items = rangesToGroupItems($unicode.getXmlNameCharRanges());
+          var items = rangesToGroupItems(Unicode.getXmlNameCharRanges());
           var r = translator.translate(parse('\\C'));
-          var x = $pattern.create(
-            [$branch.create(
-              [$piece.create(
-                $group.create(items, { positive: false }))
+          var x = Pattern.create(
+            [Branch.create(
+              [Piece.create(
+                Group.create(items, { positive: false }))
               ])
             ]);
           expect(r).to.eql(x);
         });
 
         it("should translate \\d", function () {
-          var items = rangesToGroupItems($unicode.getCategoryRanges('Nd'));
+          var items = rangesToGroupItems(Unicode.getCategoryRanges('Nd'));
           var r = translator.translate(parse('\\d'));
-          var x = $pattern.create(
-            [$branch.create(
-              [$piece.create(
-                $group.create(items))
+          var x = Pattern.create(
+            [Branch.create(
+              [Piece.create(
+                Group.create(items))
               ])
             ]);
           expect(r).to.eql(x);
         });
 
         it("should translate \\D", function () {
-          var items = rangesToGroupItems($unicode.getCategoryRanges('Nd'));
+          var items = rangesToGroupItems(Unicode.getCategoryRanges('Nd'));
           var r = translator.translate(parse('\\D'));
-          var x = $pattern.create(
-            [$branch.create(
-              [$piece.create(
-                $group.create(items, { positive: false }))
+          var x = Pattern.create(
+            [Branch.create(
+              [Piece.create(
+                Group.create(items, { positive: false }))
               ])
             ]);
           expect(r).to.eql(x);
         });
 
         it("should translate \\i", function () {
-          var items = rangesToGroupItems($unicode.getXmlNameStartCharRanges());
+          var items = rangesToGroupItems(Unicode.getXmlNameStartCharRanges());
           var r = translator.translate(parse('\\i'));
-          var x = $pattern.create(
-            [$branch.create(
-              [$piece.create(
-                $group.create(items))
+          var x = Pattern.create(
+            [Branch.create(
+              [Piece.create(
+                Group.create(items))
               ])
             ]);
           expect(r).to.eql(x);
         });
 
         it("should translate \\I", function () {
-          var items = rangesToGroupItems($unicode.getXmlNameStartCharRanges());
+          var items = rangesToGroupItems(Unicode.getXmlNameStartCharRanges());
           var r = translator.translate(parse('\\I'));
-          var x = $pattern.create(
-            [$branch.create(
-              [$piece.create(
-                $group.create(items, { positive: false }))
+          var x = Pattern.create(
+            [Branch.create(
+              [Piece.create(
+                Group.create(items, { positive: false }))
               ])
             ]);
           expect(r).to.eql(x);
@@ -326,14 +326,14 @@ define([
 
         it("should translate \\s", function () {
           var r = translator.translate(parse('\\s'));
-          var x = $pattern.create(
-            [$branch.create(
-              [$piece.create(
-                $group.create(
-                 [$codeunit.create(0x9),
-                  $codeunit.create(0xA),
-                  $codeunit.create(0xD),
-                  $codeunit.create(0x20)
+          var x = Pattern.create(
+            [Branch.create(
+              [Piece.create(
+                Group.create(
+                 [Codeunit.create(0x9),
+                  Codeunit.create(0xA),
+                  Codeunit.create(0xD),
+                  Codeunit.create(0x20)
                  ]))
               ])
             ]);
@@ -342,14 +342,14 @@ define([
 
         it("should translate \\S", function () {
           var r = translator.translate(parse('\\S'));
-          var x = $pattern.create(
-            [$branch.create(
-              [$piece.create(
-                $group.create(
-                 [$codeunit.create(0x9),
-                  $codeunit.create(0xA),
-                  $codeunit.create(0xD),
-                  $codeunit.create(0x20)
+          var x = Pattern.create(
+            [Branch.create(
+              [Piece.create(
+                Group.create(
+                 [Codeunit.create(0x9),
+                  Codeunit.create(0xA),
+                  Codeunit.create(0xD),
+                  Codeunit.create(0x20)
                  ], { positive: false }))
               ])
             ]);
@@ -359,10 +359,10 @@ define([
         it("should translate \\w", function () {
           var items = rangesToGroupItems(translateCategories('C', 'P', 'Z'));
           var r = translator.translate(parse('\\w'));
-          var x = $pattern.create(
-            [$branch.create(
-              [$piece.create(
-                $group.create(items, { positive: false }))
+          var x = Pattern.create(
+            [Branch.create(
+              [Piece.create(
+                Group.create(items, { positive: false }))
               ])
             ]);
           expect(r).to.eql(x);
@@ -371,10 +371,10 @@ define([
         it("should translate \\W", function () {
           var items = rangesToGroupItems(translateCategories('C', 'P', 'Z'));
           var r = translator.translate(parse('\\W'));
-          var x = $pattern.create(
-            [$branch.create(
-              [$piece.create(
-                $group.create(items))
+          var x = Pattern.create(
+            [Branch.create(
+              [Piece.create(
+                Group.create(items))
               ])
             ]);
           expect(r).to.eql(x);
@@ -384,15 +384,15 @@ define([
 
           it("should translate \\p to a positive group for all supported blocks", function () {
             SUPPORTED_UNICODE_BLOCKS.forEach(function (name) {
-              var range = $unicode.getBlockRange(name);
+              var range = Unicode.getBlockRange(name);
               var r = translator.translate(parse('\\p{Is' + name + '}'));
-              var x = $pattern.create(
-                [$branch.create(
-                  [$piece.create(
-                    $group.create(
-                     [$range.create(
-                       $codeunit.create(range[0]),
-                       $codeunit.create(range[1]))
+              var x = Pattern.create(
+                [Branch.create(
+                  [Piece.create(
+                    Group.create(
+                     [Range.create(
+                       Codeunit.create(range[0]),
+                       Codeunit.create(range[1]))
                      ]))
                   ])
                 ]);
@@ -402,13 +402,13 @@ define([
 
           it("should translate \\p to a positive group for all supported categories", function () {
             SUPPORTED_UNICODE_CATEGORIES.forEach(function (name) {
-              var ranges = $unicode.getCategoryRanges(name);
+              var ranges = Unicode.getCategoryRanges(name);
               var items = rangesToGroupItems(ranges);
               var r = translator.translate(parse('\\p{' + name + '}'));
-              var x = $pattern.create(
-                [$branch.create(
-                  [$piece.create(
-                    $group.create(items))
+              var x = Pattern.create(
+                [Branch.create(
+                  [Piece.create(
+                    Group.create(items))
                   ])
                 ]);
               expect(r).to.eql(x);
@@ -416,14 +416,14 @@ define([
           });
 
           it("should translate \\p to a positive group for all supported category groups", function () {
-            $unicode.getCategoryGroupNames().forEach(function (name) {
-              var ranges = $unicode.getCategoryGroupRanges(name);
+            Unicode.getCategoryGroupNames().forEach(function (name) {
+              var ranges = Unicode.getCategoryGroupRanges(name);
               var items = rangesToGroupItems(ranges);
               var r = translator.translate(parse('\\p{' + name + '}'));
-              var x = $pattern.create(
-                [$branch.create(
-                  [$piece.create(
-                    $group.create(items))
+              var x = Pattern.create(
+                [Branch.create(
+                  [Piece.create(
+                    Group.create(items))
                   ])
                 ]);
               expect(r).to.eql(x);
@@ -436,15 +436,15 @@ define([
 
           it("should translate \\P to a negative group for all supported blocks", function () {
             SUPPORTED_UNICODE_BLOCKS.forEach(function (name) {
-              var range = $unicode.getBlockRange(name);
+              var range = Unicode.getBlockRange(name);
               var r = translator.translate(parse('\\P{Is' + name + '}'));
-              var x = $pattern.create(
-                [$branch.create(
-                  [$piece.create(
-                    $group.create(
-                     [$range.create(
-                       $codeunit.create(range[0]),
-                       $codeunit.create(range[1]))
+              var x = Pattern.create(
+                [Branch.create(
+                  [Piece.create(
+                    Group.create(
+                     [Range.create(
+                       Codeunit.create(range[0]),
+                       Codeunit.create(range[1]))
                      ], { positive: false }))
                   ])
                 ]);
@@ -454,13 +454,13 @@ define([
 
           it("should translate \\P to a negative group for all supported categories", function () {
             SUPPORTED_UNICODE_CATEGORIES.forEach(function (name) {
-              var ranges = $unicode.getCategoryRanges(name);
+              var ranges = Unicode.getCategoryRanges(name);
               var items = rangesToGroupItems(ranges);
               var r = translator.translate(parse('\\P{' + name + '}'));
-              var x = $pattern.create(
-                [$branch.create(
-                  [$piece.create(
-                    $group.create(items, { positive: false }))
+              var x = Pattern.create(
+                [Branch.create(
+                  [Piece.create(
+                    Group.create(items, { positive: false }))
                   ])
                 ]);
               expect(r).to.eql(x);
@@ -468,14 +468,14 @@ define([
           });
 
           it("should translate \\P to a negative group for all supported category groups", function () {
-            $unicode.getCategoryGroupNames().forEach(function (name) {
-              var ranges = $unicode.getCategoryGroupRanges(name);
+            Unicode.getCategoryGroupNames().forEach(function (name) {
+              var ranges = Unicode.getCategoryGroupRanges(name);
               var items = rangesToGroupItems(ranges);
               var r = translator.translate(parse('\\P{' + name + '}'));
-              var x = $pattern.create(
-                [$branch.create(
-                  [$piece.create(
-                    $group.create(items, { positive: false }))
+              var x = Pattern.create(
+                [Branch.create(
+                  [Piece.create(
+                    Group.create(items, { positive: false }))
                   ])
                 ]);
               expect(r).to.eql(x);
@@ -490,13 +490,13 @@ define([
 
         it("should form ranges of 3 or more codeunits", function () {
           var r = translator.translate(parse('[aefdbc]'));
-          var x = $pattern.create(
-            [$branch.create(
-              [$piece.create(
-                $group.create(
-                 [$range.create(
-                   $codeunit.create(0x61),
-                   $codeunit.create(0x66))
+          var x = Pattern.create(
+            [Branch.create(
+              [Piece.create(
+                Group.create(
+                 [Range.create(
+                   Codeunit.create(0x61),
+                   Codeunit.create(0x66))
                  ]))
               ])
             ]);
@@ -505,13 +505,13 @@ define([
 
         it("should combine overlapping ranges", function () {
           var r = translator.translate(parse('[a-eb-f]'));
-          var x = $pattern.create(
-            [$branch.create(
-              [$piece.create(
-                $group.create(
-                 [$range.create(
-                   $codeunit.create(0x61),
-                   $codeunit.create(0x66))
+          var x = Pattern.create(
+            [Branch.create(
+              [Piece.create(
+                Group.create(
+                 [Range.create(
+                   Codeunit.create(0x61),
+                   Codeunit.create(0x66))
                  ]))
               ])
             ]);
@@ -520,12 +520,12 @@ define([
 
         it("should split ranges of only 2 codepoints into those two codepoints", function () {
           var r = translator.translate(parse('[a-b]'));
-          var x = $pattern.create(
-            [$branch.create(
-              [$piece.create(
-                $group.create(
-                  [$codeunit.create(0x61),
-                   $codeunit.create(0x62)
+          var x = Pattern.create(
+            [Branch.create(
+              [Piece.create(
+                Group.create(
+                  [Codeunit.create(0x61),
+                   Codeunit.create(0x62)
                   ]))
               ])
             ]);
@@ -536,12 +536,12 @@ define([
 
           it("should translate them to a surrogate pair", function () {
             var r = translator.translate(parse('[&#x10000;]'));
-            var x = $pattern.create(
-              [$branch.create(
-                [$piece.create(
-                  $group.create(
-                   [$codeunit.create(0xD800),
-                    $codeunit.create(0xDC00)
+            var x = Pattern.create(
+              [Branch.create(
+                [Piece.create(
+                  Group.create(
+                   [Codeunit.create(0xD800),
+                    Codeunit.create(0xDC00)
                    ]))
                 ])
               ]);
@@ -552,12 +552,12 @@ define([
 
             it("should translate to a group containing the lead surrogate of the start codepoint and the trail surrogate of the end codepoint", function () {
               var r = translator.translate(parse('[&#x10000;-&#x100FF;]'));
-              var x = $pattern.create(
-                [$branch.create(
-                  [$piece.create(
-                    $group.create(
-                     [$codeunit.create(0xD800),
-                      $codeunit.create(0xDCFF)
+              var x = Pattern.create(
+                [Branch.create(
+                  [Piece.create(
+                    Group.create(
+                     [Codeunit.create(0xD800),
+                      Codeunit.create(0xDCFF)
                      ]))
                   ])
                 ]);
@@ -572,11 +572,11 @@ define([
 
               it("should translate to a group containing only the trail surrogate of the largest non-BMP codepoint", function () {
                 var r = translator.translate(parse('[&#xFFFD;-&#x10000;]'));
-                var x = $pattern.create(
-                  [$branch.create(
-                    [$piece.create(
-                      $group.create(
-                       [$codeunit.create(0xDC00)
+                var x = Pattern.create(
+                  [Branch.create(
+                    [Piece.create(
+                      Group.create(
+                       [Codeunit.create(0xDC00)
                        ]))
                     ])
                   ]);
@@ -589,14 +589,14 @@ define([
 
               it("should translate to a group containing the trail surrogate of the largest non-BMP codepoint and a range starting at the smalles BMP codepoint and ending at the lead surrogate of the largest non-BMP codepoint", function () {
                 var r = translator.translate(parse('[&#x20;-&#x10000;]'));
-                var x = $pattern.create(
-                  [$branch.create(
-                    [$piece.create(
-                      $group.create(
-                       [$range.create(
-                         $codeunit.create(0x20),
-                         $codeunit.create(0xD800)),
-                        $codeunit.create(0xDC00)
+                var x = Pattern.create(
+                  [Branch.create(
+                    [Piece.create(
+                      Group.create(
+                       [Range.create(
+                         Codeunit.create(0x20),
+                         Codeunit.create(0xD800)),
+                        Codeunit.create(0xDC00)
                        ]))
                     ])
                   ]);
@@ -613,11 +613,11 @@ define([
 
           it("should keep the negative group", function () {
             var r = translator.translate(parse('[^&#x20;]'));
-            var x = $pattern.create(
-              [$branch.create(
-                [$piece.create(
-                  $group.create(
-                   [$codeunit.create(0x20)
+            var x = Pattern.create(
+              [Branch.create(
+                [Piece.create(
+                  Group.create(
+                   [Codeunit.create(0x20)
                    ], { positive: false }))
                 ])
               ]);
@@ -628,16 +628,16 @@ define([
 
             it("should translate to a group using the negated union of both groups' positive codepoints", function () {
               var r = translator.translate(parse('[^a-z-[A-Z]]'));
-              var x = $pattern.create(
-                [$branch.create(
-                  [$piece.create(
-                    $group.create(
-                     [$range.create(
-                       $codeunit.create(0x41),
-                       $codeunit.create(0x5A)),
-                      $range.create(
-                        $codeunit.create(0x61),
-                        $codeunit.create(0x7A))
+              var x = Pattern.create(
+                [Branch.create(
+                  [Piece.create(
+                    Group.create(
+                     [Range.create(
+                       Codeunit.create(0x41),
+                       Codeunit.create(0x5A)),
+                      Range.create(
+                        Codeunit.create(0x61),
+                        Codeunit.create(0x7A))
                      ], { positive: false }))
                   ])
                 ]);
@@ -650,13 +650,13 @@ define([
 
             it("should translate to a group using the relative complement of LHS' codepoints in RHS' codepoints", function () {
               var r = translator.translate(parse('[^a-z-[^A-Z]]'));
-              var x = $pattern.create(
-                [$branch.create(
-                  [$piece.create(
-                    $group.create(
-                     [$range.create(
-                       $codeunit.create(0x41),
-                       $codeunit.create(0x5A))
+              var x = Pattern.create(
+                [Branch.create(
+                  [Piece.create(
+                    Group.create(
+                     [Range.create(
+                       Codeunit.create(0x41),
+                       Codeunit.create(0x5A))
                      ], { positive: false }))
                   ])
                 ]);
@@ -673,16 +673,16 @@ define([
 
             it("should translate to a group using the relative complement of RHS' codepoints in LHS' codepoints", function () {
               var r = translator.translate(parse('[a-z-[d-f]]'));
-              var x = $pattern.create(
-                [$branch.create(
-                  [$piece.create(
-                    $group.create(
-                     [$range.create(
-                       $codeunit.create(0x61),
-                       $codeunit.create(0x63)),
-                      $range.create(
-                       $codeunit.create(0x67),
-                       $codeunit.create(0x7A))
+              var x = Pattern.create(
+                [Branch.create(
+                  [Piece.create(
+                    Group.create(
+                     [Range.create(
+                       Codeunit.create(0x61),
+                       Codeunit.create(0x63)),
+                      Range.create(
+                       Codeunit.create(0x67),
+                       Codeunit.create(0x7A))
                      ]))
                   ])
                 ]);
@@ -695,13 +695,13 @@ define([
 
             it("should translate to a group using only the positive codepoints of the RHS", function () {
               var r = translator.translate(parse('[a-z-[^d-f]]'));
-              var x = $pattern.create(
-                [$branch.create(
-                  [$piece.create(
-                    $group.create(
-                     [$range.create(
-                       $codeunit.create(0x64),
-                       $codeunit.create(0x66))
+              var x = Pattern.create(
+                [Branch.create(
+                  [Piece.create(
+                    Group.create(
+                     [Range.create(
+                       Codeunit.create(0x64),
+                       Codeunit.create(0x66))
                      ]))
                   ])
                 ]);
@@ -716,16 +716,16 @@ define([
 
           it("should translate to a group matching all codepoints except the subtracted codepoints", function () {
             var r = translator.translate(parse('[&#x100;-&#x200;-[&#x150;]]'));
-            var x = $pattern.create(
-              [$branch.create(
-                [$piece.create(
-                  $group.create(
-                   [$range.create(
-                     $codeunit.create(0x100),
-                     $codeunit.create(0x14F)),
-                    $range.create(
-                     $codeunit.create(0x151),
-                     $codeunit.create(0x200))
+            var x = Pattern.create(
+              [Branch.create(
+                [Piece.create(
+                  Group.create(
+                   [Range.create(
+                     Codeunit.create(0x100),
+                     Codeunit.create(0x14F)),
+                    Range.create(
+                     Codeunit.create(0x151),
+                     Codeunit.create(0x200))
                    ]))
                 ])
               ]);
@@ -737,76 +737,76 @@ define([
         context("with multi character escapes", function () {
 
           function invert(ranges) {
-            return $ranges.create(ranges).invert().array;
+            return Ranges.create(ranges).invert().array;
           }
 
           it("should translate \\c", function () {
-            var items = rangesToGroupItems($unicode.getXmlNameCharRanges());
+            var items = rangesToGroupItems(Unicode.getXmlNameCharRanges());
             var r = translator.translate(parse('[\\c]'));
-            var x = $pattern.create(
-              [$branch.create(
-                [$piece.create(
-                  $group.create(items))
+            var x = Pattern.create(
+              [Branch.create(
+                [Piece.create(
+                  Group.create(items))
                 ])
               ]);
             expect(r).to.eql(x);
           });
 
           it("should translate \\C by inverting its ranges", function () {
-            var items = rangesToGroupItems(invert($unicode.getXmlNameCharRanges()));
+            var items = rangesToGroupItems(invert(Unicode.getXmlNameCharRanges()));
             var r = translator.translate(parse('[\\C]'));
-            var x = $pattern.create(
-              [$branch.create(
-                [$piece.create(
-                  $group.create(items))
+            var x = Pattern.create(
+              [Branch.create(
+                [Piece.create(
+                  Group.create(items))
                 ])
               ]);
             expect(r).to.eql(x);
           });
 
           it("should translate \\d", function () {
-            var items = rangesToGroupItems($unicode.getCategoryRanges('Nd'));
+            var items = rangesToGroupItems(Unicode.getCategoryRanges('Nd'));
             var r = translator.translate(parse('[\\d]'));
-            var x = $pattern.create(
-              [$branch.create(
-                [$piece.create(
-                  $group.create(items))
+            var x = Pattern.create(
+              [Branch.create(
+                [Piece.create(
+                  Group.create(items))
                 ])
               ]);
             expect(r).to.eql(x);
           });
 
           it("should translate \\D by inverting its ranges", function () {
-            var items = rangesToGroupItems(invert($unicode.getCategoryRanges('Nd')));
+            var items = rangesToGroupItems(invert(Unicode.getCategoryRanges('Nd')));
             var r = translator.translate(parse('[\\D]'));
-            var x = $pattern.create(
-              [$branch.create(
-                [$piece.create(
-                  $group.create(items))
+            var x = Pattern.create(
+              [Branch.create(
+                [Piece.create(
+                  Group.create(items))
                 ])
               ]);
             expect(r).to.eql(x);
           });
 
           it("should translate \\i", function () {
-            var items = rangesToGroupItems($unicode.getXmlNameStartCharRanges());
+            var items = rangesToGroupItems(Unicode.getXmlNameStartCharRanges());
             var r = translator.translate(parse('[\\i]'));
-            var x = $pattern.create(
-              [$branch.create(
-                [$piece.create(
-                  $group.create(items))
+            var x = Pattern.create(
+              [Branch.create(
+                [Piece.create(
+                  Group.create(items))
                 ])
               ]);
             expect(r).to.eql(x);
           });
 
           it("should translate \\I by inverting its ranges", function () {
-            var items = rangesToGroupItems(invert($unicode.getXmlNameStartCharRanges()));
+            var items = rangesToGroupItems(invert(Unicode.getXmlNameStartCharRanges()));
             var r = translator.translate(parse('[\\I]'));
-            var x = $pattern.create(
-              [$branch.create(
-                [$piece.create(
-                  $group.create(items))
+            var x = Pattern.create(
+              [Branch.create(
+                [Piece.create(
+                  Group.create(items))
                 ])
               ]);
             expect(r).to.eql(x);
@@ -814,14 +814,14 @@ define([
 
           it("should translate \\s", function () {
             var r = translator.translate(parse('[\\s]'));
-            var x = $pattern.create(
-              [$branch.create(
-                [$piece.create(
-                  $group.create(
-                   [$codeunit.create(0x9),
-                    $codeunit.create(0xA),
-                    $codeunit.create(0xD),
-                    $codeunit.create(0x20)
+            var x = Pattern.create(
+              [Branch.create(
+                [Piece.create(
+                  Group.create(
+                   [Codeunit.create(0x9),
+                    Codeunit.create(0xA),
+                    Codeunit.create(0xD),
+                    Codeunit.create(0x20)
                    ]))
                 ])
               ]);
@@ -830,21 +830,21 @@ define([
 
           it("should translate \\S by inverting its ranges", function () {
             var r = translator.translate(parse('[\\S]'));
-            var x = $pattern.create(
-              [$branch.create(
-                [$piece.create(
-                  $group.create(
-                   [$range.create(
-                     $codeunit.create(0x0),
-                     $codeunit.create(0x8)),
-                    $codeunit.create(0xB),
-                    $codeunit.create(0xC),
-                    $range.create(
-                     $codeunit.create(0xE),
-                     $codeunit.create(0x1F)),
-                    $range.create(
-                     $codeunit.create(0x21),
-                     $codeunit.create(0xFFFF))
+            var x = Pattern.create(
+              [Branch.create(
+                [Piece.create(
+                  Group.create(
+                   [Range.create(
+                     Codeunit.create(0x0),
+                     Codeunit.create(0x8)),
+                    Codeunit.create(0xB),
+                    Codeunit.create(0xC),
+                    Range.create(
+                     Codeunit.create(0xE),
+                     Codeunit.create(0x1F)),
+                    Range.create(
+                     Codeunit.create(0x21),
+                     Codeunit.create(0xFFFF))
                    ]))
                 ])
               ]);
@@ -854,10 +854,10 @@ define([
           it("should translate \\w by inverting its ranges", function () {
             var items = rangesToGroupItems(invert(translateCategories('C', 'P', 'Z')));
             var r = translator.translate(parse('[\\w]'));
-            var x = $pattern.create(
-              [$branch.create(
-                [$piece.create(
-                  $group.create(items))
+            var x = Pattern.create(
+              [Branch.create(
+                [Piece.create(
+                  Group.create(items))
                 ])
               ]);
             expect(r).to.eql(x);
@@ -866,10 +866,10 @@ define([
           it("should translate \\W", function () {
             var items = rangesToGroupItems(translateCategories('C', 'P', 'Z'));
             var r = translator.translate(parse('[\\W]'));
-            var x = $pattern.create(
-              [$branch.create(
-                [$piece.create(
-                  $group.create(items))
+            var x = Pattern.create(
+              [Branch.create(
+                [Piece.create(
+                  Group.create(items))
                 ])
               ]);
             expect(r).to.eql(x);
@@ -879,15 +879,15 @@ define([
 
             it("should translate \\p to a positive group for all supported blocks", function () {
               SUPPORTED_UNICODE_BLOCKS.forEach(function (name) {
-                var range = $unicode.getBlockRange(name);
+                var range = Unicode.getBlockRange(name);
                 var r = translator.translate(parse('[\\p{Is' + name + '}]'));
-                var x = $pattern.create(
-                  [$branch.create(
-                    [$piece.create(
-                      $group.create(
-                       [$range.create(
-                         $codeunit.create(range[0]),
-                         $codeunit.create(range[1]))
+                var x = Pattern.create(
+                  [Branch.create(
+                    [Piece.create(
+                      Group.create(
+                       [Range.create(
+                         Codeunit.create(range[0]),
+                         Codeunit.create(range[1]))
                        ]))
                     ])
                   ]);
@@ -897,13 +897,13 @@ define([
 
             it("should translate \\p to a positive group for all supported categories", function () {
               SUPPORTED_UNICODE_CATEGORIES.forEach(function (name) {
-                var ranges = $unicode.getCategoryRanges(name);
+                var ranges = Unicode.getCategoryRanges(name);
                 var items = rangesToGroupItems(ranges);
                 var r = translator.translate(parse('[\\p{' + name + '}]'));
-                var x = $pattern.create(
-                  [$branch.create(
-                    [$piece.create(
-                      $group.create(items))
+                var x = Pattern.create(
+                  [Branch.create(
+                    [Piece.create(
+                      Group.create(items))
                     ])
                   ]);
                 expect(r).to.eql(x);
@@ -911,14 +911,14 @@ define([
             });
 
             it("should translate \\p to a positive group for all supported category groups", function () {
-              $unicode.getCategoryGroupNames().forEach(function (name) {
-                var ranges = $unicode.getCategoryGroupRanges(name);
+              Unicode.getCategoryGroupNames().forEach(function (name) {
+                var ranges = Unicode.getCategoryGroupRanges(name);
                 var items = rangesToGroupItems(ranges);
                 var r = translator.translate(parse('[\\p{' + name + '}]'));
-                var x = $pattern.create(
-                  [$branch.create(
-                    [$piece.create(
-                      $group.create(items))
+                var x = Pattern.create(
+                  [Branch.create(
+                    [Piece.create(
+                      Group.create(items))
                     ])
                   ]);
                 expect(r).to.eql(x);
@@ -931,12 +931,12 @@ define([
 
             it("should translate \\P to a positive group using inverted ranges for all supported blocks", function () {
               SUPPORTED_UNICODE_BLOCKS.forEach(function (name) {
-                var items = rangesToGroupItems(invert([$unicode.getBlockRange(name)]));
+                var items = rangesToGroupItems(invert([Unicode.getBlockRange(name)]));
                 var r = translator.translate(parse('[\\P{Is' + name + '}]'));
-                var x = $pattern.create(
-                  [$branch.create(
-                    [$piece.create(
-                      $group.create(items))
+                var x = Pattern.create(
+                  [Branch.create(
+                    [Piece.create(
+                      Group.create(items))
                     ])
                   ]);
                 expect(r).to.eql(x);
@@ -945,12 +945,12 @@ define([
 
             it("should translate \\P to a positive group using inverted ranges for all supported categories", function () {
               SUPPORTED_UNICODE_CATEGORIES.forEach(function (name) {
-                var items = rangesToGroupItems(invert($unicode.getCategoryRanges(name)));
+                var items = rangesToGroupItems(invert(Unicode.getCategoryRanges(name)));
                 var r = translator.translate(parse('[\\P{' + name + '}]'));
-                var x = $pattern.create(
-                  [$branch.create(
-                    [$piece.create(
-                      $group.create(items))
+                var x = Pattern.create(
+                  [Branch.create(
+                    [Piece.create(
+                      Group.create(items))
                     ])
                   ]);
                 expect(r).to.eql(x);
@@ -958,13 +958,13 @@ define([
             });
 
             it("should translate \\P to a positive group using inverted ranges for all supported category groups", function () {
-              $unicode.getCategoryGroupNames().forEach(function (name) {
-                var items = rangesToGroupItems(invert($unicode.getCategoryGroupRanges(name)));
+              Unicode.getCategoryGroupNames().forEach(function (name) {
+                var items = rangesToGroupItems(invert(Unicode.getCategoryGroupRanges(name)));
                 var r = translator.translate(parse('[\\P{' + name + '}]'));
-                var x = $pattern.create(
-                  [$branch.create(
-                    [$piece.create(
-                      $group.create(items))
+                var x = Pattern.create(
+                  [Branch.create(
+                    [Piece.create(
+                      Group.create(items))
                     ])
                   ]);
                 expect(r).to.eql(x);
@@ -989,14 +989,14 @@ define([
     'LowSurrogates'
   ];
 
-  var SUPPORTED_UNICODE_CATEGORIES = $unicode.getCategoryNames().reduce(function (categories, name) {
+  var SUPPORTED_UNICODE_CATEGORIES = Unicode.getCategoryNames().reduce(function (categories, name) {
     if (UNSUPPORTED_UNICODE_CATEGORIES.indexOf(name) === -1) {
       categories.push(name);
     }
     return categories;
   }, []);
 
-  var SUPPORTED_UNICODE_BLOCKS = $unicode.getBlockNames().reduce(function (blocks, name) {
+  var SUPPORTED_UNICODE_BLOCKS = Unicode.getBlockNames().reduce(function (blocks, name) {
     if (UNSUPPORTED_UNICODE_BLOCKS.indexOf(name) === -1) {
       blocks.push(name);
     }

@@ -11,27 +11,27 @@ define([
   'shared',
   'sulfur/schema/regex/branch',
   'sulfur/schema/regex/pattern'
-], function ($shared, $branch, $pattern) {
+], function (shared, Branch, Pattern) {
 
   'use strict';
 
-  var expect = $shared.expect;
-  var sinon = $shared.sinon;
-  var bind = $shared.bind;
+  var expect = shared.expect;
+  var sinon = shared.sinon;
+  var bind = shared.bind;
 
   describe('sulfur/schema/regex/pattern', function () {
 
     describe('#initialize()', function () {
 
       it("should initialize the pattern with the given branches", function () {
-        var p = $pattern.create([$branch.create()]);
-        expect(p.branches).to.eql([$branch.create()]);
+        var p = Pattern.create([Branch.create()]);
+        expect(p.branches).to.eql([Branch.create()]);
       });
 
       context("with no branches", function () {
 
         it("should throw", function () {
-          expect(bind($pattern, 'create', []))
+          expect(bind(Pattern, 'create', []))
             .to.throw("pattern must contain at least one branch");
         });
 
@@ -44,15 +44,15 @@ define([
       it("should call .containsEmptyGroup on each branch", function () {
         var branch = { containsEmptyGroup: function () {} };
         var spy = sinon.spy(branch, 'containsEmptyGroup');
-        var pattern = $pattern.create([branch]);
+        var pattern = Pattern.create([branch]);
         pattern.containsEmptyGroup();
         expect(spy).to.be.calledOn(pattern.branches[0]);
       });
 
       it("should return as soon .containsEmptyGroup return true on some branch", function () {
-        var trueBranch = $branch.create();
-        var falseBranch = $branch.create();
-        var pattern = $pattern.create([
+        var trueBranch = Branch.create();
+        var falseBranch = Branch.create();
+        var pattern = Pattern.create([
           trueBranch,
           falseBranch
         ]);
@@ -68,19 +68,19 @@ define([
     describe('#containsGroupWithSurrogateCodepoints', function () {
 
       it("should call .containsGroupWithSurrogateCodepoints on each branch", function () {
-        var branch = $branch.create();
+        var branch = Branch.create();
         var spy = sinon.spy(branch, 'containsGroupWithSurrogateCodepoints');
-        var pattern = $pattern.create([branch]);
+        var pattern = Pattern.create([branch]);
         pattern.containsGroupWithSurrogateCodepoints();
         expect(spy).to.be.calledOn(pattern.branches[0]);
       });
 
       it("should return as soon .containsGroupWithSurrogateCodepoints return true on some branch", function () {
-        var trueBranch = $branch.create();
-        var falseBranch = $branch.create();
+        var trueBranch = Branch.create();
+        var falseBranch = Branch.create();
         var trueSpy = sinon.stub(trueBranch, 'containsGroupWithSurrogateCodepoints').returns(true);
         var falseSpy = sinon.spy(falseBranch, 'containsGroupWithSurrogateCodepoints');
-        var pattern = $pattern.create([
+        var pattern = Pattern.create([
           trueBranch,
           falseBranch
         ]);

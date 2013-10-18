@@ -9,11 +9,11 @@
 define([
   'sulfur/factory',
   'sulfur/util'
-], function ($factory, $util) {
+], function (Factory, util) {
 
   'use strict';
 
-  return $factory.derive({
+  return Factory.derive({
 
     /**
      * Initialize the validator with one or more allowed values.
@@ -41,7 +41,7 @@ define([
         if (values.length === 0) {
           throw new Error("must specify at least one value");
         }
-        if ($util.isDefined(testMethodName) && !allRespondTo(values, testMethodName)) {
+        if (util.isDefined(testMethodName) && !allRespondTo(values, testMethodName)) {
           throw new Error('each allowed value must respond to method "' + testMethodName + '"');
         }
 
@@ -70,7 +70,7 @@ define([
      */
     validate: function (value) {
       var fn;
-      if ($util.isDefined(this._testMethodName)) {
+      if (util.isDefined(this._testMethodName)) {
         fn = function (allowedValue) {
           return allowedValue[this._testMethodName](value);
         }.bind(this);

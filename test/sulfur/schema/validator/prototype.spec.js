@@ -10,12 +10,12 @@
 define([
   'shared',
   'sulfur/schema/validator/prototype'
-], function ($shared, $prototypeValidator) {
+], function (shared, PrototypeValidator) {
 
   'use strict';
 
-  var expect = $shared.expect;
-  var sinon = $shared.sinon;
+  var expect = shared.expect;
+  var sinon = shared.sinon;
 
   describe('sulfur/schema/validator/prototype', function () {
 
@@ -24,7 +24,7 @@ define([
 
     beforeEach(function () {
       prototype = {};
-      validator = $prototypeValidator.create(prototype);
+      validator = PrototypeValidator.create(prototype);
     });
 
     describe('#getPrototype()', function () {

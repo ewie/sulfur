@@ -10,12 +10,12 @@
 define([
   'shared',
   'sulfur/schema/value/list'
-], function ($shared, $listValue) {
+], function (shared, ListValue) {
 
   'use strict';
 
-  var expect = $shared.expect;
-  var sinon = $shared.sinon;
+  var expect = shared.expect;
+  var sinon = shared.sinon;
 
   describe('sulfur/schema/value/list', function () {
 
@@ -24,13 +24,13 @@ define([
 
     beforeEach(function () {
       values = [];
-      list = $listValue.create(values);
+      list = ListValue.create(values);
     });
 
     describe('#initialize()', function () {
 
       it("should use an empty array as default values", function () {
-        var list = $listValue.create();
+        var list = ListValue.create();
         expect(list.toArray()).to.eql([]);
       });
 
@@ -40,7 +40,7 @@ define([
 
       it("should return the value at the given index", function () {
         var value = {};
-        var list = $listValue.create([ value ]);
+        var list = ListValue.create([ value ]);
         expect(list.getValueAt(0)).to.equal(value);
       });
 
@@ -65,8 +65,8 @@ define([
     describe('#eq()', function () {
 
       it("should return false when length is different", function () {
-        var list = $listValue.create();
-        var other = $listValue.create([ {} ]);
+        var list = ListValue.create();
+        var other = ListValue.create([ {} ]);
         expect(list.eq(other)).to.be.false;
       });
 
@@ -82,8 +82,8 @@ define([
             return sinon.stub(value, 'eq').returns(true);
           });
           var otherValues = [ {}, {} ];
-          var list = $listValue.create(values);
-          var other = $listValue.create(otherValues);
+          var list = ListValue.create(values);
+          var other = ListValue.create(otherValues);
           list.eq(other);
           spies.forEach(function (spy, i) {
             expect(spy).to.be.calledWith(sinon.match.same(otherValues[i]));
@@ -96,8 +96,8 @@ define([
             sinon.stub(value, 'eq').returns(true);
           });
           var otherValues = [ {} ];
-          var list = $listValue.create(values);
-          var other = $listValue.create(otherValues);
+          var list = ListValue.create(values);
+          var other = ListValue.create(otherValues);
           expect(list.eq(other)).to.be.true;
         });
 
@@ -107,8 +107,8 @@ define([
             sinon.stub(value, 'eq').returns(false);
           });
           var otherValues = [ {} ];
-          var list = $listValue.create(values);
-          var other = $listValue.create(otherValues);
+          var list = ListValue.create(values);
+          var other = ListValue.create(otherValues);
           expect(list.eq(other)).to.be.false;
         });
 

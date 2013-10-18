@@ -6,7 +6,7 @@
 
 /* global define */
 
-define(['sulfur/schema/value/simple/decimal'], function ($decimalValue) {
+define(['sulfur/schema/value/simple/decimal'], function (DecimalValue) {
 
   'use strict';
 
@@ -19,7 +19,7 @@ define(['sulfur/schema/value/simple/decimal'], function ($decimalValue) {
    */
   var LITERAL_PATTERN = /^[\x09\x0A\x0D\x20]*([+-]?)([0-9]+)(?:\.0+)?[\x09\x0A\x0D\x20]*$/;
 
-  var $ = $decimalValue.clone({
+  var $ = DecimalValue.clone({
 
     /**
      * Check if a string represents a valid integer value.
@@ -68,7 +68,7 @@ define(['sulfur/schema/value/simple/decimal'], function ($decimalValue) {
      *   whether the integer is positive
      */
     initialize: function (options) {
-      $decimalValue.prototype.initialize.call(this, options);
+      DecimalValue.prototype.initialize.call(this, options);
       if (this.countFractionDigits() !== 0) {
         throw new Error("fractionDigits must be zero");
       }

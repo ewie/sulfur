@@ -17,28 +17,28 @@ define([
   'sulfur/schema/type/simple/primitive/fileRef',
   'sulfur/schema/value/simple/fileRef'
 ], function (
-    $shared,
-    $sulfur,
-    $mediaTypeFacet,
-    $facets,
-    $qname,
-    $primitiveType,
-    $fileRefType,
-    $fileRefValue
+    shared,
+    sulfur,
+    MediaTypeFacet,
+    Facets,
+    QName,
+    PrimitiveType,
+    FileRefType,
+    FileRefValue
 ) {
 
   'use strict';
 
-  var expect = $shared.expect;
+  var expect = shared.expect;
 
   describe('sulfur/schema/type/simple/primitive/fileRef', function () {
 
     it("should be a sulfur/schema/type/simple/primitive", function () {
-      expect($fileRefType).to.eql(
-        $primitiveType.create({
-          qname: $qname.create('fileRef', $sulfur.getNamespaceURI()),
-          valueType: $fileRefValue,
-          facets: $facets.create([ $mediaTypeFacet ])
+      expect(FileRefType).to.eql(
+        PrimitiveType.create({
+          qname: QName.create('fileRef', sulfur.getNamespaceURI()),
+          valueType: FileRefValue,
+          facets: Facets.create([ MediaTypeFacet ])
         })
       );
     });

@@ -17,20 +17,20 @@ define([
   'sulfur/schema/validator/property',
   'sulfur/schema/validator/prototype'
 ], function (
-    $shared,
-    $element,
-    $elements,
-    $qname,
-    $primitiveType,
-    $allValidator,
-    $propertyValidator,
-    $prototypeValidator
+    shared,
+    Element,
+    Elements,
+    QName,
+    PrimitiveType,
+    AllValidator,
+    PropertyValidator,
+    PrototypeValidator
 ) {
 
   'use strict';
 
-  var expect = $shared.expect;
-  var returns = $shared.returns;
+  var expect = shared.expect;
+  var returns = shared.returns;
 
   describe('sulfur/schema/type/complex/primitive', function () {
 
@@ -40,12 +40,12 @@ define([
     var elements;
 
     beforeEach(function () {
-      qname = $qname.create('foo', 'urn:bar');
+      qname = QName.create('foo', 'urn:bar');
       valueType = {};
-      elements = $elements.create([
-        $element.create('x', { createValidator: returns({}) })
+      elements = Elements.create([
+        Element.create('x', { createValidator: returns({}) })
       ]);
-      type = $primitiveType.create({
+      type = PrimitiveType.create({
         qname: qname,
         valueType: valueType,
         elements: elements
@@ -80,19 +80,19 @@ define([
 
       it("should return a sulfur/schema/validator/all", function () {
         var v = type.createValidator();
-        expect($allValidator.prototype).to.be.prototypeOf(v);
+        expect(AllValidator.prototype).to.be.prototypeOf(v);
       });
 
       it("should include a sulfur/schema/validator/prototype using the value type's prototype", function () {
         var v = type.createValidator();
         expect(v.getValidators()).to.include.something.eql(
-          $prototypeValidator.create(valueType.prototype));
+          PrototypeValidator.create(valueType.prototype));
       });
 
       it("should include a sulfur/schema/validator/property with method 'getValue', the element name as argument, and the element type's validator", function () {
         var v = type.createValidator();
         expect(v.getValidators()).to.include.something.eql(
-          $propertyValidator.create('getValue',
+          PropertyValidator.create('getValue',
             elements.getElement('x').getType().createValidator(),
             [ 'x' ]));
       });

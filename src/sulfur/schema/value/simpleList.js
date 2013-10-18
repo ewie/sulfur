@@ -9,7 +9,7 @@
 define([
   'sulfur/schema/value/list',
   'sulfur/util'
-], function ($listValue, $util) {
+], function (ListValue, util) {
 
   'use strict';
 
@@ -22,11 +22,11 @@ define([
    *
    * @implement .getItemValueType()
    */
-  var $ = $listValue.clone({
+  var $ = ListValue.clone({
 
     typed: function (itemValueType) {
       return this.clone({
-        getItemValueType: $util.returns(itemValueType)
+        getItemValueType: util.returns(itemValueType)
       });
     },
 
@@ -43,7 +43,7 @@ define([
   $.augment({
 
     toString: function () {
-      var s = this._values.map($util.method('toString')).join(' ');
+      var s = this._values.map(util.method('toString')).join(' ');
       return normalize(s);
     }
 

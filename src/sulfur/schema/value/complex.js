@@ -9,7 +9,7 @@
 define([
   'sulfur/factory',
   'sulfur/util/orderedMap'
-], function ($factory, $orderedMap) {
+], function (Factory, OrderedMap) {
 
   'use strict';
 
@@ -17,7 +17,7 @@ define([
     return value.name;
   }
 
-  return $factory.derive({
+  return Factory.derive({
 
     initialize: function (values) {
       var index = values.reduce(function (index, pair) {
@@ -29,7 +29,7 @@ define([
         }
         index.insert(item);
         return index;
-      }, $orderedMap.create(keyfn));
+      }, OrderedMap.create(keyfn));
       this._values = index;
     },
 

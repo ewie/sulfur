@@ -10,12 +10,12 @@
 define([
   'shared',
   'sulfur/schema/validator/all'
-], function ($shared, $allValidator) {
+], function (shared, AllValidator) {
 
   'use strict';
 
-  var expect = $shared.expect;
-  var sinon = $shared.sinon;
+  var expect = shared.expect;
+  var sinon = shared.sinon;
 
   describe('sulfur/schema/validator/all', function () {
 
@@ -23,7 +23,7 @@ define([
 
       it("should return the array of validators", function () {
         var validators = [];
-        var validator = $allValidator.create(validators);
+        var validator = AllValidator.create(validators);
         expect(validator.getValidators()).to.equal(validators);
       });
 
@@ -39,7 +39,7 @@ define([
           { validate: function (x) { return x; } },
           { validate: function (x) { return x; } }
         ];
-        validator = $allValidator.create(validators);
+        validator = AllValidator.create(validators);
       });
 
       it("should pass the value to each validators #validate() in initialization order", function () {

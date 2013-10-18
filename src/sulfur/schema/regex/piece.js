@@ -9,7 +9,7 @@
 define([
   'sulfur/factory',
   'sulfur/schema/regex/quant'
-], function ($factory, $quant) {
+], function (Factory, Quant) {
 
   'use strict';
 
@@ -18,14 +18,14 @@ define([
    * category) with a quantifier.
    */
 
-  return $factory.derive({
+  return Factory.derive({
     /**
      * @param [codepoint|codeunit|class|group|pattern|block|category] atom
      * @param [quant] quant (default quantifier of exactly 1)
      */
     initialize: function (atom, quant) {
       this.atom = atom;
-      this.quant = quant || $quant.create(1);
+      this.quant = quant || Quant.create(1);
     },
 
     /**

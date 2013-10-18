@@ -13,28 +13,28 @@ define([
   'sulfur/schema/validator/maximum',
   'sulfur/schema/validator/property',
   'sulfur/util'
-], function ($facet, $qname, $restrictedType, $maximumValidator, $propertyValidator, $util) {
+], function (Facet, QName, RestrictedType, MaximumValidator, PropertyValidator, util) {
 
   'use strict';
 
-  var $ = $facet.clone({
+  var $ = Facet.clone({
 
-    getQName: $util.returns(
-      $qname.create('fractionDigits', 'http://www.w3.org/2001/XMLSchema')),
+    getQName: util.returns(
+      QName.create('fractionDigits', 'http://www.w3.org/2001/XMLSchema')),
 
-    isShadowingLowerRestrictions: $util.returns(true),
+    isShadowingLowerRestrictions: util.returns(true),
 
-    getMutualExclusiveFacets: $util.returns([])
+    getMutualExclusiveFacets: util.returns([])
 
   });
 
   $.augment({
 
     initialize: function (value) {
-      if (!$util.isInteger(value) || value < 0) {
+      if (!util.isInteger(value) || value < 0) {
         throw new Error("expecting a non-negative integer less than 2^53");
       }
-      $facet.prototype.initialize.call(this, value);
+      Facet.prototype.initialize.call(this, value);
     },
 
     getValueArray: function () {
@@ -54,9 +54,9 @@ define([
     },
 
     createValidator: function () {
-      return $propertyValidator.create(
+      return PropertyValidator.create(
         'countFractionDigits',
-        $maximumValidator.create(this.getValue())
+        MaximumValidator.create(this.getValue())
       );
     }
 

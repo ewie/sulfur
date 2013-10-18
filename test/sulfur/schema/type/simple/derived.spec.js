@@ -14,13 +14,13 @@ define([
   'sulfur/schema/type/simple/derived',
   'sulfur/schema/type/simple/primitive',
   'sulfur/schema/type/simple/restricted'
-], function ($shared, $facets, $qname, $derivedType, $primitiveType, $restrictedType) {
+], function (shared, Facets, QName, DerivedType, PrimitiveType, RestrictedType) {
 
   'use strict';
 
-  var expect = $shared.expect;
-  var sinon = $shared.sinon;
-  var returns = $shared.returns;
+  var expect = shared.expect;
+  var sinon = shared.sinon;
+  var returns = shared.returns;
 
   describe('sulfur/schema/type/simple/derived', function () {
 
@@ -31,15 +31,15 @@ define([
     var facets;
 
     beforeEach(function () {
-      qname = $qname.create('foo', 'urn:bar');
-      base = $primitiveType.create({
-        qname: $qname.create('x', 'urn:y'),
+      qname = QName.create('foo', 'urn:bar');
+      base = PrimitiveType.create({
+        qname: QName.create('x', 'urn:y'),
         valueType: {},
         facets: { toArray: returns([]) }
       });
       valueType = {};
       facets = { toArray: returns([]) };
-      type = $derivedType.create(
+      type = DerivedType.create(
         { base: base,
           qname: qname,
           valueType: valueType,
@@ -48,7 +48,7 @@ define([
     });
 
     it("should be derived from sulfur/schema/type/simple/restricted", function () {
-      expect($restrictedType).to.be.prototypeOf($derivedType);
+      expect(RestrictedType).to.be.prototypeOf(DerivedType);
     });
 
     describe('#initialize()', function () {
@@ -64,8 +64,8 @@ define([
       });
 
       it("should call sulfur/schema/type/simple/restricted#initialize() with the base and facets", function () {
-        var spy = sandbox.spy($restrictedType.prototype, 'initialize');
-        var type = $derivedType.create({ base: base, facets: facets });
+        var spy = sandbox.spy(RestrictedType.prototype, 'initialize');
+        var type = DerivedType.create({ base: base, facets: facets });
         expect(spy)
           .to.be.calledOn(type)
           .to.be.calledWith(

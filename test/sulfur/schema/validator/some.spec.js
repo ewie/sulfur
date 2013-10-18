@@ -10,20 +10,20 @@
 define([
   'shared',
   'sulfur/schema/validator/some'
-], function ($shared, $someValidator) {
+], function (shared, SomeValidator) {
 
   'use strict';
 
-  var expect = $shared.expect;
-  var sinon = $shared.sinon;
-  var bind = $shared.bind;
+  var expect = shared.expect;
+  var sinon = shared.sinon;
+  var bind = shared.bind;
 
   describe('sulfur/schema/validator/some', function () {
 
     describe('#initialize()', function () {
 
       it("should reject an empty array", function () {
-        expect(bind($someValidator, 'create', []))
+        expect(bind(SomeValidator, 'create', []))
           .to.throw("must specify at least one validator");
       });
 
@@ -39,7 +39,7 @@ define([
           { validate: function (x) { return x; } },
           { validate: function (x) { return x; } }
         ];
-        validator = $someValidator.create(validators);
+        validator = SomeValidator.create(validators);
       });
 
       it("should pass the value to each validator's #validate() in initialization order", function () {

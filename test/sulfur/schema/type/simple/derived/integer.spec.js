@@ -17,29 +17,29 @@ define([
   'sulfur/schema/type/simple/primitive/decimal',
   'sulfur/schema/value/simple/integer'
 ], function (
-    $shared,
-    $fractionDigitsFacet,
-    $facets,
-    $qname,
-    $derivedType,
-    $integerType,
-    $decimalType,
-    $integerValue
+    shared,
+    FractionDigitsFacet,
+    Facets,
+    QName,
+    DerivedType,
+    IntegerType,
+    DecimalType,
+    IntegerValue
 ) {
 
   'use strict';
 
-  var expect = $shared.expect;
+  var expect = shared.expect;
 
   describe('sulfur/schema/type/simple/derived/integer', function () {
 
     it("should be a sulfur/schema/type/simple/derived", function () {
-      expect($integerType).to.eql(
-        $derivedType.create({
-          base: $decimalType,
-          qname: $qname.create('integer', 'http://www.w3.org/2001/XMLSchema'),
-          valueType: $integerValue,
-          facets: $facets.create([ $fractionDigitsFacet.create(0) ])
+      expect(IntegerType).to.eql(
+        DerivedType.create({
+          base: DecimalType,
+          qname: QName.create('integer', 'http://www.w3.org/2001/XMLSchema'),
+          valueType: IntegerValue,
+          facets: Facets.create([ FractionDigitsFacet.create(0) ])
         })
       );
     });

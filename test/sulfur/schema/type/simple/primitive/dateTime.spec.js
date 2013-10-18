@@ -21,38 +21,38 @@ define([
   'sulfur/schema/type/simple/primitive/dateTime',
   'sulfur/schema/value/simple/dateTime'
 ], function (
-    $shared,
-    $enumerationFacet,
-    $maxExclusiveFacet,
-    $maxInclusiveFacet,
-    $minExclusiveFacet,
-    $minInclusiveFacet,
-    $patternFacet,
-    $facets,
-    $qname,
-    $primitiveType,
-    $dateTimeType,
-    $dateTimeValue
+    shared,
+    EnumerationFacet,
+    MaxExclusiveFacet,
+    MaxInclusiveFacet,
+    MinExclusiveFacet,
+    MinInclusiveFacet,
+    PatternFacet,
+    Facets,
+    QName,
+    PrimitiveType,
+    DateTimeType,
+    DateTimeValue
 ) {
 
   'use strict';
 
-  var expect = $shared.expect;
+  var expect = shared.expect;
 
   describe('sulfur/schema/type/simple/primitive/dateTime', function () {
 
     it("should be a sulfur/schema/type/simple/primitive", function () {
-      expect($dateTimeType).to.eql(
-        $primitiveType.create({
-          qname: $qname.create('dateTime', 'http://www.w3.org/2001/XMLSchema'),
-          valueType: $dateTimeValue,
-          facets: $facets.create([
-            $enumerationFacet,
-            $maxExclusiveFacet,
-            $maxInclusiveFacet,
-            $minExclusiveFacet,
-            $minInclusiveFacet,
-            $patternFacet
+      expect(DateTimeType).to.eql(
+        PrimitiveType.create({
+          qname: QName.create('dateTime', 'http://www.w3.org/2001/XMLSchema'),
+          valueType: DateTimeValue,
+          facets: Facets.create([
+            EnumerationFacet,
+            MaxExclusiveFacet,
+            MaxInclusiveFacet,
+            MinExclusiveFacet,
+            MinInclusiveFacet,
+            PatternFacet
           ])
         })
       );

@@ -9,7 +9,7 @@
 define([
   'sulfur/factory',
   'sulfur/util'
-], function ($factory, $util) {
+], function (Factory, util) {
 
   'use strict';
 
@@ -28,7 +28,7 @@ define([
    */
   var LITERAL_PATTERN = /^[\x09\x0A\x0D\x20]*([+-])?([0-9]+)(?:\.([0-9]+))?[\x09\x0A\x0D\x20]*$/;
 
-  var $ = $factory.clone({
+  var $ = Factory.clone({
 
     /**
      * Check if a string represents a valid decimal value.
@@ -89,7 +89,7 @@ define([
       } else {
         this.fractionDigits = '';
       }
-      if ($util.isDefined(options.positive)) {
+      if (util.isDefined(options.positive)) {
         if (this.integralDigits === '0' && !this.fractionDigits) {
           this.positive = true;
         } else {

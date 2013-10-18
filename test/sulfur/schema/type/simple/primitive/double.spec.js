@@ -21,38 +21,38 @@ define([
   'sulfur/schema/type/simple/primitive/double',
   'sulfur/schema/value/simple/double'
 ], function (
-    $shared,
-    $enumerationFacet,
-    $maxExclusiveFacet,
-    $maxInclusiveFacet,
-    $minExclusiveFacet,
-    $minInclusiveFacet,
-    $patternFacet,
-    $facets,
-    $qname,
-    $primitiveType,
-    $doubleType,
-    $doubleValue
+    shared,
+    EnumerationFacet,
+    MaxExclusiveFacet,
+    MaxInclusiveFacet,
+    MinExclusiveFacet,
+    MinInclusiveFacet,
+    PatternFacet,
+    Facets,
+    QName,
+    PrimitiveType,
+    DoubleType,
+    DoubleValue
 ) {
 
   'use strict';
 
-  var expect = $shared.expect;
+  var expect = shared.expect;
 
   describe('sulfur/schema/type/simple/primitive/double', function () {
 
     it("should be a sulfur/schema/type/simple/primitive", function () {
-      expect($doubleType).to.eql(
-        $primitiveType.create({
-          qname: $qname.create('double', 'http://www.w3.org/2001/XMLSchema'),
-          valueType: $doubleValue,
-          facets: $facets.create([
-            $enumerationFacet,
-            $maxExclusiveFacet,
-            $maxInclusiveFacet,
-            $minExclusiveFacet,
-            $minInclusiveFacet,
-            $patternFacet
+      expect(DoubleType).to.eql(
+        PrimitiveType.create({
+          qname: QName.create('double', 'http://www.w3.org/2001/XMLSchema'),
+          valueType: DoubleValue,
+          facets: Facets.create([
+            EnumerationFacet,
+            MaxExclusiveFacet,
+            MaxInclusiveFacet,
+            MinExclusiveFacet,
+            MinInclusiveFacet,
+            PatternFacet
           ])
         })
       );

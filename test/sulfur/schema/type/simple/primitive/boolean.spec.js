@@ -16,27 +16,27 @@ define([
   'sulfur/schema/type/simple/primitive/boolean',
   'sulfur/schema/value/simple/boolean'
 ], function (
-    $shared,
-    $patternFacet,
-    $facets,
-    $qname,
-    $primitiveType,
-    $booleanType,
-    $booleanValue
+    shared,
+    PatternFacet,
+    Facets,
+    QName,
+    PrimitiveType,
+    BooleanType,
+    BooleanValue
 ) {
 
   'use strict';
 
-  var expect = $shared.expect;
+  var expect = shared.expect;
 
   describe('sulfur/schema/type/simple/primitive/boolean', function () {
 
     it("should be a sulfur/schema/type/simple/primitive", function () {
-      expect($booleanType).to.eql(
-        $primitiveType.create({
-          qname: $qname.create('boolean', 'http://www.w3.org/2001/XMLSchema'),
-          valueType: $booleanValue,
-          facets: $facets.create([ $patternFacet ])
+      expect(BooleanType).to.eql(
+        PrimitiveType.create({
+          qname: QName.create('boolean', 'http://www.w3.org/2001/XMLSchema'),
+          valueType: BooleanValue,
+          facets: Facets.create([ PatternFacet ])
         })
       );
     });

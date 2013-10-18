@@ -15,11 +15,11 @@ define([
   'sulfur/util'
 ], function (
     require,
-    $facet,
-    $qname,
-    $equalValidator,
-    $propertyValidator,
-    $util
+    Facet,
+    QName,
+    EqualValidator,
+    PropertyValidator,
+    util
 ) {
 
   'use strict';
@@ -33,14 +33,14 @@ define([
   var requireMaxLengthFacet = requireFacet('maxLength');
   var requireMinLengthFacet = requireFacet('minLength');
 
-  var $ = $facet.clone({
+  var $ = Facet.clone({
 
-    getQName: $util.returns(
-      $qname.create('length', 'http://www.w3.org/2001/XMLSchema')),
+    getQName: util.returns(
+      QName.create('length', 'http://www.w3.org/2001/XMLSchema')),
 
-    isShadowingLowerRestrictions: $util.returns(true),
+    isShadowingLowerRestrictions: util.returns(true),
 
-    getMutualExclusiveFacets: $util.once(function () {
+    getMutualExclusiveFacets: util.once(function () {
       return [
         requireMaxLengthFacet(),
         requireMinLengthFacet()
@@ -57,10 +57,10 @@ define([
      * @throw [Error] if `value` is not an integer within [0, 2^53)
      */
     initialize: function (value) {
-      if (!$util.isInteger(value) || value < 0) {
+      if (!util.isInteger(value) || value < 0) {
         throw new Error("expecting a non-negative integer less than 2^53");
       }
-      $facet.prototype.initialize.call(this, value);
+      Facet.prototype.initialize.call(this, value);
     },
 
     isRestrictionOf: function (type) {
@@ -99,8 +99,8 @@ define([
     },
 
     createValidator: function () {
-      return $propertyValidator.create('getLength',
-        $equalValidator.create(this.getValue()));
+      return PropertyValidator.create('getLength',
+        EqualValidator.create(this.getValue()));
     }
 
   });

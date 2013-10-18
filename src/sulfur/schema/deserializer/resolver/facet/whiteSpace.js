@@ -9,20 +9,20 @@
 define([
   'sulfur/schema/facet/whiteSpace',
   'sulfur/util'
-], function ($whiteSpaceFacet, $util) {
+], function (WhiteSpaceFacet, util) {
 
   'use strict';
 
   return {
 
-    getFacet: $util.returns($whiteSpaceFacet),
+    getFacet: util.returns(WhiteSpaceFacet),
 
     parseValue: function (s) {
       return s;
     },
 
     createFacet: function (values) {
-      return $whiteSpaceFacet.create(values[0]);
+      return WhiteSpaceFacet.create(values[0]);
     }
 
   };

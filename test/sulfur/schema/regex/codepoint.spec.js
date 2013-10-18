@@ -10,12 +10,12 @@
 define([
   'shared',
   'sulfur/schema/regex/codepoint'
-], function ($shared, $codepoint) {
+], function (shared, Codepoint) {
 
   'use strict';
 
-  var expect = $shared.expect;
-  var bind = $shared.bind;
+  var expect = shared.expect;
+  var bind = shared.bind;
 
   describe('sulfur/schema/regex/codepoint', function () {
 
@@ -34,7 +34,7 @@ define([
               [0xFFFE, 0xFFFF]
             ].forEach(function (range) {
               for (var value = range[0]; value <= range[1]; value += 1) {
-                expect(bind($codepoint, 'create', value))
+                expect(bind(Codepoint, 'create', value))
                   .to.throw("expecting a valid XML character");
               }
             });
@@ -45,7 +45,7 @@ define([
         context("when its the codepoint of a valid XML character", function () {
 
           it("should use the codepoint value", function () {
-            var c = $codepoint.create(0x20);
+            var c = Codepoint.create(0x20);
             expect(c.value).to.equal(0x20);
           });
 
@@ -58,7 +58,7 @@ define([
         context("when the string is empty", function () {
 
           it("should throw", function () {
-            expect(bind($codepoint, 'create', ''))
+            expect(bind(Codepoint, 'create', ''))
               .to.throw("expecting a string with exactly one character");
           });
 
@@ -67,7 +67,7 @@ define([
         context("when the string represents a valid XML character", function () {
 
           it("should use the codepoint value", function () {
-            var c = $codepoint.create('a');
+            var c = Codepoint.create('a');
             expect(c.value).to.equal('a'.charCodeAt(0));
           });
 
@@ -85,7 +85,7 @@ define([
             ].forEach(function (range) {
               for (var s, value = range[0]; value <= range[1]; value += 1) {
                 s = String.fromCharCode(value);
-                expect(bind($codepoint, 'create', s))
+                expect(bind(Codepoint, 'create', s))
                  .to.throw();
               }
             });
@@ -96,7 +96,7 @@ define([
         context("when the string represents more than 1 codepoint", function () {
 
           it("should throw", function () {
-            expect(bind($codepoint, 'create', 'ab'))
+            expect(bind(Codepoint, 'create', 'ab'))
               .to.throw("expecting a string with exactly one character");
           });
 
@@ -105,7 +105,7 @@ define([
         context("when the string contains an invalid surrogate pair", function () {
 
           it("should throw", function () {
-            expect(bind($codepoint, 'create', '\ud800\u0020'))
+            expect(bind(Codepoint, 'create', '\ud800\u0020'))
               .to.throw();
           });
 

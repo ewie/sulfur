@@ -11,18 +11,18 @@ define([
   'shared',
   'sulfur/schema/facet/totalDigits',
   'sulfur/schema/deserializer/resolver/facet/totalDigits'
-], function ($shared, $totalDigitsFacet, $totalDigitsFacetResolver) {
+], function (shared, TotalDigitsFacet, TotalDigitsFacetResolver) {
 
   'use strict';
 
-  var expect = $shared.expect;
+  var expect = shared.expect;
 
   describe('sulfur/schema/deserializer/resolver/facet/totalDigits', function () {
 
     describe('.getFacet()', function () {
 
       it("should return sulfur/schema/facet/totalDigits", function () {
-        expect($totalDigitsFacetResolver.getFacet()).to.equal($totalDigitsFacet);
+        expect(TotalDigitsFacetResolver.getFacet()).to.equal(TotalDigitsFacet);
       });
 
     });
@@ -30,7 +30,7 @@ define([
     describe('.parseValue()', function () {
 
       it("should parse a decimal integer", function () {
-        expect($totalDigitsFacetResolver.parseValue('123')).to.equal(123);
+        expect(TotalDigitsFacetResolver.parseValue('123')).to.equal(123);
       });
 
     });
@@ -38,8 +38,8 @@ define([
     describe('.createFacet()', function () {
 
       it("should return a sulfur/schema/facet/totalDigits using the smallest value", function () {
-        expect($totalDigitsFacetResolver.createFacet([ 3, 1, 2 ]))
-          .to.eql($totalDigitsFacet.create(1));
+        expect(TotalDigitsFacetResolver.createFacet([ 3, 1, 2 ]))
+          .to.eql(TotalDigitsFacet.create(1));
       });
 
     });

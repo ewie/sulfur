@@ -11,13 +11,13 @@ define([
   'shared',
   'sulfur/schema',
   'sulfur/schema/elements'
-], function ($shared, $schema, $elements) {
+], function (shared, Schema, Elements) {
 
   'use strict';
 
-  var expect = $shared.expect;
-  var bind = $shared.bind;
-  var returns = $shared.returns;
+  var expect = shared.expect;
+  var bind = shared.bind;
+  var returns = shared.returns;
 
   describe('sulfur/schema', function () {
 
@@ -27,16 +27,16 @@ define([
 
     beforeEach(function () {
       name = 'bar';
-      elements = $elements.create([
+      elements = Elements.create([
         { getName: returns('name') }
       ]);
-      schema = $schema.create(name, elements);
+      schema = Schema.create(name, elements);
     });
 
     describe('#initialize()', function () {
 
       it("should reject an empty name", function () {
-        expect(bind($schema, 'create', ''))
+        expect(bind(Schema, 'create', ''))
           .to.throw("schema name must not be empty");
       });
 

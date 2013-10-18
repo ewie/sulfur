@@ -14,21 +14,21 @@ define([
   'sulfur/schema/type/simple/primitive/decimal',
   'sulfur/schema/value/simple/integer'
 ], function (
-    $fractionDigitsFacet,
-    $facets,
-    $qname,
-    $derivedType,
-    $decimalType,
-    $integerValue
+    FractionDigitsFacet,
+    Facets,
+    QName,
+    DerivedType,
+    DecimalType,
+    IntegerValue
 ) {
 
   'use strict';
 
-  return $derivedType.create({
-    base: $decimalType,
-    qname: $qname.create('integer', 'http://www.w3.org/2001/XMLSchema'),
-    valueType: $integerValue,
-    facets: $facets.create([ $fractionDigitsFacet.create(0) ])
+  return DerivedType.create({
+    base: DecimalType,
+    qname: QName.create('integer', 'http://www.w3.org/2001/XMLSchema'),
+    valueType: IntegerValue,
+    facets: Facets.create([ FractionDigitsFacet.create(0) ])
   });
 
 });

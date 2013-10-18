@@ -18,30 +18,30 @@ define([
   'sulfur/schema/type/simple/primitive',
   'sulfur/schema/value/simple/float'
 ], function (
-    $enumerationFacet,
-    $maxExclusiveFacet,
-    $maxInclusiveFacet,
-    $minExclusiveFacet,
-    $minInclusiveFacet,
-    $patternFacet,
-    $facets,
-    $qname,
-    $primitiveType,
-    $floatValue
+    EnumerationFacet,
+    MaxExclusiveFacet,
+    MaxInclusiveFacet,
+    MinExclusiveFacet,
+    MinInclusiveFacet,
+    PatternFacet,
+    Facets,
+    QName,
+    PrimitiveType,
+    FloatValue
 ) {
 
   'use strict';
 
-  return $primitiveType.create({
-    qname: $qname.create('float', 'http://www.w3.org/2001/XMLSchema'),
-    valueType: $floatValue,
-    facets: $facets.create([
-      $enumerationFacet,
-      $maxExclusiveFacet,
-      $maxInclusiveFacet,
-      $minExclusiveFacet,
-      $minInclusiveFacet,
-      $patternFacet
+  return PrimitiveType.create({
+    qname: QName.create('float', 'http://www.w3.org/2001/XMLSchema'),
+    valueType: FloatValue,
+    facets: Facets.create([
+      EnumerationFacet,
+      MaxExclusiveFacet,
+      MaxInclusiveFacet,
+      MinExclusiveFacet,
+      MinInclusiveFacet,
+      PatternFacet
     ])
   });
 

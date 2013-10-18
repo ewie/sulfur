@@ -8,7 +8,7 @@
 
 define([
   'sulfur/factory'
-], function ($factory) {
+], function (Factory) {
 
   'use strict';
 
@@ -16,7 +16,7 @@ define([
    * A pattern holds one or more branches (i.e. alternations).
    */
 
-  return $factory.derive({
+  return Factory.derive({
     /**
      * @param [array] an array of one or more branches
      *

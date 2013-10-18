@@ -20,34 +20,34 @@ define([
   'sulfur/schema/type/simple/primitive',
   'sulfur/schema/value/simple/decimal'
 ], function (
-    $enumerationFacet,
-    $fractionDigitsFacet,
-    $maxExclusiveFacet,
-    $maxInclusiveFacet,
-    $minExclusiveFacet,
-    $minInclusiveFacet,
-    $patternFacet,
-    $totalDigitsFacet,
-    $facets,
-    $qname,
-    $primitiveType,
-    $decimalValue
+    EnumerationFacet,
+    FractionDigitsFacet,
+    MaxExclusiveFacet,
+    MaxInclusiveFacet,
+    MinExclusiveFacet,
+    MinInclusiveFacet,
+    PatternFacet,
+    TotalDigitsFacet,
+    Facets,
+    QName,
+    PrimitiveType,
+    DecimalValue
 ) {
 
   'use strict';
 
-  return $primitiveType.create({
-    qname: $qname.create('decimal', 'http://www.w3.org/2001/XMLSchema'),
-    valueType: $decimalValue,
-    facets: $facets.create([
-      $enumerationFacet,
-      $fractionDigitsFacet,
-      $maxExclusiveFacet,
-      $maxInclusiveFacet,
-      $minExclusiveFacet,
-      $minInclusiveFacet,
-      $patternFacet,
-      $totalDigitsFacet
+  return PrimitiveType.create({
+    qname: QName.create('decimal', 'http://www.w3.org/2001/XMLSchema'),
+    valueType: DecimalValue,
+    facets: Facets.create([
+      EnumerationFacet,
+      FractionDigitsFacet,
+      MaxExclusiveFacet,
+      MaxInclusiveFacet,
+      MinExclusiveFacet,
+      MinInclusiveFacet,
+      PatternFacet,
+      TotalDigitsFacet
     ])
   });
 

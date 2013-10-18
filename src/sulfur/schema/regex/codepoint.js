@@ -9,7 +9,7 @@
 define([
   'sulfur/factory',
   'sulfur/unicode'
-], function ($factory, $unicode) {
+], function (Factory, Unicode) {
 
   'use strict';
 
@@ -34,7 +34,7 @@ define([
    * A codepoint represents a valid XML character using its UCS codepoint value.
    */
 
-  return $factory.derive({
+  return Factory.derive({
     /**
      * @param [number|string] value a valid XML character
      *   either as UCS codepoint in the range U+0000..U+10FFFF, or as string
@@ -48,7 +48,7 @@ define([
         if (!value) {
           throw new Error("expecting a string with exactly one character");
         }
-        var pair = $unicode.decodeCharacterFromUtf16(value);
+        var pair = Unicode.decodeCharacterFromUtf16(value);
         if (value.length > pair[1]) {
           throw new Error("expecting a string with exactly one character");
         }

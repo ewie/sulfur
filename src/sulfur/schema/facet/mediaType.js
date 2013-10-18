@@ -14,28 +14,28 @@ define([
   'sulfur/schema/validator/enumeration',
   'sulfur/util'
 ], function (
-    $sulfur,
-    $facet,
-    $qname,
-    $mediaType,
-    $enumerationValidator,
-    $util
+    sulfur,
+    Facet,
+    QName,
+    MediaType,
+    EnumerationValidator,
+    util
 ) {
 
   'use strict';
 
   function isMediaType(x) {
-    return $mediaType.prototype.isPrototypeOf(x);
+    return MediaType.prototype.isPrototypeOf(x);
   }
 
-  var $ = $facet.clone({
+  var $ = Facet.clone({
 
-    getQName: $util.returns(
-      $qname.create('mediaType', $sulfur.getNamespaceURI())),
+    getQName: util.returns(
+      QName.create('mediaType', sulfur.getNamespaceURI())),
 
-    isShadowingLowerRestrictions: $util.returns(true),
+    isShadowingLowerRestrictions: util.returns(true),
 
-    getMutualExclusiveFacets: $util.returns([])
+    getMutualExclusiveFacets: util.returns([])
 
   });
 
@@ -48,8 +48,8 @@ define([
       if (!value.every(isMediaType)) {
         throw new Error("expecting only sulfur/schema/mediaType values");
       }
-      value = $util.uniq(value);
-      $facet.prototype.initialize.call(this, value);
+      value = util.uniq(value);
+      Facet.prototype.initialize.call(this, value);
     },
 
     isRestrictionOf: function (type) {
@@ -70,7 +70,7 @@ define([
     },
 
     createValidator: function () {
-      return $enumerationValidator.create(
+      return EnumerationValidator.create(
         this.getValue(),
         { testMethod: 'matches' });
     }

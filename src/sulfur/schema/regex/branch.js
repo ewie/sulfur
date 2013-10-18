@@ -8,7 +8,7 @@
 
 define([
   'sulfur/factory'
-], function ($factory) {
+], function (Factory) {
 
   'use strict';
 
@@ -16,7 +16,7 @@ define([
    * A branch of an alternation "|".
    */
 
-  return $factory.derive({
+  return Factory.derive({
     /**
      * @param [array] pieces (optional) an array of pieces under this branch
      */

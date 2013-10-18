@@ -10,18 +10,18 @@
 define([
   'shared',
   'sulfur/schema/qname'
-], function ($shared, $qname) {
+], function (shared, QName) {
 
   'use strict';
 
-  var expect = $shared.expect;
+  var expect = shared.expect;
 
   describe('sulfur/schema/qname', function () {
 
     var qname;
 
     beforeEach(function () {
-      qname = $qname.create('foo', 'urn:bar');
+      qname = QName.create('foo', 'urn:bar');
     });
 
     describe('#getLocalName()', function () {

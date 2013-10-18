@@ -16,19 +16,19 @@ define([
   'sulfur/schema/regex/pattern',
   'sulfur/schema/regex/translator'
 ], function (
-    $shared,
-    $regex,
-    $branch,
-    $compiler,
-    $parser,
-    $pattern,
-    $translator
+    shared,
+    Regex,
+    Branch,
+    Compiler,
+    Parser,
+    Pattern,
+    Translator
 ) {
 
   'use strict';
 
-  var expect = $shared.expect;
-  var sinon = $shared.sinon;
+  var expect = shared.expect;
+  var sinon = shared.sinon;
 
   describe('sulfur/schema/regex', function () {
 
@@ -45,8 +45,8 @@ define([
     describe('#initialize()', function () {
 
       it("should initialize the regex with the given pattern", function () {
-        var p = $pattern.create([ $branch.create() ]);
-        var r = $regex.create(p);
+        var p = Pattern.create([ Branch.create() ]);
+        var r = Regex.create(p);
         expect(r.pattern).to.eql(p);
       });
 
@@ -55,8 +55,8 @@ define([
     describe('#containsGroupWithSurrogateCodepoints()', function () {
 
       it("should return the result of calling .containsGroupWithSurrogateCodepoints on .pattern", function () {
-        var p = $pattern.create([ $branch.create() ]);
-        var r = $regex.create(p);
+        var p = Pattern.create([ Branch.create() ]);
+        var r = Regex.create(p);
         var spy = sinon.spy(p, 'containsGroupWithSurrogateCodepoints');
         var result = r.containsGroupWithSurrogateCodepoints();
         expect(spy).to.be.called;
@@ -68,8 +68,8 @@ define([
     describe('#containsEmptyGroup()', function () {
 
       it("should return the result of calling .containsEmptyGroup on .pattern", function () {
-        var p = $pattern.create([ $branch.create() ]);
-        var r = $regex.create(p);
+        var p = Pattern.create([ Branch.create() ]);
+        var r = Regex.create(p);
         var spy = sinon.spy(p, 'containsEmptyGroup');
         var result = r.containsEmptyGroup();
         expect(spy).to.be.called;
@@ -81,8 +81,8 @@ define([
     describe('#translate()', function () {
 
       it("should resolve .pattern", function () {
-        var spy = sandbox.spy($translator.prototype, 'translate');
-        var r = $regex.parse('');
+        var spy = sandbox.spy(Translator.prototype, 'translate');
+        var r = Regex.parse('');
         var rr = r.translate();
         expect(spy).to.be.calledWith(r.pattern);
         expect(spy).to.have.returned(rr.pattern);
@@ -93,8 +93,8 @@ define([
     describe('#compile()', function () {
 
       it("should compile .pattern", function () {
-        var spy = sandbox.spy($compiler.prototype, 'compile');
-        var r = $regex.parse('').translate();
+        var spy = sandbox.spy(Compiler.prototype, 'compile');
+        var r = Regex.parse('').translate();
         var p = r.compile();
         expect(spy).to.be.calledWith(r.pattern);
         expect(spy).to.have.returned(p);
@@ -105,8 +105,8 @@ define([
     describe('.parse()', function () {
 
       it("should parse the given source", function () {
-        var parseSpy = sandbox.spy($parser.prototype, 'parse');
-        var r = $regex.parse('');
+        var parseSpy = sandbox.spy(Parser.prototype, 'parse');
+        var r = Regex.parse('');
         expect(parseSpy).to.be.calledWith('');
         expect(parseSpy).to.have.returned(r.pattern);
       });
@@ -116,10 +116,10 @@ define([
     describe('.compile()', function () {
 
       it("should parse, resolve and compile the given source", function () {
-        var parseSpy = sandbox.spy($regex, 'parse');
-        var translateSpy = sandbox.spy($regex.prototype, 'translate');
-        var compileSpy = sandbox.spy($regex.prototype, 'compile');
-        var r = $regex.compile('');
+        var parseSpy = sandbox.spy(Regex, 'parse');
+        var translateSpy = sandbox.spy(Regex.prototype, 'translate');
+        var compileSpy = sandbox.spy(Regex.prototype, 'compile');
+        var r = Regex.compile('');
         expect(parseSpy).to.be.calledWith('');
         expect(translateSpy).to.be.calledOn(parseSpy.getCall(0).returnValue);
         expect(compileSpy).to.be.calledOn(translateSpy.getCall(0).returnValue);

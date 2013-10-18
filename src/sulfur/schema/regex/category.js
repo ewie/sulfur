@@ -9,7 +9,7 @@
 define([
   'sulfur/factory',
   'sulfur/unicode'
-], function ($factory, $unicode) {
+], function (Factory, Unicode) {
 
   'use strict';
 
@@ -23,7 +23,7 @@ define([
    * Category or Group.
    */
 
-  return $factory.derive({
+  return Factory.derive({
     /**
      * @param [string] name the name of a Unicode General Category or Group
      * @param [boolean] positive (default true) whether to match the codepoints
@@ -33,7 +33,7 @@ define([
       if (isUnsupportedUnicodeCategory(name)) {
         throw new Error("unsupported Unicode category " + name);
       }
-      if (!$unicode.isValidCategory(name) && !$unicode.isValidCategoryGroup(name)) {
+      if (!Unicode.isValidCategory(name) && !Unicode.isValidCategoryGroup(name)) {
         throw new Error("unknown Unicode category " + name);
       }
       this.name = name;

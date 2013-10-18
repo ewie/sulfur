@@ -9,7 +9,7 @@
 define([
   'sulfur/factory',
   'sulfur/unicode'
-], function ($factory, $unicode) {
+], function (Factory, Unicode) {
 
   'use strict';
 
@@ -25,14 +25,14 @@ define([
    * A multi character escape "\p" or "\P" using a Unicode Block name.
    */
 
-  return $factory.derive({
+  return Factory.derive({
     /**
      * @param [string] name the Unicode Block name
      * @param [boolean] positive (default true) whether to match the codepoints
      *   of that block or the inverse
      */
     initialize: function (name, positive) {
-      if (!$unicode.isValidBlock(name)) {
+      if (!Unicode.isValidBlock(name)) {
         throw new Error("unknown Unicode block " + name);
       }
       if (isUnsupportedUnicodeBlock(name)) {

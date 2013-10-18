@@ -9,20 +9,20 @@
 define([
   'sulfur/schema/facet/length',
   'sulfur/util'
-], function ($lengthFacet, $util) {
+], function (LengthFacet, util) {
 
   'use strict';
 
   return {
 
-    getFacet: $util.returns($lengthFacet),
+    getFacet: util.returns(LengthFacet),
 
     parseValue: function (s) {
       return parseInt(s, 10);
     },
 
     createFacet: function (values) {
-      return $lengthFacet.create(values[0]);
+      return LengthFacet.create(values[0]);
     }
 
   };

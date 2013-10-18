@@ -12,7 +12,7 @@ define([
   'sulfur/schema/qname',
   'sulfur/schema/validator/maximum',
   'sulfur/util'
-], function (require, $facet, $qname, $maximumValidator, $util) {
+], function (require, Facet, QName, MaximumValidator, util) {
 
   'use strict';
 
@@ -26,14 +26,14 @@ define([
   var requireMaxInclusiveFacet = requireFacet('maxInclusive');
   var requireMinInclusiveFacet = requireFacet('minInclusive');
 
-  var $ = $facet.clone({
+  var $ = Facet.clone({
 
-    getQName: $util.returns(
-      $qname.create('maxExclusive', 'http://www.w3.org/2001/XMLSchema')),
+    getQName: util.returns(
+      QName.create('maxExclusive', 'http://www.w3.org/2001/XMLSchema')),
 
-    isShadowingLowerRestrictions: $util.returns(true),
+    isShadowingLowerRestrictions: util.returns(true),
 
-    getMutualExclusiveFacets: $util.once(function () {
+    getMutualExclusiveFacets: util.once(function () {
       return [ requireMaxInclusiveFacet() ];
     })
 
@@ -77,7 +77,7 @@ define([
     },
 
     createValidator: function () {
-      return $maximumValidator.create(this.getValue(), { exclusive: true });
+      return MaximumValidator.create(this.getValue(), { exclusive: true });
     }
 
   });

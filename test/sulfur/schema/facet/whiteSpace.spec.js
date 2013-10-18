@@ -16,32 +16,32 @@ define([
   'sulfur/schema/type/simple/primitive',
   'sulfur/schema/type/simple/restricted'
 ], function (
-    $shared,
-    $facet,
-    $whiteSpaceFacet,
-    $facets,
-    $qname,
-    $primitiveType,
-    $restrictedType
+    shared,
+    Facet,
+    WhiteSpaceFacet,
+    Facets,
+    QName,
+    PrimitiveType,
+    RestrictedType
 ) {
 
   'use strict';
 
-  var expect = $shared.expect;
-  var sinon = $shared.sinon;
-  var bind = $shared.bind;
+  var expect = shared.expect;
+  var sinon = shared.sinon;
+  var bind = shared.bind;
 
   describe('sulfur/schema/facet/whiteSpace', function () {
 
     it("should be derived from sulfur/schema/facet", function () {
-      expect($facet).to.be.prototypeOf($whiteSpaceFacet);
+      expect(Facet).to.be.prototypeOf(WhiteSpaceFacet);
     });
 
     describe('.getQName()', function () {
 
       it("should return {http://www.w3.org/2001/XMLSchema}whiteSpace", function () {
-        expect($whiteSpaceFacet.getQName()).to.eql(
-          $qname.create('whiteSpace', 'http://www.w3.org/2001/XMLSchema'));
+        expect(WhiteSpaceFacet.getQName()).to.eql(
+          QName.create('whiteSpace', 'http://www.w3.org/2001/XMLSchema'));
       });
 
     });
@@ -49,7 +49,7 @@ define([
     describe('.isShadowingLowerRestrictions()', function () {
 
       it("should return true", function () {
-        expect($whiteSpaceFacet.isShadowingLowerRestrictions()).to.be.true;
+        expect(WhiteSpaceFacet.isShadowingLowerRestrictions()).to.be.true;
       });
 
     });
@@ -57,7 +57,7 @@ define([
     describe('.getMutualExclusiveFacets()', function () {
 
       it("should return an empty array", function () {
-        expect($whiteSpaceFacet.getMutualExclusiveFacets()).to.eql([]);
+        expect(WhiteSpaceFacet.getMutualExclusiveFacets()).to.eql([]);
       });
 
     });
@@ -75,13 +75,13 @@ define([
       });
 
       it("should reject a value other than 'collapse', 'preserve' or 'replace'", function () {
-        expect(bind($whiteSpaceFacet, 'create', ''))
+        expect(bind(WhiteSpaceFacet, 'create', ''))
           .to.throw('expecting either "collapse", "preserve" or "replace"');
       });
 
       it("should call sulfur/schema/facet#initialize()", function () {
-        var spy = sandbox.spy($facet.prototype, 'initialize');
-        var facet = $whiteSpaceFacet.create('collapse');
+        var spy = sandbox.spy(Facet.prototype, 'initialize');
+        var facet = WhiteSpaceFacet.create('collapse');
         expect(spy)
           .to.be.calledOn(sinon.match.same(facet))
           .to.be.calledWith('collapse');
@@ -92,8 +92,8 @@ define([
     describe('#isRestrictionOf()', function () {
 
       it("should return true when the type does not define facet 'whiteSpace'", function () {
-        var type = $primitiveType.create({});
-        var facet = $whiteSpaceFacet.create('collapse');
+        var type = PrimitiveType.create({});
+        var facet = WhiteSpaceFacet.create('collapse');
         expect(facet.isRestrictionOf(type)).to.be.true;
       });
 
@@ -102,15 +102,15 @@ define([
         var base;
 
         beforeEach(function () {
-          base = $primitiveType.create({
-            facets: $facets.create([ $whiteSpaceFacet ])
+          base = PrimitiveType.create({
+            facets: Facets.create([ WhiteSpaceFacet ])
           });
         });
 
         it("should return true when the type's facet value is 'preserve'", function () {
-          var type = $restrictedType.create(base,
-            $facets.create([ $whiteSpaceFacet.create('preserve') ]));
-          var facet = $whiteSpaceFacet.create('preserve');
+          var type = RestrictedType.create(base,
+            Facets.create([ WhiteSpaceFacet.create('preserve') ]));
+          var facet = WhiteSpaceFacet.create('preserve');
           expect(facet.isRestrictionOf(type)).to.be.true;
         });
 
@@ -119,8 +119,8 @@ define([
           var type;
 
           beforeEach(function () {
-            type = $restrictedType.create(base,
-              $facets.create([ $whiteSpaceFacet.create('collapse') ]));
+            type = RestrictedType.create(base,
+              Facets.create([ WhiteSpaceFacet.create('collapse') ]));
           });
 
           [
@@ -133,7 +133,7 @@ define([
             var result = pair[1];
 
             it("should return " + result + " when the value is '" + value + "'", function () {
-              var facet = $whiteSpaceFacet.create(value);
+              var facet = WhiteSpaceFacet.create(value);
               expect(facet.isRestrictionOf(type)).to.be[result];
             });
 
@@ -146,8 +146,8 @@ define([
           var type;
 
           beforeEach(function () {
-            type = $restrictedType.create(base,
-              $facets.create([ $whiteSpaceFacet.create('replace') ]));
+            type = RestrictedType.create(base,
+              Facets.create([ WhiteSpaceFacet.create('replace') ]));
           });
 
           [
@@ -160,7 +160,7 @@ define([
             var result = pair[1];
 
             it("should return " + result + " when the value is '" + value + "'", function () {
-              var facet = $whiteSpaceFacet.create(value);
+              var facet = WhiteSpaceFacet.create(value);
               expect(facet.isRestrictionOf(type)).to.be[result];
             });
 
@@ -175,7 +175,7 @@ define([
     describe('#validate()', function () {
 
       it("should return true", function () {
-        var facet = $whiteSpaceFacet.create('collapse');
+        var facet = WhiteSpaceFacet.create('collapse');
         expect(facet.validate()).to.be.true;
       });
 
@@ -184,7 +184,7 @@ define([
     describe('#createValidator()', function () {
 
       it("should reject", function () {
-        var facet = $whiteSpaceFacet.create('replace');
+        var facet = WhiteSpaceFacet.create('replace');
         expect(bind(facet, 'createValidator'))
           .to.throw("validator creation is not allowed");
       });

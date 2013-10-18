@@ -10,20 +10,20 @@ define([
   'sulfur/schema/facet/mediaType',
   'sulfur/schema/mediaType',
   'sulfur/util'
-], function ($mediaTypeFacet, $mediaType, $util) {
+], function (MediaTypeFacet, MediaType, util) {
 
   'use strict';
 
   return {
 
-    getFacet: $util.returns($mediaTypeFacet),
+    getFacet: util.returns(MediaTypeFacet),
 
     parseValue: function (s) {
-      return $mediaType.parse(s);
+      return MediaType.parse(s);
     },
 
     createFacet: function (values) {
-      return $mediaTypeFacet.create(values);
+      return MediaTypeFacet.create(values);
     }
 
   };

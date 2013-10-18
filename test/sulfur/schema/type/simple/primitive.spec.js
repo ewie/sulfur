@@ -17,25 +17,25 @@ define([
   'sulfur/schema/validator/all',
   'sulfur/schema/validator/prototype'
 ], function (
-    $shared,
-    $facet,
-    $facets,
-    $qname,
-    $primitiveType,
-    $restrictedType,
-    $allValidator,
-    $prototypeValidator
+    shared,
+    Facet,
+    Facets,
+    QName,
+    PrimitiveType,
+    RestrictedType,
+    AllValidator,
+    PrototypeValidator
 ) {
 
   'use strict';
 
-  var expect = $shared.expect;
-  var returns = $shared.returns;
+  var expect = shared.expect;
+  var returns = shared.returns;
 
   describe('sulfur/schema/type/simple/primitive', function () {
 
     function mockFacet(qname, shadowing, initialize, createValidator) {
-      var facet = $facet.clone({
+      var facet = Facet.clone({
         getQName: returns(qname),
         getMutualExclusiveFacets: returns([]),
         isShadowingLowerRestrictions: returns(shadowing)
@@ -56,20 +56,20 @@ define([
     var nonShadowingFacet;
 
     beforeEach(function () {
-      qname = $qname.create('foo', 'urn:bar');
+      qname = QName.create('foo', 'urn:bar');
       valueType = { prototype: {} };
       shadowingFacet = mockFacet(
-        $qname.create('x', 'urn:z'),
+        QName.create('x', 'urn:z'),
         true,
         function () {},
         returns({}));
       nonShadowingFacet = mockFacet(
-        $qname.create('y', 'urn:z'),
+        QName.create('y', 'urn:z'),
         false,
         function (x) { this._x = x; },
         function () { return { x: this._x }; });
-      facets = $facets.create([ shadowingFacet, nonShadowingFacet ]);
-      type = $primitiveType.create(
+      facets = Facets.create([ shadowingFacet, nonShadowingFacet ]);
+      type = PrimitiveType.create(
         { qname: qname,
           valueType: valueType,
           facets: facets
@@ -107,7 +107,7 @@ define([
       });
 
       it("should return false when the other type is not the same sulfur/schema/type/simple/primitive", function () {
-        var other = $primitiveType.create({});
+        var other = PrimitiveType.create({});
         expect(type.isRestrictionOf(other)).to.be.false;
       });
 
@@ -117,7 +117,7 @@ define([
 
       it("should return a sulfur/schema/validator/prototype using the value type's prototype", function () {
         var v = type.createValidator();
-        expect(v).to.eql($prototypeValidator.create(valueType.prototype));
+        expect(v).to.eql(PrototypeValidator.create(valueType.prototype));
         expect(v.getPrototype()).to.equal(valueType.prototype);
       });
 
@@ -126,32 +126,32 @@ define([
     describe('#createRestrictionValidator()', function () {
 
       it("should return an sulfur/schema/validator/all using each effective facet's validator", function () {
-        var facets = $facets.create([ shadowingFacet.create(0) ]);
-        var restriction = $restrictedType.create(type, facets);
+        var facets = Facets.create([ shadowingFacet.create(0) ]);
+        var restriction = RestrictedType.create(type, facets);
         var v = type.createRestrictionValidator(restriction);
-        expect($allValidator.prototype).to.be.prototypeOf(v);
+        expect(AllValidator.prototype).to.be.prototypeOf(v);
         expect(v.getValidators())
           .to.include.something.equal(
             facets.getFacet(shadowingFacet.getQName()).createValidator());
       });
 
       it("should include this type's validator", function () {
-        var facets = $facets.create([ shadowingFacet.create(0) ]);
-        var restriction = $restrictedType.create(type, facets);
+        var facets = Facets.create([ shadowingFacet.create(0) ]);
+        var restriction = RestrictedType.create(type, facets);
         var v = type.createRestrictionValidator(restriction);
         expect(v.getValidators())
           .to.include.something.eql(type.createValidator());
       });
 
       it("should include a sulfur/schema/validator/all to wrap a non-shadowing facet's validators", function () {
-        var baseFacets = $facets.create([ nonShadowingFacet.create(1) ]);
-        var base = $restrictedType.create(type, baseFacets);
-        var facets = $facets.create([ nonShadowingFacet.create(2) ]);
-        var restriction = $restrictedType.create(base, facets);
+        var baseFacets = Facets.create([ nonShadowingFacet.create(1) ]);
+        var base = RestrictedType.create(type, baseFacets);
+        var facets = Facets.create([ nonShadowingFacet.create(2) ]);
+        var restriction = RestrictedType.create(base, facets);
         var v = type.createRestrictionValidator(restriction);
         expect(v.getValidators())
           .to.include.something.eql(
-            $allValidator.create(
+            AllValidator.create(
               [ facets.getFacet(nonShadowingFacet.getQName()).createValidator(),
                 baseFacets.getFacet(nonShadowingFacet.getQName()).createValidator()
               ]));

@@ -21,26 +21,26 @@ define([
   'sulfur/schema/type/simple/restricted',
   'sulfur/util/xpath'
 ], function (
-    $shared,
-    $facet,
-    $enumerationFacet,
-    $facets,
-    $resolver,
-    $simpleTypeResolver,
-    $qname,
-    $primitiveType,
-    $derivedType,
-    $listType,
-    $restrictedType,
-    $xpath
+    shared,
+    Facet,
+    EnumerationFacet,
+    Facets,
+    Resolver,
+    SimpleTypeResolver,
+    QName,
+    PrimitiveType,
+    DerivedType,
+    ListType,
+    RestrictedType,
+    XPath
 ) {
 
   'use strict';
 
-  var expect = $shared.expect;
-  var bind = $shared.bind;
-  var sinon = $shared.sinon;
-  var returns = $shared.returns;
+  var expect = shared.expect;
+  var bind = shared.bind;
+  var sinon = shared.sinon;
+  var returns = shared.returns;
 
   describe('sulfur/schema/deserializer/resolver/type/simple', function () {
 
@@ -50,7 +50,7 @@ define([
     }
 
     function mockFacet(qname) {
-      var facet = $facet.clone({
+      var facet = Facet.clone({
         getQName: returns(qname),
         getMutualExclusiveFacets: returns([]),
         isShadowingLowerRestrictions: returns(true)
@@ -64,108 +64,108 @@ define([
     describe('#initialize()', function () {
 
       it("should accept types derived from sulfur/schema/type/simple/primitive", function () {
-        var facet = mockFacet($qname.create('foo', 'urn:bar'));
-        var type = $primitiveType.create(
-          { qname: $qname.create('x', 'urn:y'),
-            facets: $facets.create(
+        var facet = mockFacet(QName.create('foo', 'urn:bar'));
+        var type = PrimitiveType.create(
+          { qname: QName.create('x', 'urn:y'),
+            facets: Facets.create(
               [ facet ])
           });
         var facetResolver = { getFacet: returns(facet) };
-        expect(bind($simpleTypeResolver, 'create', [ type ], [ facetResolver ]))
+        expect(bind(SimpleTypeResolver, 'create', [ type ], [ facetResolver ]))
           .to.not.throw();
       });
 
       it("should accept types derived from sulfur/schema/type/simple/derived", function () {
-        var facet = mockFacet($qname.create('foo', 'urn:bar'));
-        var base = $primitiveType.create(
-          { qname: $qname.create('x', 'urn:y'),
-            facets: $facets.create([ facet ])
+        var facet = mockFacet(QName.create('foo', 'urn:bar'));
+        var base = PrimitiveType.create(
+          { qname: QName.create('x', 'urn:y'),
+            facets: Facets.create([ facet ])
           });
-        var type = $derivedType.create(
+        var type = DerivedType.create(
           { base: base,
-            qname: $qname.create('z', 'urn:y'),
-            facets: $facets.create([ facet.create() ])
+            qname: QName.create('z', 'urn:y'),
+            facets: Facets.create([ facet.create() ])
           });
         var facetResolver = { getFacet: returns(facet) };
-        expect(bind($simpleTypeResolver, 'create', [ type ], [ facetResolver ]))
+        expect(bind(SimpleTypeResolver, 'create', [ type ], [ facetResolver ]))
           .to.not.throw();
       });
 
       it("should reject an empty array of types", function () {
-        expect(bind($simpleTypeResolver, 'create', []))
+        expect(bind(SimpleTypeResolver, 'create', []))
           .to.throw("expecting an array of one or more types");
       });
 
       it("should reject types which are not a sulfur/schema/type/simple/{primitive,derived}", function () {
         var facetResolver = {
           getFacet: returns(
-            { getQName: returns($qname.create('foo', 'urn:bar')) })
+            { getQName: returns(QName.create('foo', 'urn:bar')) })
         };
-        expect(bind($simpleTypeResolver, 'create', [{}], [ facetResolver ]))
+        expect(bind(SimpleTypeResolver, 'create', [{}], [ facetResolver ]))
           .to.throw("expecting only sulfur/schema/type/simple/{primitive,derived} types");
       });
 
       it("should reject types with duplicate qualified name", function () {
         var facet = {
-          getQName: returns($qname.create('foo', 'urn:bar'))
+          getQName: returns(QName.create('foo', 'urn:bar'))
         };
         var types = [
-          $primitiveType.create(
-            { qname: $qname.create('foo', 'urn:bar'),
-              facets: $facets.create([ facet ])
+          PrimitiveType.create(
+            { qname: QName.create('foo', 'urn:bar'),
+              facets: Facets.create([ facet ])
            }),
-          $primitiveType.create(
-            { qname: $qname.create('foo', 'urn:bar'),
-              facets: $facets.create([ facet ])
+          PrimitiveType.create(
+            { qname: QName.create('foo', 'urn:bar'),
+              facets: Facets.create([ facet ])
             })
         ];
         var facetResolver = { getFacet: returns(facet) };
-        expect(bind($simpleTypeResolver, 'create', types, [ facetResolver ]))
+        expect(bind(SimpleTypeResolver, 'create', types, [ facetResolver ]))
           .to.throw("type with duplicate qualified name {urn:bar}foo");
       });
 
       it("should reject an empty array of facet resolvers", function () {
         var types = [
-          $primitiveType.create(
-            { qname: $qname.create('foo', 'urn:bar') })
+          PrimitiveType.create(
+            { qname: QName.create('foo', 'urn:bar') })
         ];
-        expect(bind($simpleTypeResolver, 'create', types, []))
+        expect(bind(SimpleTypeResolver, 'create', types, []))
           .to.throw("expecting an array of one or more facet resolvers");
       });
 
       it("should reject facet resolvers with duplicate facets", function () {
         var types = [
-          $primitiveType.create(
-            { qname: $qname.create('foo', 'urn:bar') })
+          PrimitiveType.create(
+            { qname: QName.create('foo', 'urn:bar') })
         ];
         var facet = {
-          getQName: returns($qname.create('foo', 'urn:bar'))
+          getQName: returns(QName.create('foo', 'urn:bar'))
         };
         var facetResolvers = [
           { getFacet: returns(facet) },
           { getFacet: returns(facet) }
         ];
-        expect(bind($simpleTypeResolver, 'create', types, facetResolvers))
+        expect(bind(SimpleTypeResolver, 'create', types, facetResolvers))
           .to.throw("facet resolver with duplicate facet {urn:bar}foo");
       });
 
       it("should reject missing facet resolvers", function () {
         var allowedFacet = {
-          getQName: returns($qname.create('x', 'urn:y'))
+          getQName: returns(QName.create('x', 'urn:y'))
         };
         var types = [
-          $primitiveType.create(
-            { qname: $qname.create('foo', 'urn:bar'),
-              facets: $facets.create([ allowedFacet ])
+          PrimitiveType.create(
+            { qname: QName.create('foo', 'urn:bar'),
+              facets: Facets.create([ allowedFacet ])
             })
         ];
         var someFacet = {
-          getQName: returns($qname.create('x', 'urn:z'))
+          getQName: returns(QName.create('x', 'urn:z'))
         };
         var facetResolvers = [
           { getFacet: returns(someFacet) }
         ];
-        expect(bind($simpleTypeResolver, 'create', types, facetResolvers))
+        expect(bind(SimpleTypeResolver, 'create', types, facetResolvers))
           .to.throw("expecting a facet resolver for facet {urn:y}x");
       });
 
@@ -178,27 +178,27 @@ define([
 
       beforeEach(function () {
         var facet = {
-          getQName: returns($qname.create('foo', 'urn:bar'))
+          getQName: returns(QName.create('foo', 'urn:bar'))
         };
-        type = $primitiveType.create(
-          { qname: $qname.create('x', 'urn:y'),
-            facets: $facets.create([ facet ])
+        type = PrimitiveType.create(
+          { qname: QName.create('x', 'urn:y'),
+            facets: Facets.create([ facet ])
           });
         var facetResolver = { getFacet: returns(facet) };
-        typeResolver = $simpleTypeResolver.create([ type ], [ facetResolver ]);
+        typeResolver = SimpleTypeResolver.create([ type ], [ facetResolver ]);
       });
 
       it("should return the type matching the name and namespace", function () {
-        var t = typeResolver.resolveQualifiedName($qname.create('x', 'urn:y'));
+        var t = typeResolver.resolveQualifiedName(QName.create('x', 'urn:y'));
         expect(t).to.equal(type);
       });
 
       it("should return undefined when no type with the given name is defined", function () {
-        expect(typeResolver.resolveQualifiedName($qname.create('z', 'urn:y'))).to.be.undefined;
+        expect(typeResolver.resolveQualifiedName(QName.create('z', 'urn:y'))).to.be.undefined;
       });
 
       it("should return undefined when no type with the given namespace is defined", function () {
-        expect(typeResolver.resolveQualifiedName($qname.create('x', 'urn:z'))).to.be.undefined;
+        expect(typeResolver.resolveQualifiedName(QName.create('x', 'urn:z'))).to.be.undefined;
       });
 
     });
@@ -217,14 +217,14 @@ define([
         valueType = {
           parse: parseFn
         };
-        allowedFacets = $facets.create(
-          [ mockFacet($qname.create('foo', 'http://www.w3.org/2001/XMLSchema')),
-            mockFacet($qname.create('bar', 'http://www.w3.org/2001/XMLSchema')),
-            mockFacet($qname.create('abc', 'urn:bar')),
-            mockFacet($qname.create('def', 'urn:foo'))
+        allowedFacets = Facets.create(
+          [ mockFacet(QName.create('foo', 'http://www.w3.org/2001/XMLSchema')),
+            mockFacet(QName.create('bar', 'http://www.w3.org/2001/XMLSchema')),
+            mockFacet(QName.create('abc', 'urn:bar')),
+            mockFacet(QName.create('def', 'urn:foo'))
           ]);
-        type = $primitiveType.create(
-          { qname: $qname.create('x', 'urn:y'),
+        type = PrimitiveType.create(
+          { qname: QName.create('x', 'urn:y'),
             valueType: valueType,
             facets: allowedFacets
           });
@@ -240,12 +240,12 @@ define([
         }
 
         facetResolvers = [
-          createFacetResolver(allowedFacets.getFacet($qname.create('foo', 'http://www.w3.org/2001/XMLSchema'))),
-          createFacetResolver(allowedFacets.getFacet($qname.create('bar', 'http://www.w3.org/2001/XMLSchema'))),
-          createFacetResolver(allowedFacets.getFacet($qname.create('abc', 'urn:bar'))),
-          createFacetResolver(allowedFacets.getFacet($qname.create('def', 'urn:foo')))
+          createFacetResolver(allowedFacets.getFacet(QName.create('foo', 'http://www.w3.org/2001/XMLSchema'))),
+          createFacetResolver(allowedFacets.getFacet(QName.create('bar', 'http://www.w3.org/2001/XMLSchema'))),
+          createFacetResolver(allowedFacets.getFacet(QName.create('abc', 'urn:bar'))),
+          createFacetResolver(allowedFacets.getFacet(QName.create('def', 'urn:foo')))
         ];
-        typeResolver = $simpleTypeResolver.create([ type ], facetResolvers);
+        typeResolver = SimpleTypeResolver.create([ type ], facetResolvers);
         typeResolvers = [ typeResolver ];
       });
 
@@ -264,8 +264,8 @@ define([
         it("should return undefined when it does not have child xs:list nor xs:restriction", function () {
           var doc = parse('<simpleType xmlns="http://www.w3.org/2001/XMLSchema"/>');
           var element = doc.documentElement;
-          var xpath = $xpath.create(doc);
-          var resolver = $resolver.create(undefined, xpath);
+          var xpath = XPath.create(doc);
+          var resolver = Resolver.create(undefined, xpath);
           expect(typeResolver.resolveElement(element, resolver)).to.be.undefined;
         });
 
@@ -297,8 +297,8 @@ define([
                  '</xs:simpleType>' +
                 '</xs:schema>');
               var root = doc.documentElement;
-              var xpath = $xpath.create(doc);
-              var resolver = $resolver.create(typeResolvers, xpath);
+              var xpath = XPath.create(doc);
+              var resolver = Resolver.create(typeResolvers, xpath);
 
               var t = typeResolver.resolveElement(root.firstChild, resolver);
 
@@ -322,8 +322,8 @@ define([
                  '</xs:simpleType>' +
                 '</xs:schema>');
               var root = doc.documentElement;
-              var xpath = $xpath.create(doc);
-              var resolver = $resolver.create(typeResolvers, xpath);
+              var xpath = XPath.create(doc);
+              var resolver = Resolver.create(typeResolvers, xpath);
 
               var t = typeResolver.resolveElement(root.firstChild, resolver);
 
@@ -337,8 +337,8 @@ define([
                   ' xmlns:y="urn:y">' +
                  '<xs:restriction base="y:x"/>' +
                 '</xs:simpleType>');
-              var xpath = $xpath.create(doc);
-              var resolver = $resolver.create(typeResolvers, xpath);
+              var xpath = XPath.create(doc);
+              var resolver = Resolver.create(typeResolvers, xpath);
 
               var t = typeResolver.resolveElement(doc.documentElement, resolver);
 
@@ -352,10 +352,10 @@ define([
                   ' xmlns:y="urn:y">' +
                  '<xs:restriction base="y:z"/>' +
                 '</xs:simpleType>');
-              var xpath = $xpath.create(doc, {
+              var xpath = XPath.create(doc, {
                 xs: 'http://www.w3.org/2001/XMLSchema'
               });
-              var resolver = $resolver.create(typeResolvers, xpath);
+              var resolver = Resolver.create(typeResolvers, xpath);
 
               expect(bind(typeResolver, 'resolveElement', doc.documentElement, resolver))
                 .to.throw("cannot resolve type {urn:y}z");
@@ -390,8 +390,8 @@ define([
                 '</xs:simpleType>');
 
               var element = doc.documentElement;
-              var xpath = $xpath.create(doc);
-              var resolver = $resolver.create(typeResolvers, xpath);
+              var xpath = XPath.create(doc);
+              var resolver = Resolver.create(typeResolvers, xpath);
 
               var t = typeResolver.resolveElement(element, resolver);
 
@@ -418,8 +418,8 @@ define([
                 ]);
 
               expect(t).to.eql(
-                $restrictedType.create(
-                  type, $facets.create(
+                RestrictedType.create(
+                  type, Facets.create(
                     [ createSpies[0].getCall(0).returnValue,
                       createSpies[1].getCall(0).returnValue
                     ])));
@@ -444,8 +444,8 @@ define([
                 '</xs:simpleType>');
 
               var element = doc.documentElement;
-              var xpath = $xpath.create(doc);
-              var resolver = $resolver.create(typeResolvers, xpath);
+              var xpath = XPath.create(doc);
+              var resolver = Resolver.create(typeResolvers, xpath);
 
               var t = typeResolver.resolveElement(element, resolver);
 
@@ -472,8 +472,8 @@ define([
                 ]);
 
               expect(t).to.eql(
-                $restrictedType.create(
-                  type, $facets.create(
+                RestrictedType.create(
+                  type, Facets.create(
                     [ createSpies[2].getCall(0).returnValue,
                       createSpies[3].getCall(0).returnValue
                     ])));
@@ -499,12 +499,12 @@ define([
                '</xs:simpleType>' +
               '</xs:schema>');
             var element = doc.documentElement.firstChild;
-            var xpath = $xpath.create(doc);
-            var resolver = $resolver.create(typeResolvers, xpath);
+            var xpath = XPath.create(doc);
+            var resolver = Resolver.create(typeResolvers, xpath);
 
             var t = typeResolver.resolveElement(element, resolver);
 
-            expect($listType.prototype).to.be.prototypeOf(t);
+            expect(ListType.prototype).to.be.prototypeOf(t);
             expect(t.getItemType()).to.equal(type);
           });
 
@@ -523,12 +523,12 @@ define([
                  '</xs:simpleType>' +
                 '</xs:schema>');
               var element = doc.documentElement.firstChild;
-              var xpath = $xpath.create(doc);
-              var resolver = $resolver.create(typeResolvers, xpath);
+              var xpath = XPath.create(doc);
+              var resolver = Resolver.create(typeResolvers, xpath);
 
               var t = typeResolver.resolveElement(element, resolver);
 
-              expect($listType.prototype).to.be.prototypeOf(t);
+              expect(ListType.prototype).to.be.prototypeOf(t);
               expect(t.getItemType()).to.equal(type);
             });
 
@@ -540,12 +540,12 @@ define([
                  '<xs:list itemType="y:x"/>' +
                 '</xs:simpleType>');
               var element = doc.documentElement;
-              var xpath = $xpath.create(doc);
-              var resolver = $resolver.create(typeResolvers, xpath);
+              var xpath = XPath.create(doc);
+              var resolver = Resolver.create(typeResolvers, xpath);
 
               var t = typeResolver.resolveElement(element, resolver);
 
-              expect($listType.prototype).to.be.prototypeOf(t);
+              expect(ListType.prototype).to.be.prototypeOf(t);
               expect(t.getItemType()).to.equal(type);
             });
 
@@ -556,8 +556,8 @@ define([
                   ' xmlns:y="urn:y">' +
                  '<xs:list itemType="y:z"/>' +
                 '</xs:simpleType>');
-              var xpath = $xpath.create(doc);
-              var resolver = $resolver.create(typeResolvers, xpath);
+              var xpath = XPath.create(doc);
+              var resolver = Resolver.create(typeResolvers, xpath);
 
               expect(bind(typeResolver, 'resolveElement', doc.documentElement, resolver))
                 .to.throw("cannot resolve type {urn:y}z");

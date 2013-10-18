@@ -10,13 +10,13 @@
 define([
   'shared',
   'sulfur/schema/validator/property'
-], function ($shared, $propertyValidator) {
+], function (shared, PropertyValidator) {
 
   'use strict';
 
-  var expect = $shared.expect;
-  var sinon = $shared.sinon;
-  var returns = $shared.returns;
+  var expect = shared.expect;
+  var sinon = shared.sinon;
+  var returns = shared.returns;
 
   describe('sulfur/schema/validator/property', function () {
 
@@ -24,7 +24,7 @@ define([
 
       it("should return the property name", function () {
         var name = 'foo';
-        var validator = $propertyValidator.create(name);
+        var validator = PropertyValidator.create(name);
         expect(validator.getPropertyName()).to.equal(name);
       });
 
@@ -34,7 +34,7 @@ define([
 
       it("should return an array with arguments to the property", function () {
         var args = [];
-        var validator = $propertyValidator.create('', {}, args);
+        var validator = PropertyValidator.create('', {}, args);
         expect(validator.getArguments()).to.eql(args);
       });
 
@@ -44,7 +44,7 @@ define([
 
       it("should return the subvalidator", function () {
         var subvalidator = {};
-        var validator = $propertyValidator.create('', subvalidator);
+        var validator = PropertyValidator.create('', subvalidator);
         expect(validator.getValidator()).to.equal(subvalidator);
       });
 
@@ -59,7 +59,7 @@ define([
       beforeEach(function () {
         subvalidator = { validate: function () {} };
         argument = {};
-        validator = $propertyValidator.create('foo', subvalidator, [ argument ]);
+        validator = PropertyValidator.create('foo', subvalidator, [ argument ]);
       });
 
       context("when the property is not callable", function () {

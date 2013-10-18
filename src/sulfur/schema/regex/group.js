@@ -8,7 +8,7 @@
 
 define([
   'sulfur/factory'
-], function ($factory) {
+], function (Factory) {
 
   'use strict';
 
@@ -17,7 +17,7 @@ define([
    * group.
    */
 
-  return $factory.derive({
+  return Factory.derive({
     /**
      * Initialize a group with an array of items (any of codepoint, codeunit,
      * range, class, block or category).

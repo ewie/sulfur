@@ -16,14 +16,14 @@ define([
   'sulfur/util',
   'sulfur/util/orderedMap'
 ], function (
-    $factory,
-    $facets,
-    $derivedType,
-    $listType,
-    $primitiveType,
-    $restrictedType,
-    $util,
-    $orderedMap
+    Factory,
+    Facets,
+    DerivedType,
+    ListType,
+    PrimitiveType,
+    RestrictedType,
+    util,
+    OrderedMap
 ) {
 
   'use strict';
@@ -45,14 +45,14 @@ define([
   }
 
   function isAtomicType(x) {
-    return isFactoryOf($primitiveType, x);
+    return isFactoryOf(PrimitiveType, x);
   }
 
   function isDerivedType(x) {
-    return isFactoryOf($derivedType, x);
+    return isFactoryOf(DerivedType, x);
   }
 
-  return $factory.derive({
+  return Factory.derive({
 
     initialize: function (types, facetResolvers) {
       if (types.length === 0) {
@@ -70,7 +70,7 @@ define([
         }
         index.insert(facetResolver);
         return index;
-      }, $orderedMap.create(facetResolverKeyFn));
+      }, OrderedMap.create(facetResolverKeyFn));
 
       var typeIndex = types.reduce(function (index, type) {
         if (!isAtomicType(type) && !isDerivedType(type)) {
@@ -88,7 +88,7 @@ define([
         });
         index.insert(type);
         return index;
-      }, $orderedMap.create(typeKeyFn));
+      }, OrderedMap.create(typeKeyFn));
 
       this._typeIndex = typeIndex;
       this._facetResolverIndex = facetResolverIndex;
@@ -151,7 +151,7 @@ define([
       function resolveFacets(facetResolvers, allowedFacets, valueType,
           restriction, xpath)
       {
-        var part = $util.bipart(allowedFacets.toArray(), function (facet) {
+        var part = util.bipart(allowedFacets.toArray(), function (facet) {
           return facet.getQName().getNamespaceURI() === XSD_NAMESPACE;
         });
 
@@ -163,7 +163,7 @@ define([
         var facets = stdFacets.concat(nonStdFacets);
 
         if (facets.length) {
-          return $facets.create(facets);
+          return Facets.create(facets);
         }
       }
 
@@ -179,7 +179,7 @@ define([
           baseType.getValueType(), restriction, resolver.getXPath());
 
         if (facets) {
-          return $restrictedType.create(baseType, facets);
+          return RestrictedType.create(baseType, facets);
         } else {
           return baseType;
         }
@@ -208,7 +208,7 @@ define([
         } else {
           itemType = resolveInlinedItemType(list, resolver);
         }
-        return $listType.create(itemType);
+        return ListType.create(itemType);
       }
 
       return function (element, resolver) {

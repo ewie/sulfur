@@ -11,18 +11,18 @@ define([
   'sulfur/schema/qname',
   'sulfur/schema/validator/enumeration',
   'sulfur/util'
-], function ($facet, $qname, $enumerationValidator, $util) {
+], function (Facet, QName, EnumerationValidator, util) {
 
   'use strict';
 
-  var $ = $facet.clone({
+  var $ = Facet.clone({
 
-    getQName: $util.returns(
-      $qname.create('enumeration', 'http://www.w3.org/2001/XMLSchema')),
+    getQName: util.returns(
+      QName.create('enumeration', 'http://www.w3.org/2001/XMLSchema')),
 
-    isShadowingLowerRestrictions: $util.returns(true),
+    isShadowingLowerRestrictions: util.returns(true),
 
-    getMutualExclusiveFacets: $util.returns([])
+    getMutualExclusiveFacets: util.returns([])
 
   });
 
@@ -32,7 +32,7 @@ define([
       if (values.length === 0) {
         throw new Error("must provide at least one value");
       }
-      $facet.prototype.initialize.call(this, $util.uniq(values));
+      Facet.prototype.initialize.call(this, util.uniq(values));
     },
 
     isRestrictionOf: function (type) {
@@ -49,7 +49,7 @@ define([
     },
 
     createValidator: function () {
-      return $enumerationValidator.create(this.getValue(), { testMethod: 'eq' });
+      return EnumerationValidator.create(this.getValue(), { testMethod: 'eq' });
     }
 
   });

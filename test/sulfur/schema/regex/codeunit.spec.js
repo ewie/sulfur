@@ -10,12 +10,12 @@
 define([
   'shared',
   'sulfur/schema/regex/codeunit'
-], function ($shared, $codeunit) {
+], function (shared, Codeunit) {
 
   'use strict';
 
-  var expect = $shared.expect;
-  var bind = $shared.bind;
+  var expect = shared.expect;
+  var bind = shared.bind;
 
   describe('sulfur/schema/regex/codeunit', function () {
 
@@ -24,7 +24,7 @@ define([
       context("with a valid codeunit", function () {
 
         it("should initialize the codeunit with the given value", function () {
-          var c = $codeunit.create(0x20);
+          var c = Codeunit.create(0x20);
           expect(c.value).to.equal(0x20);
         });
 
@@ -33,7 +33,7 @@ define([
       context("with an invalid codeunit", function () {
 
         it("should reject the value", function () {
-          expect(bind($codeunit, 'create', 0x10000))
+          expect(bind(Codeunit, 'create', 0x10000))
             .to.throw("codeunit value must be a 16-bit integer");
         });
 

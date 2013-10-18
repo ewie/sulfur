@@ -10,12 +10,12 @@
 define([
   'shared',
   'sulfur/util/xpath'
-], function ($shared, $xpath) {
+], function (shared, XPath) {
 
   'use strict';
 
-  var expect = $shared.expect;
-  var sinon = $shared.sinon;
+  var expect = shared.expect;
+  var sinon = shared.sinon;
 
   describe('sulfur/util/xpath', function () {
 
@@ -38,7 +38,7 @@ define([
 
       it("should evaluate the XPath expression on the document when no context node is given", function () {
         var doc = parse('<foo><bar/></foo>');
-        var xpath = $xpath.create(doc);
+        var xpath = XPath.create(doc);
         var spy = sinon.spy(doc, 'evaluate');
         var result = xpath.evaluate('foo/bar', XPathResult.FIRST_ORDERED_NODE_TYPE);
 
@@ -58,7 +58,7 @@ define([
 
       it("should evaluate the XPath expression on a specific context node when given", function () {
         var doc = parse('<foo><bar/></foo>');
-        var xpath = $xpath.create(doc);
+        var xpath = XPath.create(doc);
         var spy = sinon.spy(doc, 'evaluate');
         var result = xpath.evaluate('bar', XPathResult.FIRST_ORDERED_NODE_TYPE, doc.documentElement);
 
@@ -78,7 +78,7 @@ define([
 
       it("should use the namespaces when given", function () {
         var doc = parse('<foo xmlns:y="urn:bar"><y:bar/></foo>');
-        var xpath = $xpath.create(doc);
+        var xpath = XPath.create(doc);
         var spy = sinon.spy(doc, 'evaluate');
         var result = xpath.evaluate('foo/x:bar', XPathResult.FIRST_ORDERED_NODE_TYPE,
           undefined, { x: 'urn:bar' });
@@ -103,7 +103,7 @@ define([
 
       it("should return an array of nodes matching the XPath expression", function () {
         var doc = parse('<foo><bar/><baz/><bar/></foo>');
-        var xpath = $xpath.create(doc);
+        var xpath = XPath.create(doc);
         var nodes = xpath.all('foo/bar');
         expect(nodes).to.have.length(2);
         expect(nodes[0]).to.equal(doc.documentElement.firstChild);
@@ -112,7 +112,7 @@ define([
 
       it("should use the context node when given", function () {
         var doc = parse('<foo><bar/><baz/><bar/></foo>');
-        var xpath = $xpath.create(doc);
+        var xpath = XPath.create(doc);
         var nodes = xpath.all('bar', doc.documentElement);
         expect(nodes).to.have.length(2);
         expect(nodes[0]).to.equal(doc.documentElement.firstChild);
@@ -121,7 +121,7 @@ define([
 
       it("should use the namespaces when given", function () {
         var doc = parse('<foo xmlns:x="urn:x"><x:bar/><baz/><bar/></foo>');
-        var xpath = $xpath.create(doc);
+        var xpath = XPath.create(doc);
         var nodes = xpath.all('x:bar', doc.documentElement, { x: 'urn:x' });
         expect(nodes).to.have.length(1);
         expect(nodes[0]).to.equal(doc.documentElement.firstChild);
@@ -133,7 +133,7 @@ define([
 
       it("should get the first node matching the XPath expression", function () {
         var doc = parse('<foo><bar/><bar/></foo>');
-        var xpath = $xpath.create(doc);
+        var xpath = XPath.create(doc);
         var spy = sinon.spy(xpath, 'evaluate');
 
         var result = xpath.first('foo/bar');
@@ -152,7 +152,7 @@ define([
 
       it("should use the context node when given", function () {
         var doc = parse('<foo><bar/><bar/></foo>');
-        var xpath = $xpath.create(doc);
+        var xpath = XPath.create(doc);
         var spy = sinon.spy(xpath, 'evaluate');
 
         var result = xpath.first('bar', doc.documentElement);
@@ -172,7 +172,7 @@ define([
 
       it("should use the namespaces when given", function () {
         var doc = parse('<foo xmlns:x="urn:x"><x:bar/><bar/></foo>');
-        var xpath = $xpath.create(doc);
+        var xpath = XPath.create(doc);
         var spy = sinon.spy(xpath, 'evaluate');
 
         var namespaces = { x: 'urn:x' };
@@ -198,7 +198,7 @@ define([
 
       it("should count the nodes matching the XPath expression", function () {
         var doc = parse('<foo><bar/></foo>');
-        var xpath = $xpath.create(doc);
+        var xpath = XPath.create(doc);
         var spy = sinon.spy(xpath, 'evaluate');
 
         var result = xpath.count('foo/bar');
@@ -217,7 +217,7 @@ define([
 
       it("should use the context node when given", function () {
         var doc = parse('<foo><bar/></foo>');
-        var xpath = $xpath.create(doc);
+        var xpath = XPath.create(doc);
         var spy = sinon.spy(xpath, 'evaluate');
 
         var result = xpath.count('bar', doc.documentElement);
@@ -237,7 +237,7 @@ define([
 
       it("should use the namespaces when given", function () {
         var doc = parse('<foo xmlns:x="urn:x"><x:bar/></foo>');
-        var xpath = $xpath.create(doc);
+        var xpath = XPath.create(doc);
         var spy = sinon.spy(xpath, 'evaluate');
 
         var namespaces = { x: 'urn:x' };
@@ -262,7 +262,7 @@ define([
     describe('#contains()', function () {
 
       it("should return true when #count() returns non-zero", function () {
-        var xpath = $xpath.create();
+        var xpath = XPath.create();
         var spy = sinon.stub(xpath, 'count').returns(1);
         var result = xpath.contains('foo/bar');
 
@@ -275,7 +275,7 @@ define([
       });
 
       it("should return false when #count() returns zero", function () {
-        var xpath = $xpath.create();
+        var xpath = XPath.create();
         var spy = sinon.stub(xpath, 'count').returns(0);
         var result = xpath.contains('foo/bar');
 
@@ -289,7 +289,7 @@ define([
 
       it("should use the context node when given", function () {
         var doc = parse('<foo/>');
-        var xpath = $xpath.create(doc);
+        var xpath = XPath.create(doc);
         var spy = sinon.spy(xpath, 'count');
         xpath.contains('foo/bar', doc.documentElement);
 
@@ -303,7 +303,7 @@ define([
 
       it("should use the namespaces when given", function () {
         var doc = parse('<foo/>');
-        var xpath = $xpath.create(doc);
+        var xpath = XPath.create(doc);
         var spy = sinon.spy(xpath, 'count');
 
         var namespaces = { x: 'urn:x' };

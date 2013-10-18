@@ -9,11 +9,11 @@
 define([
   'sulfur/factory',
   'sulfur/schema/mediaType'
-], function ($factory, $mediaType) {
+], function (Factory, MediaType) {
 
   'use strict';
 
-  return $factory.derive({
+  return Factory.derive({
 
     /**
      * @param [Blob] blob
@@ -26,7 +26,7 @@ define([
      * @param [sulfur/schema/mediaType] the file's media type
      */
     getMediaType: function () {
-      return $mediaType.create.apply($mediaType, this._blob.type.split('/'));
+      return MediaType.create.apply(MediaType, this._blob.type.split('/'));
     }
 
   });

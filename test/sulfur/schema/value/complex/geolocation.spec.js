@@ -12,18 +12,18 @@ define([
   'sulfur/schema/value/complex',
   'sulfur/schema/value/complex/geolocation',
   'sulfur/schema/value/simple/double'
-], function ($shared, $complexValue, $geolocationValue, $doubleValue) {
+], function (shared, ComplexValue, GeolocationValue, DoubleValue) {
 
   'use strict';
 
-  var expect = $shared.expect;
-  var sinon = $shared.sinon;
-  var bind = $shared.bind;
+  var expect = shared.expect;
+  var sinon = shared.sinon;
+  var bind = shared.bind;
 
   describe('sulfur/schema/value/complex/geolocation', function () {
 
     it("should be derived from sulfur/schema/value/complex", function () {
-      expect($complexValue).to.be.prototypeOf($geolocationValue);
+      expect(ComplexValue).to.be.prototypeOf(GeolocationValue);
     });
 
     describe('#initialize()', function () {
@@ -39,12 +39,12 @@ define([
       });
 
       it("should call sulfur/schema/value/_complex#initialize()", function () {
-        var spy = sandbox.spy($complexValue.prototype, 'initialize');
+        var spy = sandbox.spy(ComplexValue.prototype, 'initialize');
         var values = [
-          [ 'longitude', $doubleValue.create() ],
-          [ 'latitude', $doubleValue.create() ]
+          [ 'longitude', DoubleValue.create() ],
+          [ 'latitude', DoubleValue.create() ]
         ];
-        var value = $geolocationValue.create(values);
+        var value = GeolocationValue.create(values);
         expect(spy)
           .to.be.calledOn(sinon.match.same(value))
           .to.be.calledWith(sinon.match.same(values));
@@ -56,89 +56,89 @@ define([
           [ 'latitude', {} ],
           [ 'xxx', {} ]
         ];
-        expect(bind($geolocationValue, 'create', values))
+        expect(bind(GeolocationValue, 'create', values))
           .to.throw("expecting only longitude and latitude");
       });
 
       it("should reject a missing longitude value", function () {
-        expect(bind($geolocationValue, 'create', [ [ 'latitude', {} ] ]))
+        expect(bind(GeolocationValue, 'create', [ [ 'latitude', {} ] ]))
           .to.throw("expecting a longitude value");
       });
 
       it("should reject a missing latitude value", function () {
-        expect(bind($geolocationValue, 'create', [ [ 'longitude', {} ] ]))
+        expect(bind(GeolocationValue, 'create', [ [ 'longitude', {} ] ]))
           .to.throw("expecting a latitude value");
       });
 
       it("should reject a longitude with type other than sulfur/schema/double", function () {
         var values = [
           [ 'longitude', {} ],
-          [ 'latitude', $doubleValue.create() ]
+          [ 'latitude', DoubleValue.create() ]
         ];
-        expect(bind($geolocationValue, 'create', values))
+        expect(bind(GeolocationValue, 'create', values))
           .to.throw("longitude must be a sulfur/schema/double");
       });
 
       it("should reject a latitude with type other than sulfur/schema/double", function () {
         var values = [
-          [ 'longitude', $doubleValue.create() ],
+          [ 'longitude', DoubleValue.create() ],
           [ 'latitude', {} ]
         ];
-        expect(bind($geolocationValue, 'create', values))
+        expect(bind(GeolocationValue, 'create', values))
           .to.throw("latitude must be a sulfur/schema/double");
       });
 
       it("should reject a longitude with NaN", function () {
         var values = [
-          [ 'longitude', $doubleValue.create(Number.NaN) ],
-          [ 'latitude', $doubleValue.create() ]
+          [ 'longitude', DoubleValue.create(Number.NaN) ],
+          [ 'latitude', DoubleValue.create() ]
         ];
-        expect(bind($geolocationValue, 'create', values))
+        expect(bind(GeolocationValue, 'create', values))
           .to.throw("longitude must not be NaN");
       });
 
       it("should reject a latitude with NaN", function () {
         var values = [
-          [ 'longitude', $doubleValue.create() ],
-          [ 'latitude', $doubleValue.create(Number.NaN) ]
+          [ 'longitude', DoubleValue.create() ],
+          [ 'latitude', DoubleValue.create(Number.NaN) ]
         ];
-        expect(bind($geolocationValue, 'create', values))
+        expect(bind(GeolocationValue, 'create', values))
           .to.throw("latitude must not be NaN");
       });
 
       it("should reject a longitude less than -180", function () {
         var values = [
-          [ 'longitude', $doubleValue.create(-181) ],
-          [ 'latitude', $doubleValue.create() ]
+          [ 'longitude', DoubleValue.create(-181) ],
+          [ 'latitude', DoubleValue.create() ]
         ];
-        expect(bind($geolocationValue, 'create', values))
+        expect(bind(GeolocationValue, 'create', values))
           .to.throw("longitude must not be less than -180");
       });
 
       it("should reject a longitude greater than 180", function () {
         var values = [
-          [ 'longitude', $doubleValue.create(181) ],
-          [ 'latitude', $doubleValue.create() ]
+          [ 'longitude', DoubleValue.create(181) ],
+          [ 'latitude', DoubleValue.create() ]
         ];
-        expect(bind($geolocationValue, 'create', values))
+        expect(bind(GeolocationValue, 'create', values))
           .to.throw("longitude must not be greater than 180");
       });
 
       it("should reject a latitude less than -90", function () {
         var values = [
-          [ 'longitude', $doubleValue.create() ],
-          [ 'latitude', $doubleValue.create(-91) ]
+          [ 'longitude', DoubleValue.create() ],
+          [ 'latitude', DoubleValue.create(-91) ]
         ];
-        expect(bind($geolocationValue, 'create', values))
+        expect(bind(GeolocationValue, 'create', values))
           .to.throw("latitude must not be less than -90");
       });
 
       it("should reject a latitude greater than 90", function () {
         var values = [
-          [ 'longitude', $doubleValue.create() ],
-          [ 'latitude', $doubleValue.create(91) ]
+          [ 'longitude', DoubleValue.create() ],
+          [ 'latitude', DoubleValue.create(91) ]
         ];
-        expect(bind($geolocationValue, 'create', values))
+        expect(bind(GeolocationValue, 'create', values))
           .to.throw("latitude must not be greater than 90");
       });
 

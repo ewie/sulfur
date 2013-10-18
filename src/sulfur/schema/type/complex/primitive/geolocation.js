@@ -20,37 +20,37 @@ define([
   'sulfur/schema/value/complex/geolocation',
   'sulfur/schema/value/simple/double'
 ], function (
-    $sulfur,
-    $element,
-    $elements,
-    $maxInclusiveFacet,
-    $minInclusiveFacet,
-    $facets,
-    $qname,
-    $primitiveType,
-    $doubleType,
-    $restrictedType,
-    $geolocationValue,
-    $doubleValue
+    sulfur,
+    Element,
+    Elements,
+    MaxInclusiveFacet,
+    MinInclusiveFacet,
+    Facets,
+    QName,
+    PrimitiveType,
+    DoubleType,
+    RestrictedType,
+    GeolocationValue,
+    DoubleValue
 ) {
 
   'use strict';
 
-  return $primitiveType.create(
-    { qname: $qname.create('geolocation', $sulfur.getNamespaceURI()),
-      valueType: $geolocationValue,
-      elements: $elements.create(
-        [ $element.create('longitude',
-            $restrictedType.create($doubleType,
-              $facets.create(
-                [ $minInclusiveFacet.create($doubleValue.create(-180)),
-                  $maxInclusiveFacet.create($doubleValue.create(180))
+  return PrimitiveType.create(
+    { qname: QName.create('geolocation', sulfur.getNamespaceURI()),
+      valueType: GeolocationValue,
+      elements: Elements.create(
+        [ Element.create('longitude',
+            RestrictedType.create(DoubleType,
+              Facets.create(
+                [ MinInclusiveFacet.create(DoubleValue.create(-180)),
+                  MaxInclusiveFacet.create(DoubleValue.create(180))
                 ]))),
-          $element.create('latitude',
-            $restrictedType.create($doubleType,
-              $facets.create(
-                [ $minInclusiveFacet.create($doubleValue.create(-90)),
-                  $maxInclusiveFacet.create($doubleValue.create(90))
+          Element.create('latitude',
+            RestrictedType.create(DoubleType,
+              Facets.create(
+                [ MinInclusiveFacet.create(DoubleValue.create(-90)),
+                  MaxInclusiveFacet.create(DoubleValue.create(90))
                 ])))
         ])
     });

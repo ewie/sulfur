@@ -23,42 +23,42 @@ define([
   'sulfur/schema/regex/range',
   'sulfur/unicode'
 ], function (
-    $shared,
-    $any,
-    $block,
-    $branch,
-    $category,
-    $codepoint,
-    $class,
-    $group,
-    $parser,
-    $pattern,
-    $piece,
-    $quant,
-    $range,
-    $unicode
+    shared,
+    Any,
+    Block,
+    Branch,
+    Category,
+    Codepoint,
+    Class,
+    Group,
+    Parser,
+    Pattern,
+    Piece,
+    Quant,
+    Range,
+    Unicode
 ) {
 
   'use strict';
 
-  var expect = $shared.expect;
-  var bind = $shared.bind;
+  var expect = shared.expect;
+  var bind = shared.bind;
 
   describe('sulfur/schema/regex/parser', function () {
 
     var parser;
 
     beforeEach(function () {
-      parser = $parser.create();
+      parser = Parser.create();
     });
 
     describe('#parse()', function () {
 
       it("should parse wildcard", function () {
         var p = parser.parse('.');
-        var x = $pattern.create(
-          [$branch.create(
-            [$piece.create($any.create())
+        var x = Pattern.create(
+          [Branch.create(
+            [Piece.create(Any.create())
             ])
           ]);
         expect(p).to.eql(x);
@@ -68,10 +68,10 @@ define([
 
         it("should consume valid surrogate pairs", function () {
           var p = parser.parse('\ud83d\udca9');
-          var x = $pattern.create(
-            [$branch.create(
-              [$piece.create(
-                $codepoint.create(0x1f4a9))
+          var x = Pattern.create(
+            [Branch.create(
+              [Piece.create(
+                Codepoint.create(0x1f4a9))
               ])
             ]);
           expect(p).to.eql(x);
@@ -97,10 +97,10 @@ define([
 
         it("should handle hexadecimal character references", function () {
           var p = parser.parse('&#x1F4A9;');
-          var x = $pattern.create(
-            [$branch.create(
-              [$piece.create(
-                $codepoint.create(0x1F4A9))
+          var x = Pattern.create(
+            [Branch.create(
+              [Piece.create(
+                Codepoint.create(0x1F4A9))
               ])
             ]);
           expect(p).to.eql(x);
@@ -108,10 +108,10 @@ define([
 
         it("should handle decimal character references", function () {
           var p = parser.parse('&#128169;');
-          var x = $pattern.create(
-            [$branch.create(
-              [$piece.create(
-                $codepoint.create(128169))
+          var x = Pattern.create(
+            [Branch.create(
+              [Piece.create(
+                Codepoint.create(128169))
               ])
             ]);
           expect(p).to.eql(x);
@@ -128,10 +128,10 @@ define([
             var ref = pair[0];
             var chr = pair[1];
             var p = parser.parse(ref);
-            var x = $pattern.create(
-              [$branch.create(
-                [$piece.create(
-                  $codepoint.create(chr))
+            var x = Pattern.create(
+              [Branch.create(
+                [Piece.create(
+                  Codepoint.create(chr))
                 ])
               ]);
             expect(p).to.eql(x);
@@ -165,12 +165,12 @@ define([
 
         it("should parse alternations", function () {
           var p = parser.parse('a|b');
-          var x = $pattern.create(
-            [$branch.create(
-              [$piece.create($codepoint.create('a'))
+          var x = Pattern.create(
+            [Branch.create(
+              [Piece.create(Codepoint.create('a'))
               ]),
-             $branch.create(
-              [$piece.create($codepoint.create('b'))
+             Branch.create(
+              [Piece.create(Codepoint.create('b'))
               ])
             ]);
           expect(p).to.eql(x);
@@ -178,11 +178,11 @@ define([
 
         it("should parse empty branches", function () {
           var p = parser.parse('a|');
-          var x = $pattern.create(
-            [$branch.create(
-              [$piece.create($codepoint.create('a'))
+          var x = Pattern.create(
+            [Branch.create(
+              [Piece.create(Codepoint.create('a'))
               ]),
-             $branch.create()
+             Branch.create()
             ]);
           expect(p).to.eql(x);
         });
@@ -193,11 +193,11 @@ define([
 
         it("should parse + as {1,}", function () {
           var p = parser.parse('a+');
-          var x = $pattern.create(
-            [$branch.create(
-              [$piece.create(
-                $codepoint.create('a'),
-                $quant.create(1, Number.POSITIVE_INFINITY))
+          var x = Pattern.create(
+            [Branch.create(
+              [Piece.create(
+                Codepoint.create('a'),
+                Quant.create(1, Number.POSITIVE_INFINITY))
               ])
             ]);
           expect(p).to.eql(x);
@@ -205,11 +205,11 @@ define([
 
         it("should parse * as {0,}", function () {
           var p = parser.parse('a*');
-          var x = $pattern.create(
-            [$branch.create(
-              [$piece.create(
-                $codepoint.create('a'),
-                $quant.create(0, Number.POSITIVE_INFINITY))
+          var x = Pattern.create(
+            [Branch.create(
+              [Piece.create(
+                Codepoint.create('a'),
+                Quant.create(0, Number.POSITIVE_INFINITY))
               ])
             ]);
           expect(p).to.eql(x);
@@ -217,11 +217,11 @@ define([
 
         it("should parse ? as {0,1}", function () {
           var p = parser.parse('a?');
-          var x = $pattern.create(
-            [$branch.create(
-              [$piece.create(
-                $codepoint.create('a'),
-                $quant.create(0, 1))
+          var x = Pattern.create(
+            [Branch.create(
+              [Piece.create(
+                Codepoint.create('a'),
+                Quant.create(0, 1))
               ])
             ]);
           expect(p).to.eql(x);
@@ -229,11 +229,11 @@ define([
 
         it("should parse {min,max}", function () {
           var p = parser.parse('a{1,3}');
-          var x = $pattern.create(
-            [$branch.create(
-              [$piece.create(
-                $codepoint.create('a'),
-                $quant.create(1, 3))
+          var x = Pattern.create(
+            [Branch.create(
+              [Piece.create(
+                Codepoint.create('a'),
+                Quant.create(1, 3))
               ])
             ]);
           expect(p).to.eql(x);
@@ -241,11 +241,11 @@ define([
 
         it("should parse {n}", function () {
           var p = parser.parse('a{2}');
-          var x = $pattern.create(
-            [$branch.create(
-              [$piece.create(
-                $codepoint.create('a'),
-                $quant.create(2))
+          var x = Pattern.create(
+            [Branch.create(
+              [Piece.create(
+                Codepoint.create('a'),
+                Quant.create(2))
               ])
             ]);
           expect(p).to.eql(x);
@@ -253,11 +253,11 @@ define([
 
         it("should parse {min,}", function () {
           var p = parser.parse('a{2,}');
-          var x = $pattern.create(
-            [$branch.create(
-              [$piece.create(
-                $codepoint.create('a'),
-                $quant.create(2, Number.POSITIVE_INFINITY))
+          var x = Pattern.create(
+            [Branch.create(
+              [Piece.create(
+                Codepoint.create('a'),
+                Quant.create(2, Number.POSITIVE_INFINITY))
               ])
             ]);
           expect(p).to.eql(x);
@@ -280,9 +280,9 @@ define([
             var esc = pair[0];
             var chr = pair[1];
             var p = parser.parse(esc);
-            var x = $pattern.create(
-              [$branch.create(
-                [$piece.create($codepoint.create(chr))
+            var x = Pattern.create(
+              [Branch.create(
+                [Piece.create(Codepoint.create(chr))
                 ])
               ]);
             expect(p).to.eql(x);
@@ -295,14 +295,14 @@ define([
 
         it("should parse a pattern in parenthesis", function () {
           var p = parser.parse('(a)');
-          var sub = $pattern.create(
-            [$branch.create(
-              [$piece.create($codepoint.create('a'))
+          var sub = Pattern.create(
+            [Branch.create(
+              [Piece.create(Codepoint.create('a'))
               ])
             ]);
-          var x = $pattern.create(
-            [$branch.create(
-              [$piece.create(sub)
+          var x = Pattern.create(
+            [Branch.create(
+              [Piece.create(sub)
               ])
             ]);
           expect(p).to.eql(x);
@@ -319,25 +319,25 @@ define([
 
         it("should accept valid multi character escapes", function () {
           [
-            ['\\c', $class.CHAR, true],
-            ['\\C', $class.CHAR, false],
-            ['\\d', $class.DIGIT, true],
-            ['\\D', $class.DIGIT, false],
-            ['\\i', $class.INITIAL, true],
-            ['\\I', $class.INITIAL, false],
-            ['\\s', $class.SPACE, true],
-            ['\\S', $class.SPACE, false],
-            ['\\w', $class.WORD, true],
-            ['\\W', $class.WORD, false]
+            ['\\c', Class.CHAR, true],
+            ['\\C', Class.CHAR, false],
+            ['\\d', Class.DIGIT, true],
+            ['\\D', Class.DIGIT, false],
+            ['\\i', Class.INITIAL, true],
+            ['\\I', Class.INITIAL, false],
+            ['\\s', Class.SPACE, true],
+            ['\\S', Class.SPACE, false],
+            ['\\w', Class.WORD, true],
+            ['\\W', Class.WORD, false]
           ].forEach(function (tuple) {
             var esc = tuple[0];
             var cls = tuple[1];
             var pos = tuple[2];
             var p = parser.parse(esc);
-            var x = $pattern.create(
-              [$branch.create(
-                [$piece.create(
-                  $class.create(cls, pos))
+            var x = Pattern.create(
+              [Branch.create(
+                [Piece.create(
+                  Class.create(cls, pos))
                 ])
               ]);
             expect(p).to.eql(x);
@@ -364,9 +364,9 @@ define([
           it("should accept supported Unicode categories", function () {
             SUPPORTED_UNICODE_CATEGORIES.forEach(function (name) {
               var p = parser.parse('\\p{' + name + '}');
-              var x = $pattern.create(
-                [$branch.create(
-                  [$piece.create($category.create(name))
+              var x = Pattern.create(
+                [Branch.create(
+                  [Piece.create(Category.create(name))
                   ])
                 ]);
               expect(p).to.eql(x);
@@ -376,9 +376,9 @@ define([
           it("should accept supported Unicode blocks", function () {
             SUPPORTED_UNICODE_BLOCKS.forEach(function (name) {
               var p = parser.parse('\\p{Is' + name + '}');
-              var x = $pattern.create(
-                [$branch.create(
-                  [$piece.create($block.create(name))
+              var x = Pattern.create(
+                [Branch.create(
+                  [Piece.create(Block.create(name))
                   ])
                 ]);
               expect(p).to.eql(x);
@@ -411,9 +411,9 @@ define([
 
           it("should accept the negated form \\P", function () {
             var p = parser.parse('\\P{Ll}');
-            var x = $pattern.create(
-              [$branch.create(
-                [$piece.create($category.create('Ll', false))
+            var x = Pattern.create(
+              [Branch.create(
+                [Piece.create(Category.create('Ll', false))
                 ])
               ]);
             expect(p).to.eql(x);
@@ -435,11 +435,11 @@ define([
 
           it("should parse a positive group", function () {
             var p = parser.parse('[a]');
-            var x = $pattern.create(
-              [$branch.create(
-                [$piece.create(
-                  $group.create(
-                   [$codepoint.create('a')
+            var x = Pattern.create(
+              [Branch.create(
+                [Piece.create(
+                  Group.create(
+                   [Codepoint.create('a')
                    ]))
                 ])
               ]);
@@ -448,11 +448,11 @@ define([
 
           it("should parse a negative group", function () {
             var p = parser.parse('[^a]');
-            var x = $pattern.create(
-              [$branch.create(
-                [$piece.create(
-                  $group.create(
-                   [$codepoint.create('a')
+            var x = Pattern.create(
+              [Branch.create(
+                [Piece.create(
+                  Group.create(
+                   [Codepoint.create('a')
                    ], { positive: false }))
                 ])
               ]);
@@ -461,11 +461,11 @@ define([
 
           it("should parse '^' as valid character as first range of a negative group", function () {
             var p = parser.parse('[^^]');
-            var x = $pattern.create(
-              [$branch.create(
-                [$piece.create(
-                  $group.create(
-                   [$codepoint.create('^')
+            var x = Pattern.create(
+              [Branch.create(
+                [Piece.create(
+                  Group.create(
+                   [Codepoint.create('^')
                    ], { positive: false }))
                 ])
               ]);
@@ -474,12 +474,12 @@ define([
 
           it("should parse '^' as valid range anywhere within a group", function () {
             var p = parser.parse('[a^]');
-            var x = $pattern.create([
-              $branch.create([
-                $piece.create(
-                  $group.create(
-                    [$codepoint.create('a'),
-                     $codepoint.create('^')
+            var x = Pattern.create([
+              Branch.create([
+                Piece.create(
+                  Group.create(
+                    [Codepoint.create('a'),
+                     Codepoint.create('^')
                     ])
                 )
               ])
@@ -490,11 +490,11 @@ define([
           '{}().+*?'.split('').forEach(function (chr) {
             it("should parse '" + chr + "' as valid character", function () {
               var p = parser.parse('[' + chr + ']');
-              var x = $pattern.create(
-                [$branch.create(
-                  [$piece.create(
-                    $group.create(
-                     [$codepoint.create(chr)
+              var x = Pattern.create(
+                [Branch.create(
+                  [Piece.create(
+                    Group.create(
+                     [Codepoint.create(chr)
                      ]))
                   ])
                 ]);
@@ -504,12 +504,12 @@ define([
 
           it("should allow U+002D (HYPHEN MINUS) as first item", function () {
             var p = parser.parse('[-a]');
-            var x = $pattern.create(
-              [$branch.create(
-                [$piece.create(
-                  $group.create(
-                   [$codepoint.create('-'),
-                    $codepoint.create('a')
+            var x = Pattern.create(
+              [Branch.create(
+                [Piece.create(
+                  Group.create(
+                   [Codepoint.create('-'),
+                    Codepoint.create('a')
                    ]))
                 ])
               ]);
@@ -518,12 +518,12 @@ define([
 
           it("should allow U+002D (HYPHEN MINUS) as last item", function () {
             var p = parser.parse('[a-]');
-            var x = $pattern.create(
-              [$branch.create(
-                [$piece.create(
-                  $group.create(
-                   [$codepoint.create('a'),
-                    $codepoint.create('-')
+            var x = Pattern.create(
+              [Branch.create(
+                [Piece.create(
+                  Group.create(
+                   [Codepoint.create('a'),
+                    Codepoint.create('-')
                    ]))
                 ])
               ]);
@@ -534,26 +534,26 @@ define([
 
             it("should accept valid multi character escapes", function () {
               [
-                ['\\c', $class.CHAR, true],
-                ['\\C', $class.CHAR, false],
-                ['\\d', $class.DIGIT, true],
-                ['\\D', $class.DIGIT, false],
-                ['\\i', $class.INITIAL, true],
-                ['\\I', $class.INITIAL, false],
-                ['\\s', $class.SPACE, true],
-                ['\\S', $class.SPACE, false],
-                ['\\w', $class.WORD, true],
-                ['\\W', $class.WORD, false]
+                ['\\c', Class.CHAR, true],
+                ['\\C', Class.CHAR, false],
+                ['\\d', Class.DIGIT, true],
+                ['\\D', Class.DIGIT, false],
+                ['\\i', Class.INITIAL, true],
+                ['\\I', Class.INITIAL, false],
+                ['\\s', Class.SPACE, true],
+                ['\\S', Class.SPACE, false],
+                ['\\w', Class.WORD, true],
+                ['\\W', Class.WORD, false]
               ].forEach(function (tuple) {
                 var esc = tuple[0];
                 var cls = tuple[1];
                 var pos = tuple[2];
                 var p = parser.parse('[' + esc + ']');
-                var x = $pattern.create(
-                  [$branch.create(
-                    [$piece.create(
-                      $group.create(
-                       [$class.create(cls, pos)
+                var x = Pattern.create(
+                  [Branch.create(
+                    [Piece.create(
+                      Group.create(
+                       [Class.create(cls, pos)
                        ]))
                     ])
                   ]);
@@ -581,11 +581,11 @@ define([
               it("should accept supported Unicode categories", function () {
                 SUPPORTED_UNICODE_CATEGORIES.forEach(function (name) {
                   var p = parser.parse('[\\p{' + name + '}]');
-                  var x = $pattern.create(
-                    [$branch.create(
-                      [$piece.create(
-                        $group.create(
-                         [$category.create(name)
+                  var x = Pattern.create(
+                    [Branch.create(
+                      [Piece.create(
+                        Group.create(
+                         [Category.create(name)
                          ]))
                       ])
                     ]);
@@ -596,11 +596,11 @@ define([
               it("should accept supported Unicode blocks", function () {
                 SUPPORTED_UNICODE_BLOCKS.forEach(function (name) {
                   var p = parser.parse('[\\p{Is' + name + '}]');
-                  var x = $pattern.create(
-                    [$branch.create(
-                      [$piece.create(
-                        $group.create(
-                         [$block.create(name)
+                  var x = Pattern.create(
+                    [Branch.create(
+                      [Piece.create(
+                        Group.create(
+                         [Block.create(name)
                          ]))
                       ])
                     ]);
@@ -634,11 +634,11 @@ define([
 
               it("should accept the negated form \\P", function () {
                 var p = parser.parse('[\\P{Ll}]');
-                var x = $pattern.create(
-                  [$branch.create(
-                    [$piece.create(
-                      $group.create(
-                       [$category.create('Ll', false)
+                var x = Pattern.create(
+                  [Branch.create(
+                    [Piece.create(
+                      Group.create(
+                       [Category.create('Ll', false)
                        ]))
                     ])
                   ]);
@@ -653,13 +653,13 @@ define([
 
             it("should parse ranges", function () {
               var p = parser.parse('[a-b]');
-              var x = $pattern.create(
-                [$branch.create(
-                  [$piece.create(
-                    $group.create(
-                     [$range.create(
-                       $codepoint.create('a'),
-                       $codepoint.create('b'))
+              var x = Pattern.create(
+                [Branch.create(
+                  [Piece.create(
+                    Group.create(
+                     [Range.create(
+                       Codepoint.create('a'),
+                       Codepoint.create('b'))
                      ]))
                   ])
                 ]);
@@ -671,13 +671,13 @@ define([
                 var esc = pair[0];
                 var chr = pair[1];
                 var p = parser.parse('[' + esc + '-' + esc + ']');
-                var x = $pattern.create(
-                  [$branch.create(
-                    [$piece.create(
-                      $group.create(
-                       [$range.create(
-                         $codepoint.create(chr),
-                         $codepoint.create(chr))
+                var x = Pattern.create(
+                  [Branch.create(
+                    [Piece.create(
+                      Group.create(
+                       [Range.create(
+                         Codepoint.create(chr),
+                         Codepoint.create(chr))
                        ]))
                     ])
                   ]);
@@ -701,14 +701,14 @@ define([
 
             it("should parse subtractions", function () {
               var p = parser.parse('[a-[b]]');
-              var x = $pattern.create(
-                [$branch.create(
-                  [$piece.create(
-                    $group.create(
-                     [$codepoint.create('a')
+              var x = Pattern.create(
+                [Branch.create(
+                  [Piece.create(
+                    Group.create(
+                     [Codepoint.create('a')
                      ], { subtract:
-                      $group.create(
-                       [$codepoint.create('b')
+                      Group.create(
+                       [Codepoint.create('b')
                        ])
                      }))
                   ])
@@ -718,15 +718,15 @@ define([
 
             it("should handle a trailing dash and subtractions", function () {
               var p = parser.parse('[a--[b]]');
-              var x = $pattern.create(
-                [$branch.create(
-                  [$piece.create(
-                    $group.create(
-                     [$codepoint.create('a'),
-                      $codepoint.create('-')
+              var x = Pattern.create(
+                [Branch.create(
+                  [Piece.create(
+                    Group.create(
+                     [Codepoint.create('a'),
+                      Codepoint.create('-')
                      ], { subtract:
-                      $group.create(
-                       [$codepoint.create('b')
+                      Group.create(
+                       [Codepoint.create('b')
                        ])
                      }))
                   ])
@@ -760,14 +760,14 @@ define([
     'LowSurrogates'
   ];
 
-  var SUPPORTED_UNICODE_CATEGORIES = $unicode.getCategoryNames().reduce(function (categories, name) {
+  var SUPPORTED_UNICODE_CATEGORIES = Unicode.getCategoryNames().reduce(function (categories, name) {
     if (UNSUPPORTED_UNICODE_CATEGORIES.indexOf(name) === -1) {
       categories.push(name);
     }
     return categories;
   }, []);
 
-  var SUPPORTED_UNICODE_BLOCKS = $unicode.getBlockNames().reduce(function (blocks, name) {
+  var SUPPORTED_UNICODE_BLOCKS = Unicode.getBlockNames().reduce(function (blocks, name) {
     if (UNSUPPORTED_UNICODE_BLOCKS.indexOf(name) === -1) {
       blocks.push(name);
     }

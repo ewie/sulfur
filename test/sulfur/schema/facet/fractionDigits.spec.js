@@ -18,34 +18,34 @@ define([
   'sulfur/schema/validator/maximum',
   'sulfur/schema/validator/property'
 ], function (
-    $shared,
-    $facet,
-    $fractionDigitsFacet,
-    $facets,
-    $qname,
-    $primitiveType,
-    $restrictedType,
-    $maximumValidator,
-    $propertyValidator
+    shared,
+    Facet,
+    FractionDigitsFacet,
+    Facets,
+    QName,
+    PrimitiveType,
+    RestrictedType,
+    MaximumValidator,
+    PropertyValidator
 ) {
 
   'use strict';
 
-  var expect = $shared.expect;
-  var sinon = $shared.sinon;
-  var bind = $shared.bind;
+  var expect = shared.expect;
+  var sinon = shared.sinon;
+  var bind = shared.bind;
 
   describe('sulfur/schema/facet/fractionDigits', function () {
 
     it("should be derived from sulfur/schema/facet", function () {
-      expect($facet).to.be.prototypeOf($fractionDigitsFacet);
+      expect(Facet).to.be.prototypeOf(FractionDigitsFacet);
     });
 
     describe('.getQName()', function () {
 
       it("should return {http://www.w3.org/2001/XMLSchema}fractionDigits", function () {
-        expect($fractionDigitsFacet.getQName())
-          .to.eql($qname.create('fractionDigits',
+        expect(FractionDigitsFacet.getQName())
+          .to.eql(QName.create('fractionDigits',
             'http://www.w3.org/2001/XMLSchema'));
       });
 
@@ -54,7 +54,7 @@ define([
     describe('.isShadowingLowerRestrictions()', function () {
 
       it("should return true", function () {
-        expect($fractionDigitsFacet.isShadowingLowerRestrictions()).to.be.true;
+        expect(FractionDigitsFacet.isShadowingLowerRestrictions()).to.be.true;
       });
 
     });
@@ -62,7 +62,7 @@ define([
     describe('.getMutualExclusiveFacets()', function () {
 
       it("should return an empty array", function () {
-        expect($fractionDigitsFacet.getMutualExclusiveFacets()).to.eql([]);
+        expect(FractionDigitsFacet.getMutualExclusiveFacets()).to.eql([]);
       });
 
     });
@@ -80,33 +80,33 @@ define([
       });
 
       it("should call sulfur/schema/facet#initialize()", function () {
-        var spy = sandbox.spy($facet.prototype, 'initialize');
-        var facet = $fractionDigitsFacet.create(0);
+        var spy = sandbox.spy(Facet.prototype, 'initialize');
+        var facet = FractionDigitsFacet.create(0);
         expect(spy).to.be.calledOn(facet).to.be.calledWith(0);
       });
 
       it("should reject a non-number value", function () {
-        expect(bind($fractionDigitsFacet, 'create', '123'))
+        expect(bind(FractionDigitsFacet, 'create', '123'))
           .to.throw("expecting a non-negative integer less than 2^53");
       });
 
       it("should reject a non-integer value", function () {
-        expect(bind($fractionDigitsFacet, 'create', 1.2))
+        expect(bind(FractionDigitsFacet, 'create', 1.2))
           .to.throw("expecting a non-negative integer less than 2^53");
       });
 
       it("should reject a value equal to 2^53", function () {
-        expect(bind($fractionDigitsFacet, 'create', Math.pow(2, 53)))
+        expect(bind(FractionDigitsFacet, 'create', Math.pow(2, 53)))
           .to.throw("expecting a non-negative integer less than 2^53");
       });
 
       it("should reject a value greater than 2^53", function () {
-        expect(bind($fractionDigitsFacet, 'create', Math.pow(2, 54)))
+        expect(bind(FractionDigitsFacet, 'create', Math.pow(2, 54)))
           .to.throw("expecting a non-negative integer less than 2^53");
       });
 
       it("should reject a negative value", function () {
-        expect(bind($fractionDigitsFacet, 'create', -1))
+        expect(bind(FractionDigitsFacet, 'create', -1))
           .to.throw("expecting a non-negative integer less than 2^53");
       });
 
@@ -115,8 +115,8 @@ define([
     describe('#isRestrictionOf()', function () {
 
       it("should return true when the type does not define facet 'fractionDigits'", function () {
-        var type = $primitiveType.create({});
-        var facet = $fractionDigitsFacet.create(0);
+        var type = PrimitiveType.create({});
+        var facet = FractionDigitsFacet.create(0);
         expect(facet.isRestrictionOf(type)).to.be.true;
       });
 
@@ -125,25 +125,25 @@ define([
         var type;
 
         beforeEach(function () {
-          var base = $primitiveType.create({
-            facets: $facets.create([ $fractionDigitsFacet ])
+          var base = PrimitiveType.create({
+            facets: Facets.create([ FractionDigitsFacet ])
           });
-          type = $restrictedType.create(base,
-            $facets.create([ $fractionDigitsFacet.create(1) ]));
+          type = RestrictedType.create(base,
+            Facets.create([ FractionDigitsFacet.create(1) ]));
         });
 
         it("should return true when the value is less than the type facet's value", function () {
-          var facet = $fractionDigitsFacet.create(0);
+          var facet = FractionDigitsFacet.create(0);
           expect(facet.isRestrictionOf(type)).to.be.true;
         });
 
         it("should return true when the value is equal to the type facet's value", function () {
-          var facet = $fractionDigitsFacet.create(1);
+          var facet = FractionDigitsFacet.create(1);
           expect(facet.isRestrictionOf(type)).to.be.true;
         });
 
         it("should return false when the value is greater than the type facet's value", function () {
-          var facet = $fractionDigitsFacet.create(2);
+          var facet = FractionDigitsFacet.create(2);
           expect(facet.isRestrictionOf(type)).to.be.false;
         });
 
@@ -154,7 +154,7 @@ define([
     describe('#validate()', function () {
 
       it("should return true", function () {
-        var facet = $fractionDigitsFacet.create(0);
+        var facet = FractionDigitsFacet.create(0);
         expect(facet.validate()).to.be.true;
       });
 
@@ -163,12 +163,12 @@ define([
     describe('#createValidator()', function () {
 
       it("should return a validator/property with 'countFractionDigits' and a validator/maximum", function () {
-        var facet = $fractionDigitsFacet.create(0);
+        var facet = FractionDigitsFacet.create(0);
         var v = facet.createValidator();
         expect(v).to.eql(
-          $propertyValidator.create(
+          PropertyValidator.create(
             'countFractionDigits',
-            $maximumValidator.create(0)
+            MaximumValidator.create(0)
           )
         );
       });

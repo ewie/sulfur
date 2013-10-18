@@ -14,20 +14,20 @@ define([
   'sulfur/schema/type/simple/primitive',
   'sulfur/schema/value/simple/fileRef'
 ], function (
-    $sulfur,
-    $mediaTypeFacet,
-    $facets,
-    $qname,
-    $primitiveType,
-    $fileRefValue
+    sulfur,
+    MediaTypeFacet,
+    Facets,
+    QName,
+    PrimitiveType,
+    FileRefValue
 ) {
 
   'use strict';
 
-  return $primitiveType.create({
-    qname: $qname.create('fileRef', $sulfur.getNamespaceURI()),
-    valueType: $fileRefValue,
-    facets: $facets.create([ $mediaTypeFacet ])
+  return PrimitiveType.create({
+    qname: QName.create('fileRef', sulfur.getNamespaceURI()),
+    valueType: FileRefValue,
+    facets: Facets.create([ MediaTypeFacet ])
   });
 
 });

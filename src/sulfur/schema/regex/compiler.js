@@ -12,7 +12,7 @@ define([
   'sulfur/schema/regex/group',
   'sulfur/schema/regex/range',
   'sulfur/schema/regex/pattern'
-], function ($factory, $codeunit, $group, $range, $pattern) {
+], function (Factory, Codeunit, Group, Range, Pattern) {
 
   'use strict';
 
@@ -42,11 +42,11 @@ define([
 
   function compilePiece(piece) {
     var atom;
-    if ($codeunit.prototype.isPrototypeOf(piece.atom)) {
+    if (Codeunit.prototype.isPrototypeOf(piece.atom)) {
       atom = compileCodeunit(piece.atom);
-    } else if ($group.prototype.isPrototypeOf(piece.atom)) {
+    } else if (Group.prototype.isPrototypeOf(piece.atom)) {
       atom = compileGroup(piece.atom);
-    } else if ($pattern.prototype.isPrototypeOf(piece.atom)) {
+    } else if (Pattern.prototype.isPrototypeOf(piece.atom)) {
       atom = compilePattern(piece.atom, piece.quant);
     } else {
       throw new Error("not implemented");
@@ -111,9 +111,9 @@ define([
 
   function compileGroup(group) {
     var s = group.items.reduce(function (s, item) {
-      if ($codeunit.prototype.isPrototypeOf(item)) {
+      if (Codeunit.prototype.isPrototypeOf(item)) {
         s += compileCodeunit(item);
-      } else if ($range.prototype.isPrototypeOf(item)) {
+      } else if (Range.prototype.isPrototypeOf(item)) {
         s += compileCodeunit(item.start);
         s += '-';
         s += compileCodeunit(item.end);
@@ -124,7 +124,7 @@ define([
     return '[' + neg + s + ']';
   }
 
-  return $factory.derive({
+  return Factory.derive({
     /**
      * Compile a tree given by its root pattern.
      *

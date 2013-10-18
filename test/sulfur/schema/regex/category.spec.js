@@ -11,12 +11,12 @@ define([
   'shared',
   'sulfur/schema/regex/category',
   'sulfur/unicode'
-], function ($shared, $category, $unicode) {
+], function (shared, Category, Unicode) {
 
   'use strict';
 
-  var expect = $shared.expect;
-  var bind = $shared.bind;
+  var expect = shared.expect;
+  var bind = shared.bind;
 
   describe('sulfur/schema/regex/category', function () {
 
@@ -25,7 +25,7 @@ define([
       context("with an unknown category name", function () {
 
         it("should reject the category name", function () {
-          expect(bind($category, 'create', 'xx'))
+          expect(bind(Category, 'create', 'xx'))
             .to.throw("unknown Unicode category xx");
         });
       });
@@ -34,7 +34,7 @@ define([
 
         it("should reject the category name", function () {
           UNSUPPORTED_UNICODE_CATEGORIES.forEach(function (name) {
-            expect(bind($category, 'create', name))
+            expect(bind(Category, 'create', name))
               .to.throw("unsupported Unicode category " + name);
           });
         });
@@ -45,7 +45,7 @@ define([
 
         it("should initialize the category with the given name", function () {
           SUPPORTED_UNICODE_CATEGORIES.forEach(function (name) {
-            var b = $category.create(name);
+            var b = Category.create(name);
             expect(b.name).to.equal(name);
           });
         });
@@ -55,7 +55,7 @@ define([
       context("when called without second argument", function () {
 
         it("should initialize the category as positive", function () {
-          var c = $category.create('Ll');
+          var c = Category.create('Ll');
           expect(c.positive).to.be.true;
         });
 
@@ -67,7 +67,7 @@ define([
 
   var UNSUPPORTED_UNICODE_CATEGORIES = ['Cn'];
 
-  var SUPPORTED_UNICODE_CATEGORIES = $unicode.getCategoryNames().reduce(
+  var SUPPORTED_UNICODE_CATEGORIES = Unicode.getCategoryNames().reduce(
     function (categories, name) {
       if (UNSUPPORTED_UNICODE_CATEGORIES.indexOf(name) === -1) {
         categories.push(name);

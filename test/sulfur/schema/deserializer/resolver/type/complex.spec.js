@@ -26,30 +26,30 @@ define([
   'sulfur/schema/value/simple/double',
   'sulfur/util/xpath'
 ], function (
-    $shared,
-    $element,
-    $elements,
-    $minInclusiveFacet,
-    $facets,
-    $typeResolver,
-    $complexPrimitiveTypeResolver,
-    $simpleTypeResolver,
-    $qname,
-    $complexPrimitiveType,
-    $complexListType,
-    $complexRestrictedType,
-    $simplePrimitiveType,
-    $listType,
-    $simpleRestrictedType,
-    $doubleValue,
-    $xpath
+    shared,
+    Element,
+    Elements,
+    MinInclusiveFacet,
+    Facets,
+    TypeResolver,
+    ComplexPrimitiveTypeResolver,
+    SimpleTypeResolver,
+    QName,
+    ComplexPrimitiveType,
+    ComplexListType,
+    ComplexRestrictedType,
+    SimplePrimitiveType,
+    ListType,
+    SimpleRestrictedType,
+    DoubleValue,
+    XPath
 ) {
 
   'use strict';
 
-  var expect = $shared.expect;
-  var bind = $shared.bind;
-  var returns = $shared.returns;
+  var expect = shared.expect;
+  var bind = shared.bind;
+  var returns = shared.returns;
 
   describe('sulfur/schema/deserializer/resolver/type/complex', function () {
 
@@ -61,21 +61,21 @@ define([
     describe('#initialize()', function () {
 
       it("should reject an empty array", function () {
-        expect(bind($complexPrimitiveTypeResolver, 'create', []))
+        expect(bind(ComplexPrimitiveTypeResolver, 'create', []))
           .to.throw("expecting an array of one or more types");
       });
 
       it("should reject types which are not a sulfur/schema/type/complex", function () {
-        expect(bind($complexPrimitiveTypeResolver, 'create', [{}]))
+        expect(bind(ComplexPrimitiveTypeResolver, 'create', [{}]))
           .to.throw("expecting only sulfur/schema/type/complex types");
       });
 
       it("should reject types with duplicate qualified name", function () {
         var types = [
-          $complexPrimitiveType.create({ qname: $qname.create('foo', 'urn:bar') }),
-          $complexPrimitiveType.create({ qname: $qname.create('foo', 'urn:bar') })
+          ComplexPrimitiveType.create({ qname: QName.create('foo', 'urn:bar') }),
+          ComplexPrimitiveType.create({ qname: QName.create('foo', 'urn:bar') })
         ];
-        expect(bind($complexPrimitiveTypeResolver, 'create', types))
+        expect(bind(ComplexPrimitiveTypeResolver, 'create', types))
           .to.throw("type with duplicate qualified name {urn:bar}foo");
       });
 
@@ -87,24 +87,24 @@ define([
       var typeResolver;
 
       beforeEach(function () {
-        type = $complexPrimitiveType.create(
-          { qname: $qname.create('x', 'urn:y'),
-            elements: $elements.create([ $element.create('foo') ])
+        type = ComplexPrimitiveType.create(
+          { qname: QName.create('x', 'urn:y'),
+            elements: Elements.create([ Element.create('foo') ])
           });
-        typeResolver = $complexPrimitiveTypeResolver.create([ type ]);
+        typeResolver = ComplexPrimitiveTypeResolver.create([ type ]);
       });
 
       it("should return an instance of the type matching the name and namespace", function () {
-        var t = typeResolver.resolveQualifiedName($qname.create('x', 'urn:y'));
+        var t = typeResolver.resolveQualifiedName(QName.create('x', 'urn:y'));
         expect(t).to.equal(type);
       });
 
       it("should return undefined when no type with the given name is defined", function () {
-        expect(typeResolver.resolveQualifiedName($qname.create('z', 'urn:y'))).to.be.undefined;
+        expect(typeResolver.resolveQualifiedName(QName.create('z', 'urn:y'))).to.be.undefined;
       });
 
       it("should return undefined when no type with the given namespace is defined", function () {
-        expect(typeResolver.resolveQualifiedName($qname.create('x', 'urn:z'))).to.be.undefined;
+        expect(typeResolver.resolveQualifiedName(QName.create('x', 'urn:z'))).to.be.undefined;
       });
 
     });
@@ -118,58 +118,58 @@ define([
       var simpleType;
 
       beforeEach(function () {
-        simpleType = $simplePrimitiveType.create(
-          { qname: $qname.create('simpleType', 'urn:y'),
-            facets: $facets.create([ $minInclusiveFacet ])
+        simpleType = SimplePrimitiveType.create(
+          { qname: QName.create('simpleType', 'urn:y'),
+            facets: Facets.create([ MinInclusiveFacet ])
           });
-        var simpleType2 = $simplePrimitiveType.create(
-          { qname: $qname.create('simpleType2', 'urn:y'),
-            valueType: $doubleValue,
-            facets: $facets.create([ $minInclusiveFacet ])
+        var simpleType2 = SimplePrimitiveType.create(
+          { qname: QName.create('simpleType2', 'urn:y'),
+            valueType: DoubleValue,
+            facets: Facets.create([ MinInclusiveFacet ])
           });
-        var otherType = $simplePrimitiveType.create(
-          { qname: $qname.create('otherType', 'urn:y'),
-            facets: $facets.create([ $minInclusiveFacet ])
+        var otherType = SimplePrimitiveType.create(
+          { qname: QName.create('otherType', 'urn:y'),
+            facets: Facets.create([ MinInclusiveFacet ])
           });
-        complexType = $complexPrimitiveType.create(
-          { qname: $qname.create('complexType', 'urn:y'),
-            elements: $elements.create(
-              [ $element.create('foo', simpleType) ])
+        complexType = ComplexPrimitiveType.create(
+          { qname: QName.create('complexType', 'urn:y'),
+            elements: Elements.create(
+              [ Element.create('foo', simpleType) ])
           });
-        var complexType2 = $complexPrimitiveType.create(
-          { qname: $qname.create('complexType2', 'urn:y'),
-            elements: $elements.create(
-              [ $element.create('foo',
-                  $simpleRestrictedType.create(simpleType2,
-                    $facets.create(
-                      [ $minInclusiveFacet.create($doubleValue.create(1)) ])))
+        var complexType2 = ComplexPrimitiveType.create(
+          { qname: QName.create('complexType2', 'urn:y'),
+            elements: Elements.create(
+              [ Element.create('foo',
+                  SimpleRestrictedType.create(simpleType2,
+                    Facets.create(
+                      [ MinInclusiveFacet.create(DoubleValue.create(1)) ])))
               ])
           });
-        complexType3 = $complexPrimitiveType.create(
-          { qname: $qname.create('complexType3', 'urn:y'),
-            elements: $elements.create(
-              [ $element.create('foo', simpleType),
-                $element.create('bar', simpleType),
-                $element.create('baz', simpleType)
+        complexType3 = ComplexPrimitiveType.create(
+          { qname: QName.create('complexType3', 'urn:y'),
+            elements: Elements.create(
+              [ Element.create('foo', simpleType),
+                Element.create('bar', simpleType),
+                Element.create('baz', simpleType)
               ])
           });
-        var complexType4 = $complexPrimitiveType.create(
-          { qname: $qname.create('complexType4', 'urn:y'),
-            elements: $elements.create(
-              [ $element.create('foo', simpleType),
-                $element.create('bar', simpleType)
+        var complexType4 = ComplexPrimitiveType.create(
+          { qname: QName.create('complexType4', 'urn:y'),
+            elements: Elements.create(
+              [ Element.create('foo', simpleType),
+                Element.create('bar', simpleType)
               ])
           });
-        typeResolver = $complexPrimitiveTypeResolver.create(
+        typeResolver = ComplexPrimitiveTypeResolver.create(
           [ complexType, complexType2, complexType3, complexType4 ]);
         var facetResolver = {
-          getFacet: returns($minInclusiveFacet),
+          getFacet: returns(MinInclusiveFacet),
           parseValue: function (s) { return parseInt(s, 10); },
           createFacet: function (values) {
-            return $minInclusiveFacet.create($doubleValue.create(values[0]));
+            return MinInclusiveFacet.create(DoubleValue.create(values[0]));
           }
         };
-        var simpleResolver = $simpleTypeResolver.create(
+        var simpleResolver = SimpleTypeResolver.create(
           [ simpleType, otherType, simpleType2 ], [ facetResolver ]);
         typeResolvers = [ typeResolver, simpleResolver ];
       });
@@ -189,8 +189,8 @@ define([
         it("should return undefined when it does not have child xs:all", function () {
           var doc = parse('<complexType xmlns="http://www.w3.org/2001/XMLSchema"/>');
           var element = doc.documentElement;
-          var xpath = $xpath.create(doc);
-          var resolver = $typeResolver.create(undefined, xpath);
+          var xpath = XPath.create(doc);
+          var resolver = TypeResolver.create(undefined, xpath);
           expect(typeResolver.resolveElement(element, resolver)).to.be.undefined;
         });
 
@@ -204,8 +204,8 @@ define([
                '</all>' +
               '</complexType>');
             var element = doc.documentElement;
-            var xpath = $xpath.create(doc);
-            var resolver = $typeResolver.create(undefined, xpath);
+            var xpath = XPath.create(doc);
+            var resolver = TypeResolver.create(undefined, xpath);
             expect(bind(typeResolver, 'resolveElement', element, resolver))
               .to.throw("incompatible complex type due to an element requiring more than one occurrence");
           });
@@ -222,13 +222,13 @@ define([
                  '</all>' +
                 '</complexType>');
               var element = doc.documentElement;
-              var xpath = $xpath.create(doc);
-              var resolver = $typeResolver.create(typeResolvers, xpath);
+              var xpath = XPath.create(doc);
+              var resolver = TypeResolver.create(typeResolvers, xpath);
               var type = typeResolver.resolveElement(element, resolver);
               expect(type).to.eql(
-                $complexRestrictedType.create(complexType,
-                  $elements.create(
-                    [ $element.create('foo', simpleType) ])));
+                ComplexRestrictedType.create(complexType,
+                  Elements.create(
+                    [ Element.create('foo', simpleType) ])));
             });
 
             it("should return the type that could be satisfied with the most optional elements", function () {
@@ -243,15 +243,15 @@ define([
                  '</all>' +
                 '</complexType>');
               var element = doc.documentElement;
-              var xpath = $xpath.create(doc);
-              var resolver = $typeResolver.create(typeResolvers, xpath);
+              var xpath = XPath.create(doc);
+              var resolver = TypeResolver.create(typeResolvers, xpath);
               var type = typeResolver.resolveElement(element, resolver);
               expect(type).to.eql(
-                $complexRestrictedType.create(complexType3,
-                  $elements.create(
-                    [ $element.create('foo', simpleType),
-                      $element.create('bar', simpleType, { optional: true }),
-                      $element.create('baz', simpleType, { optional: true })
+                ComplexRestrictedType.create(complexType3,
+                  Elements.create(
+                    [ Element.create('foo', simpleType),
+                      Element.create('bar', simpleType, { optional: true }),
+                      Element.create('baz', simpleType, { optional: true })
                     ])));
             });
 
@@ -266,13 +266,13 @@ define([
                  '</all>' +
                 '</complexType>');
               var element = doc.documentElement;
-              var xpath = $xpath.create(doc);
-              var resolver = $typeResolver.create(typeResolvers, xpath);
+              var xpath = XPath.create(doc);
+              var resolver = TypeResolver.create(typeResolvers, xpath);
               var type = typeResolver.resolveElement(element, resolver);
               expect(type).to.eql(
-                $complexRestrictedType.create(complexType,
-                  $elements.create(
-                    [ $element.create('foo', simpleType) ])));
+                ComplexRestrictedType.create(complexType,
+                  Elements.create(
+                    [ Element.create('foo', simpleType) ])));
             });
 
           });
@@ -289,8 +289,8 @@ define([
                  '</all>' +
                 '</complexType>');
               var element = doc.documentElement;
-              var xpath = $xpath.create(doc);
-              var resolver = $typeResolver.create(typeResolvers, xpath);
+              var xpath = XPath.create(doc);
+              var resolver = TypeResolver.create(typeResolvers, xpath);
               expect(bind(typeResolver, 'resolveElement', element, resolver))
                 .to.throw("incompatible complex type");
             });
@@ -305,8 +305,8 @@ define([
                  '</all>' +
                 '</complexType>');
               var element = doc.documentElement;
-              var xpath = $xpath.create(doc);
-              var resolver = $typeResolver.create(typeResolvers, xpath);
+              var xpath = XPath.create(doc);
+              var resolver = TypeResolver.create(typeResolvers, xpath);
               expect(bind(typeResolver, 'resolveElement', element, resolver))
                 .to.throw("incompatible complex type");
             });
@@ -322,8 +322,8 @@ define([
                  '</all>' +
                 '</complexType>');
               var element = doc.documentElement;
-              var xpath = $xpath.create(doc);
-              var resolver = $typeResolver.create(typeResolvers, xpath);
+              var xpath = XPath.create(doc);
+              var resolver = TypeResolver.create(typeResolvers, xpath);
               expect(bind(typeResolver, 'resolveElement', element, resolver))
                 .to.throw("incompatible complex type");
             });
@@ -338,8 +338,8 @@ define([
                  '</all>' +
                 '</complexType>');
               var element = doc.documentElement;
-              var xpath = $xpath.create(doc);
-              var resolver = $typeResolver.create(typeResolvers, xpath);
+              var xpath = XPath.create(doc);
+              var resolver = TypeResolver.create(typeResolvers, xpath);
               expect(bind(typeResolver, 'resolveElement', element, resolver))
                 .to.throw("incompatible complex type");
             });
@@ -360,8 +360,8 @@ define([
                  '</all>' +
                 '</complexType>');
               var element = doc.documentElement;
-              var xpath = $xpath.create(doc);
-              var resolver = $typeResolver.create(typeResolvers, xpath);
+              var xpath = XPath.create(doc);
+              var resolver = TypeResolver.create(typeResolvers, xpath);
               expect(bind(typeResolver, 'resolveElement', element, resolver))
                 .to.throw("incompatible complex type");
             });
@@ -381,13 +381,13 @@ define([
                  '</all>' +
                 '</complexType>');
               var element = doc.documentElement;
-              var xpath = $xpath.create(doc);
-              var resolver = $typeResolver.create(typeResolvers, xpath);
+              var xpath = XPath.create(doc);
+              var resolver = TypeResolver.create(typeResolvers, xpath);
               var type = typeResolver.resolveElement(element, resolver);
               expect(type).to.eql(
-                $complexRestrictedType.create(complexType,
-                  $elements.create(
-                    [ $element.create('foo', simpleType) ])));
+                ComplexRestrictedType.create(complexType,
+                  Elements.create(
+                    [ Element.create('foo', simpleType) ])));
             });
 
             it("should reject when mandatory", function () {
@@ -400,8 +400,8 @@ define([
                  '</all>' +
                 '</complexType>');
               var element = doc.documentElement;
-              var xpath = $xpath.create(doc);
-              var resolver = $typeResolver.create([ typeResolver ], xpath);
+              var xpath = XPath.create(doc);
+              var resolver = TypeResolver.create([ typeResolver ], xpath);
               expect(bind(typeResolver, 'resolveElement', element, resolver))
                 .to.throw("incompatible complex type due to mandatory element with incompatible type " +
                   "(cannot resolve type {urn:void}incompatibleType)");
@@ -418,8 +418,8 @@ define([
                  '<attribute use="required"/>' +
                 '</complexType>');
               var element = doc.documentElement;
-              var xpath = $xpath.create(doc);
-              var resolver = $typeResolver.create(undefined, xpath);
+              var xpath = XPath.create(doc);
+              var resolver = TypeResolver.create(undefined, xpath);
               expect(bind(typeResolver, 'resolveElement', element, resolver))
                 .to.throw("incompatible complex type due to mandatory attributes");
             });
@@ -435,13 +435,13 @@ define([
                  '<attribute/>' +
                 '</complexType>');
               var element = doc.documentElement;
-              var xpath = $xpath.create(doc);
-              var resolver = $typeResolver.create(typeResolvers, xpath);
+              var xpath = XPath.create(doc);
+              var resolver = TypeResolver.create(typeResolvers, xpath);
               var type = typeResolver.resolveElement(element, resolver);
               expect(type).to.eql(
-                $complexRestrictedType.create(complexType,
-                  $elements.create(
-                    [ $element.create('foo', simpleType) ])));
+                ComplexRestrictedType.create(complexType,
+                  Elements.create(
+                    [ Element.create('foo', simpleType) ])));
             });
 
           });
@@ -458,8 +458,8 @@ define([
                  '</attributeGroup>' +
                 '</complexType>');
               var element = doc.documentElement;
-              var xpath = $xpath.create(doc);
-              var resolver = $typeResolver.create(undefined, xpath);
+              var xpath = XPath.create(doc);
+              var resolver = TypeResolver.create(undefined, xpath);
               expect(bind(typeResolver, 'resolveElement', element, resolver))
                 .to.throw("incompatible complex type due to mandatory attributes");
             });
@@ -477,13 +477,13 @@ define([
                  '</attributeGroup>' +
                 '</complexType>');
               var element = doc.documentElement;
-              var xpath = $xpath.create(doc);
-              var resolver = $typeResolver.create(typeResolvers, xpath);
+              var xpath = XPath.create(doc);
+              var resolver = TypeResolver.create(typeResolvers, xpath);
               var type = typeResolver.resolveElement(element, resolver);
               expect(type).to.eql(
-                $complexRestrictedType.create(complexType,
-                  $elements.create(
-                    [ $element.create('foo', simpleType) ])));
+                ComplexRestrictedType.create(complexType,
+                  Elements.create(
+                    [ Element.create('foo', simpleType) ])));
             });
 
           });
@@ -502,12 +502,12 @@ define([
                '</sequence>' +
               '</complexType>');
             var element = doc.documentElement;
-            var xpath = $xpath.create(doc);
-            var resolver = $typeResolver.create(typeResolvers, xpath);
+            var xpath = XPath.create(doc);
+            var resolver = TypeResolver.create(typeResolvers, xpath);
             var type = typeResolver.resolveElement(element, resolver);
             expect(type).to.eql(
-              $complexListType.create(
-                $element.create('bar', simpleType),
+              ComplexListType.create(
+                Element.create('bar', simpleType),
                 { maxLength: 1, minLength: 0 }));
           });
 
@@ -521,12 +521,12 @@ define([
                '</sequence>' +
               '</complexType>');
             var element = doc.documentElement;
-            var xpath = $xpath.create(doc);
-            var resolver = $typeResolver.create(typeResolvers, xpath);
+            var xpath = XPath.create(doc);
+            var resolver = TypeResolver.create(typeResolvers, xpath);
             var type = typeResolver.resolveElement(element, resolver);
             expect(type).to.eql(
-              $complexListType.create(
-                $element.create('bar', simpleType),
+              ComplexListType.create(
+                Element.create('bar', simpleType),
                 { maxLength: 1, minLength: 1 }));
           });
 
@@ -540,12 +540,12 @@ define([
                '</sequence>' +
               '</complexType>');
             var element = doc.documentElement;
-            var xpath = $xpath.create(doc);
-            var resolver = $typeResolver.create(typeResolvers, xpath);
+            var xpath = XPath.create(doc);
+            var resolver = TypeResolver.create(typeResolvers, xpath);
             var type = typeResolver.resolveElement(element, resolver);
             expect(type).to.eql(
-              $complexListType.create(
-                $element.create('bar', simpleType),
+              ComplexListType.create(
+                Element.create('bar', simpleType),
                 { maxLength: 1, minLength: 1 }));
           });
 
@@ -561,12 +561,12 @@ define([
                  '</sequence>' +
                 '</complexType>');
               var element = doc.documentElement;
-              var xpath = $xpath.create(doc);
-              var resolver = $typeResolver.create(typeResolvers, xpath);
+              var xpath = XPath.create(doc);
+              var resolver = TypeResolver.create(typeResolvers, xpath);
               var type = typeResolver.resolveElement(element, resolver);
               expect(type).to.eql(
-                $complexListType.create(
-                  $element.create('bar', simpleType),
+                ComplexListType.create(
+                  Element.create('bar', simpleType),
                   { maxLength: 3, minLength: 1 }));
             });
 
@@ -580,12 +580,12 @@ define([
                  '</sequence>' +
                 '</complexType>');
               var element = doc.documentElement;
-              var xpath = $xpath.create(doc);
-              var resolver = $typeResolver.create(typeResolvers, xpath);
+              var xpath = XPath.create(doc);
+              var resolver = TypeResolver.create(typeResolvers, xpath);
               var type = typeResolver.resolveElement(element, resolver);
               expect(type).to.eql(
-                $complexListType.create(
-                  $element.create('bar', simpleType),
+                ComplexListType.create(
+                  Element.create('bar', simpleType),
                   { minLength: 1 }));
             });
 
@@ -603,12 +603,12 @@ define([
                  '</sequence>' +
                 '</complexType>');
               var element = doc.documentElement;
-              var xpath = $xpath.create(doc);
-              var resolver = $typeResolver.create(typeResolvers, xpath);
+              var xpath = XPath.create(doc);
+              var resolver = TypeResolver.create(typeResolvers, xpath);
               var type = typeResolver.resolveElement(element, resolver);
               expect(type).to.eql(
-                $complexListType.create(
-                  $element.create('bar', simpleType),
+                ComplexListType.create(
+                  Element.create('bar', simpleType),
                   { maxLength: 1, minLength: 1 }));
             });
 
@@ -623,8 +623,8 @@ define([
                  '</sequence>' +
                 '</complexType>');
               var element = doc.documentElement;
-              var xpath = $xpath.create(doc);
-              var resolver = $typeResolver.create(typeResolvers, xpath);
+              var xpath = XPath.create(doc);
+              var resolver = TypeResolver.create(typeResolvers, xpath);
               expect(bind(typeResolver, 'resolveElement', element, resolver))
                 .to.throw("incompatible complex list type due to multiple mandatory elements");
             });
@@ -641,12 +641,12 @@ define([
                  '</sequence>' +
                 '</complexType>');
               var element = doc.documentElement;
-              var xpath = $xpath.create(doc);
-              var resolver = $typeResolver.create(typeResolvers, xpath);
+              var xpath = XPath.create(doc);
+              var resolver = TypeResolver.create(typeResolvers, xpath);
               var type = typeResolver.resolveElement(element, resolver);
               expect(type).to.eql(
-                $complexListType.create(
-                  $element.create('bar', simpleType),
+                ComplexListType.create(
+                  Element.create('bar', simpleType),
                   { maxLength: 1, minLength: 1 }));
             });
 
@@ -665,8 +665,8 @@ define([
                  '</sequence>' +
                 '</complexType>');
               var element = doc.documentElement;
-              var xpath = $xpath.create(doc);
-              var resolver = $typeResolver.create(typeResolvers, xpath);
+              var xpath = XPath.create(doc);
+              var resolver = TypeResolver.create(typeResolvers, xpath);
               expect(bind(typeResolver, 'resolveElement', element, resolver))
                 .to.throw("incompatible complex list type due to multiple optional elements");
             });
@@ -681,12 +681,12 @@ define([
                  '</sequence>' +
                 '</complexType>');
               var element = doc.documentElement;
-              var xpath = $xpath.create(doc);
-              var resolver = $typeResolver.create(typeResolvers, xpath);
+              var xpath = XPath.create(doc);
+              var resolver = TypeResolver.create(typeResolvers, xpath);
               var type = typeResolver.resolveElement(element, resolver);
               expect(type).to.eql(
-                $complexListType.create(
-                  $element.create('foo', simpleType, { optional: true }),
+                ComplexListType.create(
+                  Element.create('foo', simpleType, { optional: true }),
                   { maxLength: 1, minLength: 1 }));
             });
 

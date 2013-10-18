@@ -8,7 +8,7 @@
 
 define([
   'sulfur/factory'
-], function ($factory) {
+], function (Factory) {
 
   'use strict';
 
@@ -16,6 +16,6 @@ define([
    * The wildcard "." matching any non-line-breaking character.
    */
 
-  return $factory.derive();
+  return Factory.derive();
 
 });

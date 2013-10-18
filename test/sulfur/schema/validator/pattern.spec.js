@@ -10,12 +10,12 @@
 define([
   'shared',
   'sulfur/schema/validator/pattern'
-], function ($shared, $patternValidator) {
+], function (shared, PatternValidator) {
 
   'use strict';
 
-  var expect = $shared.expect;
-  var sinon = $shared.sinon;
+  var expect = shared.expect;
+  var sinon = shared.sinon;
 
   describe('sulfur/schema/validator/pattern', function () {
 
@@ -26,7 +26,7 @@ define([
 
       beforeEach(function () {
         pattern = /^[a-z]$/;
-        validator = $patternValidator.create(pattern);
+        validator = PatternValidator.create(pattern);
       });
 
       it("should return the result of calling #test() on the pattern with value#toString() as argument", function () {

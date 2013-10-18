@@ -10,13 +10,13 @@ define([
   'sulfur/factory',
   'sulfur/util',
   'sulfur/util/orderedMap'
-], function ($factory, $util, $orderedMap) {
+], function (Factory, util, OrderedMap) {
 
   'use strict';
 
-  var keyfn = $util.method('getName');
+  var keyfn = util.method('getName');
 
-  return $factory.derive({
+  return Factory.derive({
 
     initialize: function (elements) {
       if (elements.length === 0) {
@@ -29,7 +29,7 @@ define([
         }
         index.insert(element);
         return index;
-      }, $orderedMap.create(keyfn));
+      }, OrderedMap.create(keyfn));
     },
 
     getElement: function (name) {

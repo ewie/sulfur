@@ -11,12 +11,12 @@ define([
   'sulfur/schema/value/complex',
   'sulfur/schema/value/simple/double',
   'sulfur/util'
-], function ($factory, $complexValue, $doubleValue, $util) {
+], function (Factory, ComplexValue, DoubleValue, util) {
 
   'use strict';
 
   function isDouble(x) {
-    return $doubleValue.prototype.isPrototypeOf(x);
+    return DoubleValue.prototype.isPrototypeOf(x);
   }
 
   function assertValue(name, value, max) {
@@ -35,13 +35,13 @@ define([
   }
 
   function getValue(name, values) {
-    var value = $util.first(values, function (value) {
+    var value = util.first(values, function (value) {
       return value[0] === name;
     });
     return value && value[1];
   }
 
-  return $complexValue.derive({
+  return ComplexValue.derive({
 
     /**
      * Initialize the location with a longitude and latitude.
@@ -67,7 +67,7 @@ define([
       }
       assertValue('longitude', longitude, 180);
       assertValue('latitude', latitude, 90);
-      $complexValue.prototype.initialize.call(this, values);
+      ComplexValue.prototype.initialize.call(this, values);
     }
 
   });

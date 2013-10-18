@@ -21,19 +21,19 @@ define([
   'sulfur/schema/regex/range',
   'sulfur/unicode'
 ], function (
-  $factory,
-  $any,
-  $block,
-  $branch,
-  $category,
-  $codepoint,
-  $class,
-  $group,
-  $pattern,
-  $quant,
-  $piece,
-  $range,
-  $unicode
+  Factory,
+  Any,
+  Block,
+  Branch,
+  Category,
+  Codepoint,
+  Class,
+  Group,
+  Pattern,
+  Quant,
+  Piece,
+  Range,
+  Unicode
 ) {
 
   'use strict';
@@ -73,7 +73,7 @@ define([
         if (!isValidXmlCharacterCodepoint(val)) {
           throw new Error("illegal XML character " + m);
         }
-        return $unicode.encodeCharacterAsUtf16(val);
+        return Unicode.encodeCharacterAsUtf16(val);
       });
 
       s = s.replace(/&#x([\dA-Fa-f]+);/g, function (m, hex) {
@@ -81,7 +81,7 @@ define([
         if (!isValidXmlCharacterCodepoint(val)) {
           throw new Error("illegal XML character " + m);
         }
-        return $unicode.encodeCharacterAsUtf16(val);
+        return Unicode.encodeCharacterAsUtf16(val);
       });
 
       s = s.replace(/&([^;]+);/g, function (m, name) {
@@ -96,7 +96,7 @@ define([
     };
   }());
 
-  var $scanner = $factory.derive({
+  var Scanner = Factory.derive({
     initialize: function (source) {
       // By resolving character references the scanner is much simpler.
       this.source = resolveCharacterReferences(source);
@@ -150,7 +150,7 @@ define([
     },
 
     consumeCodepoint: function () {
-      var pair = $unicode.decodeCharacterFromUtf16(this.source);
+      var pair = Unicode.decodeCharacterFromUtf16(this.source);
       if (pair[1].length > 1) {
         console.log(pair);
       }
@@ -167,7 +167,7 @@ define([
         branches.push(branch);
       }
     } while (scanner.scan('|'));
-    return $pattern.create(branches);
+    return Pattern.create(branches);
   }
 
   function parseBranch(scanner) {
@@ -179,14 +179,14 @@ define([
         pieces.push(piece);
       }
     } while (piece);
-    return $branch.create(pieces);
+    return Branch.create(pieces);
   }
 
   function parsePiece(scanner) {
     var atom = parseAtom(scanner);
     if (atom) {
       var q = parseQuantifier(scanner);
-      return $piece.create(atom, q);
+      return Piece.create(atom, q);
     }
   }
 
@@ -212,11 +212,11 @@ define([
       if (match) {
         switch (match[0]) {
         case '+':
-          return $quant.create(1, Number.POSITIVE_INFINITY);
+          return Quant.create(1, Number.POSITIVE_INFINITY);
         case '*':
-          return $quant.create(0, Number.POSITIVE_INFINITY);
+          return Quant.create(0, Number.POSITIVE_INFINITY);
         case '?':
-          return $quant.create(0, 1);
+          return Quant.create(0, 1);
         }
       }
     }
@@ -246,7 +246,7 @@ define([
           max = parseInt(match[4], 10);
         }
 
-        return $quant.create(min, max);
+        return Quant.create(min, max);
       }
     }
 
@@ -258,13 +258,13 @@ define([
   function parseChar(scanner) {
     if (scanner.matches(/^[^.\\?*+()|[\]]/)) {
       var value = scanner.consumeCodepoint();
-      return $codepoint.create(value);
+      return Codepoint.create(value);
     }
   }
 
   function parseCharClass(scanner) {
     if (scanner.scan('.')) {
-      return $any.create();
+      return Any.create();
     }
     return parseCharClassEsc(scanner) || parseCharClassExpr(scanner);
   }
@@ -278,7 +278,7 @@ define([
 
       function parseGroupChar(scanner) {
         if (scanner.matches(/^[^\\[\]\-]/)) {
-          return $codepoint.create(scanner.consumeCodepoint());
+          return Codepoint.create(scanner.consumeCodepoint());
         }
       }
 
@@ -287,7 +287,7 @@ define([
         if (scanner.scan('-')) {
           var e = parseRangeChar(scanner);
           if (e) {
-            return $range.create(s, e);
+            return Range.create(s, e);
           } else {
             // The end of the range could not be parsed so put the dash back.
             scanner.back('-');
@@ -308,7 +308,7 @@ define([
 
         // Check for an initial dash.
         if (scanner.scan('-')) {
-          items.push($codepoint.create('-'));
+          items.push(Codepoint.create('-'));
         }
 
         var item;
@@ -332,12 +332,12 @@ define([
             group = parseCharClassExpr(scanner);
           } else if (scanner.test('-[')) {
             // The trailing dash is followed by another dash, thus a trailing dash and a subtraction.
-            items.push($codepoint.create('-'));
+            items.push(Codepoint.create('-'));
             scanner.consume(1);
             group = parseCharClassExpr(scanner);
           } else {
             // The trailing dash is not followed by a group, thus the allowed trailing dash.
-            items.push($codepoint.create('-'));
+            items.push(Codepoint.create('-'));
           }
         }
 
@@ -345,7 +345,7 @@ define([
           throw new Error("incomplete character group");
         }
 
-        return $group.create(items, {
+        return Group.create(items, {
           positive: positive,
           subtract: group
         });
@@ -372,10 +372,10 @@ define([
       var match = scanner.scan(PATTERN);
       if (match) {
         if (match[1]) {
-          return $codepoint.create(CONTROL_CHARS[match[1]]);
+          return Codepoint.create(CONTROL_CHARS[match[1]]);
         }
         if (match[2]) {
-          return $codepoint.create(match[2]);
+          return Codepoint.create(match[2]);
         }
       }
     };
@@ -384,11 +384,11 @@ define([
   var parseCharClassEsc = (function () {
     var parseMultiCharEsc = (function () {
       var CLASSES = {
-        'c': $class.CHAR,
-        'd': $class.DIGIT,
-        'i': $class.INITIAL,
-        's': $class.SPACE,
-        'w': $class.WORD
+        'c': Class.CHAR,
+        'd': Class.DIGIT,
+        'i': Class.INITIAL,
+        's': Class.SPACE,
+        'w': Class.WORD
       };
 
       var PATTERN = (function () {
@@ -404,7 +404,7 @@ define([
           var name = CLASSES[c.toLowerCase()];
           // Lower case indicates to match positively.
           var mode = c === c.toLowerCase();
-          return $class.create(name, mode);
+          return Class.create(name, mode);
         }
       };
     }());
@@ -428,9 +428,9 @@ define([
         scanner.consume(1);
 
         if (name.indexOf('Is') === 0) {
-          return $block.create(name.substr(2), mode);
+          return Block.create(name.substr(2), mode);
         } else {
-          return $category.create(name, mode);
+          return Category.create(name, mode);
         }
       }
     }
@@ -449,7 +449,7 @@ define([
 
   }());
 
-  return $factory.derive({
+  return Factory.derive({
     /**
      * @param [string] source the regular expression source text
      *
@@ -458,7 +458,7 @@ define([
      * @return [pattern] a pattern as the root of the syntax tree
      */
     parse: function (source) {
-      var scan = $scanner.create(source);
+      var scan = Scanner.create(source);
       return parsePattern(scan);
     }
   });

@@ -18,30 +18,30 @@ define([
   'sulfur/schema/type/simple/primitive',
   'sulfur/schema/value/simple/date'
 ], function (
-    $enumerationFacet,
-    $maxExclusiveFacet,
-    $maxInclusiveFacet,
-    $minExclusiveFacet,
-    $minInclusiveFacet,
-    $patternFacet,
-    $facets,
-    $qname,
-    $primitiveType,
-    $dateValue
+    EnumerationFacet,
+    MaxExclusiveFacet,
+    MaxInclusiveFacet,
+    MinExclusiveFacet,
+    MinInclusiveFacet,
+    PatternFacet,
+    Facets,
+    QName,
+    PrimitiveType,
+    DateValue
 ) {
 
   'use strict';
 
-  return $primitiveType.create({
-    qname: $qname.create('date', 'http://www.w3.org/2001/XMLSchema'),
-    valueType: $dateValue,
-    facets: $facets.create([
-      $enumerationFacet,
-      $maxExclusiveFacet,
-      $maxInclusiveFacet,
-      $minExclusiveFacet,
-      $minInclusiveFacet,
-      $patternFacet
+  return PrimitiveType.create({
+    qname: QName.create('date', 'http://www.w3.org/2001/XMLSchema'),
+    valueType: DateValue,
+    facets: Facets.create([
+      EnumerationFacet,
+      MaxExclusiveFacet,
+      MaxInclusiveFacet,
+      MinExclusiveFacet,
+      MinInclusiveFacet,
+      PatternFacet
     ])
   });
 

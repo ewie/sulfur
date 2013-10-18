@@ -9,21 +9,21 @@
 define([
   'sulfur/schema/facet/minInclusive',
   'sulfur/util'
-], function ($minInclusiveFacet, $util) {
+], function (MinInclusiveFacet, util) {
 
   'use strict';
 
   return {
 
-    getFacet: $util.returns($minInclusiveFacet),
+    getFacet: util.returns(MinInclusiveFacet),
 
     parseValue: function (s, p) {
       return p.parse(s);
     },
 
     createFacet: function (values) {
-      values = $util.sort(values, function (x, y) { return -x.cmp(y); });
-      return $minInclusiveFacet.create(values[0]);
+      values = util.sort(values, function (x, y) { return -x.cmp(y); });
+      return MinInclusiveFacet.create(values[0]);
     }
 
   };

@@ -11,13 +11,13 @@ define([
   'shared',
   'sulfur/schema/pattern',
   'sulfur/schema/regex'
-], function ($shared, $pattern, $regex) {
+], function (shared, Pattern, Regex) {
 
   'use strict';
 
-  var expect = $shared.expect;
-  var sinon = $shared.sinon;
-  var bind = $shared.bind;
+  var expect = shared.expect;
+  var sinon = shared.sinon;
+  var bind = shared.bind;
 
   describe('sulfur/schema/pattern', function () {
 
@@ -34,20 +34,20 @@ define([
     describe('.isValidLiteral()', function () {
 
       it("should call sulfur/schema/regex.parse() with the given string", function () {
-        var spy = sandbox.spy($regex, 'parse');
+        var spy = sandbox.spy(Regex, 'parse');
         var s = '.';
-        $pattern.isValidLiteral(s);
+        Pattern.isValidLiteral(s);
         expect(spy).to.be.calledWith(s);
       });
 
       it("should return true if sulfur/schema/regex.parse() does not throw", function () {
-        sandbox.stub($regex, 'parse');
-        expect($pattern.isValidLiteral()).to.be.true;
+        sandbox.stub(Regex, 'parse');
+        expect(Pattern.isValidLiteral()).to.be.true;
       });
 
       it("should return false if sulfur/schema/regex.parse() throws", function () {
-        sandbox.stub($regex, 'parse').throws();
-        expect($pattern.isValidLiteral()).to.be.false;
+        sandbox.stub(Regex, 'parse').throws();
+        expect(Pattern.isValidLiteral()).to.be.false;
       });
 
     });
@@ -55,14 +55,14 @@ define([
     describe('#initialize()', function () {
 
       it("should compile the source", function () {
-        var spy = sandbox.spy($regex, 'compile');
-        $pattern.create('.');
+        var spy = sandbox.spy(Regex, 'compile');
+        Pattern.create('.');
         expect(spy).to.be.calledWith('.');
       });
 
       it("should throw when sulfur/schema/regex.compile throws", function () {
-        sandbox.stub($regex, 'compile').throws(new Error("invalid for testing purposes"));
-        expect(bind($pattern, 'create', '.'))
+        sandbox.stub(Regex, 'compile').throws(new Error("invalid for testing purposes"));
+        expect(bind(Pattern, 'create', '.'))
           .to.throw('invalid pattern "." (error: invalid for testing purposes)');
       });
 
@@ -71,7 +71,7 @@ define([
     describe('#toString()', function () {
 
       it("should return the pattern's source", function () {
-        var p = $pattern.create('[a-z]');
+        var p = Pattern.create('[a-z]');
         expect(p.toString()).to.equal('[a-z]');
       });
 
@@ -80,26 +80,26 @@ define([
     describe('#test()', function () {
 
       it("should return true if the pattern matches the string", function () {
-        var p = $pattern.create('[a-z]');
+        var p = Pattern.create('[a-z]');
         expect(p.test('a')).to.be.true;
       });
 
       it("should return false if the pattern does not match the string", function () {
-        var p = $pattern.create('[a-z]');
+        var p = Pattern.create('[a-z]');
         expect(p.test('A')).to.be.false;
       });
 
       it("should call RegExp.prototype.test on the compiled pattern", function () {
         var testSpy = sandbox.spy(RegExp.prototype, 'test');
-        var compileSpy = sandbox.spy($regex, 'compile');
-        var p = $pattern.create('.');
+        var compileSpy = sandbox.spy(Regex, 'compile');
+        var p = Pattern.create('.');
         p.test();
         expect(testSpy).to.be.calledOn(compileSpy.getCall(0).returnValue);
       });
 
       it("should pass the string to RegExp.prototype.test", function () {
         var testSpy = sandbox.spy(RegExp.prototype, 'test');
-        var p = $pattern.create('.');
+        var p = Pattern.create('.');
         p.test('x');
         expect(testSpy).to.be.calledWith('x');
       });

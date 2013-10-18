@@ -6,11 +6,11 @@
 
 /* global define */
 
-define(['sulfur/factory'], function ($factory) {
+define(['sulfur/factory'], function (Factory) {
 
   'use strict';
 
-  var $ = $factory.derive({
+  var $ = Factory.derive({
 
     initialize: function (base, facets) {
 

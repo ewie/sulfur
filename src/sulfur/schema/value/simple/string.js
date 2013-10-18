@@ -10,11 +10,11 @@ define([
   'sulfur/factory',
   'sulfur/util',
   'unorm'
-], function ($factory, $util, $unorm) {
+], function (Factory, util, Unorm) {
 
   'use strict';
 
-  var $ = $factory.clone({
+  var $ = Factory.clone({
 
     /**
      * Check if a string contains only valid codeunits.
@@ -46,7 +46,7 @@ define([
      * @throw [Error] if `value` does not satisfy .isValidLiteral()
      */
     initialize: function (value) {
-      $util.isUndefined(value) && (value = '');
+      util.isUndefined(value) && (value = '');
 
       if (typeof value !== 'string') {
         throw new Error("must be initialized with a string value");
@@ -56,7 +56,7 @@ define([
         throw new Error("invalid string value");
       }
 
-      this._value = $unorm.nfc(value);
+      this._value = Unorm.nfc(value);
     },
 
     /**

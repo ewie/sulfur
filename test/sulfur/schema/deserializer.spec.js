@@ -17,22 +17,22 @@ define([
   'sulfur/schema/qname',
   'sulfur/schema/type/simple/primitive'
 ], function (
-    $shared,
-    $schema,
-    $deserializer,
-    $simpleTypeResolver,
-    $element,
-    $facets,
-    $qname,
-    $primitiveType
+    shared,
+    Schema,
+    Deserializer,
+    SimpleTypeResolver,
+    Element,
+    Facets,
+    QName,
+    PrimitiveType
 ) {
 
   'use strict';
 
-  var expect = $shared.expect;
-  var sinon = $shared.sinon;
-  var bind = $shared.bind;
-  var returns = $shared.returns;
+  var expect = shared.expect;
+  var sinon = shared.sinon;
+  var bind = shared.bind;
+  var returns = shared.returns;
 
   describe('sulfur/schema/deserializer', function () {
 
@@ -48,7 +48,7 @@ define([
 
       beforeEach(function () {
         sandbox = sinon.sandbox.create();
-        deserializer = $deserializer.create();
+        deserializer = Deserializer.create();
       });
 
       afterEach(function () {
@@ -99,17 +99,17 @@ define([
           var simpleType;
 
           beforeEach(function () {
-            var facet = { getQName: returns($qname.create('x', 'urn:y')) };
+            var facet = { getQName: returns(QName.create('x', 'urn:y')) };
             var facetResolver = {
               getFacet: returns(facet)
             };
-            simpleType = $primitiveType.create(
-              { qname: $qname.create('knownType', 'urn:y'),
-                facets: $facets.create([ facet ])
+            simpleType = PrimitiveType.create(
+              { qname: QName.create('knownType', 'urn:y'),
+                facets: Facets.create([ facet ])
               });
-            var simpleTypeResolver = $simpleTypeResolver.create(
+            var simpleTypeResolver = SimpleTypeResolver.create(
               [ simpleType ], [ facetResolver ]);
-            deserializer = $deserializer.create([ simpleTypeResolver ]);
+            deserializer = Deserializer.create([ simpleTypeResolver ]);
           });
 
           it("should use the first root element declaration which only declares elements with compatible types", function () {
@@ -135,9 +135,9 @@ define([
               '</schema>');
             var schema = deserializer.deserialize(doc);
             expect(schema).to.eql(
-              $schema.create('bar',
-                [ $element.create('x', simpleType),
-                  $element.create('y', simpleType)
+              Schema.create('bar',
+                [ Element.create('x', simpleType),
+                  Element.create('y', simpleType)
                 ]));
           });
 
@@ -157,8 +157,8 @@ define([
               '</schema>');
             var schema = deserializer.deserialize(doc);
             expect(schema).to.eql(
-              $schema.create('bar',
-                [ $element.create('x', simpleType) ]));
+              Schema.create('bar',
+                [ Element.create('x', simpleType) ]));
           });
 
           it("should ignore optional element declarations with incompatible type", function () {
@@ -177,8 +177,8 @@ define([
               '</schema>');
             var schema = deserializer.deserialize(doc);
             expect(schema).to.eql(
-              $schema.create('bar',
-                [ $element.create('y', simpleType) ]));
+              Schema.create('bar',
+                [ Element.create('y', simpleType) ]));
           });
 
         });

@@ -9,7 +9,7 @@
 define([
   'sulfur/factory',
   'sulfur/schema/value/simple/dateTime'
-], function ($factory, $dateTimeValue) {
+], function (Factory, DateTimeValue) {
 
   'use strict';
 
@@ -29,7 +29,7 @@ define([
    *     instance defines a timezone
    */
 
-  var $ = $factory.clone({
+  var $ = Factory.clone({
 
     /**
      * Check if a string represents a valid date literal.
@@ -112,7 +112,7 @@ define([
       options || (options = {});
 
       // Represent the date by using a dateTime with the date's midpoint (noon).
-      this._midpoint = $dateTimeValue.create({
+      this._midpoint = DateTimeValue.create({
         year: options.year,
         month: options.month,
         day: options.day,
@@ -218,7 +218,7 @@ define([
 
       var dtn = this._midpoint;
 
-      var dtu = $dateTimeValue.create({
+      var dtu = DateTimeValue.create({
         year: this.getYear(),
         month: this.getMonth(),
         day: this.getDay(),

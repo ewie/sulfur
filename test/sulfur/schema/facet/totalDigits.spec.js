@@ -18,34 +18,34 @@ define([
   'sulfur/schema/validator/maximum',
   'sulfur/schema/validator/property'
 ], function (
-    $shared,
-    $facet,
-    $totalDigitsFacet,
-    $facets,
-    $qname,
-    $primitiveType,
-    $restrictedType,
-    $maximumValidator,
-    $propertyValidator
+    shared,
+    Facet,
+    TotalDigitsFacet,
+    Facets,
+    QName,
+    PrimitiveType,
+    RestrictedType,
+    MaximumValidator,
+    PropertyValidator
 ) {
 
   'use strict';
 
-  var expect = $shared.expect;
-  var sinon = $shared.sinon;
-  var bind = $shared.bind;
+  var expect = shared.expect;
+  var sinon = shared.sinon;
+  var bind = shared.bind;
 
   describe('sulfur/schema/facet/totalDigits', function () {
 
     it("should be derived from sulfur/schema/facet", function () {
-      expect($facet).to.be.prototypeOf($totalDigitsFacet);
+      expect(Facet).to.be.prototypeOf(TotalDigitsFacet);
     });
 
     describe('.getQName()', function () {
 
       it("should return {http://www.w3.org/2001/XMLSchema}totalDigits", function () {
-        expect($totalDigitsFacet.getQName())
-          .to.eql($qname.create('totalDigits', 'http://www.w3.org/2001/XMLSchema'));
+        expect(TotalDigitsFacet.getQName())
+          .to.eql(QName.create('totalDigits', 'http://www.w3.org/2001/XMLSchema'));
       });
 
     });
@@ -53,7 +53,7 @@ define([
     describe('.isShadowingLowerRestrictions()', function () {
 
       it("should return false", function () {
-        expect($totalDigitsFacet.isShadowingLowerRestrictions()).to.be.true;
+        expect(TotalDigitsFacet.isShadowingLowerRestrictions()).to.be.true;
       });
 
     });
@@ -61,7 +61,7 @@ define([
     describe('.getMutualExclusiveFacets()', function () {
 
       it("should return an empty array", function () {
-        expect($totalDigitsFacet.getMutualExclusiveFacets()).to.eql([]);
+        expect(TotalDigitsFacet.getMutualExclusiveFacets()).to.eql([]);
       });
 
     });
@@ -79,38 +79,38 @@ define([
       });
 
       it("should call sulfur/schema/facet#initialize()", function () {
-        var spy = sandbox.spy($facet.prototype, 'initialize');
-        var facet = $totalDigitsFacet.create(1);
+        var spy = sandbox.spy(Facet.prototype, 'initialize');
+        var facet = TotalDigitsFacet.create(1);
         expect(spy).to.be.calledOn(facet).to.be.calledWith(1);
       });
 
       it("should reject a non-number value", function () {
-        expect(bind($totalDigitsFacet, 'create', '123'))
+        expect(bind(TotalDigitsFacet, 'create', '123'))
           .to.throw("expecting a positive integer less than 2^53");
       });
 
       it("should reject a non-integer value", function () {
-        expect(bind($totalDigitsFacet, 'create', 1.2))
+        expect(bind(TotalDigitsFacet, 'create', 1.2))
           .to.throw("expecting a positive integer less than 2^53");
       });
 
       it("should reject a value equal to 2^53", function () {
-        expect(bind($totalDigitsFacet, 'create', Math.pow(2, 53)))
+        expect(bind(TotalDigitsFacet, 'create', Math.pow(2, 53)))
           .to.throw("expecting a positive integer less than 2^53");
       });
 
       it("should reject a value greater than 2^53", function () {
-        expect(bind($totalDigitsFacet, 'create', Math.pow(2, 54)))
+        expect(bind(TotalDigitsFacet, 'create', Math.pow(2, 54)))
           .to.throw("expecting a positive integer less than 2^53");
       });
 
       it("should reject a value of zero", function () {
-        expect(bind($totalDigitsFacet, 'create', 0))
+        expect(bind(TotalDigitsFacet, 'create', 0))
           .to.throw("expecting a positive integer less than 2^53");
       });
 
       it("should reject a negative value", function () {
-        expect(bind($totalDigitsFacet, 'create', -1))
+        expect(bind(TotalDigitsFacet, 'create', -1))
           .to.throw("expecting a positive integer less than 2^53");
       });
 
@@ -119,8 +119,8 @@ define([
     describe('#isRestrictionOf()', function () {
 
       it("should return true when the type does not define facet 'totalDigits'", function () {
-        var type = $primitiveType.create({});
-        var facet = $totalDigitsFacet.create(1);
+        var type = PrimitiveType.create({});
+        var facet = TotalDigitsFacet.create(1);
         expect(facet.isRestrictionOf(type)).to.be.true;
       });
 
@@ -129,25 +129,25 @@ define([
         var type;
 
         beforeEach(function () {
-          var base = $primitiveType.create({
-            facets: $facets.create([ $totalDigitsFacet ])
+          var base = PrimitiveType.create({
+            facets: Facets.create([ TotalDigitsFacet ])
           });
-          type = $restrictedType.create(base,
-            $facets.create([ $totalDigitsFacet.create(2) ]));
+          type = RestrictedType.create(base,
+            Facets.create([ TotalDigitsFacet.create(2) ]));
         });
 
         it("should return true when the value is less than the type facet's value", function () {
-          var facet = $totalDigitsFacet.create(1);
+          var facet = TotalDigitsFacet.create(1);
           expect(facet.isRestrictionOf(type)).to.be.true;
         });
 
         it("should return true when the value is equal to the type facet's value", function () {
-          var facet = $totalDigitsFacet.create(2);
+          var facet = TotalDigitsFacet.create(2);
           expect(facet.isRestrictionOf(type)).to.be.true;
         });
 
         it("should return false when the value is greater than the type facet's value", function () {
-          var facet = $totalDigitsFacet.create(3);
+          var facet = TotalDigitsFacet.create(3);
           expect(facet.isRestrictionOf(type)).to.be.false;
         });
 
@@ -158,7 +158,7 @@ define([
     describe('#validate()', function () {
 
       it("should return true", function () {
-        var facet = $totalDigitsFacet.create(1);
+        var facet = TotalDigitsFacet.create(1);
         expect(facet.validate()).to.be.true;
       });
 
@@ -167,12 +167,12 @@ define([
     describe('#createValidator()', function () {
 
       it("should return a validator/property with 'countDigits' and a validator/maximum", function () {
-        var facet = $totalDigitsFacet.create(1);
+        var facet = TotalDigitsFacet.create(1);
         var v = facet.createValidator();
         expect(v).to.eql(
-          $propertyValidator.create(
+          PropertyValidator.create(
             'countDigits',
-            $maximumValidator.create(1)
+            MaximumValidator.create(1)
           )
         );
       });

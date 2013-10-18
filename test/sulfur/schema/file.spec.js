@@ -11,11 +11,11 @@ define([
   'shared',
   'sulfur/schema/file',
   'sulfur/schema/mediaType'
-], function ($shared, $file, $mediaType) {
+], function (shared, File, MediaType) {
 
   'use strict';
 
-  var expect = $shared.expect;
+  var expect = shared.expect;
 
   describe('sulfur/schema/file', function () {
 
@@ -23,8 +23,8 @@ define([
 
       it("should accept a Blob", function () {
         var blob = new Blob([], { type: 'image/jpeg' });
-        var f = $file.create(blob);
-        expect(f.getMediaType()).to.eql($mediaType.create('image', 'jpeg'));
+        var f = File.create(blob);
+        expect(f.getMediaType()).to.eql(MediaType.create('image', 'jpeg'));
       });
 
     });
@@ -33,8 +33,8 @@ define([
 
       it("should return the media type", function () {
         var blob = new Blob([], { type: 'text/plain' });
-        var f = $file.create(blob);
-        expect(f.getMediaType()).to.eql($mediaType.create('text', 'plain'));
+        var f = File.create(blob);
+        expect(f.getMediaType()).to.eql(MediaType.create('text', 'plain'));
       });
 
     });

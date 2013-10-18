@@ -12,26 +12,26 @@ define([
   'sulfur/schema/regex/branch',
   'sulfur/schema/regex/codepoint',
   'sulfur/schema/regex/piece'
-], function ($shared, $branch, $codepoint, $piece) {
+], function (shared, Branch, Codepoint, Piece) {
 
   'use strict';
 
-  var expect = $shared.expect;
-  var sinon = $shared.sinon;
+  var expect = shared.expect;
+  var sinon = shared.sinon;
 
   describe('sulfur/schema/regex/branch', function () {
 
     describe('#initialize()', function () {
 
       it("should initialize the branch with the given pieces", function () {
-        var b = $branch.create([$piece.create($codepoint.create('a'))]);
-        expect(b.pieces).to.eql([$piece.create($codepoint.create('a'))]);
+        var b = Branch.create([Piece.create(Codepoint.create('a'))]);
+        expect(b.pieces).to.eql([Piece.create(Codepoint.create('a'))]);
       });
 
       context("with no arguments", function () {
 
         it("should create an empty branch", function () {
-          var b = $branch.create();
+          var b = Branch.create();
           expect(b.pieces).to.have.length(0);
         });
 
@@ -44,7 +44,7 @@ define([
       it("should call .containsEmptyGroup on each piece", function () {
         var piece = { containsEmptyGroup: function () {} };
         var spy = sinon.spy(piece, 'containsEmptyGroup');
-        var branch = $branch.create([piece]);
+        var branch = Branch.create([piece]);
         branch.containsEmptyGroup();
         expect(spy).to.be.calledOn(branch.pieces[0]);
       });
@@ -54,7 +54,7 @@ define([
         var falsePiece = { containsEmptyGroup: function () {} };
         var trueSpy = sinon.spy(truePiece, 'containsEmptyGroup');
         var falseSpy = sinon.spy(falsePiece, 'containsEmptyGroup');
-        var branch = $branch.create([
+        var branch = Branch.create([
           truePiece,
           falsePiece
         ]);
@@ -70,7 +70,7 @@ define([
       it("should call .containsGroupWithSurrogateCodepoints on each piece", function () {
         var piece = { containsGroupWithSurrogateCodepoints: function () {} };
         var spy = sinon.spy(piece, 'containsGroupWithSurrogateCodepoints');
-        var branch = $branch.create([piece]);
+        var branch = Branch.create([piece]);
         branch.containsGroupWithSurrogateCodepoints();
         expect(spy).to.be.calledOn(branch.pieces[0]);
       });
@@ -80,7 +80,7 @@ define([
         var falsePiece = { containsGroupWithSurrogateCodepoints: function () {} };
         var trueSpy = sinon.spy(truePiece, 'containsGroupWithSurrogateCodepoints');
         var falseSpy = sinon.spy(falsePiece, 'containsGroupWithSurrogateCodepoints');
-        var branch = $branch.create([
+        var branch = Branch.create([
           truePiece,
           falsePiece
         ]);

@@ -6,14 +6,14 @@
 
 /* global define */
 
-define(['sulfur/schema/type/simple/restricted'], function ($restrictedType) {
+define(['sulfur/schema/type/simple/restricted'], function (RestrictedType) {
 
   'use strict';
 
-  return $restrictedType.derive({
+  return RestrictedType.derive({
 
     initialize: function (options) {
-      $restrictedType.prototype.initialize.call(this, options.base, options.facets);
+      RestrictedType.prototype.initialize.call(this, options.base, options.facets);
       this._qname = options.qname;
       this._namespace = options.namespace;
       this._valueType = options.valueType;

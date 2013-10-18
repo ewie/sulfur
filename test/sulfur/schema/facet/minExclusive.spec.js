@@ -19,35 +19,35 @@ define([
   'sulfur/schema/validator/minimum',
   'sulfur/schema/value/simple/integer'
 ], function (
-    $shared,
-    $facet,
-    $maxExclusiveFacet,
-    $maxInclusiveFacet,
-    $minExclusiveFacet,
-    $minInclusiveFacet,
-    $facets,
-    $qname,
-    $minimumValidator,
-    $integerValue
+    shared,
+    Facet,
+    MaxExclusiveFacet,
+    MaxInclusiveFacet,
+    MinExclusiveFacet,
+    MinInclusiveFacet,
+    Facets,
+    QName,
+    MinimumValidator,
+    IntegerValue
 ) {
 
   'use strict';
 
-  var expect = $shared.expect;
-  var sinon = $shared.sinon;
-  var returns = $shared.returns;
+  var expect = shared.expect;
+  var sinon = shared.sinon;
+  var returns = shared.returns;
 
   describe('sulfur/schema/facet/minExclusive', function () {
 
     it("should be derived from sulfur/schema/facet", function () {
-      expect($facet).to.be.prototypeOf($minExclusiveFacet);
+      expect(Facet).to.be.prototypeOf(MinExclusiveFacet);
     });
 
     describe('.getQName()', function () {
 
       it("should return {http://www.w3.org/2001/XMLSchema}minExclusive", function () {
-        expect($minExclusiveFacet.getQName())
-          .to.eql($qname.create('minExclusive', 'http://www.w3.org/2001/XMLSchema'));
+        expect(MinExclusiveFacet.getQName())
+          .to.eql(QName.create('minExclusive', 'http://www.w3.org/2001/XMLSchema'));
       });
 
     });
@@ -55,7 +55,7 @@ define([
     describe('.isShadowingLowerRestrictions()', function () {
 
       it("should return false", function () {
-        expect($minExclusiveFacet.isShadowingLowerRestrictions()).to.be.true;
+        expect(MinExclusiveFacet.isShadowingLowerRestrictions()).to.be.true;
       });
 
     });
@@ -63,8 +63,8 @@ define([
     describe('.getMutualExclusiveFacets()', function () {
 
       it("should return sulfur/schema/facet/minInclusive", function () {
-        expect($minExclusiveFacet.getMutualExclusiveFacets())
-          .to.eql([ $minInclusiveFacet ]);
+        expect(MinExclusiveFacet.getMutualExclusiveFacets())
+          .to.eql([ MinInclusiveFacet ]);
       });
 
     });
@@ -80,7 +80,7 @@ define([
         validator = { validate: function () {} };
         type = { createValidator: returns(validator) };
         value = {};
-        facet = $minExclusiveFacet.create(value);
+        facet = MinExclusiveFacet.create(value);
       });
 
       it("should check the value using the validator of the given type", function () {
@@ -107,19 +107,19 @@ define([
       var type;
 
       beforeEach(function () {
-        facet = $minExclusiveFacet.create($integerValue.create());
+        facet = MinExclusiveFacet.create(IntegerValue.create());
       });
 
       it("should return true when valid", function () {
-        var dummyFacet = { getQName: returns($qname.create('x', 'urn:y')) };
-        type = $facets.create([ dummyFacet ]);
-        type.getValueType = function () { return $integerValue; };
+        var dummyFacet = { getQName: returns(QName.create('x', 'urn:y')) };
+        type = Facets.create([ dummyFacet ]);
+        type.getValueType = function () { return IntegerValue; };
         expect(facet.validate(type)).to.be.true;
       });
 
       it("should return false when the value is not of the given type", function () {
-        var dummyFacet = { getQName: returns($qname.create('x', 'urn:y')) };
-        type = $facets.create([ dummyFacet ]);
+        var dummyFacet = { getQName: returns(QName.create('x', 'urn:y')) };
+        type = Facets.create([ dummyFacet ]);
         type.getValueType = function () { return { prototype: {} }; };
         expect(facet.validate(type)).to.be.false;
       });
@@ -127,8 +127,8 @@ define([
       context("with a sulfur/schema/facet/minInclusive", function () {
 
         beforeEach(function () {
-          type = $facets.create([ $minInclusiveFacet.create() ]);
-          type.getValueType = function () { return $integerValue; };
+          type = Facets.create([ MinInclusiveFacet.create() ]);
+          type.getValueType = function () { return IntegerValue; };
         });
 
         it("should reject", function () {
@@ -146,10 +146,10 @@ define([
       context("with a value greater than sulfur/schema/facet/maxExclusive when given", function () {
 
         beforeEach(function () {
-          type = $facets.create([
-            $maxExclusiveFacet.create($integerValue.parse('-1'))
+          type = Facets.create([
+            MaxExclusiveFacet.create(IntegerValue.parse('-1'))
           ]);
-          type.getValueType = function () { return $integerValue; };
+          type.getValueType = function () { return IntegerValue; };
         });
 
         it("should reject", function () {
@@ -167,10 +167,10 @@ define([
       context("with a value greater than sulfur/schema/facet/maxInclusive when given", function () {
 
         beforeEach(function () {
-          type = $facets.create([
-            $maxInclusiveFacet.create($integerValue.parse('-1'))
+          type = Facets.create([
+            MaxInclusiveFacet.create(IntegerValue.parse('-1'))
           ]);
-          type.getValueType = function () { return $integerValue; };
+          type.getValueType = function () { return IntegerValue; };
         });
 
         it("should reject", function () {
@@ -188,10 +188,10 @@ define([
       context("with a value equal to sulfur/schema/facet/maxInclusive when given", function () {
 
         beforeEach(function () {
-          type = $facets.create([
-            $maxInclusiveFacet.create($integerValue.create())
+          type = Facets.create([
+            MaxInclusiveFacet.create(IntegerValue.create())
           ]);
-          type.getValueType = function () { return $integerValue; };
+          type.getValueType = function () { return IntegerValue; };
         });
 
         it("should reject", function () {
@@ -211,9 +211,9 @@ define([
     describe('#createValidator()', function () {
 
       it("should return a validator/minimum matching exclusively", function () {
-        var facet = $minExclusiveFacet.create(0);
+        var facet = MinExclusiveFacet.create(0);
         var v = facet.createValidator();
-        expect(v).to.eql($minimumValidator.create(facet.getValue(), { exclusive: true }));
+        expect(v).to.eql(MinimumValidator.create(facet.getValue(), { exclusive: true }));
       });
 
     });

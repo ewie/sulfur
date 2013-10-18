@@ -9,21 +9,21 @@
 define([
   'sulfur/schema/facet/fractionDigits',
   'sulfur/util'
-], function ($fractionDigitsFacet, $util) {
+], function (FractionDigitsFacet, util) {
 
   'use strict';
 
   return {
 
-    getFacet: $util.returns($fractionDigitsFacet),
+    getFacet: util.returns(FractionDigitsFacet),
 
     parseValue: function (s) {
       return parseInt(s, 10);
     },
 
     createFacet: function (values) {
-      values = $util.sort(values, function (x, y) { return x - y; });
-      return $fractionDigitsFacet.create(values[0]);
+      values = util.sort(values, function (x, y) { return x - y; });
+      return FractionDigitsFacet.create(values[0]);
     }
 
   };

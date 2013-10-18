@@ -11,12 +11,12 @@ define([
   'shared',
   'sulfur/schema/regex/block',
   'sulfur/unicode'
-], function ($shared, $block, $unicode) {
+], function (shared, Block, Unicode) {
 
   'use strict';
 
-  var expect = $shared.expect;
-  var bind = $shared.bind;
+  var expect = shared.expect;
+  var bind = shared.bind;
 
   describe('sulfur/schema/regex/block', function () {
 
@@ -25,7 +25,7 @@ define([
       context("with an unknown block name", function () {
 
         it("should reject the block name", function () {
-          expect(bind($block, 'create', 'xxx'))
+          expect(bind(Block, 'create', 'xxx'))
             .to.throw("unknown Unicode block xxx");
         });
       });
@@ -34,7 +34,7 @@ define([
 
         it("should reject the block name", function () {
           UNSUPPORTED_UNICODE_BLOCKS.forEach(function (name) {
-            expect(bind($block, 'create', name))
+            expect(bind(Block, 'create', name))
               .to.throw("unsupported Unicode block " + name);
           });
         });
@@ -45,7 +45,7 @@ define([
 
         it("should initialize the block with the given name", function () {
           SUPPORTED_UNICODE_BLOCKS.forEach(function (name) {
-            var b = $block.create(name);
+            var b = Block.create(name);
             expect(b.name).to.equal(name);
           });
         });
@@ -55,7 +55,7 @@ define([
       context("when called without second argument", function () {
 
         it("should initialize the block as positive", function () {
-          var b = $block.create('BasicLatin');
+          var b = Block.create('BasicLatin');
           expect(b.positive).to.be.true;
         });
 
@@ -71,7 +71,7 @@ define([
     'LowSurrogates'
   ];
 
-  var SUPPORTED_UNICODE_BLOCKS = $unicode.getBlockNames().reduce(
+  var SUPPORTED_UNICODE_BLOCKS = Unicode.getBlockNames().reduce(
     function (blocks, name) {
       if (UNSUPPORTED_UNICODE_BLOCKS.indexOf(name) === -1) {
         blocks.push(name);

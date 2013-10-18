@@ -9,21 +9,21 @@
 define([
   'sulfur/schema/facet/totalDigits',
   'sulfur/util'
-], function ($totalDigitsFacet, $util) {
+], function (TotalDigitsFacet, util) {
 
   'use strict';
 
   return {
 
-    getFacet: $util.returns($totalDigitsFacet),
+    getFacet: util.returns(TotalDigitsFacet),
 
     parseValue: function (s) {
       return parseInt(s, 10);
     },
 
     createFacet: function (values) {
-      values = $util.sort(values, function (x, y) { return x - y; });
-      return $totalDigitsFacet.create(values[0]);
+      values = util.sort(values, function (x, y) { return x - y; });
+      return TotalDigitsFacet.create(values[0]);
     }
 
   };

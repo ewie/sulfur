@@ -23,42 +23,42 @@ define([
   'sulfur/schema/type/simple/primitive/decimal',
   'sulfur/schema/value/simple/decimal'
 ], function (
-    $shared,
-    $enumerationFacet,
-    $fractionDigitsFacet,
-    $maxExclusiveFacet,
-    $maxInclusiveFacet,
-    $minExclusiveFacet,
-    $minInclusiveFacet,
-    $patternFacet,
-    $totalDigitsFacet,
-    $facets,
-    $qname,
-    $primitiveType,
-    $decimalType,
-    $decimalValue
+    shared,
+    EnumerationFacet,
+    FractionDigitsFacet,
+    MaxExclusiveFacet,
+    MaxInclusiveFacet,
+    MinExclusiveFacet,
+    MinInclusiveFacet,
+    PatternFacet,
+    TotalDigitsFacet,
+    Facets,
+    QName,
+    PrimitiveType,
+    DecimalType,
+    DecimalValue
 ) {
 
   'use strict';
 
-  var expect = $shared.expect;
+  var expect = shared.expect;
 
   describe('sulfur/schema/type/simple/primitive/decimal', function () {
 
     it("should be a sulfur/schema/type/simple/primitive", function () {
-      expect($decimalType).to.eql(
-        $primitiveType.create({
-          qname: $qname.create('decimal', 'http://www.w3.org/2001/XMLSchema'),
-          valueType: $decimalValue,
-          facets: $facets.create([
-            $enumerationFacet,
-            $fractionDigitsFacet,
-            $maxExclusiveFacet,
-            $maxInclusiveFacet,
-            $minExclusiveFacet,
-            $minInclusiveFacet,
-            $patternFacet,
-            $totalDigitsFacet
+      expect(DecimalType).to.eql(
+        PrimitiveType.create({
+          qname: QName.create('decimal', 'http://www.w3.org/2001/XMLSchema'),
+          valueType: DecimalValue,
+          facets: Facets.create([
+            EnumerationFacet,
+            FractionDigitsFacet,
+            MaxExclusiveFacet,
+            MaxInclusiveFacet,
+            MinExclusiveFacet,
+            MinInclusiveFacet,
+            PatternFacet,
+            TotalDigitsFacet
           ])
         })
       );

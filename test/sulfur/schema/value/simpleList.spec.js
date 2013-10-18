@@ -11,26 +11,26 @@ define([
   'shared',
   'sulfur/schema/value/list',
   'sulfur/schema/value/simpleList'
-], function ($shared, $listValue, $simpleListValue) {
+], function (shared, ListValue, SimpleListValue) {
 
   'use strict';
 
-  var expect = $shared.expect;
-  var sinon = $shared.sinon;
-  var returns = $shared.returns;
+  var expect = shared.expect;
+  var sinon = shared.sinon;
+  var returns = shared.returns;
 
   describe('sulfur/schema/value/simpleList', function () {
 
     it("should be derived from sulfur/schema/value/list", function () {
-      expect($listValue).to.be.prototypeOf($simpleListValue);
+      expect(ListValue).to.be.prototypeOf(SimpleListValue);
     });
 
     describe('.typed()', function () {
 
       it("should clone and use the given value type as item value type", function () {
         var valueType = {};
-        var simpleList = $simpleListValue.typed(valueType);
-        expect($simpleListValue).to.be.prototypeOf(simpleList);
+        var simpleList = SimpleListValue.typed(valueType);
+        expect(SimpleListValue).to.be.prototypeOf(simpleList);
         expect(simpleList.getItemValueType()).to.equal(valueType);
       });
 
@@ -47,7 +47,7 @@ define([
             return { s: s };
           }
         };
-        simpleList = $simpleListValue.typed(valueType);
+        simpleList = SimpleListValue.typed(valueType);
       });
 
       it("should parse a space separated sequence of literals", function () {
@@ -81,7 +81,7 @@ define([
         var spies = items.map(function (item) {
           return sinon.spy(item, 'toString');
         });
-        var list = $simpleListValue.create(items);
+        var list = SimpleListValue.create(items);
         var s = list.toString();
         expect(s).to.equal('x y');
         expect(spies[0]).to.be.calledOn(items[0]);
@@ -95,7 +95,7 @@ define([
           { toString: returns('e\x0Df') },
           { toString: returns('g  h ') }
         ];
-        var list = $simpleListValue.create(items);
+        var list = SimpleListValue.create(items);
         var s = list.toString();
         expect(s).to.equal('a b c d e f g h');
       });
