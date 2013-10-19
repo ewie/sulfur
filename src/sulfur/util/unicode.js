@@ -6,7 +6,7 @@
 
 /* global define */
 
-define(function () {
+define(['sulfur/util'], function (util) {
 
   'use strict';
 
@@ -279,7 +279,7 @@ define(function () {
    * @return {array} a new sorted array
    */
   function sort(ranges) {
-    return [].concat(ranges).sort(function (left, right) {
+    return util.sort(ranges, function (left, right) {
       var d0 = left[0] - right[0];
       if (d0 !== 0) {
         return d0;
