@@ -20,7 +20,7 @@ define([
   'sulfur/schema/regex/piece',
   'sulfur/schema/regex/range',
   'sulfur/schema/regex/ranges',
-  'sulfur/unicode'
+  'sulfur/util/unicode'
 ], function (
   Factory,
   Any,
@@ -35,7 +35,7 @@ define([
   Piece,
   Range,
   Ranges,
-  Unicode
+  unicode
 ) {
 
   'use strict';
@@ -138,7 +138,7 @@ define([
   }
 
   function translateCodepoint(character) {
-    var pair = Unicode.encodeToSurrogatePair(character.value);
+    var pair = unicode.encodeToSurrogatePair(character.value);
     if (pair) {
       return Pattern.create(
         [Branch.create(
@@ -161,7 +161,7 @@ define([
   }
 
   function translateBlock(block) {
-    var range = Unicode.getBlockRange(block.name);
+    var range = unicode.getBlockRange(block.name);
     return Group.create([
       Range.create(
         Codeunit.create(range[0]),
@@ -173,10 +173,10 @@ define([
     var name = category.name;
 
     var ranges;
-    if (Unicode.isValidCategory(name)) {
-      ranges = Unicode.getCategoryRanges(name);
+    if (unicode.isValidCategory(name)) {
+      ranges = unicode.getCategoryRanges(name);
     } else {
-      ranges = Unicode.getCategoryGroupRanges(name);
+      ranges = unicode.getCategoryGroupRanges(name);
     }
 
     var items = ranges.reduce(function (items, range) {
@@ -201,7 +201,7 @@ define([
 
   function resolveCodepointItem(codepoint) {
     var value = codepoint.value;
-    var pair = Unicode.encodeToSurrogatePair(value);
+    var pair = unicode.encodeToSurrogatePair(value);
     if (pair) {
       return [
         [ pair[0], pair[0] ],
@@ -217,8 +217,8 @@ define([
   function resolveRangeItem(range) {
     var start = range.start.value;
     var end = range.end.value;
-    var startPair = Unicode.encodeToSurrogatePair(start);
-    var endPair = Unicode.encodeToSurrogatePair(end);
+    var startPair = unicode.encodeToSurrogatePair(start);
+    var endPair = unicode.encodeToSurrogatePair(end);
     var ranges = [];
     if (startPair && endPair) {
       ranges.push(
@@ -240,17 +240,17 @@ define([
   }
 
   function resolveBlockItem(block) {
-    var ranges = [ Unicode.getBlockRange(block.name) ];
+    var ranges = [ unicode.getBlockRange(block.name) ];
     return block.positive ? ranges : invertRanges(ranges);
   }
 
   function resolveCategoryItem(category) {
     var name = category.name;
     var ranges;
-    if (Unicode.isValidCategory(name)) {
-      ranges = Unicode.getCategoryRanges(name);
-    } else if (Unicode.isValidCategoryGroup(name)) {
-      ranges = Unicode.getCategoryGroupRanges(name);
+    if (unicode.isValidCategory(name)) {
+      ranges = unicode.getCategoryRanges(name);
+    } else if (unicode.isValidCategoryGroup(name)) {
+      ranges = unicode.getCategoryGroupRanges(name);
     }
     return category.positive ? ranges : invertRanges(ranges);
   }
@@ -345,7 +345,7 @@ define([
       positive = class_.positive;
       break;
     case Class.DIGIT:
-      ranges = Unicode.getCategoryRanges('Nd');
+      ranges = unicode.getCategoryRanges('Nd');
       positive = class_.positive;
       break;
     case Class.WORD:
@@ -353,11 +353,11 @@ define([
       positive = !class_.positive;
       break;
     case Class.CHAR:
-      ranges = Unicode.getXmlNameCharRanges();
+      ranges = unicode.getXmlNameCharRanges();
       positive = class_.positive;
       break;
     case Class.INITIAL:
-      ranges = Unicode.getXmlNameStartCharRanges();
+      ranges = unicode.getXmlNameStartCharRanges();
       positive = class_.positive;
       break;
     default:
@@ -392,9 +392,9 @@ define([
   }
 
   function resolveWordClass() {
-    var cRanges = Unicode.getCategoryGroupRanges('C');
-    var pRanges = Unicode.getCategoryGroupRanges('P');
-    var zRanges = Unicode.getCategoryGroupRanges('Z');
+    var cRanges = unicode.getCategoryGroupRanges('C');
+    var pRanges = unicode.getCategoryGroupRanges('P');
+    var zRanges = unicode.getCategoryGroupRanges('Z');
     return Ranges.create(cRanges.concat(pRanges, zRanges)).array;
   }
 

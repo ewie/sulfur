@@ -8,8 +8,8 @@
 
 define([
   'sulfur/factory',
-  'sulfur/unicode'
-], function (Factory, Unicode) {
+  'sulfur/util/unicode'
+], function (Factory, unicode) {
 
   'use strict';
 
@@ -48,7 +48,7 @@ define([
         if (!value) {
           throw new Error("expecting a string with exactly one character");
         }
-        var pair = Unicode.decodeCharacterFromUtf16(value);
+        var pair = unicode.decodeCharacterFromUtf16(value);
         if (value.length > pair[1]) {
           throw new Error("expecting a string with exactly one character");
         }

@@ -8,8 +8,8 @@
 
 define([
   'sulfur/factory',
-  'sulfur/unicode'
-], function (Factory, Unicode) {
+  'sulfur/util/unicode'
+], function (Factory, unicode) {
 
   'use strict';
 
@@ -32,7 +32,7 @@ define([
      *   of that block or the inverse
      */
     initialize: function (name, positive) {
-      if (!Unicode.isValidBlock(name)) {
+      if (!unicode.isValidBlock(name)) {
         throw new Error("unknown Unicode block " + name);
       }
       if (isUnsupportedUnicodeBlock(name)) {

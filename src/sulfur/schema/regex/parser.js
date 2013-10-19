@@ -19,7 +19,7 @@ define([
   'sulfur/schema/regex/quant',
   'sulfur/schema/regex/piece',
   'sulfur/schema/regex/range',
-  'sulfur/unicode'
+  'sulfur/util/unicode'
 ], function (
   Factory,
   Any,
@@ -33,7 +33,7 @@ define([
   Quant,
   Piece,
   Range,
-  Unicode
+  unicode
 ) {
 
   'use strict';
@@ -73,7 +73,7 @@ define([
         if (!isValidXmlCharacterCodepoint(val)) {
           throw new Error("illegal XML character " + m);
         }
-        return Unicode.encodeCharacterAsUtf16(val);
+        return unicode.encodeCharacterAsUtf16(val);
       });
 
       s = s.replace(/&#x([\dA-Fa-f]+);/g, function (m, hex) {
@@ -81,7 +81,7 @@ define([
         if (!isValidXmlCharacterCodepoint(val)) {
           throw new Error("illegal XML character " + m);
         }
-        return Unicode.encodeCharacterAsUtf16(val);
+        return unicode.encodeCharacterAsUtf16(val);
       });
 
       s = s.replace(/&([^;]+);/g, function (m, name) {
@@ -150,7 +150,7 @@ define([
     },
 
     consumeCodepoint: function () {
-      var pair = Unicode.decodeCharacterFromUtf16(this.source);
+      var pair = unicode.decodeCharacterFromUtf16(this.source);
       if (pair[1].length > 1) {
         console.log(pair);
       }

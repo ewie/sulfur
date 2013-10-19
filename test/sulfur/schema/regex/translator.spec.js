@@ -19,7 +19,7 @@ define([
   'sulfur/schema/regex/range',
   'sulfur/schema/regex/ranges',
   'sulfur/schema/regex/translator',
-  'sulfur/unicode'
+  'sulfur/util/unicode'
 ], function (
   shared,
   Branch,
@@ -32,7 +32,7 @@ define([
   Range,
   Ranges,
   Translator,
-  Unicode
+  unicode
 ) {
 
   'use strict';
@@ -70,7 +70,7 @@ define([
 
       function translateCategories() {
         var ranges = Array.prototype.map.call(arguments, function (name) {
-          return Unicode.getCategoryGroupRanges(name);
+          return unicode.getCategoryGroupRanges(name);
         });
         ranges = [].concat.apply([], ranges);
         return Ranges.create(ranges).array;
@@ -253,7 +253,7 @@ define([
         });
 
         it("should translate \\c", function () {
-          var items = rangesToGroupItems(Unicode.getXmlNameCharRanges());
+          var items = rangesToGroupItems(unicode.getXmlNameCharRanges());
           var r = translator.translate(parse('\\c'));
           var x = Pattern.create(
             [Branch.create(
@@ -265,7 +265,7 @@ define([
         });
 
         it("should translate \\C", function () {
-          var items = rangesToGroupItems(Unicode.getXmlNameCharRanges());
+          var items = rangesToGroupItems(unicode.getXmlNameCharRanges());
           var r = translator.translate(parse('\\C'));
           var x = Pattern.create(
             [Branch.create(
@@ -277,7 +277,7 @@ define([
         });
 
         it("should translate \\d", function () {
-          var items = rangesToGroupItems(Unicode.getCategoryRanges('Nd'));
+          var items = rangesToGroupItems(unicode.getCategoryRanges('Nd'));
           var r = translator.translate(parse('\\d'));
           var x = Pattern.create(
             [Branch.create(
@@ -289,7 +289,7 @@ define([
         });
 
         it("should translate \\D", function () {
-          var items = rangesToGroupItems(Unicode.getCategoryRanges('Nd'));
+          var items = rangesToGroupItems(unicode.getCategoryRanges('Nd'));
           var r = translator.translate(parse('\\D'));
           var x = Pattern.create(
             [Branch.create(
@@ -301,7 +301,7 @@ define([
         });
 
         it("should translate \\i", function () {
-          var items = rangesToGroupItems(Unicode.getXmlNameStartCharRanges());
+          var items = rangesToGroupItems(unicode.getXmlNameStartCharRanges());
           var r = translator.translate(parse('\\i'));
           var x = Pattern.create(
             [Branch.create(
@@ -313,7 +313,7 @@ define([
         });
 
         it("should translate \\I", function () {
-          var items = rangesToGroupItems(Unicode.getXmlNameStartCharRanges());
+          var items = rangesToGroupItems(unicode.getXmlNameStartCharRanges());
           var r = translator.translate(parse('\\I'));
           var x = Pattern.create(
             [Branch.create(
@@ -384,7 +384,7 @@ define([
 
           it("should translate \\p to a positive group for all supported blocks", function () {
             SUPPORTED_UNICODE_BLOCKS.forEach(function (name) {
-              var range = Unicode.getBlockRange(name);
+              var range = unicode.getBlockRange(name);
               var r = translator.translate(parse('\\p{Is' + name + '}'));
               var x = Pattern.create(
                 [Branch.create(
@@ -402,7 +402,7 @@ define([
 
           it("should translate \\p to a positive group for all supported categories", function () {
             SUPPORTED_UNICODE_CATEGORIES.forEach(function (name) {
-              var ranges = Unicode.getCategoryRanges(name);
+              var ranges = unicode.getCategoryRanges(name);
               var items = rangesToGroupItems(ranges);
               var r = translator.translate(parse('\\p{' + name + '}'));
               var x = Pattern.create(
@@ -416,8 +416,8 @@ define([
           });
 
           it("should translate \\p to a positive group for all supported category groups", function () {
-            Unicode.getCategoryGroupNames().forEach(function (name) {
-              var ranges = Unicode.getCategoryGroupRanges(name);
+            unicode.getCategoryGroupNames().forEach(function (name) {
+              var ranges = unicode.getCategoryGroupRanges(name);
               var items = rangesToGroupItems(ranges);
               var r = translator.translate(parse('\\p{' + name + '}'));
               var x = Pattern.create(
@@ -436,7 +436,7 @@ define([
 
           it("should translate \\P to a negative group for all supported blocks", function () {
             SUPPORTED_UNICODE_BLOCKS.forEach(function (name) {
-              var range = Unicode.getBlockRange(name);
+              var range = unicode.getBlockRange(name);
               var r = translator.translate(parse('\\P{Is' + name + '}'));
               var x = Pattern.create(
                 [Branch.create(
@@ -454,7 +454,7 @@ define([
 
           it("should translate \\P to a negative group for all supported categories", function () {
             SUPPORTED_UNICODE_CATEGORIES.forEach(function (name) {
-              var ranges = Unicode.getCategoryRanges(name);
+              var ranges = unicode.getCategoryRanges(name);
               var items = rangesToGroupItems(ranges);
               var r = translator.translate(parse('\\P{' + name + '}'));
               var x = Pattern.create(
@@ -468,8 +468,8 @@ define([
           });
 
           it("should translate \\P to a negative group for all supported category groups", function () {
-            Unicode.getCategoryGroupNames().forEach(function (name) {
-              var ranges = Unicode.getCategoryGroupRanges(name);
+            unicode.getCategoryGroupNames().forEach(function (name) {
+              var ranges = unicode.getCategoryGroupRanges(name);
               var items = rangesToGroupItems(ranges);
               var r = translator.translate(parse('\\P{' + name + '}'));
               var x = Pattern.create(
@@ -741,7 +741,7 @@ define([
           }
 
           it("should translate \\c", function () {
-            var items = rangesToGroupItems(Unicode.getXmlNameCharRanges());
+            var items = rangesToGroupItems(unicode.getXmlNameCharRanges());
             var r = translator.translate(parse('[\\c]'));
             var x = Pattern.create(
               [Branch.create(
@@ -753,7 +753,7 @@ define([
           });
 
           it("should translate \\C by inverting its ranges", function () {
-            var items = rangesToGroupItems(invert(Unicode.getXmlNameCharRanges()));
+            var items = rangesToGroupItems(invert(unicode.getXmlNameCharRanges()));
             var r = translator.translate(parse('[\\C]'));
             var x = Pattern.create(
               [Branch.create(
@@ -765,7 +765,7 @@ define([
           });
 
           it("should translate \\d", function () {
-            var items = rangesToGroupItems(Unicode.getCategoryRanges('Nd'));
+            var items = rangesToGroupItems(unicode.getCategoryRanges('Nd'));
             var r = translator.translate(parse('[\\d]'));
             var x = Pattern.create(
               [Branch.create(
@@ -777,7 +777,7 @@ define([
           });
 
           it("should translate \\D by inverting its ranges", function () {
-            var items = rangesToGroupItems(invert(Unicode.getCategoryRanges('Nd')));
+            var items = rangesToGroupItems(invert(unicode.getCategoryRanges('Nd')));
             var r = translator.translate(parse('[\\D]'));
             var x = Pattern.create(
               [Branch.create(
@@ -789,7 +789,7 @@ define([
           });
 
           it("should translate \\i", function () {
-            var items = rangesToGroupItems(Unicode.getXmlNameStartCharRanges());
+            var items = rangesToGroupItems(unicode.getXmlNameStartCharRanges());
             var r = translator.translate(parse('[\\i]'));
             var x = Pattern.create(
               [Branch.create(
@@ -801,7 +801,7 @@ define([
           });
 
           it("should translate \\I by inverting its ranges", function () {
-            var items = rangesToGroupItems(invert(Unicode.getXmlNameStartCharRanges()));
+            var items = rangesToGroupItems(invert(unicode.getXmlNameStartCharRanges()));
             var r = translator.translate(parse('[\\I]'));
             var x = Pattern.create(
               [Branch.create(
@@ -879,7 +879,7 @@ define([
 
             it("should translate \\p to a positive group for all supported blocks", function () {
               SUPPORTED_UNICODE_BLOCKS.forEach(function (name) {
-                var range = Unicode.getBlockRange(name);
+                var range = unicode.getBlockRange(name);
                 var r = translator.translate(parse('[\\p{Is' + name + '}]'));
                 var x = Pattern.create(
                   [Branch.create(
@@ -897,7 +897,7 @@ define([
 
             it("should translate \\p to a positive group for all supported categories", function () {
               SUPPORTED_UNICODE_CATEGORIES.forEach(function (name) {
-                var ranges = Unicode.getCategoryRanges(name);
+                var ranges = unicode.getCategoryRanges(name);
                 var items = rangesToGroupItems(ranges);
                 var r = translator.translate(parse('[\\p{' + name + '}]'));
                 var x = Pattern.create(
@@ -911,8 +911,8 @@ define([
             });
 
             it("should translate \\p to a positive group for all supported category groups", function () {
-              Unicode.getCategoryGroupNames().forEach(function (name) {
-                var ranges = Unicode.getCategoryGroupRanges(name);
+              unicode.getCategoryGroupNames().forEach(function (name) {
+                var ranges = unicode.getCategoryGroupRanges(name);
                 var items = rangesToGroupItems(ranges);
                 var r = translator.translate(parse('[\\p{' + name + '}]'));
                 var x = Pattern.create(
@@ -931,7 +931,7 @@ define([
 
             it("should translate \\P to a positive group using inverted ranges for all supported blocks", function () {
               SUPPORTED_UNICODE_BLOCKS.forEach(function (name) {
-                var items = rangesToGroupItems(invert([Unicode.getBlockRange(name)]));
+                var items = rangesToGroupItems(invert([unicode.getBlockRange(name)]));
                 var r = translator.translate(parse('[\\P{Is' + name + '}]'));
                 var x = Pattern.create(
                   [Branch.create(
@@ -945,7 +945,7 @@ define([
 
             it("should translate \\P to a positive group using inverted ranges for all supported categories", function () {
               SUPPORTED_UNICODE_CATEGORIES.forEach(function (name) {
-                var items = rangesToGroupItems(invert(Unicode.getCategoryRanges(name)));
+                var items = rangesToGroupItems(invert(unicode.getCategoryRanges(name)));
                 var r = translator.translate(parse('[\\P{' + name + '}]'));
                 var x = Pattern.create(
                   [Branch.create(
@@ -958,8 +958,8 @@ define([
             });
 
             it("should translate \\P to a positive group using inverted ranges for all supported category groups", function () {
-              Unicode.getCategoryGroupNames().forEach(function (name) {
-                var items = rangesToGroupItems(invert(Unicode.getCategoryGroupRanges(name)));
+              unicode.getCategoryGroupNames().forEach(function (name) {
+                var items = rangesToGroupItems(invert(unicode.getCategoryGroupRanges(name)));
                 var r = translator.translate(parse('[\\P{' + name + '}]'));
                 var x = Pattern.create(
                   [Branch.create(
@@ -989,14 +989,14 @@ define([
     'LowSurrogates'
   ];
 
-  var SUPPORTED_UNICODE_CATEGORIES = Unicode.getCategoryNames().reduce(function (categories, name) {
+  var SUPPORTED_UNICODE_CATEGORIES = unicode.getCategoryNames().reduce(function (categories, name) {
     if (UNSUPPORTED_UNICODE_CATEGORIES.indexOf(name) === -1) {
       categories.push(name);
     }
     return categories;
   }, []);
 
-  var SUPPORTED_UNICODE_BLOCKS = Unicode.getBlockNames().reduce(function (blocks, name) {
+  var SUPPORTED_UNICODE_BLOCKS = unicode.getBlockNames().reduce(function (blocks, name) {
     if (UNSUPPORTED_UNICODE_BLOCKS.indexOf(name) === -1) {
       blocks.push(name);
     }

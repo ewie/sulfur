@@ -10,8 +10,8 @@
 define([
   'shared',
   'sulfur/schema/regex/block',
-  'sulfur/unicode'
-], function (shared, Block, Unicode) {
+  'sulfur/util/unicode'
+], function (shared, Block, unicode) {
 
   'use strict';
 
@@ -71,7 +71,7 @@ define([
     'LowSurrogates'
   ];
 
-  var SUPPORTED_UNICODE_BLOCKS = Unicode.getBlockNames().reduce(
+  var SUPPORTED_UNICODE_BLOCKS = unicode.getBlockNames().reduce(
     function (blocks, name) {
       if (UNSUPPORTED_UNICODE_BLOCKS.indexOf(name) === -1) {
         blocks.push(name);

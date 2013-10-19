@@ -8,8 +8,8 @@
 
 define([
   'sulfur/factory',
-  'sulfur/unicode'
-], function (Factory, Unicode) {
+  'sulfur/util/unicode'
+], function (Factory, unicode) {
 
   'use strict';
 
@@ -33,7 +33,7 @@ define([
       if (isUnsupportedUnicodeCategory(name)) {
         throw new Error("unsupported Unicode category " + name);
       }
-      if (!Unicode.isValidCategory(name) && !Unicode.isValidCategoryGroup(name)) {
+      if (!unicode.isValidCategory(name) && !unicode.isValidCategoryGroup(name)) {
         throw new Error("unknown Unicode category " + name);
       }
       this.name = name;

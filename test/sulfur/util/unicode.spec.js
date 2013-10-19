@@ -9,7 +9,7 @@
 
 define([
   'shared',
-  'sulfur/unicode'
+  'sulfur/util/unicode'
 ], function (shared, unicode) {
 
   'use strict';
@@ -17,7 +17,7 @@ define([
   var expect = shared.expect;
   var bind = shared.bind;
 
-  describe('sulfur/unicode', function () {
+  describe('sulfur/util/unicode', function () {
 
     describe('.decodeCharacterFromUtf16()', function () {
 

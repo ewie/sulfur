@@ -10,8 +10,8 @@
 define([
   'shared',
   'sulfur/schema/regex/category',
-  'sulfur/unicode'
-], function (shared, Category, Unicode) {
+  'sulfur/util/unicode'
+], function (shared, Category, unicode) {
 
   'use strict';
 
@@ -67,7 +67,7 @@ define([
 
   var UNSUPPORTED_UNICODE_CATEGORIES = ['Cn'];
 
-  var SUPPORTED_UNICODE_CATEGORIES = Unicode.getCategoryNames().reduce(
+  var SUPPORTED_UNICODE_CATEGORIES = unicode.getCategoryNames().reduce(
     function (categories, name) {
       if (UNSUPPORTED_UNICODE_CATEGORIES.indexOf(name) === -1) {
         categories.push(name);

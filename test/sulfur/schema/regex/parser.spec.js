@@ -21,7 +21,7 @@ define([
   'sulfur/schema/regex/piece',
   'sulfur/schema/regex/quant',
   'sulfur/schema/regex/range',
-  'sulfur/unicode'
+  'sulfur/util/unicode'
 ], function (
     shared,
     Any,
@@ -36,7 +36,7 @@ define([
     Piece,
     Quant,
     Range,
-    Unicode
+    unicode
 ) {
 
   'use strict';
@@ -760,14 +760,14 @@ define([
     'LowSurrogates'
   ];
 
-  var SUPPORTED_UNICODE_CATEGORIES = Unicode.getCategoryNames().reduce(function (categories, name) {
+  var SUPPORTED_UNICODE_CATEGORIES = unicode.getCategoryNames().reduce(function (categories, name) {
     if (UNSUPPORTED_UNICODE_CATEGORIES.indexOf(name) === -1) {
       categories.push(name);
     }
     return categories;
   }, []);
 
-  var SUPPORTED_UNICODE_BLOCKS = Unicode.getBlockNames().reduce(function (blocks, name) {
+  var SUPPORTED_UNICODE_BLOCKS = unicode.getBlockNames().reduce(function (blocks, name) {
     if (UNSUPPORTED_UNICODE_BLOCKS.indexOf(name) === -1) {
       blocks.push(name);
     }
