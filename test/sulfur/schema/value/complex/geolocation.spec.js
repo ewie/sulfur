@@ -70,22 +70,22 @@ define([
           .to.throw("expecting a latitude value");
       });
 
-      it("should reject a longitude with type other than sulfur/schema/double", function () {
+      it("should reject a longitude with type other than sulfur/schema/value/simple/double", function () {
         var values = [
           [ 'longitude', {} ],
           [ 'latitude', DoubleValue.create() ]
         ];
         expect(bind(GeolocationValue, 'create', values))
-          .to.throw("longitude must be a sulfur/schema/double");
+          .to.throw("longitude must be a sulfur/schema/value/simple/double");
       });
 
-      it("should reject a latitude with type other than sulfur/schema/double", function () {
+      it("should reject a latitude with type other than sulfur/schema/value/simple/double", function () {
         var values = [
           [ 'longitude', DoubleValue.create() ],
           [ 'latitude', {} ]
         ];
         expect(bind(GeolocationValue, 'create', values))
-          .to.throw("latitude must be a sulfur/schema/double");
+          .to.throw("latitude must be a sulfur/schema/value/simple/double");
       });
 
       it("should reject a longitude with NaN", function () {

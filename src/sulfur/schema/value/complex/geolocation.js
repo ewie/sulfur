@@ -21,7 +21,7 @@ define([
 
   function assertValue(name, value, max) {
     if (!isDouble(value)) {
-      throw new Error(name + " must be a sulfur/schema/double");
+      throw new Error(name + " must be a sulfur/schema/value/simple/double");
     }
     if (value.isNaN()) {
       throw new Error(name + " must not be NaN");
@@ -48,7 +48,7 @@ define([
      *
      * @param {array} values an array of name/value pairs
      *
-     * @throw {Error} when longitude or latitude is not a sulfur/schema/double
+     * @throw {Error} when longitude or latitude is not a {sulfur/schema/value/simple/double}
      * @throw {Error} when longitude or latitude is NaN
      * @throw {Error} when longitude is not withing range [-180, 180]
      * @throw {Error} when latitude is not withing range [-90, 90]
