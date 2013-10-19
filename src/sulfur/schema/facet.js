@@ -7,7 +7,7 @@
 /* global define */
 
 define([
-  'sulfur/factory',
+  'sulfur/util/factory',
   'sulfur/schema/validator/all',
   'sulfur/util'
 ], function (Factory, AllValidator, util) {

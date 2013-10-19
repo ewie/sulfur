@@ -9,7 +9,7 @@
 
 define([
   'shared',
-  'sulfur/factory'
+  'sulfur/util/factory'
 ], function (shared, Factory) {
 
   'use strict';
@@ -18,7 +18,7 @@ define([
   var sinon = shared.sinon;
   var descriptor = shared.descriptor;
 
-  describe('sulfur/factory', function () {
+  describe('sulfur/util/factory', function () {
 
     var sandbox;
 

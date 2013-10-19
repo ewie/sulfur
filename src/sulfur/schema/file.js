@@ -7,7 +7,7 @@
 /* global define */
 
 define([
-  'sulfur/factory',
+  'sulfur/util/factory',
   'sulfur/schema/mediaType'
 ], function (Factory, MediaType) {
 

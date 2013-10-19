@@ -7,7 +7,7 @@
 /* global define */
 
 define([
-  'sulfur/factory',
+  'sulfur/util/factory',
   'sulfur/schema/value/simple/decimal',
   'sulfur/util'
 ], function (Factory, DecimalValue, util) {

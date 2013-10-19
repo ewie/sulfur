@@ -7,7 +7,7 @@
 /* global define */
 
 define([
-  'sulfur/factory',
+  'sulfur/util/factory',
   'sulfur/util',
   'sulfur/util/orderedMap'
 ], function (Factory, util, OrderedMap) {

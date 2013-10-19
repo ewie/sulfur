@@ -7,7 +7,7 @@
 /* global define */
 
 define([
-  'sulfur/factory',
+  'sulfur/util/factory',
   'sulfur/schema/regex/compiler',
   'sulfur/schema/regex/parser',
   'sulfur/schema/regex/translator'

@@ -7,7 +7,7 @@
 /* global define */
 
 define([
-  'sulfur/factory'
+  'sulfur/util/factory'
 ], function (Factory) {
 
   'use strict';

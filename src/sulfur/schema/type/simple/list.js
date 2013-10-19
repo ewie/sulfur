@@ -7,7 +7,7 @@
 /* global define */
 
 define([
-  'sulfur/factory',
+  'sulfur/util/factory',
   'sulfur/schema/facet/enumeration',
   'sulfur/schema/facet/length',
   'sulfur/schema/facet/maxLength',

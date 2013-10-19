@@ -7,7 +7,7 @@
 /* global define */
 
 define([
-  'sulfur/factory',
+  'sulfur/util/factory',
   'sulfur/schema/element',
   'sulfur/schema/elements',
   'sulfur/schema/type/complex/list',
