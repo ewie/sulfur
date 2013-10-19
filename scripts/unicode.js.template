@@ -6,7 +6,7 @@
 
 /* global define */
 
-define(function () {
+define(['sulfur/util'], function (util) {
 
   'use strict';
 
@@ -31,14 +31,14 @@ define(function () {
     /**
      * Decode a character represented by a string into its UCS codepoint value.
      *
-     * @param [string] s
+     * @param {string} s
      *   a string of length 1 containing a single BMP character, or
      *   a string of length 2 containing a surrogate pair
      *
-     * @throw [Error] if `s` is empty
-     * @throw [Error] if `s` is missing a lead or trail surrogate
+     * @throw {Error} if `s` is empty
+     * @throw {Error} if `s` is missing a lead or trail surrogate
      *
-     * @return [number] the character's codepoint value
+     * @return {number} the character's codepoint value
      */
     decodeCharacterFromUtf16: function (s) {
       if (s.length === 0) {
@@ -69,9 +69,9 @@ define(function () {
     /**
      * Encode a UCS codepoint value as UTF-16.
      *
-     * @param [number] value the codepoint value to encode
+     * @param {number} value the codepoint value to encode
      *
-     * @return [string] a string containing either a single BMP character or a
+     * @return {string} a string containing either a single BMP character or a
      *   surrogate pair
      */
     encodeCharacterAsUtf16: function (value) {
@@ -85,9 +85,9 @@ define(function () {
     /**
      * Encode a UCS codepoint as a surrogate pair.
      *
-     * @param [number] value the codepoint value to encode
+     * @param {number} value the codepoint value to encode
      *
-     * @return [array] an array containing the lead and trail surrogate
+     * @return {array} an array containing the lead and trail surrogate
      */
     encodeToSurrogatePair: function (value) {
       if (!isValidCodepoint(value)) {
@@ -107,10 +107,10 @@ define(function () {
     /**
      * Check if a string represents a valid Block name.
      *
-     * @param [string] name
+     * @param {string} name
      *
-     * @return [true] if valid
-     * @return [false] otherwise
+     * @return {true} if valid
+     * @return {false} otherwise
      */
     isValidBlock: function (name) {
       return BLOCKS.hasOwnProperty(name);
@@ -119,10 +119,10 @@ define(function () {
     /**
      * Check if a string represents a valid General Category name.
      *
-     * @param [string] name
+     * @param {string} name
      *
-     * @return [true] if valid
-     * @return [false] otherwise
+     * @return {true} if valid
+     * @return {false} otherwise
      */
     isValidCategory: function (name) {
       return CATEGORIES.hasOwnProperty(name);
@@ -131,10 +131,10 @@ define(function () {
     /**
      * Check if a string represents a valid General Category Group name.
      *
-     * @param [string] name
+     * @param {string} name
      *
-     * @return [true] if valid
-     * @return [false] otherwise
+     * @return {true} if valid
+     * @return {false} otherwise
      */
     isValidCategoryGroup: function (name) {
       return CATEGORY_GROUPS.hasOwnProperty(name);
@@ -143,10 +143,10 @@ define(function () {
     /**
      * Get the codepoint range of the Block with the given name.
      *
-     * @param [string] name
+     * @param {string} name
      *
-     * @return [array] an array containing the block's start and end
-     * @return [undefined] if `name` does not denote a valid Block
+     * @return {array} an array containing the block's start and end
+     * @return {undefined} if `name` does not denote a valid Block
      */
     getBlockRange: function (name) {
       if ($.isValidBlock(name)) {
@@ -159,10 +159,10 @@ define(function () {
     /**
      * Get the codepoint ranges of the General Category with the given name.
      *
-     * @param [string] name
+     * @param {string} name
      *
-     * @return [array] an array of sorted and disjoint ranges
-     * @return [undefined] if `name` does not denote a valid General Category
+     * @return {array} an array of sorted and disjoint ranges
+     * @return {undefined} if `name` does not denote a valid General Category
      */
     getCategoryRanges: function (name) {
       if ($.isValidCategory(name)) {
@@ -173,10 +173,10 @@ define(function () {
     /**
      * Get the codepoint ranges the General Category Group with the given name.
      *
-     * @param [string] name
+     * @param {string} name
      *
-     * @return [array] an array of sorted and disjoint ranges
-     * @return [undefined] if `name` does not denote a valid General Category Group
+     * @return {array} an array of sorted and disjoint ranges
+     * @return {undefined} if `name` does not denote a valid General Category Group
      */
     getCategoryGroupRanges: function (name) {
       if ($.isValidCategoryGroup(name)) {
@@ -190,7 +190,7 @@ define(function () {
     /**
      * Get the names of all valid General Categories.
      *
-     * @return [array] an array of General Category names in no particular order
+     * @return {array} an array of General Category names in no particular order
      */
     getCategoryNames: function () {
       return Object.keys(CATEGORIES);
@@ -199,7 +199,7 @@ define(function () {
     /**
      * Get the names of all valid General Category Groups.
      *
-     * @return [array] an array of valid General Category Group names in no
+     * @return {array} an array of valid General Category Group names in no
      *   particular order
      */
     getCategoryGroupNames: function () {
@@ -209,7 +209,7 @@ define(function () {
     /**
      * Get the names of all valid Blocks.
      *
-     * @return [array] an array of valid Block names in no particular order
+     * @return {array} an array of valid Block names in no particular order
      */
     getBlockNames: function () {
       return Object.keys(BLOCKS);
@@ -218,7 +218,7 @@ define(function () {
     /**
      * Get the codepoint ranges for all valid start characters of an XML Name.
      *
-     * @return [array] an array of sorted and disjoint ranges
+     * @return {array} an array of sorted and disjoint ranges
      */
     getXmlNameStartCharRanges: function () {
       return copy(XML_NAME_START_CHARACTERS);
@@ -227,7 +227,7 @@ define(function () {
     /**
      * Get the codepoint ranges for all characters that make up a valid XML Name.
      *
-     * @return [array] an array of sorted and disjoint ranges
+     * @return {array} an array of sorted and disjoint ranges
      */
     getXmlNameCharRanges: function () {
       return copy(XML_NAME_CHARACTERS);
@@ -237,9 +237,9 @@ define(function () {
   /**
    * Resolve a category group of a certain name.
    *
-   * @param [strng] name a valid category group name
+   * @param {strng} name a valid category group name
    *
-   * @return [array] an array of sorted and disjoin ranges
+   * @return {array} an array of sorted and disjoin ranges
    */
   function resolveCategoryGroup(name) {
     var p = CATEGORY_GROUPS[name];
@@ -261,9 +261,9 @@ define(function () {
   /**
    * Create a deep copy of an array of ranges.
    *
-   * @param [array] ranges an array of ranges
+   * @param {array} ranges an array of ranges
    *
-   * @return [array] a deep copy of the given ranges
+   * @return {array} a deep copy of the given ranges
    */
   function copy(ranges) {
     return ranges.map(function (range) {
@@ -274,12 +274,12 @@ define(function () {
   /**
    * Sort an array of ranges in lexicographical order.
    *
-   * @param [array] ranges an array of ranges
+   * @param {array} ranges an array of ranges
    *
-   * @return [array] a new sorted array
+   * @return {array} a new sorted array
    */
   function sort(ranges) {
-    return [].concat(ranges).sort(function (left, right) {
+    return util.sort(ranges, function (left, right) {
       var d0 = left[0] - right[0];
       if (d0 !== 0) {
         return d0;
@@ -292,9 +292,9 @@ define(function () {
    * Form disjoint ranges by combining two ranges if the gap in between is
    * less than or equal zero
    *
-   * @param [array] ranges an array of sorted ranges
+   * @param {array} ranges an array of sorted ranges
    *
-   * @return [array] a new array of disjoint ranges
+   * @return {array} a new array of disjoint ranges
    */
   function disjoin(ranges) {
     return ranges.reduce(function (ranges, range) {
