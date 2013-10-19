@@ -15,8 +15,8 @@ define(['sulfur/factory'], function (Factory) {
     /**
      * Initialize the validator with a property name and subvalidator.
      *
-     * @param [string] name
-     * @param [#validate()] validator a validator for the named property
+     * @param {string} name
+     * @param {.validate()} validator a validator for the named property
      */
     initialize: function (name, validator) {
       this._name = name;
@@ -27,10 +27,10 @@ define(['sulfur/factory'], function (Factory) {
      * Validate an object's property against the subvalidator if that property
      * is not undefined.
      *
-     * @param [object] obj
+     * @param {object} obj
      *
-     * @return [true] if the property is undefined or satisfies the subvalidator
-     * @return [false] if the property does not satisfy the subvalidator
+     * @return {true} if the property is undefined or satisfies the subvalidator
+     * @return {false} if the property does not satisfy the subvalidator
      */
     validate: function (value) {
       value = value[this._name];

@@ -15,7 +15,7 @@ define(['sulfur/factory'], function (Factory) {
     /**
      * Initialize the validator with an item validator.
      *
-     * @param [#validate()] itemValidator
+     * @param {.validate()} itemValidator
      */
     initialize: function (itemValidator) {
       this._itemValidator = itemValidator;
@@ -24,9 +24,9 @@ define(['sulfur/factory'], function (Factory) {
     /**
      * Validate an array of items with item validator.
      *
-     * @param [array] items an array of items to validate
+     * @param {array} items an array of items to validate
      *
-     * @return [boolean] wether all items satisfy the item validator
+     * @return {boolean} wether all items satisfy the item validator
      */
     validate: function (items) {
       return items.every(function (item) {

@@ -13,7 +13,7 @@ define(['sulfur/factory'], function (Factory) {
   return Factory.derive({
 
     /**
-     * @param [any] value
+     * @param {any} value
      */
     initialize: function (value) {
       this._value = value;
@@ -22,9 +22,9 @@ define(['sulfur/factory'], function (Factory) {
     /**
      * Check if a value is strictly equal to the expected value.
      *
-     * @param [any] value
+     * @param {any} value
      *
-     * @return [boolean] whether `value` is strictly equal to the expected value
+     * @return {boolean} whether `value` is strictly equal to the expected value
      */
     validate: function (value) {
       return value === this._value;

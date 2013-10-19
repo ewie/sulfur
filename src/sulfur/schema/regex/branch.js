@@ -18,7 +18,7 @@ define([
 
   return Factory.derive({
     /**
-     * @param [array] pieces (optional) an array of pieces under this branch
+     * @param {array} pieces (optional) an array of pieces under this branch
      */
     initialize: function (pieces) {
       this.pieces = pieces || [];
@@ -27,8 +27,8 @@ define([
     /**
      * Check whether the branch contains an empty group.
      *
-     * @return [true] if any piece contains an empty group
-     * @return [false] otherwise
+     * @return {true} if any piece contains an empty group
+     * @return {false} otherwise
      */
     containsEmptyGroup: function () {
       return this.pieces.some(function (piece) {
@@ -39,9 +39,9 @@ define([
     /**
      * Check whether the branch contains a group containing surrogate codepoints.
      *
-     * @return [true] if any piece contains a containing a surrogate pair
+     * @return {true} if any piece contains a containing a surrogate pair
      *   branch
-     * @return [false] otherwise
+     * @return {false} otherwise
      */
     containsGroupWithSurrogateCodepoints: function () {
       return this.pieces.some(function (piece) {

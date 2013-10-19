@@ -52,9 +52,9 @@ define([
   $.augment({
 
     /**
-     * @param [number] value
+     * @param {number} value
      *
-     * @throw [Error] if `value` is not an integer within [0, 2^53)
+     * @throw {Error} if `value` is not an integer within [0, 2^53)
      */
     initialize: function (value) {
       if (!util.isInteger(value) || value < 0) {

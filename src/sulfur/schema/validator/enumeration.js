@@ -18,12 +18,12 @@ define([
     /**
      * Initialize the validator with one or more allowed values.
      *
-     * @param [array] values
-     * @param [object] options (optional)
+     * @param {array} values
+     * @param {object} options (optional)
      *
-     * @option options [string] testMethod (optional)
+     * @option options {string} testMethod (optional)
      *
-     * @throw [Error] if any value does not respond to the test method
+     * @throw {Error} if any value does not respond to the test method
      */
     initialize: (function () {
 
@@ -52,8 +52,8 @@ define([
     }()),
 
     /**
-     * @return [string] the name of the test method when defined
-     * @return [undefined] when no test method is defined
+     * @return {string} the name of the test method when defined
+     * @return {undefined} when no test method is defined
      */
     getTestMethodName: function () {
       return this._testMethodName;
@@ -63,9 +63,9 @@ define([
      * Validate a value against all allowed values by calling the test method
      * when defined or by using a strict equality check.
      *
-     * @param [any] value
+     * @param {any} value
      *
-     * @return [boolean] whether `value` satisfies the test method of any
+     * @return {boolean} whether `value` satisfies the test method of any
      *   allowed value or strictly equals one of the these values
      */
     validate: function (value) {

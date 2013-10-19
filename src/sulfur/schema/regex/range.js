@@ -18,10 +18,10 @@ define([
 
   return Factory.derive({
     /**
-     * @param [codepoint|codeunit] start the first value in the range
-     * @param [codepoint|codeunit] end the last value in the range
+     * @param {codepoint|codeunit} start the first value in the range
+     * @param {codepoint|codeunit} end the last value in the range
      *
-     * @throw [Error] if the range is empty
+     * @throw {Error} if the range is empty
      */
     initialize: function (start, end) {
       if (start.value > end.value) {

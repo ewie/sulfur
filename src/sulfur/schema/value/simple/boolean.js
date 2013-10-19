@@ -15,9 +15,9 @@ define(['sulfur/factory'], function (Factory) {
     /**
      * Check if a string represents a boolean literal.
      *
-     * @param [string] s
+     * @param {string} s
      *
-     * @return [boolean] whether the `s` represents a boolean literal or not
+     * @return {boolean} whether the `s` represents a boolean literal or not
      */
     isValidLiteral: (function () {
 
@@ -32,9 +32,9 @@ define(['sulfur/factory'], function (Factory) {
     /**
      * Parse a string representing a boolean literal.
      *
-     * @param [string] s
+     * @param {string} s
      *
-     * @throw [Error] if `s` does not represent a boolean literal
+     * @throw {Error} if `s` does not represent a boolean literal
      */
     parse: function (s) {
       if (!this.isValidLiteral(s)) {
@@ -51,9 +51,9 @@ define(['sulfur/factory'], function (Factory) {
     /**
      * Initialize with a boolean value.
      *
-     * @param [boolean] value
+     * @param {boolean} value
      *
-     * @throw [Error] if `value` is not boolean
+     * @throw {Error} if `value` is not boolean
      */
     initialize: function (value) {
       if (typeof value !== 'boolean') {
@@ -65,7 +65,7 @@ define(['sulfur/factory'], function (Factory) {
     /**
      * Get the boolean value.
      *
-     * @return [boolean] the boolean value
+     * @return {boolean} the boolean value
      */
     getValue: function () {
       return this._value;
@@ -74,7 +74,7 @@ define(['sulfur/factory'], function (Factory) {
     /**
      * Get the canonical string representation.
      *
-     * @return [string] the canonical string representation
+     * @return {string} the canonical string representation
      */
     toString: function () {
       return this._value ? 'true' : 'false';
@@ -83,9 +83,9 @@ define(['sulfur/factory'], function (Factory) {
     /**
      * Check this for equality with another boolean.
      *
-     * @param [sulfur/schema/value/simple/boolean] other
+     * @param {sulfur/schema/value/simple/boolean} other
      *
-     * @return [boolean] whether this is equal to `other`
+     * @return {boolean} whether this is equal to `other`
      */
     eq: function (other) {
       return this._value === other._value;

@@ -46,12 +46,12 @@ define([
     /**
      * Initialize the location with a longitude and latitude.
      *
-     * @param [array] values an array of name/value pairs
+     * @param {array} values an array of name/value pairs
      *
-     * @throw [Error] when longitude or latitude is not a sulfur/schema/double
-     * @throw [Error] when longitude or latitude is NaN
-     * @throw [Error] when longitude is not withing range [-180, 180]
-     * @throw [Error] when latitude is not withing range [-90, 90]
+     * @throw {Error} when longitude or latitude is not a sulfur/schema/double
+     * @throw {Error} when longitude or latitude is NaN
+     * @throw {Error} when longitude is not withing range [-180, 180]
+     * @throw {Error} when latitude is not withing range [-90, 90]
      */
     initialize: function (values) {
       var longitude = getValue('longitude', values);

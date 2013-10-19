@@ -26,8 +26,8 @@ define(['sulfur/factory'], function (Factory) {
   return Factory.derive({
 
     /**
-     * @param [function] key (default #toString()) a key function
-     * @param [array] items (optional) initial items to be inserted
+     * @param {function} key (default .toString()) a key function
+     * @param {array} items (optional) initial items to be inserted
      */
     initialize: (function () {
 
@@ -62,9 +62,9 @@ define(['sulfur/factory'], function (Factory) {
     /**
      * Get an item's key.
      *
-     * @param [any] item
+     * @param {any} item
      *
-     * @return [string] the item's key
+     * @return {string} the item's key
      */
     getKey: function (item) {
       return this._key(item);
@@ -73,9 +73,9 @@ define(['sulfur/factory'], function (Factory) {
     /**
      * Check if the map associates a key with an item.
      *
-     * @param [string] key the key to check
+     * @param {string} key the key to check
      *
-     * @return [boolean] whether the key is associated with an item or not
+     * @return {boolean} whether the key is associated with an item or not
      */
     containsKey: function (key) {
       var newkey = sanitizeKey(key);
@@ -85,9 +85,9 @@ define(['sulfur/factory'], function (Factory) {
     /**
      * Check if the map contains a specific item.
      *
-     * @param [any] item the item to check
+     * @param {any} item the item to check
      *
-     * @return [boolean] whether the map contains the item, based on strict
+     * @return {boolean} whether the map contains the item, based on strict
      *   equality, or not
      */
     containsItem: function (item) {
@@ -96,10 +96,10 @@ define(['sulfur/factory'], function (Factory) {
     },
 
     /**
-     * @param [string] key
+     * @param {string} key
      *
-     * @return [any] the item associated with the key
-     * @return [undefined] if no item is associated with the key
+     * @return {any} the item associated with the key
+     * @return {undefined} if no item is associated with the key
      */
     getItemByKey: function (key) {
       key = sanitizeKey(key);
@@ -112,18 +112,18 @@ define(['sulfur/factory'], function (Factory) {
      * Check if an item can be safely inserted into the map, i.e. the item's
      * key is not associated with an item.
      *
-     * @param [any] item
+     * @param {any} item
      *
-     * @return [boolean] whether `item` can be safely inserted or not
+     * @return {boolean} whether `item` can be safely inserted or not
      */
     canBeInserted: function (item) {
       return !this.containsKey(this.getKey(item));
     },
 
     /**
-     * @param [any] item an item to insert
+     * @param {any} item an item to insert
      *
-     * @throw [Error] if the key generated from `item` is already associated
+     * @throw {Error} if the key generated from `item` is already associated
      *   with another item
      */
     insert: function (item) {
@@ -139,7 +139,7 @@ define(['sulfur/factory'], function (Factory) {
     /**
      * Get the array of items in insertion order.
      *
-     * @return [array] the items
+     * @return {array} the items
      */
     toArray: function () {
       return this._items;

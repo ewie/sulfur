@@ -13,8 +13,8 @@ define(['sulfur/factory'], function (Factory) {
   return Factory.derive({
 
     /**
-     * @param [sulfur/schema/value/simple/string] id
-     * @param [sulfur/schema/file] file (optional)
+     * @param {sulfur/schema/value/simple/string} id
+     * @param {sulfur/schema/file} file (optional)
      */
     initialize: function (id, file) {
       this._id = id;
@@ -22,15 +22,15 @@ define(['sulfur/factory'], function (Factory) {
     },
 
     /**
-     * @return [sulfur/schema/value/simple/string] the reference's identifier
+     * @return {sulfur/schema/value/simple/string} the reference's identifier
      */
     getIdentifier: function () {
       return this._id;
     },
 
     /**
-     * @return [sulfur/schema/file] the file when defined
-     * @return [undefined] when no file is defined
+     * @return {sulfur/schema/file} the file when defined
+     * @return {undefined} when no file is defined
      */
     getFile: function () {
       return this._file;

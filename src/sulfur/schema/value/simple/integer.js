@@ -24,9 +24,9 @@ define(['sulfur/schema/value/simple/decimal'], function (DecimalValue) {
     /**
      * Check if a string represents a valid integer value.
      *
-     * @param [string] s the string representation
+     * @param {string} s the string representation
      *
-     * @return [boolean] whether the representation is valid
+     * @return {boolean} whether the representation is valid
      */
     isValidLiteral: function (s) {
       return LITERAL_PATTERN.test(s);
@@ -36,11 +36,11 @@ define(['sulfur/schema/value/simple/decimal'], function (DecimalValue) {
      * Parse a string representing an integer value (i.e. a decimal with no
      * significant fraction digits).
      *
-     * @param [string] s the string representation
+     * @param {string} s the string representation
      *
-     * @return [sulfur/schema/value/simple/integer] the parsed integer
+     * @return {sulfur/schema/value/simple/integer} the parsed integer
      *
-     * @throw [Error] if the string represent no valid integer
+     * @throw {Error} if the string represent no valid integer
      */
     parse: function (s) {
       var m = LITERAL_PATTERN.exec(s);
@@ -58,13 +58,13 @@ define(['sulfur/schema/value/simple/decimal'], function (DecimalValue) {
   $.augment({
 
     /**
-     * @param [object] options
+     * @param {object} options
      *
-     * @option options [string] integralDigits (default '0')
+     * @option options {string} integralDigits (default '0')
      *   the digits to the left of the period
-     * @option options [string] fractionDigits (default '0')
+     * @option options {string} fractionDigits (default '0')
      *   the digits to the right of the period, must be zero
-     * @option options [boolean] positive (default true)
+     * @option options {boolean} positive (default true)
      *   whether the integer is positive
      */
     initialize: function (options) {

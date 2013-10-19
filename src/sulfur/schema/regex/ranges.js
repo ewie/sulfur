@@ -22,9 +22,9 @@ define([
    *
    *   [a b] < [c d]  iff  a < c OR (a = c AND b < d)
    *
-   * @param [array] ranges an array of ranges to sort
+   * @param {array} ranges an array of ranges to sort
    *
-   * @return [array] a new sorted array
+   * @return {array} a new sorted array
    */
   function sort(ranges) {
     return [].concat(ranges).sort(function (left, right) {
@@ -42,9 +42,9 @@ define([
    *   (2) overlapping ranges (i.e. part of a range partly lies within
    *       another range)
    *
-   * @param [array] ranges an array of ranges
+   * @param {array} ranges an array of ranges
    *
-   * @return [array] a new array of ranges
+   * @return {array} a new array of ranges
    */
   function disjoin(ranges) {
     ranges = sort(ranges);
@@ -81,16 +81,16 @@ define([
    *  results       <--->      <->    <--->
    *  consumed        1         2       3
    *
-   * @param [number] min the inclusive start of the range
-   * @param [number] max the inclusive end of the range
-   * @param [array] ranges an array of sorted disjoint ranges
-   * @param [number] offset
+   * @param {number} min the inclusive start of the range
+   * @param {number} max the inclusive end of the range
+   * @param {array} ranges an array of sorted disjoint ranges
+   * @param {number} offset
    *   the index of the first range in `ranges` to consider
-   * @param [array] results an array receiving resulting ranges
+   * @param {array} results an array receiving resulting ranges
    *
-   * @throw [Error] if the range at `offset` is less than `min`
+   * @throw {Error} if the range at `offset` is less than `min`
    *
-   * @return [number]
+   * @return {number}
    *   the number of consumed ranges (starting at `offset`),
    *   which are less than `max`
    */
@@ -146,7 +146,7 @@ define([
      * Initialize the range collection with an array of ranges that will be
      * sorted and disjoined and be made available as #array.
      *
-     * @param [array] an array of pairs each specifying a range with start and
+     * @param {array} an array of pairs each specifying a range with start and
      *   end value
      */
     initialize: function (ranges) {
@@ -156,7 +156,7 @@ define([
     /**
      * Invert the ranges within the range U+0000..U+FFFF (the BMP).
      *
-     * @return [ranges] a new range collection
+     * @return {ranges} a new range collection
      */
     invert: function () {
       var ranges = [];
@@ -184,9 +184,9 @@ define([
      *
      *   R = LHS - RHS
      *
-     * @param [ranges] other the RHS
+     * @param {ranges} other the RHS
      *
-     * @return [ranges] the result of subtracting the RHS from the LHS
+     * @return {ranges} the result of subtracting the RHS from the LHS
      */
     subtract: function (other) {
       var results = [];
@@ -219,7 +219,7 @@ define([
     /**
      * Add the ranges of another range collection.
      *
-     * @return [ranges] a new range collection containing the ranges of this
+     * @return {ranges} a new range collection containing the ranges of this
      *   and the other collection.
      */
     add: function (other) {

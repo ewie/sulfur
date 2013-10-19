@@ -35,12 +35,12 @@ define([
     /**
      * Initialize the media type with a type and subtype.
      *
-     * @param [string] type (default '*')
-     * @param [string] subtype (default '*')
+     * @param {string} type (default '*')
+     * @param {string} subtype (default '*')
      *
-     * @throw [Error] if `type` is defined and not one of "application", "audio",
+     * @throw {Error} if `type` is defined and not one of "application", "audio",
      *   "image, "text" or "video"
-     * @throw [Error] if `subtype` is invalid
+     * @throw {Error} if `subtype` is invalid
      */
     initialize: function (type, subtype) {
       type === '*' && (type = undefined);
@@ -59,21 +59,21 @@ define([
     },
 
     /**
-     * @return [string] the type
+     * @return {string} the type
      */
     getType: function () {
       return this._type;
     },
 
     /**
-     * @return [string] the subtype
+     * @return {string} the subtype
      */
     getSubtype: function () {
       return this._subtype;
     },
 
     /**
-     * @return [string] the string representation
+     * @return {string} the string representation
      */
     toString: function () {
       return (this._type || '*') + '/' + (this._subtype || '*');
@@ -83,9 +83,9 @@ define([
      * Check if the media type matches another media type. An undefined type or
      * subtype on the LHS matches any respective type or subtype on the RHS.
      *
-     * @param [sulfur/schema/mediaType] other
+     * @param {sulfur/schema/mediaType} other
      *
-     * @return [boolean] whether LHS matches RHS or not
+     * @return {boolean} whether LHS matches RHS or not
      */
     matches: function (other) {
       if (util.isUndefined(this._type)) {

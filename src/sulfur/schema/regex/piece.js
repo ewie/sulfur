@@ -20,8 +20,8 @@ define([
 
   return Factory.derive({
     /**
-     * @param [codepoint|codeunit|class|group|pattern|block|category] atom
-     * @param [quant] quant (default quantifier of exactly 1)
+     * @param {codepoint|codeunit|class|group|pattern|block|category} atom
+     * @param {quant} quant (default quantifier of exactly 1)
      */
     initialize: function (atom, quant) {
       this.atom = atom;
@@ -32,8 +32,8 @@ define([
      * Check if the piece contains an empty group. Which is possible if the
      * atom is either a group or a pattern.
      *
-     * @return [true] if the piece contains an empty group
-     * @return [false] otherwise
+     * @return {true} if the piece contains an empty group
+     * @return {false} otherwise
      */
     containsEmptyGroup: function () {
       if (this.atom.items) {
@@ -49,8 +49,8 @@ define([
      * Check if the piece contains a group containing surrogate pairs. Which is
      * possible if the atom is either a group or a pattern.
      *
-     * @return [true] if the piece contains a group containing a surrogate pair
-     * @return [false] otherwise
+     * @return {true} if the piece contains a group containing a surrogate pair
+     * @return {false} otherwise
      */
     containsGroupWithSurrogateCodepoints: function () {
       if (this.atom.items) {

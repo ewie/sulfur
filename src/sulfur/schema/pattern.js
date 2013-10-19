@@ -23,9 +23,9 @@ define([
     /**
      * Check if a string represents a valid XSD pattern.
      *
-     * @param [string] s the string representation
+     * @param {string} s the string representation
      *
-     * @return [boolean] whether the string representation is a valid pattern
+     * @return {boolean} whether the string representation is a valid pattern
      */
     isValidLiteral: function (s) {
       try {
@@ -43,9 +43,9 @@ define([
     /**
      * Initialize the pattern by compiling the given source.
      *
-     * @param [string] source the pattern's source
+     * @param {string} source the pattern's source
      *
-     * @throw [Error] if sulfur/schema/regex.compile throws
+     * @throw {Error} if sulfur/schema/regex.compile throws
      */
     initialize: function (source) {
       var compiledPattern;
@@ -61,7 +61,7 @@ define([
     /**
      * Get the source from which the patterns was compiled.
      *
-     * @return [string] the pattern's source
+     * @return {string} the pattern's source
      */
     toString: function () {
       return this._source;
@@ -70,9 +70,9 @@ define([
     /**
      * Check if a string matches the pattern.
      *
-     * @param [string] s the string to test
+     * @param {string} s the string to test
      *
-     * @return [boolean] whether `s` matches the pattern
+     * @return {boolean} whether `s` matches the pattern
      */
     test: function (s) {
       return this._compiledPattern.test(s);

@@ -19,9 +19,9 @@ define([
     /**
      * Check if a string contains only valid codeunits.
      *
-     * @param [string] s
+     * @param {string} s
      *
-     * @return [boolean] whether `s` contains only valid codeunits or not
+     * @return {boolean} whether `s` contains only valid codeunits or not
      */
     isValidLiteral: (function () {
 
@@ -40,10 +40,10 @@ define([
     /**
      * Initialize with a string value.
      *
-     * @param [string] value
+     * @param {string} value
      *
-     * @throw [Error] if `value` is not a string
-     * @throw [Error] if `value` does not satisfy .isValidLiteral()
+     * @throw {Error} if `value` is not a string
+     * @throw {Error} if `value` does not satisfy .isValidLiteral()
      */
     initialize: function (value) {
       util.isUndefined(value) && (value = '');
@@ -62,7 +62,7 @@ define([
     /**
      * Get the string value.
      *
-     * @return [string]
+     * @return {string}
      */
     toString: function () {
       return this._value;
@@ -71,18 +71,18 @@ define([
     /**
      * Get the number of codeunits.
      *
-     * @return [number]
+     * @return {number}
      */
     getLength: function () {
       return this._value.length;
     },
 
     /**
-     * @param [string] mode the normalization mode ("collapse", "preserve" or "replace")
+     * @param {string} mode the normalization mode ("collapse", "preserve" or "replace")
      *
-     * @return [sulfur/schema/value/simple/string] a string with normalized white space
+     * @return {sulfur/schema/value/simple/string} a string with normalized white space
      *
-     * @throw [Error] when an invalid normalization mode is given
+     * @throw {Error} when an invalid normalization mode is given
      */
     normalizeWhiteSpace: function (mode) {
       switch (mode) {
@@ -102,7 +102,7 @@ define([
      * Replace every sequence of white space characters with a single space,
      * and remove leading and trailing white space.
      *
-     * @return [sulfur/schema/value/simple/string] a string with collapsed white space
+     * @return {sulfur/schema/value/simple/string} a string with collapsed white space
      */
     collapseWhiteSpace: function () {
       var s = this._value.replace(/[\x09\x0A\x0D\x20]+/g, ' ')
@@ -113,7 +113,7 @@ define([
     /**
      * Replace every white space character with a single space.
      *
-     * @return [sulfur/schema/value/simple/string] a string with replaced white space
+     * @return {sulfur/schema/value/simple/string} a string with replaced white space
      */
     replaceWhiteSpace: function () {
       var s = this._value.replace(/[\x09\x0A\x0D\x20]/g, ' ');
@@ -123,9 +123,9 @@ define([
     /**
      * Check this for equality with another string.
      *
-     * @param [sulfur/schema/value/simple/string] other
+     * @param {sulfur/schema/value/simple/string} other
      *
-     * @return [boolean] whether this and `other` are equal or not
+     * @return {boolean} whether this and `other` are equal or not
      */
     eq: function (other) {
       return this._value === other._value;

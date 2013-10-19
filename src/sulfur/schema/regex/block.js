@@ -27,8 +27,8 @@ define([
 
   return Factory.derive({
     /**
-     * @param [string] name the Unicode Block name
-     * @param [boolean] positive (default true) whether to match the codepoints
+     * @param {string} name the Unicode Block name
+     * @param {boolean} positive (default true) whether to match the codepoints
      *   of that block or the inverse
      */
     initialize: function (name, positive) {

@@ -128,9 +128,9 @@ define([
     /**
      * Compile a tree given by its root pattern.
      *
-     * @param [pattern] pattern the pattern (root of a tree) to compile
+     * @param {pattern} pattern the pattern (root of a tree) to compile
      *
-     * @return [RegExp] the compiled executable regular expression
+     * @return {RegExp} the compiled executable regular expression
      */
     compile: function (pattern) {
       return new RegExp('^' + compilePattern(pattern) + '$');

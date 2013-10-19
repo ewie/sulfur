@@ -47,9 +47,9 @@ define([
   /**
    * Test if a codepoint value is a valid XML character.
    *
-   * @param [number] value the codepoint value
+   * @param {number} value the codepoint value
    *
-   * @return [boolean] true if valid
+   * @return {boolean} true if valid
    */
   function isValidXmlCharacterCodepoint(value) {
     return value === 0x9 || value === 0xA || value === 0xD ||
@@ -451,11 +451,11 @@ define([
 
   return Factory.derive({
     /**
-     * @param [string] source the regular expression source text
+     * @param {string} source the regular expression source text
      *
-     * @throw [Error] if there are errors in syntax or semantic
+     * @throw {Error} if there are errors in syntax or semantic
      *
-     * @return [pattern] a pattern as the root of the syntax tree
+     * @return {pattern} a pattern as the root of the syntax tree
      */
     parse: function (source) {
       var scan = Scanner.create(source);

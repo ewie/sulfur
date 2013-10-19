@@ -30,10 +30,10 @@ define(function () {
 
   var $ = Object.create(Object.prototype, {
     /**
-     * Create an object from .prototype and call #initialize on the new object
-     * passing on any arguments.
+     * Create an object from .prototype and call .initialize() on the new
+     * object with any arguments.
      *
-     * @return [object] the new object
+     * @return {object} the new object
      */
     create: {
       writable: true,
@@ -41,7 +41,7 @@ define(function () {
       value: function () {
         // XXX A regular invocation causes an error on Chrome 23, because
         //   Object.create would SOMETIMES return undefined for no good reason.
-        //   By using #call we can solve this problem.
+        //   By using .call() we can solve this problem.
         var obj = Object.create.call(Object, this.prototype);
         obj.initialize.apply(obj, arguments);
         return obj;
@@ -53,12 +53,12 @@ define(function () {
      * with zero or more extension, with objects to the right having higher
      * precedence.
      *
-     * @param [object...] extensions (optional)
-     * @param [function] spec (optional) a function to receive the base factory
+     * @param {object...} extensions (optional)
+     * @param {function} spec (optional) a function to receive the base factory
      *   and all extensions, may return an object to be used as the rightmost
      *   extension
      *
-     * @return [object] a new factory using this as prototype
+     * @return {object} a new factory using this as prototype
      */
     clone: {
       writable: true,
@@ -81,11 +81,11 @@ define(function () {
      * objects into the new factory's .prototype property, with objects to the
      * right having higher precedence.
      *
-     * @param [object...] mixins (optional)
-     * @param [function] spec (optional) a function to receive the base factory
+     * @param {object...} mixins (optional)
+     * @param {function} spec (optional) a function to receive the base factory
      *   and all mixins, may return an object to be used as the rightmost mixin
      *
-     * @return [object] a new factory using this as prototype
+     * @return {object} a new factory using this as prototype
      */
     derive: {
       writable: true,
@@ -102,9 +102,9 @@ define(function () {
      * Extend this with zero or more extension objects, with objects to the
      * right have higher precedence.
      *
-     * @param [object...] extensions (optional)
+     * @param {object...} extensions (optional)
      *
-     * @return [object] this
+     * @return {object} this
      */
     extend: {
       writable: true,
@@ -128,9 +128,9 @@ define(function () {
     /**
      * Extend .prototype with properties of the provided mixins.
      *
-     * @param [object...] mixins (optional)
+     * @param {object...} mixins (optional)
      *
-     * @return [object] this
+     * @return {object} this
      */
     augment: {
       writable: true,

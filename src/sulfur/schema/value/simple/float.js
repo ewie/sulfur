@@ -15,7 +15,7 @@ define(['sulfur/schema/value/simple/double'], function (DoubleValue) {
     /**
      * Get the maximum finite value.
      *
-     * @return [number]
+     * @return {number}
      */
     getMaxValue: function () {
       return 3.4028234663852886E+38;
@@ -28,11 +28,11 @@ define(['sulfur/schema/value/simple/double'], function (DoubleValue) {
     /**
      * Initialize the float with a value.
      *
-     * @param [number] value (default 0)
+     * @param {number} value (default 0)
      *
-     * @throw [Error] if `value` is not a number
-     * @throw [Error] if `value` is less than -(.getMaxValue())
-     * @throw [Error] if `value` is greater than .getMaxValue()
+     * @throw {Error} if `value` is not a number
+     * @throw {Error} if `value` is less than -(.getMaxValue())
+     * @throw {Error} if `value` is greater than .getMaxValue()
      */
     initialize: (function () {
 

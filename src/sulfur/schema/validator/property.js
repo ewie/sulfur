@@ -15,9 +15,9 @@ define(['sulfur/factory'], function (Factory) {
     /**
      * Initialize the validator with a property name and subvalidator.
      *
-     * @param [string] name
-     * @param [#validate()] validator a validator for the named property
-     * @param [array] arguments (default []) arguments to be passed to the
+     * @param {string} name
+     * @param {.validate()} validator a validator for the named property
+     * @param {array} arguments (default []) arguments to be passed to the
      *   property when it's a function
      */
     initialize: function (name, validator, args) {
@@ -41,9 +41,9 @@ define(['sulfur/factory'], function (Factory) {
     /**
      * Validate an object's property against the subvalidator.
      *
-     * @param [object] obj
+     * @param {object} obj
      *
-     * @return [boolean] whether the property of `obj` satisfies the subvalidator
+     * @return {boolean} whether the property of `obj` satisfies the subvalidator
      */
     validate: function (obj) {
       var property = obj[this._name];

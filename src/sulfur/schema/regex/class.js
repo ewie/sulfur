@@ -26,8 +26,8 @@ define([
 
   var $ = Factory.derive({
     /**
-     * @param [string] name of the character class
-     * @param [boolean] whether to match codepoints of that class or the inverse
+     * @param {string} name of the character class
+     * @param {boolean} whether to match codepoints of that class or the inverse
      */
     initialize: function (name, positive) {
       if (!CLASSES.hasOwnProperty(name)) {

@@ -61,11 +61,12 @@ define([
     /**
      * Parse a regular expression as defined by XML Schema 1.0
      *
-     * @param [string] source the text of the regular expression to parse
+     * @param {string} source the text of the regular expression to parse
      *
-     * @throw [Error] errors thrown by a [parser]
+     * @throw {Error} errors thrown by a {sulfur/schema/regex/parser}
      *
-     * @return [regex] a syntax tree representing the parsed regular expression
+     * @return {sulfur/schema/regex} a syntax tree representing the parsed
+     *  regular expression
      */
     parse: function (source) {
       var parser = Parser.create();
@@ -76,12 +77,12 @@ define([
     /**
      * Compile a regular expression as defined by XML Schema 1.0
      *
-     * @param [string] source the text of the regular expression to compile
+     * @param {string} source the text of the regular expression to compile
      *
-     * @throw [Error] errors thrown by a [parser]
-     * @throw [Error] errors thrown by a [compiler]
+     * @throw {Error} errors thrown by a {sulfur/schema/regex/parser}
+     * @throw {Error} errors thrown by a {sulfur/schema/regex/compiler}
      *
-     * @return [RegExp] an executable JavaScript regular expression
+     * @return {RegExp} an executable JavaScript regular expression
      */
     compile: function (source) {
       return this.parse(source).translate().compile();
@@ -93,7 +94,7 @@ define([
     /**
      * Initialize the regular expression with the given pattern.
      *
-     * @param [pattern] pattern
+     * @param {sulfur/schema/regex/pattern} pattern
      */
     initialize: function (pattern) {
       this.pattern = pattern;
@@ -103,7 +104,7 @@ define([
      * Translate the regular expression tree to a tree which can be compiled
      * to a JavaScript regular expression.
      *
-     * @return [regex] the translated regular expression tree
+     * @return {sulfur/schema/regex/regex} the translated regular expression tree
      */
     translate: function () {
       var translator = Translator.create();
@@ -116,9 +117,9 @@ define([
      * surrogate codepoints. Such a group causes the regular expression to
      * not behave as indented and may therefor give false results.
      *
-     * @return [true] if the regular expression contains a group with
+     * @return {true} if the regular expression contains a group with
      *   surrogate codepoints
-     * @return [false] otherwise
+     * @return {false} otherwise
      */
     containsGroupWithSurrogateCodepoints: function () {
       return this.pattern.containsGroupWithSurrogateCodepoints();
@@ -133,8 +134,8 @@ define([
      * An empty group results from a group subtraction when the LHS group is
      * a subset of the RHS group.
      *
-     * @return [true] if the regular expression contains an empty group
-     * @return [false] otherwise
+     * @return {true} if the regular expression contains an empty group
+     * @return {false} otherwise
      */
     containsEmptyGroup: function () {
       return this.pattern.containsEmptyGroup();
@@ -144,7 +145,7 @@ define([
      * Compile the regular expression to an executable JavaScript regular
      * expression.
      *
-     * @return [RegExp] an executable JavaScript regular expression
+     * @return {RegExp} an executable JavaScript regular expression
      */
     compile: function () {
       var compiler = Compiler.create();

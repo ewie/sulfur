@@ -18,9 +18,9 @@ define([
   return Factory.derive({
 
     /**
-     * @param [array] typeResolvers an array of type resolvers used in the
+     * @param {array} typeResolvers an array of type resolvers used in the
      *   given order
-     * @param [sulfur/util/xpath] xpath
+     * @param {sulfur/util/xpath} xpath
      */
     initialize: function (typeResolvers, xpath) {
       this._typeResolvers = typeResolvers;
@@ -28,7 +28,7 @@ define([
     },
 
     /**
-     * @return [sulfur/util/xpath]
+     * @return {sulfur/util/xpath}
      */
     getXPath: function () {
       return this._xpath;
@@ -44,8 +44,8 @@ define([
     },
 
     /**
-     * @throw [Error] when the type element cannot be resolved by any converter
-     * @throw [Error] when a converter throws an error
+     * @throw {Error} when the type element cannot be resolved by any converter
+     * @throw {Error} when a converter throws an error
      */
     resolveTypeElement: function (element) {
       for (var i = 0; i < this._typeResolvers.length; i += 1) {
@@ -60,8 +60,8 @@ define([
     },
 
     /**
-     * @throw [Error] when the type element cannot be resolved by any converter
-     * @throw [Error] when a converter throws an error
+     * @throw {Error} when the type element cannot be resolved by any converter
+     * @throw {Error} when a converter throws an error
      */
     resolveNamedType: function (qname) {
       for (var i = 0; i < this._typeResolvers.length; i += 1) {
@@ -80,12 +80,12 @@ define([
      *
      * Does not resolve attribute "ref" nor "subsitutionGroup".
      *
-     * @param [Element] element an xs:element
+     * @param {Element} element an xs:element
      *
-     * @return [object]
+     * @return {object}
      *
-     * @throw [Error] when the type declaration is no supported
-     * @throw [Error] when the type declaration cannot be resolved
+     * @throw {Error} when the type declaration is no supported
+     * @throw {Error} when the type declaration cannot be resolved
      */
     resolveElementType: function (element) {
       if (element.hasAttribute('type')) {

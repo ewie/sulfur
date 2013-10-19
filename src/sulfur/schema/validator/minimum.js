@@ -13,10 +13,10 @@ define(['sulfur/factory'], function (Factory) {
   return Factory.derive({
 
     /**
-     * @param [any] minimum
-     * @param [object] options (optional)
+     * @param {any} minimum
+     * @param {object} options (optional)
      *
-     * @option options [boolean] exclusive whether to match exclusively or not
+     * @option options {boolean} exclusive whether to match exclusively or not
      */
     initialize: function (minimum, options) {
       options || (options = {});
@@ -25,13 +25,13 @@ define(['sulfur/factory'], function (Factory) {
     },
 
     /**
-     * Check if a value satisfies the minimum. If minimum responds to #cmp(),
+     * Check if a value satisfies the minimum. If the minimum responds to .cmp(),
      * it will be called with `value` as argument, otherwise uses the regular
      * comparison operator.
      *
-     * @param [any] value
+     * @param {any} value
      *
-     * @return [boolean] whether `value` is greater than minimum or equal when
+     * @return {boolean} whether `value` is greater than minimum or equal when
      *   matched inclusively
      */
     validate: function (value) {

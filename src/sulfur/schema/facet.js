@@ -17,11 +17,11 @@ define([
   /**
    * @abstract
    *
-   * @implement [sulfur/schema/qname] .getQName()
-   * @implement [boolean] .isShadowingLowerRestrictions()
-   * @implement [#validate()] #createValidator()
-   * @implement [boolean] #validate([any])
-   * @implement [boolean] #isRestrictionOf([sulfur/schema/facets])
+   * @implement {sulfur/schema/qname} .getQName()
+   * @implement {boolean} .isShadowingLowerRestrictions()
+   * @implement {.validate()} #createValidator()
+   * @implement {boolean} #validate({any})
+   * @implement {boolean} #isRestrictionOf({sulfur/schema/facets})
    *
    * @api private
    */
@@ -79,7 +79,7 @@ define([
     /**
      * Initialize the facet with a value.
      *
-     * @param [any] value
+     * @param {any} value
      *
      * @api public
      */
@@ -90,7 +90,7 @@ define([
     /**
      * @api public
      *
-     * @return [string] the facet's name
+     * @return {string} the facet's name
      */
     getQName: function () {
       return this.factory.getQName();
@@ -103,7 +103,7 @@ define([
     /**
      * @api public
      *
-     * @return [any] the facet's value
+     * @return {any} the facet's value
      */
     getValue: function () {
       return this._value;

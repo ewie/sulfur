@@ -15,9 +15,9 @@ define(['sulfur/factory'], function (Factory) {
     /**
      * Initialize the validator with one or more validators.
      *
-     * @param [array] validators an array of one or more validators
+     * @param {array} validators an array of one or more validators
      *
-     * @throw [Error] if no validator is given
+     * @throw {Error} if no validator is given
      */
     initialize: function (validators) {
       if (validators.length === 0) {
@@ -29,9 +29,9 @@ define(['sulfur/factory'], function (Factory) {
     /**
      * Check if a value satisfies any of the validators.
      *
-     * @param [any] value
+     * @param {any} value
      *
-     * @return [boolean] whether `value` satisfies any validator
+     * @return {boolean} whether `value` satisfies any validator
      */
     validate: function (value) {
       return this._validators.some(function (validator) {

@@ -33,9 +33,9 @@ define([
     /**
      * Check if a string represents a valid decimal value.
      *
-     * @param [string] s the string representation
+     * @param {string} s the string representation
      *
-     * @return [boolean] whether the representation is valid
+     * @return {boolean} whether the representation is valid
      */
     isValidLiteral: function (s) {
       return LITERAL_PATTERN.test(s);
@@ -44,11 +44,11 @@ define([
     /**
      * Parse a string representing a decimal value.
      *
-     * @param [string] s the string representation
+     * @param {string} s the string representation
      *
-     * @return [decimal] the parsed decimal
+     * @return {decimal} the parsed decimal
      *
-     * @throw [Error] if the string represents no valid decimal
+     * @throw {Error} if the string represents no valid decimal
      */
     parse: function (s) {
       var m = LITERAL_PATTERN.exec(s);
@@ -67,13 +67,13 @@ define([
   $.augment({
 
     /**
-     * @param [object] options (opional)
+     * @param {object} options (opional)
      *
-     * @option options [string] integralDigits (default '0')
+     * @option options {string} integralDigits (default '0')
      *   the digits to the left of the period
-     * @option options [string] fractionDigits (default '0')
+     * @option options {string} fractionDigits (default '0')
      *   the digits to the right of the period
-     * @option options [boolean] positive (default true)
+     * @option options {boolean} positive (default true)
      *   whether the decimal is positive
      */
     initialize: function (options) {
@@ -103,7 +103,7 @@ define([
     /**
      * Convert the decimal to its string representation.
      *
-     * @return [string] the string representation
+     * @return {string} the string representation
      */
     toString: function () {
       var s = '';
@@ -120,7 +120,7 @@ define([
     /**
      * Get the number of total digits.
      *
-     * @return [number]
+     * @return {number}
      */
     countDigits: function () {
       return this.countIntegralDigits() + this.countFractionDigits();
@@ -129,7 +129,7 @@ define([
     /**
      * Get the number of digits to the left of the period.
      *
-     * @return [number]
+     * @return {number}
      */
     countIntegralDigits: function () {
       return this.integralDigits.length;
@@ -138,7 +138,7 @@ define([
     /**
      * Get the number of digits to the right of the period.
      *
-     * @return [number]
+     * @return {number}
      */
     countFractionDigits: function () {
       return this.fractionDigits ? this.fractionDigits.length : 0;
@@ -147,11 +147,11 @@ define([
     /**
      * Compare with a decimal as RHS.
      *
-     * @param [sulfur/schema/value/simple/decimal] other the RHS datetime
+     * @param {sulfur/schema/value/simple/decimal} other the RHS datetime
      *
-     * @return [-1] if less than `other`
-     * @return [0] if equal to `other`
-     * @return [1] if greater than `other`
+     * @return {-1} if less than `other`
+     * @return {0} if equal to `other`
+     * @return {1} if greater than `other`
      */
     cmp: function (other) {
       if (!this.positive && other.positive) {
@@ -178,9 +178,9 @@ define([
     /**
      * Check if equal to another decimal.
      *
-     * @param [sulfur/schema/value/simple/decimal] other
+     * @param {sulfur/schema/value/simple/decimal} other
      *
-     * @return [boolean] whether both decimals are equal
+     * @return {boolean} whether both decimals are equal
      */
     eq: function (other) {
       return this.cmp(other) === 0;
@@ -189,9 +189,9 @@ define([
     /**
      * Check if the decimal is less than another decimal.
      *
-     * @param [sulfur/schema/value/simple/decimal] other
+     * @param {sulfur/schema/value/simple/decimal} other
      *
-     * @return [boolean] whether the decimal is less than the other
+     * @return {boolean} whether the decimal is less than the other
      */
     lt: function (other) {
       return this.cmp(other) < 0;
@@ -200,9 +200,9 @@ define([
     /**
      * Check if the decimal is greater than another decimal.
      *
-     * @param [sulfur/schema/value/simple/decimal] other
+     * @param {sulfur/schema/value/simple/decimal} other
      *
-     * @return [boolean] whether the decimal is greater than the other
+     * @return {boolean} whether the decimal is greater than the other
      */
     gt: function (other) {
       return this.cmp(other) > 0;
@@ -211,9 +211,9 @@ define([
     /**
      * Check if the decimal is less than or equal to another decimal.
      *
-     * @param [sulfur/schema/value/simple/decimal] other
+     * @param {sulfur/schema/value/simple/decimal} other
      *
-     * @return [boolean] whether the decimal is less than or equal to the other
+     * @return {boolean} whether the decimal is less than or equal to the other
      */
     gteq: function (other) {
       return !this.lt(other);
@@ -222,9 +222,9 @@ define([
     /**
      * Check if the decimal is greater than or equal to another decimal.
      *
-     * @param [sulfur/schema/value/simple/decimal] other
+     * @param {sulfur/schema/value/simple/decimal} other
      *
-     * @return [boolean] whether the decimal is greater than or equal to the other
+     * @return {boolean} whether the decimal is greater than or equal to the other
      */
     lteq: function (other) {
       return !this.gt(other);

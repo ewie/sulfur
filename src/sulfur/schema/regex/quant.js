@@ -19,12 +19,12 @@ define([
 
   return Factory.derive({
     /**
-     * @param [number] min
-     * @param [number] max (default `min`) use Number.POSITIVE_INFINITY for an
+     * @param {number} min
+     * @param {number} max (default `min`) use Number.POSITIVE_INFINITY for an
      *   unlimited number of occurrences
      *
-     * @throw [Error] if `min` is less than zero
-     * @throw [Error] if `min` is greater than `max`
+     * @throw {Error} if `min` is less than zero
+     * @throw {Error} if `min` is greater than `max`
      */
     initialize: function (min, max) {
       if (min < 0) {

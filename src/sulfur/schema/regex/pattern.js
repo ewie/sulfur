@@ -18,9 +18,9 @@ define([
 
   return Factory.derive({
     /**
-     * @param [array] an array of one or more branches
+     * @param {array} an array of one or more branches
      *
-     * @throw [Error] if `branches` is empty
+     * @throw {Error} if `branches` is empty
      */
     initialize: function (branches) {
       if (!branches.length) {
@@ -32,8 +32,8 @@ define([
    /**
     * Check if any branch contains an empty group.
     *
-    * @return [true] if any branch contains an empty group
-    * @return [false] otherwise
+    * @return {true} if any branch contains an empty group
+    * @return {false} otherwise
     */
     containsEmptyGroup: function () {
       return this.branches.some(function (branch) {
@@ -44,8 +44,8 @@ define([
     /**
      * Check if any branch contains a group containing surrogate codepoints.
      *
-     * @return [true] if any branch contains a group containing a surrogate pair
-     * @return [false] otherwise
+     * @return {true} if any branch contains a group containing a surrogate pair
+     * @return {false} otherwise
      */
     containsGroupWithSurrogateCodepoints: function () {
       return this.branches.some(function (branch) {

@@ -22,12 +22,12 @@ define([
      * Initialize a group with an array of items (any of codepoint, codeunit,
      * range, class, block or category).
      *
-     * @param [array] items (optional) an array of group items
-     * @param [object] options (optional)
+     * @param {array} items (optional) an array of group items
+     * @param {object} options (optional)
      *
-     * @option options [boolean] positive (default true) whether to match the
+     * @option options {boolean} positive (default true) whether to match the
      *   codepoints given by `items` or the inverse
-     * @option options [group] subtrahend (optional) a group to subtract,
+     * @option options {group} subtrahend (optional) a group to subtract,
      *   effectively removing all the subtrahend's items from `items`
      */
     initialize: function (items, options) {
@@ -40,8 +40,8 @@ define([
     /**
      * Check if the group is empty, i.e. it has no items.
      *
-     * @return [true] if empty
-     * @return [false] otherwise
+     * @return {true} if empty
+     * @return {false} otherwise
      */
     isEmpty: function () {
       return this.items.length === 0;
@@ -50,8 +50,8 @@ define([
     /**
      * Check if the groups contains any surrogate codepoints.
      *
-     * @return [true] if there are surrogate codepoints
-     * @return [false] otherwise
+     * @return {true} if there are surrogate codepoints
+     * @return {false} otherwise
      */
     containsSurrogateCodepoints: function () {
       return this.items.some(function (item) {

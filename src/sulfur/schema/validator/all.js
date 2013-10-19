@@ -15,14 +15,14 @@ define(['sulfur/factory'], function (Factory) {
     /**
      * Initialize the validator with zero or more validators.
      *
-     * @param [array] validators an array of zero or more validators
+     * @param {array} validators an array of zero or more validators
      */
     initialize: function (validators) {
       this._validators = validators;
     },
 
     /**
-     * @return [array] the validators
+     * @return {array} the validators
      */
     getValidators: function () {
       return this._validators;
@@ -31,9 +31,9 @@ define(['sulfur/factory'], function (Factory) {
     /**
      * Validate a value against all validators.
      *
-     * @param [any] value
+     * @param {any} value
      *
-     * @return [boolean] whether `value` passes all validators or not
+     * @return {boolean} whether `value` passes all validators or not
      */
     validate: function (value) {
       return this._validators.every(function (validator) {

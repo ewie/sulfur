@@ -34,9 +34,9 @@ define([
     /**
      * Check if a string represents a valid date literal.
      *
-     * @param [string] s the string to check
+     * @param {string} s the string to check
      *
-     * @return [boolean] whether `s` represents a valid date literal or not
+     * @return {boolean} whether `s` represents a valid date literal or not
      */
     isValidLiteral: function (s) {
       try {
@@ -50,12 +50,12 @@ define([
     /**
      * Parse a date literal and initialize a date object.
      *
-     * @param [string] s a valid date literal
+     * @param {string} s a valid date literal
      *
-     * @return [sulfur/schema/value/simple/date] the parsed date
+     * @return {sulfur/schema/value/simple/date} the parsed date
      *
-     * @throw [Error] if there are syntax errors
-     * @throw [Error] if there are semantic errors (invalid date or timezone)
+     * @throw {Error} if there are syntax errors
+     * @throw {Error} if there are semantic errors (invalid date or timezone)
      */
     parse: (function () {
 
@@ -98,15 +98,15 @@ define([
      * Initialize the date with year, month, day and timezone. Normalizes the
      * date to UTC.
      *
-     * @param [object] options (optional)
+     * @param {object} options (optional)
      *
-     * @option options [number] year (default 1)
-     * @option options [number] month (default 1)
-     * @option options [number] day (default 1)
-     * @option options [number] tzhour (default 0 when `tzminute` given)
-     * @option options [number] tzminute (default 0 when `tzhour` given)
+     * @option options {number} year (default 1)
+     * @option options {number} month (default 1)
+     * @option options {number} day (default 1)
+     * @option options {number} tzhour (default 0 when `tzminute` given)
+     * @option options {number} tzminute (default 0 when `tzhour` given)
      *
-     * @throw [Error] if the date or timezone is not valid
+     * @throw {Error} if the date or timezone is not valid
      */
     initialize: function (options) {
       options || (options = {});
@@ -123,21 +123,21 @@ define([
     },
 
     /**
-     * @return [number] the year
+     * @return {number} the year
      */
     getYear: function () {
       return this._midpoint.getYear();
     },
 
     /**
-     * @return [number] the month
+     * @return {number} the month
      */
     getMonth: function () {
       return this._midpoint.getMonth();
     },
 
     /**
-     * @return [number] the day
+     * @return {number} the day
      */
     getDay: function () {
       return this._midpoint.getDay();
@@ -146,7 +146,7 @@ define([
     /**
      * Check if the date defines a timezone.
      *
-     * @return [boolean] whether the date defines a timezone or not
+     * @return {boolean} whether the date defines a timezone or not
      */
     hasTimezone: function () {
       return this._midpoint.hasTimezone();
@@ -156,7 +156,7 @@ define([
      * Convert this date to its string representation using the recoverable
      * timezone when defined.
      *
-     * @return [string] the string representation
+     * @return {string} the string representation
      */
     toString: (function () {
 
@@ -208,7 +208,7 @@ define([
     /**
      * Get the recoverable timezone for this date.
      *
-     * @return [object] the recoverable timezone as object with property `hour`
+     * @return {object} the recoverable timezone as object with property `hour`
      *   and `minute`
      */
     getRecoverableTimezone: function () {
@@ -241,11 +241,11 @@ define([
     /**
      * Compare with a datetime as RHS.
      *
-     * @param [sulfur/schema/value/simple/date] other the RHS datetime
+     * @param {sulfur/schema/value/simple/date} other the RHS datetime
      *
-     * @return [-1] if less than `other`
-     * @return [0] if equal to `other`
-     * @return [1] if greater than `other`
+     * @return {-1} if less than `other`
+     * @return {0} if equal to `other`
+     * @return {1} if greater than `other`
      */
     cmp: function (other) {
       return this._midpoint.cmp(other._midpoint);
@@ -254,9 +254,9 @@ define([
     /**
      * Check for equality with another date.
      *
-     * @param [sulfur/schema/value/simple/date] other
+     * @param {sulfur/schema/value/simple/date} other
      *
-     * @return [boolean] whether equal to `other` or not
+     * @return {boolean} whether equal to `other` or not
      */
     eq: function (other) {
       return this.cmp(other) === 0;
@@ -265,9 +265,9 @@ define([
     /**
      * Check if less than another date.
      *
-     * @param [sulfur/schema/value/simple/date] other
+     * @param {sulfur/schema/value/simple/date} other
      *
-     * @return [boolean] whether less than `other` or not
+     * @return {boolean} whether less than `other` or not
      */
     lt: function (other) {
       return this.cmp(other) < 0;
@@ -276,9 +276,9 @@ define([
     /**
      * Check if greater than another date.
      *
-     * @param [sulfur/schema/value/simple/date] other
+     * @param {sulfur/schema/value/simple/date} other
      *
-     * @return [boolean] whether greater than `other` or not
+     * @return {boolean} whether greater than `other` or not
      */
     gt: function (other) {
       return this.cmp(other) > 0;
@@ -287,9 +287,9 @@ define([
     /**
      * Check if less than or equal to another date.
      *
-     * @param [sulfur/schema/value/simple/date] other
+     * @param {sulfur/schema/value/simple/date} other
      *
-     * @return [boolean] whether less than or equal `other` or not
+     * @return {boolean} whether less than or equal `other` or not
      */
     lteq: function (other) {
       return !this.gt(other);
@@ -298,9 +298,9 @@ define([
     /**
      * Check if greater than or equal to another date.
      *
-     * @param [sulfur/schema/value/simple/date] other
+     * @param {sulfur/schema/value/simple/date} other
      *
-     * @return [boolean] whether greater than or equal to `other` or not
+     * @return {boolean} whether greater than or equal to `other` or not
      */
     gteq: function (other) {
       return !this.lt(other);

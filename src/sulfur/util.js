@@ -15,11 +15,11 @@ define(['sulfur/util/orderedMap'], function (OrderedMap) {
     /**
      * Bind an object to one of its methods.
      *
-     * @param [object] obj
-     * @param [string] name
-     * @param [any...] args
+     * @param {object} obj
+     * @param {string} name
+     * @param {any...} args
      *
-     * @return [function] a function calling `name` on `obj` with prepended
+     * @return {function} a function calling `name` on `obj` with prepended
      *   arguments `args`
      */
     bind: function () {
@@ -50,9 +50,9 @@ define(['sulfur/util/orderedMap'], function (OrderedMap) {
     /**
      * Check if a value is not undefined.
      *
-     * @param [any] x
+     * @param {any} x
      *
-     * @return [boolean] whether `x` is not undefined or not
+     * @return {boolean} whether `x` is not undefined or not
      */
     isDefined: function (x) {
       return !this.isUndefined(x);
@@ -61,9 +61,9 @@ define(['sulfur/util/orderedMap'], function (OrderedMap) {
     /**
      * Check if a value is undefined.
      *
-     * @param [any] x
+     * @param {any} x
      *
-     * @return [boolean] whether `x` is undefined or not
+     * @return {boolean} whether `x` is undefined or not
      */
     isUndefined: function (x) {
       return typeof x === 'undefined';
@@ -73,9 +73,9 @@ define(['sulfur/util/orderedMap'], function (OrderedMap) {
      * Check if a number represents an 53-bit integer, which are the only
      * integer values that can be represented with a double.
      *
-     * @param [any] x
+     * @param {any} x
      *
-     * @return [boolean] whether `x` is a number representing a 53-bit integer
+     * @return {boolean} whether `x` is a number representing a 53-bit integer
      */
     isInteger: (function () {
 
@@ -92,9 +92,9 @@ define(['sulfur/util/orderedMap'], function (OrderedMap) {
      * Create a function that calls a method on an object given as first
      * argument.
      *
-     * @param [string] name
+     * @param {string} name
      *
-     * @return [function] a function calling `name` on any object given as
+     * @return {function} a function calling `name` on any object given as
      *   first argument
      */
     method: function (name) {
@@ -118,9 +118,9 @@ define(['sulfur/util/orderedMap'], function (OrderedMap) {
     /**
      * Create a function returning a given value.
      *
-     * @param [any] x a value to be returned by the function
+     * @param {any} x a value to be returned by the function
      *
-     * @return [function] a function returning the given value
+     * @return {function} a function returning the given value
      */
     returns: function (x) {
       return function () {
@@ -131,10 +131,10 @@ define(['sulfur/util/orderedMap'], function (OrderedMap) {
     /**
      * Sort an array without modifying the original array.
      *
-     * @param [array] ary the array to sort
-     * @param [function] fn (optional) a custom comparison function
+     * @param {array} ary the array to sort
+     * @param {function} fn (optional) a custom comparison function
      *
-     * @return [array] a new sorted array
+     * @return {array} a new sorted array
      */
     sort: function (ary, fn) {
       return [].concat(ary).sort(fn);
@@ -143,11 +143,11 @@ define(['sulfur/util/orderedMap'], function (OrderedMap) {
     /**
      * Remove duplicate elements from an array by using a string key.
      *
-     * @param [array] elements
-     * @param [function] key (optional) a function returning a string key for
+     * @param {array} elements
+     * @param {function} key (optional) a function returning a string key for
      *   each element
      *
-     * @return [array] an array without duplicate elements based on each
+     * @return {array} an array without duplicate elements based on each
      *   element's key
      */
     uniq: function (elements, key) {

@@ -13,16 +13,16 @@ define(['sulfur/factory'], function (Factory) {
   return Factory.derive({
 
     /**
-     * Initialize the validator with an object responding to #isPrototypeOf().
+     * Initialize the validator with an object responding to .isPrototypeOf().
      *
-     * @param [#isPrototypeOf()] prototype
+     * @param {.isPrototypeOf()} prototype
      */
     initialize: function (prototype) {
       this._prototype = prototype;
     },
 
     /**
-     * @return [object] the prototype to match
+     * @return {object} the prototype to match
      */
     getPrototype: function () {
       return this._prototype;
@@ -31,9 +31,9 @@ define(['sulfur/factory'], function (Factory) {
     /**
      * Check if an object derives from the required prototype.
      *
-     * @param [object] obj the object to check
+     * @param {object} obj the object to check
      *
-     * @return [boolean] whether `obj` derives from the required prototype or not
+     * @return {boolean} whether `obj` derives from the required prototype or not
      */
     validate: function (obj) {
       return this._prototype.isPrototypeOf(obj);

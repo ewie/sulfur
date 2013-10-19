@@ -15,7 +15,7 @@ define(['sulfur/factory'], function (Factory) {
     /**
      * Get the maximum finite value.
      *
-     * @return [number]
+     * @return {number}
      */
     getMaxValue: function () {
       return 1.7976931348623157e+308;
@@ -24,9 +24,9 @@ define(['sulfur/factory'], function (Factory) {
     /**
      * Check if a string represents a valid float literal.
      *
-     * @param [string] s the string to check
+     * @param {string} s the string to check
      *
-     * @return [boolean] whether the string represents a float in the valid
+     * @return {boolean} whether the string represents a float in the valid
      *   range or not
      */
     isValidLiteral: function (s) {
@@ -41,12 +41,12 @@ define(['sulfur/factory'], function (Factory) {
     /**
      * Parse a string representing a float literal.
      *
-     * @param [string] s the string to parse
+     * @param {string} s the string to parse
      *
-     * @return [sulfur/schema/value/simple/double] a float with the parsed value
+     * @return {sulfur/schema/value/simple/double} a float with the parsed value
      *
-     * @throw [Error] if the literal has syntax errors
-     * @throw [Error] if the literal value lies outside the valid range
+     * @throw {Error} if the literal has syntax errors
+     * @throw {Error} if the literal value lies outside the valid range
      */
     parse: (function () {
 
@@ -88,9 +88,9 @@ define(['sulfur/factory'], function (Factory) {
     /**
      * Initialize the float with a value.
      *
-     * @param [number] value (default 0)
+     * @param {number} value (default 0)
      *
-     * @throw [Error] if `value` is not a number
+     * @throw {Error} if `value` is not a number
      */
     initialize: function (value) {
       typeof value === 'undefined' && (value = 0);
@@ -103,7 +103,7 @@ define(['sulfur/factory'], function (Factory) {
     /**
      * Get the represented value.
      *
-     * @return [number]
+     * @return {number}
      */
     getValue: function () {
       return this._value;
@@ -112,7 +112,7 @@ define(['sulfur/factory'], function (Factory) {
     /**
      * Check if the value is finite.
      *
-     * @return [boolean] whether the value is finite or not
+     * @return {boolean} whether the value is finite or not
      */
     isFinite: (function () {
 
@@ -129,7 +129,7 @@ define(['sulfur/factory'], function (Factory) {
     /**
      * Check if the value is NaN (not a number).
      *
-     * @return [boolean] whether the value is NaN or not
+     * @return {boolean} whether the value is NaN or not
      */
     isNaN: (function () {
       // ECMAScript 6 introduces `Number.isNaN` which may not be available on a
@@ -145,7 +145,7 @@ define(['sulfur/factory'], function (Factory) {
     /**
      * Check if the value is positive (not zero not negative).
      *
-     * @return [boolean] whether the value is positive or not
+     * @return {boolean} whether the value is positive or not
      */
     isPositive: function () {
       return this._value > 0;
@@ -154,7 +154,7 @@ define(['sulfur/factory'], function (Factory) {
     /**
      * Get the value's canonical representation.
      *
-     * @return [string] the canonical representation
+     * @return {string} the canonical representation
      */
     toString: function () {
       if (this._value === 0) {
@@ -166,12 +166,12 @@ define(['sulfur/factory'], function (Factory) {
     /**
      * Compare this float as LHS with another float as RHS.
      *
-     * @param [sulfur/schema/value/simple/double] other
+     * @param {sulfur/schema/value/simple/double} other
      *
-     * @return [-1] if LHS is less than RHS
-     * @return [0] if LHS is equal to RHS
-     * @return [1] if LHS is greater than RHS
-     * @return [undefined] if either LHS or RHS is NaN
+     * @return {-1} if LHS is less than RHS
+     * @return {0} if LHS is equal to RHS
+     * @return {1} if LHS is greater than RHS
+     * @return {undefined} if either LHS or RHS is NaN
      */
     cmp: function (other) {
       if (this._value < other._value) {
@@ -189,9 +189,9 @@ define(['sulfur/factory'], function (Factory) {
     /**
      * Check for equality with another double.
      *
-     * @param [sulfur/schema/value/simple/double] other
+     * @param {sulfur/schema/value/simple/double} other
      *
-     * @return [boolean] whether equal to `other` or not
+     * @return {boolean} whether equal to `other` or not
      */
     eq: function (other) {
       return this.cmp(other) === 0;
@@ -200,9 +200,9 @@ define(['sulfur/factory'], function (Factory) {
     /**
      * Check if less than another double.
      *
-     * @param [sulfur/schema/value/simple/double] other
+     * @param {sulfur/schema/value/simple/double} other
      *
-     * @return [boolean] whether less than `other` or not
+     * @return {boolean} whether less than `other` or not
      */
     lt: function (other) {
       return this.cmp(other) < 0;
@@ -211,9 +211,9 @@ define(['sulfur/factory'], function (Factory) {
     /**
      * Check if greater than another double.
      *
-     * @param [sulfur/schema/value/simple/double] other
+     * @param {sulfur/schema/value/simple/double} other
      *
-     * @return [boolean] whether greater than `other` or not
+     * @return {boolean} whether greater than `other` or not
      */
     gt: function (other) {
       return this.cmp(other) > 0;
@@ -222,9 +222,9 @@ define(['sulfur/factory'], function (Factory) {
     /**
      * Check if less than or equal to another double.
      *
-     * @param [sulfur/schema/value/simple/double] other
+     * @param {sulfur/schema/value/simple/double} other
      *
-     * @return [boolean] whether less than or equal `other` or not
+     * @return {boolean} whether less than or equal `other` or not
      */
     lteq: function (other) {
       return !this.gt(other);
@@ -233,9 +233,9 @@ define(['sulfur/factory'], function (Factory) {
     /**
      * Check if greater than or equal to another double.
      *
-     * @param [sulfur/schema/value/simple/double] other
+     * @param {sulfur/schema/value/simple/double} other
      *
-     * @return [boolean] whether greater than or equal to `other` or not
+     * @return {boolean} whether greater than or equal to `other` or not
      */
     gteq: function (other) {
       return !this.lt(other);

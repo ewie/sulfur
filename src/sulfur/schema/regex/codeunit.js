@@ -19,9 +19,9 @@ define([
 
   return Factory.derive({
     /**
-     * @param [number] value the codeunit value in the range U+0000..U+FFFF
+     * @param {number} value the codeunit value in the range U+0000..U+FFFF
      *
-     * @throw [Error] if `value` is outside the valid range
+     * @throw {Error} if `value` is outside the valid range
      */
     initialize: function (value) {
       if (value < 0 || value > 0xFFFF) {

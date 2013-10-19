@@ -45,9 +45,9 @@ define([
      * Check if a string represents a valid dateTime according to XML Schema 1.0
      * as used by the DataGridService.
      *
-     * @param [string] s
+     * @param {string} s
      *
-     * @return [boolean]
+     * @return {boolean}
      */
     isValidLiteral: function (s) {
       try {
@@ -62,11 +62,11 @@ define([
      * Parse a dateTime literal according to XML Schema 1.0 as used by the
      * DataGridService.
      *
-     * @param [string] s
+     * @param {string} s
      *
-     * @return [sulfur/schema/value/simple/dateTime] the parsed datetime
+     * @return {sulfur/schema/value/simple/dateTime} the parsed datetime
      *
-     * @throw [Error] on an invalid string representation or invalid values
+     * @throw {Error} on an invalid string representation or invalid values
      */
     parse: (function () {
 
@@ -128,18 +128,18 @@ define([
      * Initialize the datetime with year, month, day, hour, minute, second and
      * a timezone. Normalized the datetime to UTC.
      *
-     * @param [object] options (optional)
+     * @param {object} options (optional)
      *
-     * @option options [number] year (default 1)
-     * @option options [number] month (default 1)
-     * @option options [number] day (default 1)
-     * @option options [number] hour (default 0)
-     * @option options [number] minute (default 0)
-     * @option options [number, string, decimal] second (default 0)
-     * @option options [number] tzhour (default 0 if `tzminute` is given)
-     * @option options [number] tzminute (default 0 if `tzhour` is given)
+     * @option options {number} year (default 1)
+     * @option options {number} month (default 1)
+     * @option options {number} day (default 1)
+     * @option options {number} hour (default 0)
+     * @option options {number} minute (default 0)
+     * @option options {number, string, decimal} second (default 0)
+     * @option options {number} tzhour (default 0 if `tzminute` is given)
+     * @option options {number} tzminute (default 0 if `tzhour` is given)
      *
-     * @throw [Error] on values outside their valid range and on invalid date,
+     * @throw {Error} on values outside their valid range and on invalid date,
      *   time or timezone
      */
     initialize: (function () {
@@ -430,42 +430,42 @@ define([
     }()),
 
     /**
-     * @return [number] the year
+     * @return {number} the year
      */
     getYear: function () {
       return this._year;
     },
 
     /**
-     * @return [number] the month
+     * @return {number} the month
      */
     getMonth: function () {
       return this._month;
     },
 
     /**
-     * @return [number] the day
+     * @return {number} the day
      */
     getDay: function () {
       return this._day;
     },
 
     /**
-     * @return [number] the hour
+     * @return {number} the hour
      */
     getHour: function () {
       return this._hour;
     },
 
     /**
-     * @return [number] the minute
+     * @return {number} the minute
      */
     getMinute: function () {
       return this._minute;
     },
 
     /**
-     * @return [sulfur/schema/value/simple/decimal] the second
+     * @return {sulfur/schema/value/simple/decimal} the second
      */
     getSecond: function () {
       return this._second;
@@ -474,7 +474,7 @@ define([
     /**
      * Convert the datetime to its string representation.
      *
-     * @return [string] the string representation
+     * @return {string} the string representation
      */
     toString: (function () {
 
@@ -513,7 +513,7 @@ define([
     /**
      * Check if the datetime defines a timezone.
      *
-     * @return [boolean] whether a timezone is defined or not
+     * @return {boolean} whether a timezone is defined or not
      */
     hasTimezone: function () {
       return this._zulu;
@@ -525,11 +525,11 @@ define([
      * Because the DataGridService ignores the timezone of either datetime,
      * the comparison only considers year, month, day, hour, minute and second.
      *
-     * @param [sulfur/schema/value/simple/dateTime] other the RHS datetime
+     * @param {sulfur/schema/value/simple/dateTime} other the RHS datetime
      *
-     * @return [-1] if less than `other`
-     * @return [0] if equal to `other`
-     * @return [1] if greater than `other`
+     * @return {-1} if less than `other`
+     * @return {0} if equal to `other`
+     * @return {1} if greater than `other`
      */
     cmp: (function () {
 
@@ -557,9 +557,9 @@ define([
     /**
      * Check for equality with another datetime.
      *
-     * @param [sulfur/schema/value/simple/dateTime] other
+     * @param {sulfur/schema/value/simple/dateTime} other
      *
-     * @return [boolean] whether equal to `other` or not
+     * @return {boolean} whether equal to `other` or not
      */
     eq: function (other) {
       return this.cmp(other) === 0;
@@ -568,9 +568,9 @@ define([
     /**
      * Check if less than another datetime.
      *
-     * @param [sulfur/schema/value/simple/dateTime] other
+     * @param {sulfur/schema/value/simple/dateTime} other
      *
-     * @return [boolean] whether less than `other` or not
+     * @return {boolean} whether less than `other` or not
      */
     lt: function (other) {
       return this.cmp(other) < 0;
@@ -579,9 +579,9 @@ define([
     /**
      * Check if greater than another datetime.
      *
-     * @param [sulfur/schema/value/simple/dateTime] other
+     * @param {sulfur/schema/value/simple/dateTime} other
      *
-     * @return [boolean] whether greater than `other` or not
+     * @return {boolean} whether greater than `other` or not
      */
     gt: function (other) {
       return this.cmp(other) > 0;
@@ -590,9 +590,9 @@ define([
     /**
      * Check if less than or equal to another datetime.
      *
-     * @param [sulfur/schema/value/simple/dateTime] other
+     * @param {sulfur/schema/value/simple/dateTime} other
      *
-     * @return [boolean] whether less than or equal `other` or not
+     * @return {boolean} whether less than or equal `other` or not
      */
     lteq: function (other) {
       return !this.gt(other);
@@ -601,9 +601,9 @@ define([
     /**
      * Check if greater than or equal to another datetime.
      *
-     * @param [sulfur/schema/value/simple/dateTime] other
+     * @param {sulfur/schema/value/simple/dateTime} other
      *
-     * @return [boolean] whether greater than or equal to `other` or not
+     * @return {boolean} whether greater than or equal to `other` or not
      */
     gteq: function (other) {
       return !this.lt(other);

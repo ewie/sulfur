@@ -25,8 +25,8 @@ define([
 
   return Factory.derive({
     /**
-     * @param [string] name the name of a Unicode General Category or Group
-     * @param [boolean] positive (default true) whether to match the codepoints
+     * @param {string} name the name of a Unicode General Category or Group
+     * @param {boolean} positive (default true) whether to match the codepoints
      *   of that General Category or the inverse
      */
     initialize: function (name, positive) {

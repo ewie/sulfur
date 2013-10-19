@@ -16,10 +16,10 @@ define([
   /**
    * Test if a codepoint value is a valid XML character.
    *
-   * @param [number] value the codepoint value
+   * @param {number} value the codepoint value
    *
-   * @return [true] if valid
-   * @return [false] otherwise
+   * @return {true} if valid
+   * @return {false} otherwise
    */
   function isValidXmlCharacterCodepoint(value) {
     return value === 0x9 ||
@@ -36,12 +36,12 @@ define([
 
   return Factory.derive({
     /**
-     * @param [number|string] value a valid XML character
+     * @param {number|string} value a valid XML character
      *   either as UCS codepoint in the range U+0000..U+10FFFF, or as string
      *   containing a single BMP codepoint or a surrogate pair
      *
-     * @throw [Error] if the string is empty
-     * @throw [Error] if the string contains more than one character
+     * @throw {Error} if the string is empty
+     * @throw {Error} if the string contains more than one character
      */
     initialize: function (value) {
       if (typeof value !== 'number') {
