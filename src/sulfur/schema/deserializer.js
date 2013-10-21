@@ -20,8 +20,8 @@ define([
 
   return Factory.derive({
 
-    initialize: function (typeTypeDeserializers) {
-      this._typeTypeDeserializers = typeTypeDeserializers;
+    initialize: function (typeDeserializers) {
+      this._typeDeserializers = typeDeserializers;
     },
 
     deserialize: function (document) {
@@ -36,7 +36,7 @@ define([
       }
 
       var xpath = XPath.create(document);
-      var typeDeserializer = TypeDeserializer.create(this._typeTypeDeserializers, xpath);
+      var typeDeserializer = TypeDeserializer.create(this._typeDeserializers, xpath);
 
       var ns = { xs: XSD_NAMESPACE };
       var roots = xpath.all('xs:element', root, ns);
