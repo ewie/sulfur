@@ -44,8 +44,8 @@ define([
     },
 
     /**
-     * @throw {Error} when the type element cannot be resolved by any converter
-     * @throw {Error} when a converter throws an error
+     * @throw {Error} when the type element cannot be deserialized by any type deserializer
+     * @throw {Error} when a type deserializer throws an error
      */
     deserializeTypeElement: function (element) {
       for (var i = 0; i < this._typeDeserializers.length; i += 1) {
@@ -60,8 +60,8 @@ define([
     },
 
     /**
-     * @throw {Error} when the type element cannot be resolved by any converter
-     * @throw {Error} when a converter throws an error
+     * @throw {Error} when the type element cannot be resolved by any type deserializer
+     * @throw {Error} when a type deserializer throws an error
      */
     resolveNamedType: function (qname) {
       for (var i = 0; i < this._typeDeserializers.length; i += 1) {

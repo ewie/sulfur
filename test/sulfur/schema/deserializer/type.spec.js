@@ -41,8 +41,8 @@ define([
 
       it("should return the XPath object", function () {
         var xpath = {};
-        var context = TypeDeserializer.create(undefined, xpath);
-        expect(context.getXPath()).to.equal(xpath);
+        var typeDeserializer = TypeDeserializer.create(undefined, xpath);
+        expect(typeDeserializer.getXPath()).to.equal(xpath);
       });
 
     });
@@ -52,8 +52,8 @@ define([
       it("should return undefined when no global type with the given name is declared", function () {
         var doc = parse('<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"/>');
         var xpath = XPath.create(doc);
-        var context = TypeDeserializer.create(undefined, xpath);
-        expect(context.resolveGlobalType('foo')).to.be.undefined;
+        var typeDeserializer = TypeDeserializer.create(undefined, xpath);
+        expect(typeDeserializer.resolveGlobalType('foo')).to.be.undefined;
       });
 
       it("should return the result of calling #deserializeTypeElement() with the xs:simpleType of the given name when declared", function () {
@@ -62,9 +62,9 @@ define([
            '<xs:simpleType name="foo"/>' +
           '</xs:schema>');
         var xpath = XPath.create(doc);
-        var context = TypeDeserializer.create(undefined, xpath);
-        var deserializeSpy = sinon.stub(context, 'deserializeTypeElement').returns({});
-        var type = context.resolveGlobalType('foo');
+        var typeDeserializer = TypeDeserializer.create(undefined, xpath);
+        var deserializeSpy = sinon.stub(typeDeserializer, 'deserializeTypeElement').returns({});
+        var type = typeDeserializer.resolveGlobalType('foo');
         expect(deserializeSpy)
           .to.be.calledWith(doc.documentElement.firstChild)
           .to.have.returned(sinon.match.same(type));
@@ -76,9 +76,9 @@ define([
            '<xs:complexType name="bar"/>' +
           '</xs:schema>');
         var xpath = XPath.create(doc);
-        var context = TypeDeserializer.create(undefined, xpath);
-        var deserializeSpy = sinon.stub(context, 'deserializeTypeElement').returns({});
-        var type = context.resolveGlobalType('bar');
+        var typeDeserializer = TypeDeserializer.create(undefined, xpath);
+        var deserializeSpy = sinon.stub(typeDeserializer, 'deserializeTypeElement').returns({});
+        var type = typeDeserializer.resolveGlobalType('bar');
         expect(deserializeSpy)
           .to.be.calledWith(doc.documentElement.firstChild)
           .to.have.returned(sinon.match.same(type));
@@ -88,10 +88,10 @@ define([
 
     describe('#deserializeTypeElement()', function () {
 
-      var converters;
+      var typeDeserializers;
 
       beforeEach(function () {
-        converters = [
+        typeDeserializers = [
           {
             deserializeElement: function () {}
           },
@@ -101,30 +101,30 @@ define([
         ];
       });
 
-      it("should reject when every converter's #deserializeElement() returns undefined", function () {
+      it("should reject when every type deserializer's #deserializeElement() returns undefined", function () {
         var element = { localName: 'x', namespaceURI: 'urn:y' };
-        var context = TypeDeserializer.create(converters);
-        var spies = converters.map(function (converter) {
-          return sinon.spy(converter, 'deserializeElement');
+        var typeDeserializer = TypeDeserializer.create(typeDeserializers);
+        var spies = typeDeserializers.map(function (typeDeserializer) {
+          return sinon.spy(typeDeserializer, 'deserializeElement');
         });
-        expect(bind(context, 'deserializeTypeElement', element))
+        expect(bind(typeDeserializer, 'deserializeTypeElement', element))
           .to.throw("cannot deserialize type element {urn:y}x");
         spies.forEach(function (spy) {
           expect(spy).to.be.calledWith(
             sinon.match.same(element),
-            sinon.match.same(context));
+            sinon.match.same(typeDeserializer));
         });
       });
 
-      it("should return the defined result of any converter's #deserializeElement()", function () {
+      it("should return the result of the first type deserializer whose #deserializeElement() returns a defined result", function () {
         var element = {};
-        var context = TypeDeserializer.create(converters);
-        var spy = sinon.stub(converters[0], 'deserializeElement').returns({});
-        var type = context.deserializeTypeElement(element);
+        var typeDeserializer = TypeDeserializer.create(typeDeserializers);
+        var spy = sinon.stub(typeDeserializers[0], 'deserializeElement').returns({});
+        var type = typeDeserializer.deserializeTypeElement(element);
         expect(spy)
           .to.be.calledWith(
             sinon.match.same(element),
-            sinon.match.same(context))
+            sinon.match.same(typeDeserializer))
           .to.have.returned(sinon.match.same(type));
       });
 
@@ -132,10 +132,10 @@ define([
 
     describe('#resolveNamedType()', function () {
 
-      var converters;
+      var typeDeserializers;
 
       beforeEach(function () {
-        converters = [
+        typeDeserializers = [
           {
             resolveQualifiedName: function () {}
           },
@@ -145,24 +145,24 @@ define([
         ];
       });
 
-      it("should reject when every converter's #resolveQualifiedName() returns undefined", function () {
-        var context = TypeDeserializer.create(converters);
-        var spies = converters.map(function (converter) {
-          return sinon.spy(converter, 'resolveQualifiedName');
+      it("should reject when every type deserializer's #resolveQualifiedName() returns undefined", function () {
+        var typeDeserializer = TypeDeserializer.create(typeDeserializers);
+        var spies = typeDeserializers.map(function (typeDeserializer) {
+          return sinon.spy(typeDeserializer, 'resolveQualifiedName');
         });
         var qname = QName.create('foo', 'urn:bar');
-        expect(bind(context, 'resolveNamedType', qname))
+        expect(bind(typeDeserializer, 'resolveNamedType', qname))
           .to.throw("cannot resolve type {urn:bar}foo");
         spies.forEach(function (spy) {
           expect(spy).to.be.calledWith(sinon.match.same(qname));
         });
       });
 
-      it("should return the defined result of any converter's #resolveQualifiedName()", function () {
-        var context = TypeDeserializer.create(converters);
-        var spy = sinon.stub(converters[0], 'resolveQualifiedName').returns({});
+      it("should return the defined result of any type deserializer's #resolveQualifiedName()", function () {
+        var typeDeserializer = TypeDeserializer.create(typeDeserializers);
+        var spy = sinon.stub(typeDeserializers[0], 'resolveQualifiedName').returns({});
         var qname = QName.create('foo', 'urn:bar');
-        var type = context.resolveNamedType(qname);
+        var type = typeDeserializer.resolveNamedType(qname);
         expect(spy)
           .to.be.calledWith(sinon.match.same(qname))
           .to.have.returned(sinon.match.same(type));
@@ -180,8 +180,8 @@ define([
         var root = doc.documentElement;
         var element = root.firstChild;
         var xpath = XPath.create(doc);
-        var context = TypeDeserializer.create(undefined, xpath);
-        expect(bind(context, 'deserializeElementType', element))
+        var typeDeserializer = TypeDeserializer.create(undefined, xpath);
+        expect(bind(typeDeserializer, 'deserializeElementType', element))
           .to.throw("element with unsupported type declaration");
       });
 
@@ -196,9 +196,9 @@ define([
                 return this.hasAttribute(name) ? 'someType' : null;
               }
             };
-            var context = TypeDeserializer.create();
-            var deserializeSpy = sinon.stub(context, 'resolveGlobalType').returns({});
-            var type = context.deserializeElementType(element);
+            var typeDeserializer = TypeDeserializer.create();
+            var deserializeSpy = sinon.stub(typeDeserializer, 'resolveGlobalType').returns({});
+            var type = typeDeserializer.deserializeElementType(element);
             expect(deserializeSpy)
               .to.be.calledWith('someType')
               .to.have.returned(sinon.match.same(type));
@@ -213,10 +213,10 @@ define([
               '</xs:schema>');
             var root = doc.documentElement;
             var element = root.firstChild;
-            var context = TypeDeserializer.create();
-            sinon.stub(context, 'resolveGlobalType').returns(undefined);
-            var deserializeSpy = sinon.stub(context, 'resolveNamedType').returns({});
-            var type = context.deserializeElementType(element);
+            var typeDeserializer = TypeDeserializer.create();
+            sinon.stub(typeDeserializer, 'resolveGlobalType').returns(undefined);
+            var deserializeSpy = sinon.stub(typeDeserializer, 'resolveNamedType').returns({});
+            var type = typeDeserializer.deserializeElementType(element);
             expect(deserializeSpy)
               .to.be.calledWith(QName.create('bar', 'urn:foo'))
               .to.have.returned(sinon.match.same(type));
@@ -236,9 +236,9 @@ define([
             var root = doc.documentElement;
             var element = root.firstChild;
             var xpath = XPath.create(doc);
-            var context = TypeDeserializer.create(undefined, xpath);
-            var deserializeSpy = sinon.stub(context, 'deserializeTypeElement').returns({});
-            var type = context.deserializeElementType(element);
+            var typeDeserializer = TypeDeserializer.create(undefined, xpath);
+            var deserializeSpy = sinon.stub(typeDeserializer, 'deserializeTypeElement').returns({});
+            var type = typeDeserializer.deserializeElementType(element);
             expect(deserializeSpy)
               .to.be.calledWith(element.firstChild)
               .to.have.returned(sinon.match.same(type));
@@ -254,9 +254,9 @@ define([
             var root = doc.documentElement;
             var element = root.firstChild;
             var xpath = XPath.create(doc);
-            var context = TypeDeserializer.create(undefined, xpath);
-            var deserializeSpy = sinon.stub(context, 'deserializeTypeElement').returns({});
-            var type = context.deserializeElementType(element);
+            var typeDeserializer = TypeDeserializer.create(undefined, xpath);
+            var deserializeSpy = sinon.stub(typeDeserializer, 'deserializeTypeElement').returns({});
+            var type = typeDeserializer.deserializeElementType(element);
             expect(deserializeSpy)
               .to.be.calledWith(element.firstChild)
               .to.have.returned(sinon.match.same(type));
@@ -272,9 +272,9 @@ define([
 
       it("should resolve the prefix when the qualified name has a prefix", function () {
         var doc = parse('<foo xmlns:xxx="urn:baz"/>');
-        var context = TypeDeserializer.create();
-        var deserializePrefixSpy = sinon.spy(context, 'resolvePrefix');
-        var r = context.resolveQualifiedName('xxx:foo', doc.documentElement);
+        var typeDeserializer = TypeDeserializer.create();
+        var deserializePrefixSpy = sinon.spy(typeDeserializer, 'resolvePrefix');
+        var r = typeDeserializer.resolveQualifiedName('xxx:foo', doc.documentElement);
         expect(deserializePrefixSpy)
           .to.be.calledWith('xxx', sinon.match.same(doc.documentElement));
         expect(r).to.eql(QName.create('foo', 'urn:baz'));
@@ -282,9 +282,9 @@ define([
 
       it("should resolve the empty prefix when the qualified name has no prefix", function () {
         var doc = parse('<foo xmlns="urn:bar"/>');
-        var context = TypeDeserializer.create();
-        var deserializePrefixSpy = sinon.spy(context, 'resolvePrefix');
-        var r = context.resolveQualifiedName('foo', doc.documentElement);
+        var typeDeserializer = TypeDeserializer.create();
+        var deserializePrefixSpy = sinon.spy(typeDeserializer, 'resolvePrefix');
+        var r = typeDeserializer.resolveQualifiedName('foo', doc.documentElement);
         expect(deserializePrefixSpy)
           .to.be.calledWith('', sinon.match.same(doc.documentElement));
         expect(r).to.eql(QName.create('foo', 'urn:bar'));
@@ -299,9 +299,9 @@ define([
           '<foo>' +
            '<bar xmlns:xxx="urn:bar"/>' +
           '</foo>');
-        var context = TypeDeserializer.create();
+        var typeDeserializer = TypeDeserializer.create();
         var element = doc.documentElement.firstChild;
-        var r = context.resolvePrefix('xxx', element);
+        var r = typeDeserializer.resolvePrefix('xxx', element);
         expect(r).to.equal('urn:bar');
       });
 
@@ -310,25 +310,25 @@ define([
           '<foo xmlns:bar="urn:foo">' +
            '<bar/>' +
           '</foo>');
-        var context = TypeDeserializer.create();
+        var typeDeserializer = TypeDeserializer.create();
         var element = doc.documentElement.firstChild;
-        var r = context.resolvePrefix('bar', element);
+        var r = typeDeserializer.resolvePrefix('bar', element);
         expect(r).to.equal('urn:foo');
       });
 
       it("should handle the empty prefix", function () {
         var doc = parse('<foo xmlns="urn:bar"/>');
-        var context = TypeDeserializer.create();
+        var typeDeserializer = TypeDeserializer.create();
         var element = doc.documentElement;
-        var r = context.resolvePrefix('', element);
+        var r = typeDeserializer.resolvePrefix('', element);
         expect(r).to.equal('urn:bar');
       });
 
       it("should reject an undeclared prefix", function () {
         var doc = parse('<foo/>');
-        var context = TypeDeserializer.create();
+        var typeDeserializer = TypeDeserializer.create();
         var element = doc.documentElement;
-        expect(bind(context, 'resolvePrefix', 'foo', element))
+        expect(bind(typeDeserializer, 'resolvePrefix', 'foo', element))
           .to.throw('cannot resolve undeclared prefix "foo"');
       });
 
