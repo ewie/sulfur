@@ -9,10 +9,10 @@
 define([
   'sulfur/util/factory',
   'sulfur/schema',
-  'sulfur/schema/deserializer/resolver',
+  'sulfur/schema/deserializer/type',
   'sulfur/schema/element',
   'sulfur/util/xpath'
-], function (Factory, Schema, Resolver, Element, XPath) {
+], function (Factory, Schema, TypeDeserializer, Element, XPath) {
 
   'use strict';
 
@@ -20,8 +20,8 @@ define([
 
   return Factory.derive({
 
-    initialize: function (typeResolvers) {
-      this._typeResolvers = typeResolvers;
+    initialize: function (typeTypeDeserializers) {
+      this._typeTypeDeserializers = typeTypeDeserializers;
     },
 
     deserialize: function (document) {
@@ -36,7 +36,7 @@ define([
       }
 
       var xpath = XPath.create(document);
-      var resolver = Resolver.create(this._typeResolvers, xpath);
+      var resolver = TypeDeserializer.create(this._typeTypeDeserializers, xpath);
 
       var ns = { xs: XSD_NAMESPACE };
       var roots = xpath.all('xs:element', root, ns);
@@ -56,7 +56,7 @@ define([
           }
           var type;
           try {
-            type = resolver.resolveElementType(el);
+            type = resolver.deserializeElementType(el);
           } catch (e) {
             if (el.getAttribute('minOccurs') === '0') {
               continue;

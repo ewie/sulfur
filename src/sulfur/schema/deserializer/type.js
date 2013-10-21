@@ -39,7 +39,7 @@ define([
         '[@name = "' + name + '"]';
       var element = this._xpath.first(expr, undefined, NS);
       if (element) {
-        return this.resolveTypeElement(element);
+        return this.deserializeTypeElement(element);
       }
     },
 
@@ -47,15 +47,15 @@ define([
      * @throw {Error} when the type element cannot be resolved by any converter
      * @throw {Error} when a converter throws an error
      */
-    resolveTypeElement: function (element) {
+    deserializeTypeElement: function (element) {
       for (var i = 0; i < this._typeResolvers.length; i += 1) {
         var c = this._typeResolvers[i];
-        var t = c.resolveElement(element, this);
+        var t = c.deserializeElement(element, this);
         if (t) {
           return t;
         }
       }
-      throw new Error("cannot resolve type element " +
+      throw new Error("cannot deserialize type element " +
         "{" + element.namespaceURI + "}" + element.localName);
     },
 
@@ -87,7 +87,7 @@ define([
      * @throw {Error} when the type declaration is no supported
      * @throw {Error} when the type declaration cannot be resolved
      */
-    resolveElementType: function (element) {
+    deserializeElementType: function (element) {
       if (element.hasAttribute('type')) {
         var typeName = element.getAttribute('type');
         var globalType = this.resolveGlobalType(typeName);
@@ -99,7 +99,7 @@ define([
       }
       var type = this._xpath.first('xs:complexType|xs:simpleType', element, NS);
       if (type) {
-        return this.resolveTypeElement(type);
+        return this.deserializeTypeElement(type);
       }
       throw new Error("element with unsupported type declaration");
     },

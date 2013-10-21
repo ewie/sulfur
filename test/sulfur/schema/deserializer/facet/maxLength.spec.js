@@ -10,19 +10,19 @@
 define([
   'shared',
   'sulfur/schema/facet/maxLength',
-  'sulfur/schema/deserializer/resolver/facet/maxLength'
-], function (shared, MaxLengthFacet, MaxLengthFacetResolver) {
+  'sulfur/schema/deserializer/facet/maxLength'
+], function (shared, MaxLengthFacet, MaxLengthFacetDeserializer) {
 
   'use strict';
 
   var expect = shared.expect;
 
-  describe('sulfur/schema/deserializer/resolver/facet/maxLength', function () {
+  describe('sulfur/schema/deserializer/facet/maxLength', function () {
 
     describe('.getFacet()', function () {
 
       it("should return sulfur/schema/facet/maxLength", function () {
-        expect(MaxLengthFacetResolver.getFacet()).to.equal(MaxLengthFacet);
+        expect(MaxLengthFacetDeserializer.getFacet()).to.equal(MaxLengthFacet);
       });
 
     });
@@ -30,7 +30,7 @@ define([
     describe('.parseValue()', function () {
 
       it("should parse a decimal integer", function () {
-        expect(MaxLengthFacetResolver.parseValue('123')).to.equal(123);
+        expect(MaxLengthFacetDeserializer.parseValue('123')).to.equal(123);
       });
 
     });
@@ -38,7 +38,7 @@ define([
     describe('.createFacet()', function () {
 
       it("should return a sulfur/schema/facet/maxLength using the smallest value", function () {
-        expect(MaxLengthFacetResolver.createFacet([ 1, 0, 2 ]))
+        expect(MaxLengthFacetDeserializer.createFacet([ 1, 0, 2 ]))
           .to.eql(MaxLengthFacet.create(0));
       });
 

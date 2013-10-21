@@ -10,20 +10,20 @@
 define([
   'shared',
   'sulfur/schema/facet/enumeration',
-  'sulfur/schema/deserializer/resolver/facet/enumeration'
-], function (shared, EnumerationFacet, EnumerationFacetResolver) {
+  'sulfur/schema/deserializer/facet/enumeration'
+], function (shared, EnumerationFacet, EnumerationFacetDeserializer) {
 
   'use strict';
 
   var expect = shared.expect;
   var sinon = shared.sinon;
 
-  describe('sulfur/schema/deserializer/resolver/facet/enumeration', function () {
+  describe('sulfur/schema/deserializer/facet/enumeration', function () {
 
     describe('.getFacet()', function () {
 
       it("should return sulfur/schema/facet/enumeration", function () {
-        expect(EnumerationFacetResolver.getFacet()).to.equal(EnumerationFacet);
+        expect(EnumerationFacetDeserializer.getFacet()).to.equal(EnumerationFacet);
       });
 
     });
@@ -33,7 +33,7 @@ define([
       it("should pass the given string to .parse() on the given object", function () {
         var obj = { parse: sinon.stub().returns({}) };
         var s = '...';
-        var value = EnumerationFacetResolver.parseValue(s, obj);
+        var value = EnumerationFacetDeserializer.parseValue(s, obj);
         expect(obj.parse)
           .to.be.calledWith(s)
           .to.have.returned(sinon.match.same(value));
@@ -44,7 +44,7 @@ define([
     describe('.createFacet()', function () {
 
       it("should return a sulfur/schema/facet/enumeration with the given values", function () {
-        expect(EnumerationFacetResolver.createFacet([ 1, 2, 3 ]))
+        expect(EnumerationFacetDeserializer.createFacet([ 1, 2, 3 ]))
           .to.eql(EnumerationFacet.create([ 1, 2, 3 ]));
       });
 

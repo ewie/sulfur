@@ -58,7 +58,7 @@ define([
       return this._typeIndex.getItemByKey(qname.toString());
     },
 
-    resolveElement: (function () {
+    deserializeElement: (function () {
 
       function declaresMandatoryAttributes(element, xpath) {
         var groups = xpath.all('xs:attributeGroup', element, NS);
@@ -70,7 +70,7 @@ define([
         return xpath.contains('xs:attribute[@use = "required"]', element, NS);
       }
 
-      function resolveElement(element, resolver) {
+      function resolveElement(element, typeDeserializer) {
         var minOccurs = element.hasAttribute('minOccurs') ?
           parseInt(element.getAttribute('minOccurs'), 10) : 1;
 
@@ -86,7 +86,7 @@ define([
 
         var type;
         try {
-          type = resolver.resolveElementType(element);
+          type = typeDeserializer.deserializeElementType(element);
         } catch (e) {
           // reject the element when mandatory
           if (minOccurs > 0) {
@@ -152,23 +152,23 @@ define([
         });
       }
 
-      function resolveElements(element, resolver) {
-        return resolver.getXPath().all('xs:all/xs:element', element, NS)
+      function resolveElements(element, typeDeserializer) {
+        return typeDeserializer.getXPath().all('xs:all/xs:element', element, NS)
           .reduce(function (elements, element) {
-            element = resolveElement(element, resolver);
+            element = resolveElement(element, typeDeserializer);
             element && elements.push(element);
             return elements;
           }, []);
       }
 
-      function resolveAll(types, element, resolver) {
-        var xpath = resolver.getXPath();
+      function resolveAll(types, element, typeDeserializer) {
+        var xpath = typeDeserializer.getXPath();
 
         if (declaresMandatoryAttributes(element, xpath)) {
           throw new Error("incompatible complex type due to mandatory attributes");
         }
 
-        var elements = resolveElements(element, resolver);
+        var elements = resolveElements(element, typeDeserializer);
 
         var type = findCompatibleType(types, elements);
         if (!type) {
@@ -190,8 +190,8 @@ define([
         return 1;
       }
 
-      function resolveSequence(element, resolver) {
-        var xpath = resolver.getXPath();
+      function resolveSequence(element, typeDeserializer) {
+        var xpath = typeDeserializer.getXPath();
         var sequence = xpath.first('xs:sequence', element, NS);
 
         var mandatoryElementsExpr = 'xs:element[not(@minOccurs) or @minOccurs != "0"]';
@@ -210,7 +210,7 @@ define([
         var itemElement = xpath.first(mandatoryElementsExpr, sequence, NS) ||
           xpath.first(optionalElementsExpr, sequence, NS);
 
-        itemElement = resolveElement(itemElement, resolver);
+        itemElement = resolveElement(itemElement, typeDeserializer);
 
         return ListType.create(itemElement, {
           maxLength: getOccurs(sequence, 'max'),
@@ -218,22 +218,23 @@ define([
         });
       }
 
-      return function (element, resolver) {
+      return function (element, typeDeserializer) {
         if (element.localName !== 'complexType' ||
             element.namespaceURI !== XSD_NAMESPACE)
         {
           return;
         }
 
-        var xpath = resolver.getXPath();
+        var xpath = typeDeserializer.getXPath();
 
         if (xpath.contains('xs:all', element, NS)) {
-          return resolveAll(this._typeIndex.toArray(), element, resolver);
+          return resolveAll(this._typeIndex.toArray(), element, typeDeserializer);
         }
 
         if (xpath.contains('xs:sequence', element, NS)) {
-          return resolveSequence(element, resolver);
+          return resolveSequence(element, typeDeserializer);
         }
+
       };
 
     }())

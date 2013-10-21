@@ -11,7 +11,7 @@ define([
   'shared',
   'sulfur/schema',
   'sulfur/schema/deserializer',
-  'sulfur/schema/deserializer/resolver/type/simple',
+  'sulfur/schema/deserializer/type/simple',
   'sulfur/schema/element',
   'sulfur/schema/facets',
   'sulfur/schema/qname',
@@ -20,7 +20,7 @@ define([
     shared,
     Schema,
     Deserializer,
-    SimpleTypeResolver,
+    SimpleTypeDeserializer,
     Element,
     Facets,
     QName,
@@ -100,16 +100,16 @@ define([
 
           beforeEach(function () {
             var facet = { getQName: returns(QName.create('x', 'urn:y')) };
-            var facetResolver = {
+            var facetDeserializer = {
               getFacet: returns(facet)
             };
             simpleType = PrimitiveType.create(
               { qname: QName.create('knownType', 'urn:y'),
                 facets: Facets.create([ facet ])
               });
-            var simpleTypeResolver = SimpleTypeResolver.create(
-              [ simpleType ], [ facetResolver ]);
-            deserializer = Deserializer.create([ simpleTypeResolver ]);
+            var simpleTypeDeserializer = SimpleTypeDeserializer.create(
+              [ simpleType ], [ facetDeserializer ]);
+            deserializer = Deserializer.create([ simpleTypeDeserializer ]);
           });
 
           it("should use the first root element declaration which only declares elements with compatible types", function () {

@@ -10,20 +10,20 @@
 define([
   'shared',
   'sulfur/schema/facet/minExclusive',
-  'sulfur/schema/deserializer/resolver/facet/minExclusive'
-], function (shared, MinExclusiveFacet, MinExclusiveFacetResolver) {
+  'sulfur/schema/deserializer/facet/minExclusive'
+], function (shared, MinExclusiveFacet, MinExclusiveFacetDeserializer) {
 
   'use strict';
 
   var expect = shared.expect;
   var sinon = shared.sinon;
 
-  describe('sulfur/schema/deserializer/resolver/facet/minExclusive', function () {
+  describe('sulfur/schema/deserializer/facet/minExclusive', function () {
 
     describe('.getFacet()', function () {
 
       it("should return sulfur/schema/facet/minExclusive", function () {
-        expect(MinExclusiveFacetResolver.getFacet()).to.equal(MinExclusiveFacet);
+        expect(MinExclusiveFacetDeserializer.getFacet()).to.equal(MinExclusiveFacet);
       });
 
     });
@@ -33,7 +33,7 @@ define([
       it("should pass the given string to .parse() on the given object", function () {
         var obj = { parse: sinon.stub().returns({}) };
         var s = '...';
-        var value = MinExclusiveFacetResolver.parseValue(s, obj);
+        var value = MinExclusiveFacetDeserializer.parseValue(s, obj);
         expect(obj.parse)
           .to.be.calledWith(s)
           .to.have.returned(sinon.match.same(value));
@@ -54,7 +54,7 @@ define([
 
       it("should return a sulfur/schema/facet/minExclusive using the largest value", function () {
         var values = [ value(2), value(3), value(1) ];
-        expect(MinExclusiveFacetResolver.createFacet(values))
+        expect(MinExclusiveFacetDeserializer.createFacet(values))
           .to.eql(MinExclusiveFacet.create(values[1]));
       });
 

@@ -9,21 +9,21 @@
 
 define([
   'shared',
-  'sulfur/schema/facet/minInclusive',
-  'sulfur/schema/deserializer/resolver/facet/minInclusive'
-], function (shared, MinInclusiveFacet, MinInclusiveFacetResolver) {
+  'sulfur/schema/facet/maxInclusive',
+  'sulfur/schema/deserializer/facet/maxInclusive'
+], function (shared, MaxInclusiveFacet, MaxInclusiveFacetDeserializer) {
 
   'use strict';
 
   var expect = shared.expect;
   var sinon = shared.sinon;
 
-  describe('sulfur/schema/deserializer/resolver/facet/minInclusive', function () {
+  describe('sulfur/schema/deserializer/facet/maxInclusive', function () {
 
     describe('.getFacet()', function () {
 
-      it("should return sulfur/schema/facet/minInclusive", function () {
-        expect(MinInclusiveFacetResolver.getFacet()).to.equal(MinInclusiveFacet);
+      it("should return sulfur/schema/facet/maxInclusive", function () {
+        expect(MaxInclusiveFacetDeserializer.getFacet()).to.equal(MaxInclusiveFacet);
       });
 
     });
@@ -33,7 +33,7 @@ define([
       it("should pass the given string to .parse() on the given object", function () {
         var obj = { parse: sinon.stub().returns({}) };
         var s = '...';
-        var value = MinInclusiveFacetResolver.parseValue(s, obj);
+        var value = MaxInclusiveFacetDeserializer.parseValue(s, obj);
         expect(obj.parse)
           .to.be.calledWith(s)
           .to.have.returned(sinon.match.same(value));
@@ -52,10 +52,10 @@ define([
         };
       }
 
-      it("should return a sulfur/schema/facet/minInclusive using the largest value", function () {
-        var values = [ value(2), value(3), value(1) ];
-        expect(MinInclusiveFacetResolver.createFacet(values))
-          .to.eql(MinInclusiveFacet.create(values[1]));
+      it("should return a sulfur/schema/facet/maxInclusive using the smallest value", function () {
+        var values = [ value(2), value(0), value(1) ];
+        expect(MaxInclusiveFacetDeserializer.createFacet(values))
+          .to.eql(MaxInclusiveFacet.create(values[1]));
       });
 
     });

@@ -13,9 +13,9 @@ define([
   'sulfur/schema/elements',
   'sulfur/schema/facet/minInclusive',
   'sulfur/schema/facets',
-  'sulfur/schema/deserializer/resolver',
-  'sulfur/schema/deserializer/resolver/type/complex',
-  'sulfur/schema/deserializer/resolver/type/simple',
+  'sulfur/schema/deserializer/type',
+  'sulfur/schema/deserializer/type/complex',
+  'sulfur/schema/deserializer/type/simple',
   'sulfur/schema/qname',
   'sulfur/schema/type/complex/primitive',
   'sulfur/schema/type/complex/list',
@@ -31,9 +31,9 @@ define([
     Elements,
     MinInclusiveFacet,
     Facets,
-    TypeResolver,
-    ComplexPrimitiveTypeResolver,
-    SimpleTypeResolver,
+    TypeDeserializer,
+    ComplexTypeDeserializer,
+    SimpleTypeDeserializer,
     QName,
     ComplexPrimitiveType,
     ComplexListType,
@@ -51,7 +51,7 @@ define([
   var bind = shared.bind;
   var returns = shared.returns;
 
-  describe('sulfur/schema/deserializer/resolver/type/complex', function () {
+  describe('sulfur/schema/deserializer/type/complex', function () {
 
     function parse(s) {
       var p = new DOMParser();
@@ -61,12 +61,12 @@ define([
     describe('#initialize()', function () {
 
       it("should reject an empty array", function () {
-        expect(bind(ComplexPrimitiveTypeResolver, 'create', []))
+        expect(bind(ComplexTypeDeserializer, 'create', []))
           .to.throw("expecting an array of one or more types");
       });
 
       it("should reject types which are not a sulfur/schema/type/complex", function () {
-        expect(bind(ComplexPrimitiveTypeResolver, 'create', [{}]))
+        expect(bind(ComplexTypeDeserializer, 'create', [{}]))
           .to.throw("expecting only sulfur/schema/type/complex types");
       });
 
@@ -75,7 +75,7 @@ define([
           ComplexPrimitiveType.create({ qname: QName.create('foo', 'urn:bar') }),
           ComplexPrimitiveType.create({ qname: QName.create('foo', 'urn:bar') })
         ];
-        expect(bind(ComplexPrimitiveTypeResolver, 'create', types))
+        expect(bind(ComplexTypeDeserializer, 'create', types))
           .to.throw("type with duplicate qualified name {urn:bar}foo");
       });
 
@@ -84,35 +84,35 @@ define([
     describe('#resolveQualifiedName()', function () {
 
       var type;
-      var typeResolver;
+      var typeDeserializer;
 
       beforeEach(function () {
         type = ComplexPrimitiveType.create(
           { qname: QName.create('x', 'urn:y'),
             elements: Elements.create([ Element.create('foo') ])
           });
-        typeResolver = ComplexPrimitiveTypeResolver.create([ type ]);
+        typeDeserializer = ComplexTypeDeserializer.create([ type ]);
       });
 
       it("should return an instance of the type matching the name and namespace", function () {
-        var t = typeResolver.resolveQualifiedName(QName.create('x', 'urn:y'));
+        var t = typeDeserializer.resolveQualifiedName(QName.create('x', 'urn:y'));
         expect(t).to.equal(type);
       });
 
       it("should return undefined when no type with the given name is defined", function () {
-        expect(typeResolver.resolveQualifiedName(QName.create('z', 'urn:y'))).to.be.undefined;
+        expect(typeDeserializer.resolveQualifiedName(QName.create('z', 'urn:y'))).to.be.undefined;
       });
 
       it("should return undefined when no type with the given namespace is defined", function () {
-        expect(typeResolver.resolveQualifiedName(QName.create('x', 'urn:z'))).to.be.undefined;
+        expect(typeDeserializer.resolveQualifiedName(QName.create('x', 'urn:z'))).to.be.undefined;
       });
 
     });
 
-    describe('#resolveElement()', function () {
+    describe('#deserializeElement()', function () {
 
-      var typeResolver;
-      var typeResolvers;
+      var typeDeserializer;
+      var typeDeserializers;
       var complexType;
       var complexType3;
       var simpleType;
@@ -160,7 +160,7 @@ define([
                 Element.create('bar', simpleType)
               ])
           });
-        typeResolver = ComplexPrimitiveTypeResolver.create(
+        typeDeserializer = ComplexTypeDeserializer.create(
           [ complexType, complexType2, complexType3, complexType4 ]);
         var facetResolver = {
           getFacet: returns(MinInclusiveFacet),
@@ -169,19 +169,19 @@ define([
             return MinInclusiveFacet.create(DoubleValue.create(values[0]));
           }
         };
-        var simpleResolver = SimpleTypeResolver.create(
+        var simpleResolver = SimpleTypeDeserializer.create(
           [ simpleType, otherType, simpleType2 ], [ facetResolver ]);
-        typeResolvers = [ typeResolver, simpleResolver ];
+        typeDeserializers = [ typeDeserializer, simpleResolver ];
       });
 
       it("should return undefined when the element's local name is not 'complexType", function () {
         var element = { localName: 'notAComplexType' };
-        expect(typeResolver.resolveElement(element)).to.be.undefined;
+        expect(typeDeserializer.deserializeElement(element)).to.be.undefined;
       });
 
       it("should return undefined when the element's namespace is not 'http://www.w3.org/2001/XMLSchema'", function () {
         var element = { localName: 'complexType', namespaceURI: 'urn:void' };
-        expect(typeResolver.resolveElement(element)).to.be.undefined;
+        expect(typeDeserializer.deserializeElement(element)).to.be.undefined;
       });
 
       context("with element xs:complexType", function () {
@@ -190,8 +190,8 @@ define([
           var doc = parse('<complexType xmlns="http://www.w3.org/2001/XMLSchema"/>');
           var element = doc.documentElement;
           var xpath = XPath.create(doc);
-          var resolver = TypeResolver.create(undefined, xpath);
-          expect(typeResolver.resolveElement(element, resolver)).to.be.undefined;
+          var resolver = TypeDeserializer.create(undefined, xpath);
+          expect(typeDeserializer.deserializeElement(element, resolver)).to.be.undefined;
         });
 
         context("with child xs:all", function () {
@@ -205,8 +205,8 @@ define([
               '</complexType>');
             var element = doc.documentElement;
             var xpath = XPath.create(doc);
-            var resolver = TypeResolver.create(undefined, xpath);
-            expect(bind(typeResolver, 'resolveElement', element, resolver))
+            var resolver = TypeDeserializer.create(undefined, xpath);
+            expect(bind(typeDeserializer, 'deserializeElement', element, resolver))
               .to.throw("incompatible complex type due to an element requiring more than one occurrence");
           });
 
@@ -223,8 +223,8 @@ define([
                 '</complexType>');
               var element = doc.documentElement;
               var xpath = XPath.create(doc);
-              var resolver = TypeResolver.create(typeResolvers, xpath);
-              var type = typeResolver.resolveElement(element, resolver);
+              var resolver = TypeDeserializer.create(typeDeserializers, xpath);
+              var type = typeDeserializer.deserializeElement(element, resolver);
               expect(type).to.eql(
                 ComplexRestrictedType.create(complexType,
                   Elements.create(
@@ -244,8 +244,8 @@ define([
                 '</complexType>');
               var element = doc.documentElement;
               var xpath = XPath.create(doc);
-              var resolver = TypeResolver.create(typeResolvers, xpath);
-              var type = typeResolver.resolveElement(element, resolver);
+              var resolver = TypeDeserializer.create(typeDeserializers, xpath);
+              var type = typeDeserializer.deserializeElement(element, resolver);
               expect(type).to.eql(
                 ComplexRestrictedType.create(complexType3,
                   Elements.create(
@@ -267,8 +267,8 @@ define([
                 '</complexType>');
               var element = doc.documentElement;
               var xpath = XPath.create(doc);
-              var resolver = TypeResolver.create(typeResolvers, xpath);
-              var type = typeResolver.resolveElement(element, resolver);
+              var resolver = TypeDeserializer.create(typeDeserializers, xpath);
+              var type = typeDeserializer.deserializeElement(element, resolver);
               expect(type).to.eql(
                 ComplexRestrictedType.create(complexType,
                   Elements.create(
@@ -290,8 +290,8 @@ define([
                 '</complexType>');
               var element = doc.documentElement;
               var xpath = XPath.create(doc);
-              var resolver = TypeResolver.create(typeResolvers, xpath);
-              expect(bind(typeResolver, 'resolveElement', element, resolver))
+              var resolver = TypeDeserializer.create(typeDeserializers, xpath);
+              expect(bind(typeDeserializer, 'deserializeElement', element, resolver))
                 .to.throw("incompatible complex type");
             });
 
@@ -306,8 +306,8 @@ define([
                 '</complexType>');
               var element = doc.documentElement;
               var xpath = XPath.create(doc);
-              var resolver = TypeResolver.create(typeResolvers, xpath);
-              expect(bind(typeResolver, 'resolveElement', element, resolver))
+              var resolver = TypeDeserializer.create(typeDeserializers, xpath);
+              expect(bind(typeDeserializer, 'deserializeElement', element, resolver))
                 .to.throw("incompatible complex type");
             });
 
@@ -323,8 +323,8 @@ define([
                 '</complexType>');
               var element = doc.documentElement;
               var xpath = XPath.create(doc);
-              var resolver = TypeResolver.create(typeResolvers, xpath);
-              expect(bind(typeResolver, 'resolveElement', element, resolver))
+              var resolver = TypeDeserializer.create(typeDeserializers, xpath);
+              expect(bind(typeDeserializer, 'deserializeElement', element, resolver))
                 .to.throw("incompatible complex type");
             });
 
@@ -339,8 +339,8 @@ define([
                 '</complexType>');
               var element = doc.documentElement;
               var xpath = XPath.create(doc);
-              var resolver = TypeResolver.create(typeResolvers, xpath);
-              expect(bind(typeResolver, 'resolveElement', element, resolver))
+              var resolver = TypeDeserializer.create(typeDeserializers, xpath);
+              expect(bind(typeDeserializer, 'deserializeElement', element, resolver))
                 .to.throw("incompatible complex type");
             });
 
@@ -361,8 +361,8 @@ define([
                 '</complexType>');
               var element = doc.documentElement;
               var xpath = XPath.create(doc);
-              var resolver = TypeResolver.create(typeResolvers, xpath);
-              expect(bind(typeResolver, 'resolveElement', element, resolver))
+              var resolver = TypeDeserializer.create(typeDeserializers, xpath);
+              expect(bind(typeDeserializer, 'deserializeElement', element, resolver))
                 .to.throw("incompatible complex type");
             });
 
@@ -382,8 +382,8 @@ define([
                 '</complexType>');
               var element = doc.documentElement;
               var xpath = XPath.create(doc);
-              var resolver = TypeResolver.create(typeResolvers, xpath);
-              var type = typeResolver.resolveElement(element, resolver);
+              var resolver = TypeDeserializer.create(typeDeserializers, xpath);
+              var type = typeDeserializer.deserializeElement(element, resolver);
               expect(type).to.eql(
                 ComplexRestrictedType.create(complexType,
                   Elements.create(
@@ -401,8 +401,8 @@ define([
                 '</complexType>');
               var element = doc.documentElement;
               var xpath = XPath.create(doc);
-              var resolver = TypeResolver.create([ typeResolver ], xpath);
-              expect(bind(typeResolver, 'resolveElement', element, resolver))
+              var resolver = TypeDeserializer.create([ typeDeserializer ], xpath);
+              expect(bind(typeDeserializer, 'deserializeElement', element, resolver))
                 .to.throw("incompatible complex type due to mandatory element with incompatible type " +
                   "(cannot resolve type {urn:void}incompatibleType)");
             });
@@ -419,8 +419,8 @@ define([
                 '</complexType>');
               var element = doc.documentElement;
               var xpath = XPath.create(doc);
-              var resolver = TypeResolver.create(undefined, xpath);
-              expect(bind(typeResolver, 'resolveElement', element, resolver))
+              var resolver = TypeDeserializer.create(undefined, xpath);
+              expect(bind(typeDeserializer, 'deserializeElement', element, resolver))
                 .to.throw("incompatible complex type due to mandatory attributes");
             });
 
@@ -436,8 +436,8 @@ define([
                 '</complexType>');
               var element = doc.documentElement;
               var xpath = XPath.create(doc);
-              var resolver = TypeResolver.create(typeResolvers, xpath);
-              var type = typeResolver.resolveElement(element, resolver);
+              var resolver = TypeDeserializer.create(typeDeserializers, xpath);
+              var type = typeDeserializer.deserializeElement(element, resolver);
               expect(type).to.eql(
                 ComplexRestrictedType.create(complexType,
                   Elements.create(
@@ -459,8 +459,8 @@ define([
                 '</complexType>');
               var element = doc.documentElement;
               var xpath = XPath.create(doc);
-              var resolver = TypeResolver.create(undefined, xpath);
-              expect(bind(typeResolver, 'resolveElement', element, resolver))
+              var resolver = TypeDeserializer.create(undefined, xpath);
+              expect(bind(typeDeserializer, 'deserializeElement', element, resolver))
                 .to.throw("incompatible complex type due to mandatory attributes");
             });
 
@@ -478,8 +478,8 @@ define([
                 '</complexType>');
               var element = doc.documentElement;
               var xpath = XPath.create(doc);
-              var resolver = TypeResolver.create(typeResolvers, xpath);
-              var type = typeResolver.resolveElement(element, resolver);
+              var resolver = TypeDeserializer.create(typeDeserializers, xpath);
+              var type = typeDeserializer.deserializeElement(element, resolver);
               expect(type).to.eql(
                 ComplexRestrictedType.create(complexType,
                   Elements.create(
@@ -503,8 +503,8 @@ define([
               '</complexType>');
             var element = doc.documentElement;
             var xpath = XPath.create(doc);
-            var resolver = TypeResolver.create(typeResolvers, xpath);
-            var type = typeResolver.resolveElement(element, resolver);
+            var resolver = TypeDeserializer.create(typeDeserializers, xpath);
+            var type = typeDeserializer.deserializeElement(element, resolver);
             expect(type).to.eql(
               ComplexListType.create(
                 Element.create('bar', simpleType),
@@ -522,8 +522,8 @@ define([
               '</complexType>');
             var element = doc.documentElement;
             var xpath = XPath.create(doc);
-            var resolver = TypeResolver.create(typeResolvers, xpath);
-            var type = typeResolver.resolveElement(element, resolver);
+            var resolver = TypeDeserializer.create(typeDeserializers, xpath);
+            var type = typeDeserializer.deserializeElement(element, resolver);
             expect(type).to.eql(
               ComplexListType.create(
                 Element.create('bar', simpleType),
@@ -541,8 +541,8 @@ define([
               '</complexType>');
             var element = doc.documentElement;
             var xpath = XPath.create(doc);
-            var resolver = TypeResolver.create(typeResolvers, xpath);
-            var type = typeResolver.resolveElement(element, resolver);
+            var resolver = TypeDeserializer.create(typeDeserializers, xpath);
+            var type = typeDeserializer.deserializeElement(element, resolver);
             expect(type).to.eql(
               ComplexListType.create(
                 Element.create('bar', simpleType),
@@ -562,8 +562,8 @@ define([
                 '</complexType>');
               var element = doc.documentElement;
               var xpath = XPath.create(doc);
-              var resolver = TypeResolver.create(typeResolvers, xpath);
-              var type = typeResolver.resolveElement(element, resolver);
+              var resolver = TypeDeserializer.create(typeDeserializers, xpath);
+              var type = typeDeserializer.deserializeElement(element, resolver);
               expect(type).to.eql(
                 ComplexListType.create(
                   Element.create('bar', simpleType),
@@ -581,8 +581,8 @@ define([
                 '</complexType>');
               var element = doc.documentElement;
               var xpath = XPath.create(doc);
-              var resolver = TypeResolver.create(typeResolvers, xpath);
-              var type = typeResolver.resolveElement(element, resolver);
+              var resolver = TypeDeserializer.create(typeDeserializers, xpath);
+              var type = typeDeserializer.deserializeElement(element, resolver);
               expect(type).to.eql(
                 ComplexListType.create(
                   Element.create('bar', simpleType),
@@ -604,8 +604,8 @@ define([
                 '</complexType>');
               var element = doc.documentElement;
               var xpath = XPath.create(doc);
-              var resolver = TypeResolver.create(typeResolvers, xpath);
-              var type = typeResolver.resolveElement(element, resolver);
+              var resolver = TypeDeserializer.create(typeDeserializers, xpath);
+              var type = typeDeserializer.deserializeElement(element, resolver);
               expect(type).to.eql(
                 ComplexListType.create(
                   Element.create('bar', simpleType),
@@ -624,8 +624,8 @@ define([
                 '</complexType>');
               var element = doc.documentElement;
               var xpath = XPath.create(doc);
-              var resolver = TypeResolver.create(typeResolvers, xpath);
-              expect(bind(typeResolver, 'resolveElement', element, resolver))
+              var resolver = TypeDeserializer.create(typeDeserializers, xpath);
+              expect(bind(typeDeserializer, 'deserializeElement', element, resolver))
                 .to.throw("incompatible complex list type due to multiple mandatory elements");
             });
 
@@ -642,8 +642,8 @@ define([
                 '</complexType>');
               var element = doc.documentElement;
               var xpath = XPath.create(doc);
-              var resolver = TypeResolver.create(typeResolvers, xpath);
-              var type = typeResolver.resolveElement(element, resolver);
+              var resolver = TypeDeserializer.create(typeDeserializers, xpath);
+              var type = typeDeserializer.deserializeElement(element, resolver);
               expect(type).to.eql(
                 ComplexListType.create(
                   Element.create('bar', simpleType),
@@ -666,8 +666,8 @@ define([
                 '</complexType>');
               var element = doc.documentElement;
               var xpath = XPath.create(doc);
-              var resolver = TypeResolver.create(typeResolvers, xpath);
-              expect(bind(typeResolver, 'resolveElement', element, resolver))
+              var resolver = TypeDeserializer.create(typeDeserializers, xpath);
+              expect(bind(typeDeserializer, 'deserializeElement', element, resolver))
                 .to.throw("incompatible complex list type due to multiple optional elements");
             });
 
@@ -682,8 +682,8 @@ define([
                 '</complexType>');
               var element = doc.documentElement;
               var xpath = XPath.create(doc);
-              var resolver = TypeResolver.create(typeResolvers, xpath);
-              var type = typeResolver.resolveElement(element, resolver);
+              var resolver = TypeDeserializer.create(typeDeserializers, xpath);
+              var type = typeDeserializer.deserializeElement(element, resolver);
               expect(type).to.eql(
                 ComplexListType.create(
                   Element.create('foo', simpleType, { optional: true }),
