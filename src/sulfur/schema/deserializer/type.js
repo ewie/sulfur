@@ -18,12 +18,12 @@ define([
   return Factory.derive({
 
     /**
-     * @param {array} typeResolvers an array of type resolvers used in the
-     *   given order
+     * @param {array} typeDeserializers an array of type deserializers used in
+     *   the given order
      * @param {sulfur/util/xpath} xpath
      */
-    initialize: function (typeResolvers, xpath) {
-      this._typeResolvers = typeResolvers;
+    initialize: function (typeDeserializers, xpath) {
+      this._typeDeserializers = typeDeserializers;
       this._xpath = xpath;
     },
 
@@ -48,8 +48,8 @@ define([
      * @throw {Error} when a converter throws an error
      */
     deserializeTypeElement: function (element) {
-      for (var i = 0; i < this._typeResolvers.length; i += 1) {
-        var c = this._typeResolvers[i];
+      for (var i = 0; i < this._typeDeserializers.length; i += 1) {
+        var c = this._typeDeserializers[i];
         var t = c.deserializeElement(element, this);
         if (t) {
           return t;
@@ -64,8 +64,8 @@ define([
      * @throw {Error} when a converter throws an error
      */
     resolveNamedType: function (qname) {
-      for (var i = 0; i < this._typeResolvers.length; i += 1) {
-        var c = this._typeResolvers[i];
+      for (var i = 0; i < this._typeDeserializers.length; i += 1) {
+        var c = this._typeDeserializers[i];
         var t = c.resolveQualifiedName(qname);
         if (t) {
           return t;

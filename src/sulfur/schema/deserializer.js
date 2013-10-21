@@ -36,7 +36,7 @@ define([
       }
 
       var xpath = XPath.create(document);
-      var resolver = TypeDeserializer.create(this._typeTypeDeserializers, xpath);
+      var typeDeserializer = TypeDeserializer.create(this._typeTypeDeserializers, xpath);
 
       var ns = { xs: XSD_NAMESPACE };
       var roots = xpath.all('xs:element', root, ns);
@@ -56,7 +56,7 @@ define([
           }
           var type;
           try {
-            type = resolver.deserializeElementType(el);
+            type = typeDeserializer.deserializeElementType(el);
           } catch (e) {
             if (el.getAttribute('minOccurs') === '0') {
               continue;
