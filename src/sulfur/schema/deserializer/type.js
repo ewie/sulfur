@@ -21,28 +21,18 @@ define([
     /**
      * @param {array} typeDeserializers an array of type deserializers used in
      *   the given order
-     * @param {sulfur/util/xpath} xpath
      */
-    initialize: function (typeDeserializers, xpath) {
+    initialize: function (typeDeserializers) {
       this._typeDeserializers = typeDeserializers;
-      this._xpath = xpath;
-
       this._referenceStack = [];
     },
 
-    /**
-     * @return {sulfur/util/xpath}
-     */
-    getXPath: function () {
-      return this._xpath;
-    },
-
-    resolveGlobalType: function (name) {
+    resolveGlobalType: function (name, xpath) {
       var expr = '(/xs:schema/xs:simpleType|/xs:schema/xs:complexType)' +
         '[@name = "' + name + '"]';
-      var element = this._xpath.first(expr, undefined, NS);
+      var element = xpath.first(expr, undefined, NS);
       if (element) {
-        return this.deserializeType(element);
+        return this.deserializeType(element, xpath);
       }
     },
 
@@ -50,10 +40,10 @@ define([
      * @throw {Error} when the type element cannot be deserialized by any type deserializer
      * @throw {Error} when a type deserializer throws an error
      */
-    deserializeType: function (element) {
+    deserializeType: function (element, xpath) {
       for (var i = 0; i < this._typeDeserializers.length; i += 1) {
         var c = this._typeDeserializers[i];
-        var t = c.deserializeElement(element, this);
+        var t = c.deserializeElement(element, this, xpath);
         if (t) {
           return t;
         }
@@ -102,13 +92,14 @@ define([
      * Does not resolve attribute "subsitutionGroup".
      *
      * @param {Element} element an XML Schema element declaration
+     * @param {sulfur/util/xpath} xpath
      *
      * @return {sulfur/schema/element}
      *
      * @throw {Error} when the type declaration cannot be resolved
      * @throw {Error} when the type is recursive
      */
-    deserializeElement: function (element) {
+    deserializeElement: function (element, xpath) {
       var name;
       var type;
       if (element.hasAttribute('ref')) {
@@ -117,8 +108,8 @@ define([
           throw new Error("recursive element type");
         }
         this._referenceStack.push(refName);
-        var ref = this._xpath.first('/xs:schema/xs:element[@name = "' + refName + '"]', undefined, NS);
-        ref = this.deserializeElement(ref);
+        var ref = xpath.first('/xs:schema/xs:element[@name = "' + refName + '"]', undefined, NS);
+        ref = this.deserializeElement(ref, xpath);
         type = ref.getType();
         name = ref.getName();
         this._referenceStack.pop();
@@ -126,7 +117,7 @@ define([
         name = element.getAttribute('name');
         if (element.hasAttribute('type')) {
           var typeName = element.getAttribute('type');
-          var globalType = this.resolveGlobalType(typeName);
+          var globalType = this.resolveGlobalType(typeName, xpath);
           if (globalType) {
             type = globalType;
           } else {
@@ -134,8 +125,8 @@ define([
             type = this.resolveNamedType(qname);
           }
         } else {
-          var child = this._xpath.first('xs:complexType|xs:simpleType', element, NS);
-          type = this.deserializeType(child);
+          var child = xpath.first('xs:complexType|xs:simpleType', element, NS);
+          type = this.deserializeType(child, xpath);
         }
       }
       var optional = element.getAttribute('minOccurs') === '0';

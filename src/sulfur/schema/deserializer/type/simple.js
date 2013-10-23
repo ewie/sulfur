@@ -100,9 +100,9 @@ define([
 
     deserializeElement: (function () {
 
-      function resolveReferencedBase(restriction, typeDeserializer) {
+      function resolveReferencedBase(restriction, typeDeserializer, xpath) {
         var baseName = restriction.getAttribute('base');
-        var globalType = typeDeserializer.resolveGlobalType(baseName);
+        var globalType = typeDeserializer.resolveGlobalType(baseName, xpath);
         if (globalType) {
           return globalType;
         }
@@ -110,10 +110,9 @@ define([
         return typeDeserializer.resolveNamedType(qname);
       }
 
-      function resolveInlinedBase(restriction, typeDeserializer) {
-        var xpath = typeDeserializer.getXPath();
+      function resolveInlinedBase(restriction, typeDeserializer, xpath) {
         var type = xpath.first('xs:simpleType', restriction, NS);
-        return typeDeserializer.deserializeType(type);
+        return typeDeserializer.deserializeType(type, xpath);
       }
 
       function resolveAnyFacets(facetDeserializers, allowedFacets, valueType,
@@ -167,16 +166,16 @@ define([
         }
       }
 
-      function resolveRestriction(restriction, facetDeserializers, typeDeserializer) {
+      function resolveRestriction(restriction, typeDeserializer, xpath, facetDeserializers) {
         var baseType;
         if (restriction.hasAttribute('base')) {
-          baseType = resolveReferencedBase(restriction, typeDeserializer);
+          baseType = resolveReferencedBase(restriction, typeDeserializer, xpath);
         } else {
-          baseType = resolveInlinedBase(restriction, typeDeserializer);
+          baseType = resolveInlinedBase(restriction, typeDeserializer, xpath);
         }
 
         var facets = resolveFacets(facetDeserializers, baseType.getAllowedFacets(),
-          baseType.getValueType(), restriction, typeDeserializer.getXPath());
+          baseType.getValueType(), restriction, xpath);
 
         if (facets) {
           return RestrictedType.create(baseType, facets);
@@ -185,9 +184,9 @@ define([
         }
       }
 
-      function resolveReferencedItemType(list, typeDeserializer) {
+      function resolveReferencedItemType(list, typeDeserializer, xpath) {
         var itemTypeName = list.getAttribute('itemType');
-        var globalType = typeDeserializer.resolveGlobalType(itemTypeName);
+        var globalType = typeDeserializer.resolveGlobalType(itemTypeName, xpath);
         if (globalType) {
           return globalType;
         }
@@ -195,40 +194,37 @@ define([
         return typeDeserializer.resolveNamedType(qname);
       }
 
-      function resolveInlinedItemType(list, typeDeserializer) {
-        var xpath = typeDeserializer.getXPath();
+      function resolveInlinedItemType(list, typeDeserializer, xpath) {
         var simpleType = xpath.first('xs:simpleType', list, NS);
-        return typeDeserializer.deserializeType(simpleType);
+        return typeDeserializer.deserializeType(simpleType, xpath);
       }
 
-      function resolveList(list, typeDeserializer) {
+      function resolveList(list, typeDeserializer, xpath) {
         var itemType;
         if (list.hasAttribute('itemType')) {
-          itemType = resolveReferencedItemType(list, typeDeserializer);
+          itemType = resolveReferencedItemType(list, typeDeserializer, xpath);
         } else {
-          itemType = resolveInlinedItemType(list, typeDeserializer);
+          itemType = resolveInlinedItemType(list, typeDeserializer, xpath);
         }
         return ListType.create(itemType);
       }
 
-      return function (element, typeDeserializer) {
+      return function (element, typeDeserializer, xpath) {
         if (element.localName !== 'simpleType' ||
             element.namespaceURI !== XSD_NAMESPACE)
         {
           return;
         }
 
-        var xpath = typeDeserializer.getXPath();
-
         var restriction = xpath.first('xs:restriction', element, NS);
         if (restriction) {
-          return resolveRestriction(restriction, this._facetDeserializerIndex,
-            typeDeserializer);
+          return resolveRestriction(restriction, typeDeserializer, xpath,
+            this._facetDeserializerIndex);
         }
 
         var list = xpath.first('xs:list', element, NS);
         if (list) {
-          return resolveList(list, typeDeserializer);
+          return resolveList(list, typeDeserializer, xpath);
         }
       };
 

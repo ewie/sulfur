@@ -265,8 +265,8 @@ define([
           var doc = parse('<simpleType xmlns="http://www.w3.org/2001/XMLSchema"/>');
           var element = doc.documentElement;
           var xpath = XPath.create(doc);
-          var typeDeserializer = TypeDeserializer.create(undefined, xpath);
-          expect(simpleTypeDeserializer.deserializeElement(element, typeDeserializer)).to.be.undefined;
+          var typeDeserializer = TypeDeserializer.create();
+          expect(simpleTypeDeserializer.deserializeElement(element, typeDeserializer, xpath)).to.be.undefined;
         });
 
         context("with child xs:restriction", function () {
@@ -298,9 +298,10 @@ define([
                 '</xs:schema>');
               var root = doc.documentElement;
               var xpath = XPath.create(doc);
-              var typeDeserializer = TypeDeserializer.create(typeDeserializers, xpath);
+              var typeDeserializer = TypeDeserializer.create(typeDeserializers);
 
-              var t = simpleTypeDeserializer.deserializeElement(root.firstChild, typeDeserializer);
+              var t = simpleTypeDeserializer.deserializeElement(
+                root.firstChild, typeDeserializer, xpath);
 
               expect(t).to.eql(type);
             });
@@ -323,9 +324,10 @@ define([
                 '</xs:schema>');
               var root = doc.documentElement;
               var xpath = XPath.create(doc);
-              var typeDeserializer = TypeDeserializer.create(typeDeserializers, xpath);
+              var typeDeserializer = TypeDeserializer.create(typeDeserializers);
 
-              var t = simpleTypeDeserializer.deserializeElement(root.firstChild, typeDeserializer);
+              var t = simpleTypeDeserializer.deserializeElement(
+                root.firstChild, typeDeserializer, xpath);
 
               expect(t).to.eql(type);
             });
@@ -338,9 +340,10 @@ define([
                  '<xs:restriction base="y:x"/>' +
                 '</xs:simpleType>');
               var xpath = XPath.create(doc);
-              var typeDeserializer = TypeDeserializer.create(typeDeserializers, xpath);
+              var typeDeserializer = TypeDeserializer.create(typeDeserializers);
 
-              var t = simpleTypeDeserializer.deserializeElement(doc.documentElement, typeDeserializer);
+              var t = simpleTypeDeserializer.deserializeElement(
+                doc.documentElement, typeDeserializer, xpath);
 
               expect(t).to.eql(type);
             });
@@ -355,9 +358,10 @@ define([
               var xpath = XPath.create(doc, {
                 xs: 'http://www.w3.org/2001/XMLSchema'
               });
-              var typeDeserializer = TypeDeserializer.create(typeDeserializers, xpath);
+              var typeDeserializer = TypeDeserializer.create(typeDeserializers);
 
-              expect(bind(simpleTypeDeserializer, 'deserializeElement', doc.documentElement, typeDeserializer))
+              expect(bind(simpleTypeDeserializer, 'deserializeElement',
+                  doc.documentElement, typeDeserializer, xpath))
                 .to.throw("cannot resolve type {urn:y}z");
             });
 
@@ -391,9 +395,10 @@ define([
 
               var element = doc.documentElement;
               var xpath = XPath.create(doc);
-              var typeDeserializer = TypeDeserializer.create(typeDeserializers, xpath);
+              var typeDeserializer = TypeDeserializer.create(typeDeserializers);
 
-              var t = simpleTypeDeserializer.deserializeElement(element, typeDeserializer);
+              var t = simpleTypeDeserializer.deserializeElement(
+                element, typeDeserializer, xpath);
 
               expect(parseSpies[0].getCall(0).args[0])
                 .to.equal('x');
@@ -445,9 +450,10 @@ define([
 
               var element = doc.documentElement;
               var xpath = XPath.create(doc);
-              var typeDeserializer = TypeDeserializer.create(typeDeserializers, xpath);
+              var typeDeserializer = TypeDeserializer.create(typeDeserializers);
 
-              var t = simpleTypeDeserializer.deserializeElement(element, typeDeserializer);
+              var t = simpleTypeDeserializer.deserializeElement(
+                element, typeDeserializer, xpath);
 
               expect(parseSpies[2].getCall(0).args[0])
                 .to.equal('1');
@@ -500,9 +506,10 @@ define([
               '</xs:schema>');
             var element = doc.documentElement.firstChild;
             var xpath = XPath.create(doc);
-            var typeDeserializer = TypeDeserializer.create(typeDeserializers, xpath);
+            var typeDeserializer = TypeDeserializer.create(typeDeserializers);
 
-            var t = simpleTypeDeserializer.deserializeElement(element, typeDeserializer);
+            var t = simpleTypeDeserializer.deserializeElement(
+              element, typeDeserializer, xpath);
 
             expect(ListType.prototype).to.be.prototypeOf(t);
             expect(t.getItemType()).to.equal(type);
@@ -524,9 +531,10 @@ define([
                 '</xs:schema>');
               var element = doc.documentElement.firstChild;
               var xpath = XPath.create(doc);
-              var typeDeserializer = TypeDeserializer.create(typeDeserializers, xpath);
+              var typeDeserializer = TypeDeserializer.create(typeDeserializers);
 
-              var t = simpleTypeDeserializer.deserializeElement(element, typeDeserializer);
+              var t = simpleTypeDeserializer.deserializeElement(
+                element, typeDeserializer, xpath);
 
               expect(ListType.prototype).to.be.prototypeOf(t);
               expect(t.getItemType()).to.equal(type);
@@ -541,9 +549,10 @@ define([
                 '</xs:simpleType>');
               var element = doc.documentElement;
               var xpath = XPath.create(doc);
-              var typeDeserializer = TypeDeserializer.create(typeDeserializers, xpath);
+              var typeDeserializer = TypeDeserializer.create(typeDeserializers);
 
-              var t = simpleTypeDeserializer.deserializeElement(element, typeDeserializer);
+              var t = simpleTypeDeserializer.deserializeElement(
+                element, typeDeserializer, xpath);
 
               expect(ListType.prototype).to.be.prototypeOf(t);
               expect(t.getItemType()).to.equal(type);
@@ -557,9 +566,10 @@ define([
                  '<xs:list itemType="y:z"/>' +
                 '</xs:simpleType>');
               var xpath = XPath.create(doc);
-              var typeDeserializer = TypeDeserializer.create(typeDeserializers, xpath);
+              var typeDeserializer = TypeDeserializer.create(typeDeserializers);
 
-              expect(bind(simpleTypeDeserializer, 'deserializeElement', doc.documentElement, typeDeserializer))
+              expect(bind(simpleTypeDeserializer, 'deserializeElement',
+                  doc.documentElement, typeDeserializer, xpath))
                 .to.throw("cannot resolve type {urn:y}z");
             });
 
