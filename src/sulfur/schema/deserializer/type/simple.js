@@ -74,7 +74,7 @@ define([
 
       var typeIndex = types.reduce(function (index, type) {
         if (!isAtomicType(type) && !isDerivedType(type)) {
-          throw new Error("expecting only sulfur/schema/type/simple/{primitive,derived} types");
+          throw new Error("expecting only sulfur/schema/type/simple/{derived,primitive} types");
         }
         var qname = index.getKey(type);
         if (index.containsKey(qname)) {
@@ -113,7 +113,7 @@ define([
       function resolveInlinedBase(restriction, typeDeserializer) {
         var xpath = typeDeserializer.getXPath();
         var type = xpath.first('xs:simpleType', restriction, NS);
-        return typeDeserializer.deserializeTypeElement(type);
+        return typeDeserializer.deserializeType(type);
       }
 
       function resolveAnyFacets(facetDeserializers, allowedFacets, valueType,
@@ -198,7 +198,7 @@ define([
       function resolveInlinedItemType(list, typeDeserializer) {
         var xpath = typeDeserializer.getXPath();
         var simpleType = xpath.first('xs:simpleType', list, NS);
-        return typeDeserializer.deserializeTypeElement(simpleType);
+        return typeDeserializer.deserializeType(simpleType);
       }
 
       function resolveList(list, typeDeserializer) {

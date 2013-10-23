@@ -7,9 +7,10 @@
 /* global define */
 
 define([
-  'sulfur/util/factory',
-  'sulfur/schema/qname'
-], function (Factory, QName) {
+  'sulfur/schema/element',
+  'sulfur/schema/qname',
+  'sulfur/util/factory'
+], function (Element, QName, Factory) {
 
   'use strict';
 
@@ -25,6 +26,8 @@ define([
     initialize: function (typeDeserializers, xpath) {
       this._typeDeserializers = typeDeserializers;
       this._xpath = xpath;
+
+      this._referenceStack = [];
     },
 
     /**
@@ -39,7 +42,7 @@ define([
         '[@name = "' + name + '"]';
       var element = this._xpath.first(expr, undefined, NS);
       if (element) {
-        return this.deserializeTypeElement(element);
+        return this.deserializeType(element);
       }
     },
 
@@ -47,7 +50,7 @@ define([
      * @throw {Error} when the type element cannot be deserialized by any type deserializer
      * @throw {Error} when a type deserializer throws an error
      */
-    deserializeTypeElement: function (element) {
+    deserializeType: function (element) {
       for (var i = 0; i < this._typeDeserializers.length; i += 1) {
         var c = this._typeDeserializers[i];
         var t = c.deserializeElement(element, this);
@@ -75,33 +78,68 @@ define([
     },
 
     /**
-     * Resolve an element type either by resolving attribute "type" or by
-     * resolving child xs:simpleType or xs:complexType, whichever is defined.
+     * Check if an element would create a recursive type when passed to
+     * #deserializeElement().
      *
-     * Does not resolve attribute "ref" nor "subsitutionGroup".
+     * @param {Element} element an XML Schema element declaration
      *
-     * @param {Element} element an xs:element
-     *
-     * @return {object}
-     *
-     * @throw {Error} when the type declaration is no supported
-     * @throw {Error} when the type declaration cannot be resolved
+     * @return {false} when the element does not reference another element, or
+     *   does not cause a recursion
+     * @return {true} when the element references an element whose deserialization
+     *   has not yet been completed
      */
-    deserializeElementType: function (element) {
-      if (element.hasAttribute('type')) {
-        var typeName = element.getAttribute('type');
-        var globalType = this.resolveGlobalType(typeName);
-        if (globalType) {
-          return globalType;
+    isRecursiveElement: function (element) {
+      if (!element.hasAttribute('ref')) {
+        return false;
+      }
+      var refName = element.getAttribute('ref');
+      return this._referenceStack.indexOf(refName) !== -1;
+    },
+
+    /**
+     * Deserialize an element and its type.
+     *
+     * Does not resolve attribute "subsitutionGroup".
+     *
+     * @param {Element} element an XML Schema element declaration
+     *
+     * @return {sulfur/schema/element}
+     *
+     * @throw {Error} when the type declaration cannot be resolved
+     * @throw {Error} when the type is recursive
+     */
+    deserializeElement: function (element) {
+      var name;
+      var type;
+      if (element.hasAttribute('ref')) {
+        var refName = element.getAttribute('ref');
+        if (this._referenceStack.indexOf(refName) !== -1) {
+          throw new Error("recursive element type");
         }
-        var qname = this.resolveQualifiedName(typeName, element);
-        return this.resolveNamedType(qname);
+        this._referenceStack.push(refName);
+        var ref = this._xpath.first('/xs:schema/xs:element[@name = "' + refName + '"]', undefined, NS);
+        ref = this.deserializeElement(ref);
+        type = ref.getType();
+        name = ref.getName();
+        this._referenceStack.pop();
+      } else {
+        name = element.getAttribute('name');
+        if (element.hasAttribute('type')) {
+          var typeName = element.getAttribute('type');
+          var globalType = this.resolveGlobalType(typeName);
+          if (globalType) {
+            type = globalType;
+          } else {
+            var qname = this.resolveQualifiedName(typeName, element);
+            type = this.resolveNamedType(qname);
+          }
+        } else {
+          var child = this._xpath.first('xs:complexType|xs:simpleType', element, NS);
+          type = this.deserializeType(child);
+        }
       }
-      var type = this._xpath.first('xs:complexType|xs:simpleType', element, NS);
-      if (type) {
-        return this.deserializeTypeElement(type);
-      }
-      throw new Error("element with unsupported type declaration");
+      var optional = element.getAttribute('minOccurs') === '0';
+      return Element.create(name, type, { optional: optional });
     },
 
     resolveQualifiedName: function (qname, element) {

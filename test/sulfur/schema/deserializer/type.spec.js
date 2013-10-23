@@ -56,28 +56,28 @@ define([
         expect(typeDeserializer.resolveGlobalType('foo')).to.be.undefined;
       });
 
-      it("should return the result of calling #deserializeTypeElement() with the xs:simpleType of the given name when declared", function () {
+      it("should return the result of calling #deserializeType() with the xs:simpleType of the given name when declared", function () {
         var doc = parse(
           '<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">' +
            '<xs:simpleType name="foo"/>' +
           '</xs:schema>');
         var xpath = XPath.create(doc);
         var typeDeserializer = TypeDeserializer.create(undefined, xpath);
-        var deserializeSpy = sinon.stub(typeDeserializer, 'deserializeTypeElement').returns({});
+        var deserializeSpy = sinon.stub(typeDeserializer, 'deserializeType').returns({});
         var type = typeDeserializer.resolveGlobalType('foo');
         expect(deserializeSpy)
           .to.be.calledWith(doc.documentElement.firstChild)
           .to.have.returned(sinon.match.same(type));
       });
 
-      it("should return the result of calling #deserializeTypeElement() with the xs:complexType of the given name when declared", function () {
+      it("should return the result of calling #deserializeType() with the xs:complexType of the given name when declared", function () {
         var doc = parse(
           '<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">' +
            '<xs:complexType name="bar"/>' +
           '</xs:schema>');
         var xpath = XPath.create(doc);
         var typeDeserializer = TypeDeserializer.create(undefined, xpath);
-        var deserializeSpy = sinon.stub(typeDeserializer, 'deserializeTypeElement').returns({});
+        var deserializeSpy = sinon.stub(typeDeserializer, 'deserializeType').returns({});
         var type = typeDeserializer.resolveGlobalType('bar');
         expect(deserializeSpy)
           .to.be.calledWith(doc.documentElement.firstChild)
@@ -86,18 +86,14 @@ define([
 
     });
 
-    describe('#deserializeTypeElement()', function () {
+    describe('#deserializeType()', function () {
 
       var typeDeserializers;
 
       beforeEach(function () {
         typeDeserializers = [
-          {
-            deserializeElement: function () {}
-          },
-          {
-            deserializeElement: function () {}
-          }
+          { deserializeElement: function () {} },
+          { deserializeElement: function () {} }
         ];
       });
 
@@ -107,7 +103,7 @@ define([
         var spies = typeDeserializers.map(function (typeDeserializer) {
           return sinon.spy(typeDeserializer, 'deserializeElement');
         });
-        expect(bind(typeDeserializer, 'deserializeTypeElement', element))
+        expect(bind(typeDeserializer, 'deserializeType', element))
           .to.throw("cannot deserialize type element {urn:y}x");
         spies.forEach(function (spy) {
           expect(spy).to.be.calledWith(
@@ -120,7 +116,7 @@ define([
         var element = {};
         var typeDeserializer = TypeDeserializer.create(typeDeserializers);
         var spy = sinon.stub(typeDeserializers[0], 'deserializeElement').returns({});
-        var type = typeDeserializer.deserializeTypeElement(element);
+        var type = typeDeserializer.deserializeType(element);
         expect(spy)
           .to.be.calledWith(
             sinon.match.same(element),
@@ -136,12 +132,8 @@ define([
 
       beforeEach(function () {
         typeDeserializers = [
-          {
-            resolveQualifiedName: function () {}
-          },
-          {
-            resolveQualifiedName: function () {}
-          }
+          { resolveQualifiedName: function () {} },
+          { resolveQualifiedName: function () {} }
         ];
       });
 
@@ -170,63 +162,233 @@ define([
 
     });
 
-    describe('#deserializeElementType()', function () {
+    describe('#isRecursiveElement()', function () {
 
-      it("should reject an element without a supported type declaration", function () {
+      it("should return false when the element does not have attribute @ref", function () {
+        var element = document.createElementNS('urn:foo', 'foo:bar');
+        var typeDeserializer = TypeDeserializer.create();
+        expect(typeDeserializer.isRecursiveElement(element)).to.be.false;
+      });
+
+      context("when the element has attribute @ref", function () {
+
+        it("should return true when #deserializeElement() has not yet finished deserializing an element with the same reference", function () {
+          var doc = parse(
+            '<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">' +
+             '<xs:element ref="foo"/>' +
+             '<xs:element name="foo">' +
+              '<xs:complexType>' +
+               '<xs:all>' +
+                '<xs:element ref="foo"/>' +
+               '</xs:all>' +
+              '</xs:complexType>' +
+             '</xs:element>' +
+            '</xs:schema>');
+
+          var xpath = XPath.create(doc);
+          var typeDeserializer = TypeDeserializer.create(undefined, xpath);
+          var element = doc.documentElement.firstChild;
+          var spy = sinon.stub(typeDeserializer, 'deserializeType', function () {
+            var e = element.nextSibling.firstChild.firstChild.firstChild;
+            expect(typeDeserializer.isRecursiveElement(e)).to.be.true;
+          });
+          typeDeserializer.deserializeElement(element);
+          expect(spy).to.be.called;
+          expect(typeDeserializer.isRecursiveElement(element)).to.be.false;
+        });
+
+        it("should return false when #deserializeElement() has no ongoing deserialization of an element with the same reference", function () {
+          var doc = parse(
+            '<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">' +
+             '<xs:element ref="bar"/>' +
+             '<xs:element name="bar">' +
+              '<xs:complexType>' +
+               '<xs:all>' +
+                '<xs:element ref="baz"/>' +
+               '</xs:all>' +
+              '</xs:complexType>' +
+             '</xs:element>' +
+             '<xs:element name="baz"/>' +
+            '</xs:schema>');
+
+          var xpath = XPath.create(doc);
+          var typeDeserializer = TypeDeserializer.create(undefined, xpath);
+          var element = doc.documentElement.firstChild;
+          var spy = sinon.stub(typeDeserializer, 'deserializeType', function () {
+            var e = element.nextSibling.firstChild.firstChild.firstChild;
+            expect(typeDeserializer.isRecursiveElement(e)).to.be.false;
+          });
+          typeDeserializer.deserializeElement(element);
+          expect(spy).to.be.called;
+          expect(typeDeserializer.isRecursiveElement(element)).to.be.false;
+        });
+
+      });
+
+    });
+
+    describe('#deserializeElement()', function () {
+
+      it("should return an element with the declared name", function () {
         var doc = parse(
           '<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">' +
-           '<xs:element/>' +
+           '<xs:element name="foo" type="someType"/>' +
           '</xs:schema>');
         var root = doc.documentElement;
         var element = root.firstChild;
-        var xpath = XPath.create(doc);
-        var typeDeserializer = TypeDeserializer.create(undefined, xpath);
-        expect(bind(typeDeserializer, 'deserializeElementType', element))
-          .to.throw("element with unsupported type declaration");
+
+        var typeDeserializer = TypeDeserializer.create();
+        var someType = {};
+        sinon.stub(typeDeserializer, 'resolveGlobalType').returns(someType);
+
+        var e = typeDeserializer.deserializeElement(element);
+
+        expect(e.getName()).to.equal('foo');
       });
 
-      context("with a supported type declaration", function () {
+      it("should return an optional element when attribute @minOccurs has value '0'", function () {
+        var doc = parse(
+          '<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">' +
+           '<xs:element name="foo" type="someType" minOccurs="0"/>' +
+          '</xs:schema>');
+        var root = doc.documentElement;
+        var element = root.firstChild;
 
-        context("with attribute @type", function () {
+        var typeDeserializer = TypeDeserializer.create();
+        var someType = {};
+        sinon.stub(typeDeserializer, 'resolveGlobalType').returns(someType);
 
-          it("should return the result of calling #resolveGlobalType() with the type name when #containsGlobalType() is true", function () {
-            var element = {
-              hasAttribute: function (name) { return name === 'type'; },
-              getAttribute: function (name) {
-                return this.hasAttribute(name) ? 'someType' : null;
-              }
-            };
-            var typeDeserializer = TypeDeserializer.create();
-            var deserializeSpy = sinon.stub(typeDeserializer, 'resolveGlobalType').returns({});
-            var type = typeDeserializer.deserializeElementType(element);
-            expect(deserializeSpy)
-              .to.be.calledWith('someType')
-              .to.have.returned(sinon.match.same(type));
-          });
+        var e = typeDeserializer.deserializeElement(element);
 
-          it("should return the result of calling #resolveNamedType() with the deserialized type name when #resolveGlobalType() returns undefined", function () {
+        expect(e.isOptional()).to.be.true;
+      });
+
+      context("with attribute @type", function () {
+
+        it("should return an element with the resolved global when the referenced type is a global type", function () {
+          var doc = parse(
+            '<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">' +
+             '<xs:element name="foo" type="someType"/>' +
+            '</xs:schema>');
+          var root = doc.documentElement;
+          var element = root.firstChild;
+
+          var typeDeserializer = TypeDeserializer.create();
+          var type = {};
+          var deserializeSpy = sinon.stub(typeDeserializer,
+            'resolveGlobalType').returns(type);
+
+          var e = typeDeserializer.deserializeElement(element);
+
+          expect(e.getType()).to.equal(type);
+          expect(deserializeSpy).to.be.calledWith('someType');
+        });
+
+        it("should return an element with the resolved named type when the referenced type is not a global type", function () {
+          var doc = parse(
+            '<xs:schema' +
+              ' xmlns:xs="http://www.w3.org/2001/XMLSchema"' +
+              ' xmlns:foo="urn:foo">' +
+             '<xs:element name="baz" type="foo:bar"/>' +
+            '</xs:schema>');
+          var root = doc.documentElement;
+          var element = root.firstChild;
+
+          var typeDeserializer = TypeDeserializer.create();
+          var type = {};
+          var deserializeSpy = sinon.stub(typeDeserializer,
+            'resolveNamedType').returns(type);
+          sinon.stub(typeDeserializer, 'resolveGlobalType').returns(undefined);
+
+          var e = typeDeserializer.deserializeElement(element);
+
+          expect(e.getType()).to.equal(type);
+          expect(deserializeSpy).to.be.calledWith(QName.create('bar', 'urn:foo'));
+        });
+
+      });
+
+      context("without attribute @type", function () {
+
+        context("with attribute @ref", function () {
+
+          it("should return an element with name and type of the referenced element", function () {
             var doc = parse(
-              '<xs:schema' +
-                ' xmlns:xs="http://www.w3.org/2001/XMLSchema"' +
-                ' xmlns:foo="urn:foo">' +
-               '<xs:element type="foo:bar"/>' +
+              '<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">' +
+               '<xs:element ref="bar"/>' +
+               '<xs:element name="bar" type="someType"/>' +
               '</xs:schema>');
             var root = doc.documentElement;
             var element = root.firstChild;
-            var typeDeserializer = TypeDeserializer.create();
-            sinon.stub(typeDeserializer, 'resolveGlobalType').returns(undefined);
-            var deserializeSpy = sinon.stub(typeDeserializer, 'resolveNamedType').returns({});
-            var type = typeDeserializer.deserializeElementType(element);
+
+            var xpath = XPath.create(doc);
+            var typeDeserializer = TypeDeserializer.create(undefined, xpath);
+            var type = {};
+            var deserializeSpy = sinon.spy(typeDeserializer, 'deserializeElement');
+            sinon.stub(typeDeserializer, 'resolveGlobalType').returns(type);
+
+            var e = typeDeserializer.deserializeElement(element);
+
+            expect(e.getName()).to.equal('bar');
+            expect(e.getType()).to.equal(type);
             expect(deserializeSpy)
-              .to.be.calledWith(QName.create('bar', 'urn:foo'))
-              .to.have.returned(sinon.match.same(type));
+              .to.be.calledWith(sinon.match.same(element.nextSibling));
+          });
+
+          it("should return an optional element if the referencing element has attribute @minOccurs with value '0'", function () {
+            var doc = parse(
+              '<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">' +
+               '<xs:element ref="x" minOccurs="0"/>' +
+               '<xs:element name="x" type="someType"/>' +
+              '</xs:schema>');
+            var root = doc.documentElement;
+            var element = root.firstChild;
+
+            var xpath = XPath.create(doc);
+            var typeDeserializer = TypeDeserializer.create(undefined, xpath);
+            var type = {};
+            var deserializeSpy = sinon.spy(typeDeserializer, 'deserializeElement');
+            sinon.stub(typeDeserializer, 'resolveGlobalType').returns(type);
+
+            var e = typeDeserializer.deserializeElement(element);
+
+            expect(e.getName()).to.equal('x');
+            expect(e.getType()).to.equal(type);
+            expect(e.isOptional()).to.be.true;
+            expect(deserializeSpy)
+              .to.be.calledWith(sinon.match.same(element.nextSibling));
+          });
+
+          it("should reject a mandatory element when the reference is recursive", function () {
+            var doc = parse(
+              '<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">' +
+               '<xs:element ref="foo"/>' +
+               '<xs:element name="foo">' +
+                '<xs:complexType>' +
+                 '<xs:all>' +
+                  '<xs:element ref="foo"/>' +
+                 '</xs:all>' +
+                '</xs:complexType>' +
+               '</xs:element>' +
+              '</xs:schema>');
+
+            var xpath = XPath.create(doc);
+            var typeDeserializer = TypeDeserializer.create(undefined, xpath);
+            var element = doc.documentElement.firstChild;
+            var spy = sinon.stub(typeDeserializer, 'deserializeType', function () {
+              var e = element.nextSibling.firstChild.firstChild.firstChild;
+              expect(bind(typeDeserializer, 'deserializeElement', e))
+                .to.throw("recursive element type");
+            });
+            typeDeserializer.deserializeElement(element);
+            expect(spy).to.be.called;
           });
 
         });
 
-        context("without attribute @type", function () {
+        context("without attribute @ref", function () {
 
-          it("should return the result of calling #deserializeTypeElement() with child xs:simpleType when declared", function () {
+          it("should return an element with the deserialized type of child xs:simpleType when declared", function () {
             var doc = parse(
               '<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">' +
                '<xs:element>' +
@@ -235,16 +397,21 @@ define([
               '</xs:schema>');
             var root = doc.documentElement;
             var element = root.firstChild;
+
             var xpath = XPath.create(doc);
             var typeDeserializer = TypeDeserializer.create(undefined, xpath);
-            var deserializeSpy = sinon.stub(typeDeserializer, 'deserializeTypeElement').returns({});
-            var type = typeDeserializer.deserializeElementType(element);
+            var type = {};
+            var deserializeSpy = sinon.stub(typeDeserializer,
+              'deserializeType').returns(type);
+
+            var e = typeDeserializer.deserializeElement(element);
+
+            expect(e.getType()).to.equal(type);
             expect(deserializeSpy)
-              .to.be.calledWith(element.firstChild)
-              .to.have.returned(sinon.match.same(type));
+              .to.be.calledWith(sinon.match.same(element.firstChild));
           });
 
-          it("should return the result of calling #deserializeTypeElement() with child xs:complexType when declared", function () {
+          it("should return the result of calling #deserializeType() with child xs:complexType when declared", function () {
             var doc = parse(
               '<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">' +
                '<xs:element>' +
@@ -253,13 +420,17 @@ define([
               '</xs:schema>');
             var root = doc.documentElement;
             var element = root.firstChild;
+
             var xpath = XPath.create(doc);
             var typeDeserializer = TypeDeserializer.create(undefined, xpath);
-            var deserializeSpy = sinon.stub(typeDeserializer, 'deserializeTypeElement').returns({});
-            var type = typeDeserializer.deserializeElementType(element);
+            var type = {};
+            var deserializeSpy = sinon.stub(typeDeserializer,
+              'deserializeType').returns(type);
+
+            var e = typeDeserializer.deserializeElement(element);
+            expect(e.getType()).to.equal(type);
             expect(deserializeSpy)
-              .to.be.calledWith(element.firstChild)
-              .to.have.returned(sinon.match.same(type));
+              .to.be.calledWith(sinon.match.same(element.firstChild));
           });
 
         });

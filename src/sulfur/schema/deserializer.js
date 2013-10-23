@@ -54,9 +54,9 @@ define([
           if (el.getAttribute('maxOccurs') === '0') {
             continue;
           }
-          var type;
+          var element;
           try {
-            type = typeDeserializer.deserializeElementType(el);
+            element = typeDeserializer.deserializeElement(el);
           } catch (e) {
             if (el.getAttribute('minOccurs') === '0') {
               continue;
@@ -65,7 +65,7 @@ define([
               break;
             }
           }
-          elements.push(Element.create(el.getAttribute('name'), type));
+          elements.push(element);
         }
         if (compatible) {
           return Schema.create(_root.getAttribute('name'), elements);

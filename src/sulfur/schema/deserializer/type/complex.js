@@ -70,35 +70,38 @@ define([
         return xpath.contains('xs:attribute[@use = "required"]', element, NS);
       }
 
+      /**
+       * @param {Element} element
+       * @param {sulfur/schema/deserializer/type} typeDeserializer
+       *
+       * @return {undefined} when the element has an incompatible type and cannot be ignored
+       * @return {null} when the element has an incompatible type but can be ignored
+       * @return {sulfur/schema/element} an element with compatible type
+       */
       function resolveElement(element, typeDeserializer) {
         var minOccurs = element.hasAttribute('minOccurs') ?
           parseInt(element.getAttribute('minOccurs'), 10) : 1;
 
-        // ignore the element when prohibited
         if (minOccurs === 0 && element.getAttribute('maxOccurs') === '0') {
-          return;
+          return null;
         }
 
         if (minOccurs > 1) {
-          throw new Error("incompatible complex type due to an element " +
-            "requiring more than one occurrence");
-        }
-
-        var type;
-        try {
-          type = typeDeserializer.deserializeElementType(element);
-        } catch (e) {
-          // reject the element when mandatory
-          if (minOccurs > 0) {
-            throw new Error("incompatible complex type due to mandatory element " +
-              "with incompatible type (" + e.message + ")");
-          }
-          // ignore the element when optional
           return;
         }
 
-        var name = element.getAttribute('name');
-        return Element.create(name, type, { optional: minOccurs === 0 });
+        if (typeDeserializer.isRecursiveElement(element)) {
+          return;
+        }
+
+        var e;
+        try {
+          e = typeDeserializer.deserializeElement(element);
+        } catch (ex) {
+          return minOccurs > 0 ? undefined : null;
+        }
+
+        return e;
       }
 
       function findCompatibleType(types, elements) {
@@ -153,26 +156,38 @@ define([
       }
 
       function resolveElements(element, typeDeserializer) {
-        return typeDeserializer.getXPath().all('xs:all/xs:element', element, NS)
-          .reduce(function (elements, element) {
-            element = resolveElement(element, typeDeserializer);
-            element && elements.push(element);
-            return elements;
-          }, []);
+        var elements = typeDeserializer.getXPath().all('xs:all/xs:element', element, NS);
+
+        var es = [];
+        for (var i = 0; i < elements.length; i += 1) {
+          var e = resolveElement(elements[i], typeDeserializer);
+          if (e === undefined) {
+            return;
+          }
+          if (e === null) {
+            continue;
+          }
+          es.push(e);
+        }
+
+        return es;
       }
 
       function resolveAll(types, element, typeDeserializer) {
         var xpath = typeDeserializer.getXPath();
 
         if (declaresMandatoryAttributes(element, xpath)) {
-          throw new Error("incompatible complex type due to mandatory attributes");
+          return;
         }
 
         var elements = resolveElements(element, typeDeserializer);
+        if (!elements) {
+          return;
+        }
 
         var type = findCompatibleType(types, elements);
         if (!type) {
-          throw new Error("incompatible complex type");
+          return;
         }
 
         return RestrictedType.create(type, Elements.create(elements));
@@ -199,11 +214,11 @@ define([
 
         var mandatoryElementCount = xpath.count(mandatoryElementsExpr, sequence, NS);
         if (mandatoryElementCount > 1) {
-          throw new Error("incompatible complex list type due to multiple mandatory elements");
+          return;
         } else if (mandatoryElementCount === 0) {
           var optionalElementCount = xpath.count(optionalElementsExpr, sequence, NS);
           if (optionalElementCount > 1) {
-            throw new Error("incompatible complex list type due to multiple optional elements");
+            return;
           }
         }
 

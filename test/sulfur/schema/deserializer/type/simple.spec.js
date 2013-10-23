@@ -25,7 +25,7 @@ define([
     Facet,
     EnumerationFacet,
     Facets,
-    Deserializer,
+    TypeDeserializer,
     SimpleTypeDeserializer,
     QName,
     PrimitiveType,
@@ -96,13 +96,13 @@ define([
           .to.throw("expecting an array of one or more types");
       });
 
-      it("should reject types which are not a sulfur/schema/type/simple/{primitive,derived}", function () {
+      it("should reject types which are not a sulfur/schema/type/simple/{derived,primitive}", function () {
         var facetDeserializer = {
           getFacet: returns(
             { getQName: returns(QName.create('foo', 'urn:bar')) })
         };
         expect(bind(SimpleTypeDeserializer, 'create', [{}], [ facetDeserializer ]))
-          .to.throw("expecting only sulfur/schema/type/simple/{primitive,derived} types");
+          .to.throw("expecting only sulfur/schema/type/simple/{derived,primitive} types");
       });
 
       it("should reject types with duplicate qualified name", function () {
@@ -174,7 +174,7 @@ define([
     describe('#resolveQualifiedName()', function () {
 
       var type;
-      var typeDeserializer;
+      var simpleTypeDeserializer;
 
       beforeEach(function () {
         var facet = {
@@ -185,20 +185,20 @@ define([
             facets: Facets.create([ facet ])
           });
         var facetDeserializer = { getFacet: returns(facet) };
-        typeDeserializer = SimpleTypeDeserializer.create([ type ], [ facetDeserializer ]);
+        simpleTypeDeserializer = SimpleTypeDeserializer.create([ type ], [ facetDeserializer ]);
       });
 
       it("should return the type matching the name and namespace", function () {
-        var t = typeDeserializer.resolveQualifiedName(QName.create('x', 'urn:y'));
+        var t = simpleTypeDeserializer.resolveQualifiedName(QName.create('x', 'urn:y'));
         expect(t).to.equal(type);
       });
 
       it("should return undefined when no type with the given name is defined", function () {
-        expect(typeDeserializer.resolveQualifiedName(QName.create('z', 'urn:y'))).to.be.undefined;
+        expect(simpleTypeDeserializer.resolveQualifiedName(QName.create('z', 'urn:y'))).to.be.undefined;
       });
 
       it("should return undefined when no type with the given namespace is defined", function () {
-        expect(typeDeserializer.resolveQualifiedName(QName.create('x', 'urn:z'))).to.be.undefined;
+        expect(simpleTypeDeserializer.resolveQualifiedName(QName.create('x', 'urn:z'))).to.be.undefined;
       });
 
     });
@@ -206,7 +206,7 @@ define([
     describe('#deserializeElement()', function () {
 
       var type;
-      var typeDeserializer;
+      var simpleTypeDeserializer;
       var typeDeserializers;
       var valueType;
       var allowedFacets;
@@ -245,18 +245,18 @@ define([
           createFacetDeserializer(allowedFacets.getFacet(QName.create('abc', 'urn:bar'))),
           createFacetDeserializer(allowedFacets.getFacet(QName.create('def', 'urn:foo')))
         ];
-        typeDeserializer = SimpleTypeDeserializer.create([ type ], facetDeserializers);
-        typeDeserializers = [ typeDeserializer ];
+        simpleTypeDeserializer = SimpleTypeDeserializer.create([ type ], facetDeserializers);
+        typeDeserializers = [ simpleTypeDeserializer ];
       });
 
       it("should return undefined when the element's local name is not 'simpleType", function () {
         var element = { localName: 'notASimpleType' };
-        expect(typeDeserializer.deserializeElement(element)).to.be.undefined;
+        expect(simpleTypeDeserializer.deserializeElement(element)).to.be.undefined;
       });
 
       it("should return undefined when the element's namespace is not 'http://www.w3.org/2001/XMLSchema'", function () {
         var element = { localName: 'simpleType', namespaceURI: 'urn:void' };
-        expect(typeDeserializer.deserializeElement(element)).to.be.undefined;
+        expect(simpleTypeDeserializer.deserializeElement(element)).to.be.undefined;
       });
 
       context("with element xs:simpleType", function () {
@@ -265,8 +265,8 @@ define([
           var doc = parse('<simpleType xmlns="http://www.w3.org/2001/XMLSchema"/>');
           var element = doc.documentElement;
           var xpath = XPath.create(doc);
-          var resolver = Deserializer.create(undefined, xpath);
-          expect(typeDeserializer.deserializeElement(element, resolver)).to.be.undefined;
+          var typeDeserializer = TypeDeserializer.create(undefined, xpath);
+          expect(simpleTypeDeserializer.deserializeElement(element, typeDeserializer)).to.be.undefined;
         });
 
         context("with child xs:restriction", function () {
@@ -298,9 +298,9 @@ define([
                 '</xs:schema>');
               var root = doc.documentElement;
               var xpath = XPath.create(doc);
-              var resolver = Deserializer.create(typeDeserializers, xpath);
+              var typeDeserializer = TypeDeserializer.create(typeDeserializers, xpath);
 
-              var t = typeDeserializer.deserializeElement(root.firstChild, resolver);
+              var t = simpleTypeDeserializer.deserializeElement(root.firstChild, typeDeserializer);
 
               expect(t).to.eql(type);
             });
@@ -323,9 +323,9 @@ define([
                 '</xs:schema>');
               var root = doc.documentElement;
               var xpath = XPath.create(doc);
-              var resolver = Deserializer.create(typeDeserializers, xpath);
+              var typeDeserializer = TypeDeserializer.create(typeDeserializers, xpath);
 
-              var t = typeDeserializer.deserializeElement(root.firstChild, resolver);
+              var t = simpleTypeDeserializer.deserializeElement(root.firstChild, typeDeserializer);
 
               expect(t).to.eql(type);
             });
@@ -338,9 +338,9 @@ define([
                  '<xs:restriction base="y:x"/>' +
                 '</xs:simpleType>');
               var xpath = XPath.create(doc);
-              var resolver = Deserializer.create(typeDeserializers, xpath);
+              var typeDeserializer = TypeDeserializer.create(typeDeserializers, xpath);
 
-              var t = typeDeserializer.deserializeElement(doc.documentElement, resolver);
+              var t = simpleTypeDeserializer.deserializeElement(doc.documentElement, typeDeserializer);
 
               expect(t).to.eql(type);
             });
@@ -355,9 +355,9 @@ define([
               var xpath = XPath.create(doc, {
                 xs: 'http://www.w3.org/2001/XMLSchema'
               });
-              var resolver = Deserializer.create(typeDeserializers, xpath);
+              var typeDeserializer = TypeDeserializer.create(typeDeserializers, xpath);
 
-              expect(bind(typeDeserializer, 'deserializeElement', doc.documentElement, resolver))
+              expect(bind(simpleTypeDeserializer, 'deserializeElement', doc.documentElement, typeDeserializer))
                 .to.throw("cannot resolve type {urn:y}z");
             });
 
@@ -391,9 +391,9 @@ define([
 
               var element = doc.documentElement;
               var xpath = XPath.create(doc);
-              var resolver = Deserializer.create(typeDeserializers, xpath);
+              var typeDeserializer = TypeDeserializer.create(typeDeserializers, xpath);
 
-              var t = typeDeserializer.deserializeElement(element, resolver);
+              var t = simpleTypeDeserializer.deserializeElement(element, typeDeserializer);
 
               expect(parseSpies[0].getCall(0).args[0])
                 .to.equal('x');
@@ -445,9 +445,9 @@ define([
 
               var element = doc.documentElement;
               var xpath = XPath.create(doc);
-              var resolver = Deserializer.create(typeDeserializers, xpath);
+              var typeDeserializer = TypeDeserializer.create(typeDeserializers, xpath);
 
-              var t = typeDeserializer.deserializeElement(element, resolver);
+              var t = simpleTypeDeserializer.deserializeElement(element, typeDeserializer);
 
               expect(parseSpies[2].getCall(0).args[0])
                 .to.equal('1');
@@ -500,9 +500,9 @@ define([
               '</xs:schema>');
             var element = doc.documentElement.firstChild;
             var xpath = XPath.create(doc);
-            var resolver = Deserializer.create(typeDeserializers, xpath);
+            var typeDeserializer = TypeDeserializer.create(typeDeserializers, xpath);
 
-            var t = typeDeserializer.deserializeElement(element, resolver);
+            var t = simpleTypeDeserializer.deserializeElement(element, typeDeserializer);
 
             expect(ListType.prototype).to.be.prototypeOf(t);
             expect(t.getItemType()).to.equal(type);
@@ -524,9 +524,9 @@ define([
                 '</xs:schema>');
               var element = doc.documentElement.firstChild;
               var xpath = XPath.create(doc);
-              var resolver = Deserializer.create(typeDeserializers, xpath);
+              var typeDeserializer = TypeDeserializer.create(typeDeserializers, xpath);
 
-              var t = typeDeserializer.deserializeElement(element, resolver);
+              var t = simpleTypeDeserializer.deserializeElement(element, typeDeserializer);
 
               expect(ListType.prototype).to.be.prototypeOf(t);
               expect(t.getItemType()).to.equal(type);
@@ -541,9 +541,9 @@ define([
                 '</xs:simpleType>');
               var element = doc.documentElement;
               var xpath = XPath.create(doc);
-              var resolver = Deserializer.create(typeDeserializers, xpath);
+              var typeDeserializer = TypeDeserializer.create(typeDeserializers, xpath);
 
-              var t = typeDeserializer.deserializeElement(element, resolver);
+              var t = simpleTypeDeserializer.deserializeElement(element, typeDeserializer);
 
               expect(ListType.prototype).to.be.prototypeOf(t);
               expect(t.getItemType()).to.equal(type);
@@ -557,9 +557,9 @@ define([
                  '<xs:list itemType="y:z"/>' +
                 '</xs:simpleType>');
               var xpath = XPath.create(doc);
-              var resolver = Deserializer.create(typeDeserializers, xpath);
+              var typeDeserializer = TypeDeserializer.create(typeDeserializers, xpath);
 
-              expect(bind(typeDeserializer, 'deserializeElement', doc.documentElement, resolver))
+              expect(bind(simpleTypeDeserializer, 'deserializeElement', doc.documentElement, typeDeserializer))
                 .to.throw("cannot resolve type {urn:y}z");
             });
 
