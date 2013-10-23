@@ -7,11 +7,11 @@
 /* global define */
 
 define([
-  'sulfur/util/factory',
   'sulfur/schema/validator/all',
   'sulfur/schema/validator/property',
-  'sulfur/schema/validator/prototype'
-], function (Factory, AllValidator, PropertyValidator, PrototypeValidator) {
+  'sulfur/schema/validator/prototype',
+  'sulfur/util/factory'
+], function (AllValidator, PropertyValidator, PrototypeValidator, Factory) {
 
   'use strict';
 
@@ -34,6 +34,10 @@ define([
 
     getAllowedElements: function () {
       return this._allowedElements;
+    },
+
+    isRestrictionOf: function (other) {
+      return this === other;
     },
 
     createValidator: function () {

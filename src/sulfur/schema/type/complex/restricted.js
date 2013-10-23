@@ -7,11 +7,18 @@
 /* global define */
 
 define([
-  'sulfur/util/factory',
+  'sulfur/schema/type/complex/primitive',
   'sulfur/schema/validator/all',
   'sulfur/schema/validator/property',
-  'sulfur/schema/validator/prototype'
-], function (Factory, AllValidator, PropertyValidator, PrototypeValidator) {
+  'sulfur/schema/validator/prototype',
+  'sulfur/util/factory'
+], function (
+    PrimitiveType,
+    AllValidator,
+    PropertyValidator,
+    PrototypeValidator,
+    Factory
+) {
 
   'use strict';
 
@@ -52,6 +59,20 @@ define([
 
     getElements: function () {
       return this._elements;
+    },
+
+    isRestrictionOf: function (other) {
+      if (PrimitiveType.prototype.isPrototypeOf(other)) {
+        return this._primitive.isRestrictionOf(other);
+      }
+      if (this.factory.prototype.isPrototypeOf(other)) {
+        var otherElements = other.getElements();
+        return this._primitive.isRestrictionOf(other.getPrimitive()) &&
+          this._elements.toArray().every(function (element) {
+            var otherElement = otherElements.getElement(element.getName());
+            return element.getType().isRestrictionOf(otherElement.getType());
+          });
+      }
     },
 
     createValidator: function () {

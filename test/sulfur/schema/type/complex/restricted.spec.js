@@ -5,7 +5,7 @@
  */
 
 /* global define */
-/* global beforeEach, describe, it */
+/* global beforeEach, context, describe, it */
 
 define([
   'shared',
@@ -30,6 +30,7 @@ define([
   'use strict';
 
   var expect = shared.expect;
+  var sinon = shared.sinon;
   var bind = shared.bind;
   var returns = shared.returns;
 
@@ -126,6 +127,92 @@ define([
           [ Element.create('foo', type) ]);
         var restriction = RestrictedType.create(base, elements);
         expect(restriction.getElements()).to.equal(elements);
+      });
+
+    });
+
+    describe('#isRestrictionOf()', function () {
+
+      context("when the other type is a sulfur/schema/type/complex/primitive", function () {
+
+        it("should delegate to this restriction primitive's .isRestrictionOf()", function () {
+          var type = { isRestrictionOf: returns(true) };
+          var element = Element.create('foo', type);
+          var primitive = PrimitiveType.create({
+            elements: Elements.create([ element ])
+          });
+          var otherPrimitive = PrimitiveType.create({
+            elements: Elements.create([ element ])
+          });
+          var restriction = RestrictedType.create(primitive,
+            Elements.create([ element ]));
+          var spy = sinon.spy(primitive, 'isRestrictionOf');
+          var r = restriction.isRestrictionOf(otherPrimitive);
+          expect(spy)
+            .to.be.calledWith(sinon.match.same(otherPrimitive))
+            .to.have.returned(r);
+        });
+
+      });
+
+      context("when the other type is a sulfur/schema/type/complex/restricted", function () {
+
+        it("should delegate to this restriction primitive's .isRestrictionOf()", function () {
+          var type = { isRestrictionOf: returns(true) };
+          var element = Element.create('foo', type);
+          var primitive = PrimitiveType.create({
+            elements: Elements.create([ element ])
+          });
+          var otherPrimitive = PrimitiveType.create({
+            elements: Elements.create([ element ])
+          });
+          var restriction = RestrictedType.create(primitive,
+            Elements.create([ element ]));
+          var otherRestriction = RestrictedType.create(otherPrimitive,
+            Elements.create([ element ]));
+          var spy = sinon.spy(primitive, 'isRestrictionOf');
+          var r = restriction.isRestrictionOf(otherRestriction);
+          expect(spy)
+            .to.be.calledWith(sinon.match.same(otherPrimitive))
+            .to.have.returned(r);
+        });
+
+        it("should return true when every element type of this restriction is a restriction of the corresponding element type of the other restriction", function () {
+          var type = { isRestrictionOf: returns(true) };
+          var otherType = { isRestrictionOf: returns(true) };
+          var element = Element.create('foo', type);
+          var otherElement = Element.create('foo', otherType);
+          var primitive = PrimitiveType.create({
+            elements: Elements.create([ element ])
+          });
+          var restriction = RestrictedType.create(primitive,
+            Elements.create([ element ]));
+          var otherRestriction = RestrictedType.create(primitive,
+            Elements.create([ otherElement ]));
+          var spy = sinon.spy(type, 'isRestrictionOf');
+          var r = restriction.isRestrictionOf(otherRestriction);
+          expect(r).to.be.true;
+          expect(spy).to.be.calledWith(sinon.match.same(otherType));
+        });
+
+        it("should return false when any element type of this restriction is not a restriction of the corresponding element type of the other restriction", function () {
+          var type = { isRestrictionOf: returns(true) };
+          var otherType = { isRestrictionOf: returns(true) };
+          var element = Element.create('foo', type);
+          var otherElement = Element.create('foo', otherType);
+          var primitive = PrimitiveType.create({
+            elements: Elements.create([ element ])
+          });
+          var restriction = RestrictedType.create(primitive,
+            Elements.create([ element ]));
+          var otherRestriction = RestrictedType.create(primitive,
+            Elements.create([ otherElement ]));
+          var spy = sinon.stub(type, 'isRestrictionOf').returns(false);
+          var r = restriction.isRestrictionOf(otherRestriction);
+          expect(r).to.be.false;
+          expect(spy).to.be.calledWith(sinon.match.same(otherType));
+        });
+
       });
 
     });

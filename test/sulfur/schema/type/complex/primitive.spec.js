@@ -76,6 +76,15 @@ define([
 
     });
 
+    describe('#isRestrictionOf()', function () {
+
+      it("should return true when this type and the other type are identical", function () {
+        var type = PrimitiveType.create({});
+        expect(type.isRestrictionOf(type)).to.be.true;
+      });
+
+    });
+
     describe('#createValidator()', function () {
 
       it("should return a sulfur/schema/validator/all", function () {
