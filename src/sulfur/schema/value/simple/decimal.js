@@ -101,20 +101,14 @@ define([
     },
 
     /**
-     * Convert the decimal to its string representation.
+     * Convert the decimal to its canonical string representation.
      *
      * @return {string} the string representation
      */
     toString: function () {
-      var s = '';
-      if (!this.positive) {
-        s += '-';
-      }
-      s += this.integralDigits;
-      if (this.fractionDigits) {
-        s += '.' + this.fractionDigits;
-      }
-      return s;
+      return (this.positive ? '' : '-') +
+             this.integralDigits +
+             '.' + (this.fractionDigits || '0');
     },
 
     /**

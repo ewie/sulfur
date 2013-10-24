@@ -17,7 +17,7 @@ define(['sulfur/schema/value/simple/decimal'], function (DecimalValue) {
    *   $1 optional sign
    *   $2 integral digits
    */
-  var LITERAL_PATTERN = /^[\x09\x0A\x0D\x20]*([+-]?)([0-9]+)(?:\.0+)?[\x09\x0A\x0D\x20]*$/;
+  var LITERAL_PATTERN = /^[\x09\x0A\x0D\x20]*([+-]?)([0-9]+)[\x09\x0A\x0D\x20]*$/;
 
   var $ = DecimalValue.clone({
 
@@ -72,6 +72,16 @@ define(['sulfur/schema/value/simple/decimal'], function (DecimalValue) {
       if (this.countFractionDigits() !== 0) {
         throw new Error("fractionDigits must be zero");
       }
+    },
+
+    /**
+     * Convert the integer to its canonical string representation.
+     *
+     * @return {string} the string representation
+     */
+    toString: function () {
+      var s = DecimalValue.prototype.toString.call(this);
+      return s.substr(0, s.length - 2);
     }
 
   });

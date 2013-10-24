@@ -53,12 +53,8 @@ define([
         expect(IntegerValue.isValidLiteral('+2')).to.be.true;
       });
 
-      it("should accept insignificant fraction digits", function () {
-        expect(IntegerValue.isValidLiteral('0.0')).to.be.true;
-      });
-
-      it("should reject significant fraction digits", function () {
-        expect(IntegerValue.isValidLiteral('0.1')).to.be.false;
+      it("should reject a fractional part", function () {
+        expect(IntegerValue.isValidLiteral('0.0')).to.be.false;
       });
 
       it("should reject strings not representing a valid integer", function () {
@@ -74,9 +70,9 @@ define([
           .to.throw('invalid decimal integer "123abc"');
       });
 
-      it("should reject strings with any significant fraction digits", function () {
-        expect(bind(IntegerValue, 'parse', '1.2'))
-          .to.throw('invalid decimal integer "1.2"');
+      it("should reject strings with a fractional part", function () {
+        expect(bind(IntegerValue, 'parse', '1.0'))
+          .to.throw('invalid decimal integer "1.0"');
       });
 
       context("with a valid string", function () {
@@ -101,10 +97,6 @@ define([
           expect(d.positive).to.be.false;
         });
 
-        it("should accept insignifcant fractional digits", function () {
-          expect(bind(IntegerValue, 'parse', '0.0')).not.to.throw();
-        });
-
       });
 
     });
@@ -123,7 +115,7 @@ define([
       describe("option `fractionDigits`", function () {
 
         it("should accept insignifcant fractionDigits", function () {
-          var d = IntegerValue.create({ fractionDigits: '000' });
+          var d = IntegerValue.create({ fractionDigits: '0' });
           expect(d.fractionDigits).to.equal('');
         });
 
@@ -132,6 +124,20 @@ define([
             .to.throw("fractionDigits must be zero");
         });
 
+      });
+
+    });
+
+    describe('#toString()', function () {
+
+      it("should return the canonical representation", function () {
+        var d = IntegerValue.create();
+        expect(d.toString()).to.equal('0');
+      });
+
+      it("should use a sign when negative", function () {
+        var d = IntegerValue.parse('-123');
+        expect(d.toString()).to.equal('-123');
       });
 
     });

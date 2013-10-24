@@ -10,8 +10,9 @@
 define([
   'shared',
   'sulfur/schema/value/simple/dateTime',
-  'sulfur/schema/value/simple/decimal'
-], function (shared, DateTimeValue, DecimalValue) {
+  'sulfur/schema/value/simple/decimal',
+  'sulfur/schema/value/simple/integer'
+], function (shared, DateTimeValue, DecimalValue, IntegerValue) {
 
   'use strict';
 
@@ -501,7 +502,7 @@ define([
 
       it("should pad with zeros", function () {
         var dt = DateTimeValue.create();
-        expect(dt.toString()).to.equal('0001-01-01T00:00:00');
+        expect(dt.toString()).to.equal('0001-01-01T00:00:00.0');
       });
 
       it("should include the second's fractional part", function () {
@@ -511,7 +512,12 @@ define([
 
       it("should use 'Z' to denote a timezoned datetime", function () {
         var dt = DateTimeValue.create({ tzhour: 0 });
-        expect(dt.toString()).to.equal('0001-01-01T00:00:00Z');
+        expect(dt.toString()).to.equal('0001-01-01T00:00:00.0Z');
+      });
+
+      it("should handle seconds initialized with an sulfur/schema/value/simple/integer", function () {
+        var dt = DateTimeValue.create({ second: IntegerValue.create() });
+        expect(dt.toString()).to.equal('0001-01-01T00:00:00');
       });
 
     });

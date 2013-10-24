@@ -98,7 +98,7 @@ define([
 
     describe('#initialize()', function () {
 
-      describe("option `integralDigitis`", function () {
+      describe("option `integralDigits`", function () {
 
         it("should default to '0' when not given", function () {
           var d = DecimalValue.create();
@@ -185,9 +185,9 @@ define([
 
     describe('#toString()', function () {
 
-      it("should return the integral digits", function () {
-        var d = DecimalValue.parse('123');
-        expect(d.toString()).to.equal('123');
+      it("should return the canonical representation", function () {
+        var d = DecimalValue.create();
+        expect(d.toString()).to.equal('0.0');
       });
 
       it("should include significant fraction digits", function () {
@@ -197,7 +197,7 @@ define([
 
       it("should use a sign when negative", function () {
         var d = DecimalValue.parse('-123');
-        expect(d.toString()).to.equal('-123');
+        expect(d.toString()).to.equal('-123.0');
       });
 
     });
@@ -248,7 +248,7 @@ define([
             expect(lhs.cmp(rhs)).to.equal(-1);
           });
 
-          it("should return 1 if LHS has less integral digits then RHS", function () {
+          it("should return 1 if RHS has less integral digits then LHS", function () {
             expect(rhs.cmp(lhs)).to.equal(1);
           });
 
