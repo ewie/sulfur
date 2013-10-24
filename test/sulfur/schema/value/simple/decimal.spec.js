@@ -239,35 +239,76 @@ define([
           expect(lhs.cmp(rhs)).to.equal(0);
         });
 
-        context("with different number of integral digits", function () {
+        context("when negative", function () {
 
-          var lhs = DecimalValue.parse('12');
-          var rhs = DecimalValue.parse('123');
+          context("with different number of integral digits", function () {
 
-          it("should return -1 if LHS has less integral digits then RHS", function () {
-            expect(lhs.cmp(rhs)).to.equal(-1);
+            var lhs = DecimalValue.parse('-21');
+            var rhs = DecimalValue.parse('-123');
+
+            it("should return 1 if LHS has less integral digits then RHS", function () {
+              expect(lhs.cmp(rhs)).to.equal(1);
+            });
+
+            it("should return -1 if RHS has less integral digits then LHS", function () {
+              expect(rhs.cmp(lhs)).to.equal(-1);
+            });
+
           });
 
-          it("should return 1 if RHS has less integral digits then LHS", function () {
-            expect(rhs.cmp(lhs)).to.equal(1);
+          context("with equal number of integral digits", function () {
+
+            it("should compare integral digits lexicographically", function () {
+              var lhs = DecimalValue.parse('-1999');
+              var rhs = DecimalValue.parse('-2000');
+              expect(lhs.cmp(rhs)).to.equal(1);
+              expect(rhs.cmp(lhs)).to.equal(-1);
+            });
+
+            it("should compare fraction digits lexicographically", function () {
+              var lhs = DecimalValue.parse('-1.1999');
+              var rhs = DecimalValue.parse('-1.2000');
+              expect(lhs.cmp(rhs)).to.equal(1);
+              expect(rhs.cmp(lhs)).to.equal(-1);
+            });
+
           });
 
         });
 
-        context("with equal number of integral digits", function () {
+        context("when non-negative", function () {
 
-          it("should compare integral digits lexicographically", function () {
-            var lhs = DecimalValue.parse('1999');
-            var rhs = DecimalValue.parse('2000');
-            expect(lhs.cmp(rhs)).to.equal(-1);
-            expect(rhs.cmp(lhs)).to.equal(1);
+          context("with different number of integral digits", function () {
+
+            var lhs = DecimalValue.parse('21');
+            var rhs = DecimalValue.parse('123');
+
+            it("should return -1 if LHS has less integral digits then RHS", function () {
+              expect(lhs.cmp(rhs)).to.equal(-1);
+            });
+
+            it("should return 1 if RHS has less integral digits then LHS", function () {
+              expect(rhs.cmp(lhs)).to.equal(1);
+            });
+
           });
 
-          it("should compare fraction digits lexicographically", function () {
-            var lhs = DecimalValue.parse('1.1999');
-            var rhs = DecimalValue.parse('1.2000');
-            expect(lhs.cmp(rhs)).to.equal(-1);
-            expect(rhs.cmp(lhs)).to.equal(1);
+          context("with equal number of integral digits", function () {
+
+            it("should compare integral digits lexicographically", function () {
+              var lhs = DecimalValue.parse('1999');
+              var rhs = DecimalValue.parse('2000');
+              expect(lhs.cmp(rhs)).to.equal(-1);
+              expect(rhs.cmp(lhs)).to.equal(1);
+            });
+
+            it("should compare fraction digits lexicographically", function () {
+              var lhs = DecimalValue.parse('1.1999');
+              var rhs = DecimalValue.parse('1.2000');
+              expect(lhs.cmp(rhs)).to.equal(-1);
+              expect(rhs.cmp(lhs)).to.equal(1);
+            });
+
           });
 
         });

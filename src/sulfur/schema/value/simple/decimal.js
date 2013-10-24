@@ -154,17 +154,23 @@ define([
       if (this.positive && !other.positive) {
         return 1;
       }
+      if (this.integralDigits.length < other.integralDigits.length) {
+        return this.positive ? -1 : 1;
+      }
+      if (this.integralDigits.length > other.integralDigits.length) {
+        return this.positive ? 1 : -1;
+      }
       if (this.integralDigits < other.integralDigits) {
-        return -1;
+        return this.positive ? -1 : 1;
       }
       if (this.integralDigits > other.integralDigits) {
-        return 1;
+        return this.positive ? 1 : -1;
       }
       if (this.fractionDigits < other.fractionDigits) {
-        return -1;
+        return this.positive ? -1 : 1;
       }
       if (this.fractionDigits > other.fractionDigits) {
-        return 1;
+        return this.positive ? 1 : -1;
       }
       return 0;
     },
