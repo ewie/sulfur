@@ -135,7 +135,7 @@ define([
      * @option options {number} day (default 1)
      * @option options {number} hour (default 0)
      * @option options {number} minute (default 0)
-     * @option options {number, string, decimal} second (default 0)
+     * @option options {sulfur/schema/value/simple/decimal} second (default 0)
      * @option options {number} tzhour (default 0 if `tzminute` is given)
      * @option options {number} tzminute (default 0 if `tzhour` is given)
      *
@@ -397,12 +397,6 @@ define([
 
         assertTime(hour, minute, second);
 
-        if (typeof second === 'number') {
-          second = DecimalValue.parse(second.toString(10));
-        } else if (typeof second === 'string') {
-          second = DecimalValue.parse(second);
-        }
-
         if (util.isDefined(options.tzhour) || util.isDefined(options.tzminute)) {
           var tzhour = optionOrDefault(options, 'tzhour', 0);
           var tzminute = optionOrDefault(options, 'tzminute', 0);
@@ -489,7 +483,7 @@ define([
       return function () {
 
         var sec = this._second.toString();
-        if (sec === '0' || sec.indexOf('.') === 1) {
+        if (sec.length < 2 || sec.indexOf('.') === 1) {
           sec = '0' + sec;
         }
 

@@ -346,9 +346,25 @@ define([
 
     describe('#toString()', function () {
 
-      it("should pad with zeros", function () {
+      it("should pad year to 4 digits", function () {
         var dt = DateValue.create();
         expect(dt.toString()).to.equal('0001-01-01');
+        dt = DateValue.create({ year: 1000 });
+        expect(dt.toString()).to.equal('1000-01-01');
+      });
+
+      it("should pad month to 2 digits", function () {
+        var dt = DateValue.create();
+        expect(dt.toString()).to.equal('0001-01-01');
+        dt = DateValue.create({ month: 10 });
+        expect(dt.toString()).to.equal('0001-10-01');
+      });
+
+      it("should pad day to 2 digits", function () {
+        var dt = DateValue.create();
+        expect(dt.toString()).to.equal('0001-01-01');
+        dt = DateValue.create({ day: 10 });
+        expect(dt.toString()).to.equal('0001-01-10');
       });
 
       context("with a timezone", function () {

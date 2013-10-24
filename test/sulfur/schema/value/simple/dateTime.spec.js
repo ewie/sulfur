@@ -500,14 +500,46 @@ define([
 
     describe('#toString()', function () {
 
-      it("should pad with zeros", function () {
+      it("should pad year to 4 digits", function () {
         var dt = DateTimeValue.create();
         expect(dt.toString()).to.equal('0001-01-01T00:00:00.0');
+        dt = DateTimeValue.create({ year: 1000 });
+        expect(dt.toString()).to.equal('1000-01-01T00:00:00.0');
       });
 
-      it("should include the second's fractional part", function () {
-        var dt = DateTimeValue.create({ second: DecimalValue.parse('1.2') });
-        expect(dt.toString()).to.equal('0001-01-01T00:00:01.2');
+      it("should pad month to 2 digits", function () {
+        var dt = DateTimeValue.create();
+        expect(dt.toString()).to.equal('0001-01-01T00:00:00.0');
+        dt = DateTimeValue.create({ month: 10 });
+        expect(dt.toString()).to.equal('0001-10-01T00:00:00.0');
+      });
+
+      it("should pad day to 2 digits", function () {
+        var dt = DateTimeValue.create();
+        expect(dt.toString()).to.equal('0001-01-01T00:00:00.0');
+        dt = DateTimeValue.create({ day: 10 });
+        expect(dt.toString()).to.equal('0001-01-10T00:00:00.0');
+      });
+
+      it("should pad hour to 2 digits", function () {
+        var dt = DateTimeValue.create();
+        expect(dt.toString()).to.equal('0001-01-01T00:00:00.0');
+        dt = DateTimeValue.create({ hour: 10 });
+        expect(dt.toString()).to.equal('0001-01-01T10:00:00.0');
+      });
+
+      it("should pad minute to 2 digits", function () {
+        var dt = DateTimeValue.create();
+        expect(dt.toString()).to.equal('0001-01-01T00:00:00.0');
+        dt = DateTimeValue.create({ minute: 10 });
+        expect(dt.toString()).to.equal('0001-01-01T00:10:00.0');
+      });
+
+      it("should pad second to 2 digits", function () {
+        var dt = DateTimeValue.create();
+        expect(dt.toString()).to.equal('0001-01-01T00:00:00.0');
+        dt = DateTimeValue.create({ second: DecimalValue.parse('10') });
+        expect(dt.toString()).to.equal('0001-01-01T00:00:10.0');
       });
 
       it("should use 'Z' to denote a timezoned datetime", function () {
@@ -516,8 +548,10 @@ define([
       });
 
       it("should handle seconds initialized with an sulfur/schema/value/simple/integer", function () {
-        var dt = DateTimeValue.create({ second: IntegerValue.create() });
-        expect(dt.toString()).to.equal('0001-01-01T00:00:00');
+        var dt = DateTimeValue.create({ second: IntegerValue.parse('1') });
+        expect(dt.toString()).to.equal('0001-01-01T00:00:01');
+        dt = DateTimeValue.create({ second: IntegerValue.parse('10') });
+        expect(dt.toString()).to.equal('0001-01-01T00:00:10');
       });
 
     });
