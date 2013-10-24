@@ -38,7 +38,8 @@ define(['sulfur/util'], function (util) {
      * @throw {Error} if `s` is empty
      * @throw {Error} if `s` is missing a lead or trail surrogate
      *
-     * @return {number} the character's codepoint value
+     * @return {array} a pair of the character's codepoint value and the number
+     *   of consumed code units
      */
     decodeCharacterFromUtf16: function (s) {
       if (s.length === 0) {
@@ -75,7 +76,7 @@ define(['sulfur/util'], function (util) {
      *   surrogate pair
      */
     encodeCharacterAsUtf16: function (value) {
-      var pair = $.encodeToSurrogatePair(value);
+      var pair = this.encodeToSurrogatePair(value);
       if (pair) {
         return String.fromCharCode(pair[0]) + String.fromCharCode(pair[1]);
       }
@@ -149,7 +150,7 @@ define(['sulfur/util'], function (util) {
      * @return {undefined} if `name` does not denote a valid Block
      */
     getBlockRange: function (name) {
-      if ($.isValidBlock(name)) {
+      if (this.isValidBlock(name)) {
         // return a copy
         var range = BLOCKS[name];
         return [ range[0], range[1] ];
@@ -165,7 +166,7 @@ define(['sulfur/util'], function (util) {
      * @return {undefined} if `name` does not denote a valid General Category
      */
     getCategoryRanges: function (name) {
-      if ($.isValidCategory(name)) {
+      if (this.isValidCategory(name)) {
         return copy(CATEGORIES[name]);
       }
     },
@@ -179,7 +180,7 @@ define(['sulfur/util'], function (util) {
      * @return {undefined} if `name` does not denote a valid General Category Group
      */
     getCategoryGroupRanges: function (name) {
-      if ($.isValidCategoryGroup(name)) {
+      if (this.isValidCategoryGroup(name)) {
         if (typeof CATEGORY_GROUPS[name] === 'string') {
           CATEGORY_GROUPS[name] = resolveCategoryGroup(name);
         }
