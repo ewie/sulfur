@@ -15,7 +15,7 @@ define([
 
   return {
 
-    getFacet: util.returns(MinInclusiveFacet),
+    get facet() { return MinInclusiveFacet; },
 
     parseValue: function (s, p) {
       return p.parse(s);

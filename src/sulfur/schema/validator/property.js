@@ -23,18 +23,18 @@ define(['sulfur/util/factory'], function (Factory) {
     initialize: function (name, validator, args) {
       this._name = name;
       this._validator = validator;
-      this._arguments = args;
+      this._args = args;
     },
 
-    getPropertyName: function () {
+    get propertyName() {
       return this._name;
     },
 
-    getArguments: function () {
-      return this._arguments;
+    get args() {
+      return this._args;
     },
 
-    getValidator: function () {
+    get validator() {
       return this._validator;
     },
 
@@ -48,7 +48,7 @@ define(['sulfur/util/factory'], function (Factory) {
     validate: function (obj) {
       var property = obj[this._name];
       if (typeof property === 'function') {
-        property = property.apply(obj, this._arguments);
+        property = property.apply(obj, this._args);
       }
       return this._validator.validate(property);
     }

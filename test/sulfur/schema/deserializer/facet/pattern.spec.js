@@ -21,10 +21,10 @@ define([
 
   describe('sulfur/schema/deserializer/facet/pattern', function () {
 
-    describe('.getFacet()', function () {
+    describe('.facet', function () {
 
       it("should return sulfur/schema/facet/pattern", function () {
-        expect(PatternFacetDeserializer.getFacet()).to.equal(PatternFacet);
+        expect(PatternFacetDeserializer.facet).to.equal(PatternFacet);
       });
 
     });

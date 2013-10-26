@@ -15,10 +15,10 @@ define(['shared', 'sulfur'], function (shared, sulfur) {
 
   describe('sulfur', function () {
 
-    describe('.getNamespaceURI()', function () {
+    describe('.namespaceURI', function () {
 
       it("should return 'https://vsr.informatik.tu-chemnitz.de/projects/2013/sulfur'", function () {
-        expect(sulfur.getNamespaceURI()).to.equal('https://vsr.informatik.tu-chemnitz.de/projects/2013/sulfur');
+        expect(sulfur.namespaceURI).to.equal('https://vsr.informatik.tu-chemnitz.de/projects/2013/sulfur');
       });
 
     });

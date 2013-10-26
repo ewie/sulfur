@@ -38,8 +38,8 @@ define([
       options || (options = {});
       var shadowing = typeof options.shadowing === 'undefined' ? true : options.shadowing;
       var facet = Facet.clone({
-        getQName: returns(qname),
-        getMutualExclusiveFacets: returns(options.mutex || []),
+        qname: qname,
+        mutualExclusiveFacets: options.mutex || [],
         isShadowingLowerRestrictions: returns(shadowing)
       });
       facet.augment({
@@ -175,7 +175,7 @@ define([
           var v = facet.createConjunctionValidator(instances);
           expect(AllValidator.prototype).to.be.prototypeOf(v);
           spies.forEach(function (spy, i) {
-            expect(spy).to.have.returned(sinon.match.same(v.getValidators()[i]));
+            expect(spy).to.have.returned(sinon.match.same(v.validators[i]));
           });
         });
 
@@ -188,16 +188,15 @@ define([
       it("should initialize with a value", function () {
         var value = {};
         var facet = Facet.create(value);
-        expect(facet.getValue()).to.equal(value);
+        expect(facet.value).to.equal(value);
       });
 
     });
 
-    describe('#getQName()', function () {
+    describe('#qname', function () {
 
-      it("should return the value of .getQName()", function () {
-        var spy = sinon.spy(DerivedFacet, 'getQName');
-        expect(spy).to.have.returned(facet.getQName());
+      it("should return the value of .qname", function () {
+        expect(facet.qname).to.equal(DerivedFacet.qname);
       });
 
     });
@@ -211,12 +210,12 @@ define([
 
     });
 
-    describe('#getValue()', function () {
+    describe('#value', function () {
 
       it("should return the facet value", function () {
         var value = {};
         var facet = Facet.create(value);
-        expect(facet.getValue()).to.equal(value);
+        expect(facet.value).to.equal(value);
       });
 
     });

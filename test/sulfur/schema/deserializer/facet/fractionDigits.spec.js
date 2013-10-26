@@ -19,10 +19,10 @@ define([
 
   describe('sulfur/schema/deserializer/facet/fractionDigits', function () {
 
-    describe('.getFacet()', function () {
+    describe('.facet', function () {
 
       it("should return sulfur/schema/facet/fractionDigits", function () {
-        expect(FractionDigitsFacetDeserializer.getFacet()).to.equal(FractionDigitsFacet);
+        expect(FractionDigitsFacetDeserializer.facet).to.equal(FractionDigitsFacet);
       });
 
     });

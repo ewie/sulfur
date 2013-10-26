@@ -93,7 +93,7 @@ define([
 
       it("should use the empty string as default value", function () {
         var s = StringValue.create();
-        expect(s.getLength()).to.equal(0);
+        expect(s.length).to.equal(0);
       });
 
       it("should reject a non-string value", function () {
@@ -131,11 +131,11 @@ define([
 
     });
 
-    describe('#getLength()', function () {
+    describe('#length', function () {
 
       it("should return the number of UTF-16 codeunits", function () {
         var s = StringValue.create('\uD800\uDC00');
-        expect(s.getLength()).to.equal(2);
+        expect(s.length).to.equal(2);
       });
 
     });

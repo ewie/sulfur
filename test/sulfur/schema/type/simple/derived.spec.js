@@ -75,18 +75,18 @@ define([
 
     });
 
-    describe('#getQName()', function () {
+    describe('#qname', function () {
 
       it("should return the qualified name", function () {
-        expect(type.getQName()).to.equal(qname);
+        expect(type.qname).to.equal(qname);
       });
 
     });
 
-    describe('#getValueType()', function () {
+    describe('#valueType', function () {
 
       it("should return the value type", function () {
-        expect(type.getValueType()).to.equal(valueType);
+        expect(type.valueType).to.equal(valueType);
       });
 
     });

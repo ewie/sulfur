@@ -20,10 +20,10 @@ define([
 
   describe('sulfur/schema/deserializer/facet/minExclusive', function () {
 
-    describe('.getFacet()', function () {
+    describe('.facet', function () {
 
       it("should return sulfur/schema/facet/minExclusive", function () {
-        expect(MinExclusiveFacetDeserializer.getFacet()).to.equal(MinExclusiveFacet);
+        expect(MinExclusiveFacetDeserializer.facet).to.equal(MinExclusiveFacet);
       });
 
     });

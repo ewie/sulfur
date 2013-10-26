@@ -20,13 +20,15 @@ define([
      */
     initialize: function (blob) {
       this._blob = blob;
+      this._mediaType = MediaType.create.apply(MediaType,
+        this._blob.type.split('/'));
     },
 
     /**
      * @param {sulfur/schema/mediaType} the file's media type
      */
-    getMediaType: function () {
-      return MediaType.create.apply(MediaType, this._blob.type.split('/'));
+    get mediaType() {
+      return this._mediaType;
     }
 
   });

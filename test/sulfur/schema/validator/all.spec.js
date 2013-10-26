@@ -19,12 +19,12 @@ define([
 
   describe('sulfur/schema/validator/all', function () {
 
-    describe('#getValidators()', function () {
+    describe('#validators', function () {
 
       it("should return the array of validators", function () {
         var validators = [];
         var validator = AllValidator.create(validators);
-        expect(validator.getValidators()).to.equal(validators);
+        expect(validator.validators).to.equal(validators);
       });
 
     });

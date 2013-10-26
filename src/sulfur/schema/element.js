@@ -18,11 +18,11 @@ define(['sulfur/util/factory'], function (Factory) {
       this._optional = options && options.optional || false;
     },
 
-    getName: function () {
+    get name() {
       return this._name;
     },
 
-    getType: function () {
+    get type() {
       return this._type;
     },
 

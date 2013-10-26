@@ -239,7 +239,7 @@ define([
 
         var e = typeDeserializer.deserializeElement(element);
 
-        expect(e.getName()).to.equal('foo');
+        expect(e.name).to.equal('foo');
       });
 
       it("should return an optional element when attribute @minOccurs has value '0'", function () {
@@ -276,7 +276,7 @@ define([
 
           var e = typeDeserializer.deserializeElement(element);
 
-          expect(e.getType()).to.equal(type);
+          expect(e.type).to.equal(type);
           expect(deserializeSpy).to.be.calledWith('someType');
         });
 
@@ -298,7 +298,7 @@ define([
 
           var e = typeDeserializer.deserializeElement(element);
 
-          expect(e.getType()).to.equal(type);
+          expect(e.type).to.equal(type);
           expect(deserializeSpy).to.be.calledWith(QName.create('bar', 'urn:foo'));
         });
 
@@ -325,8 +325,8 @@ define([
 
             var e = typeDeserializer.deserializeElement(element, xpath);
 
-            expect(e.getName()).to.equal('bar');
-            expect(e.getType()).to.equal(type);
+            expect(e.name).to.equal('bar');
+            expect(e.type).to.equal(type);
 
             expect(deserializeSpy).to.be.called;
             expect(deserializeSpy.getCall(1).args[0]).to.equal(element.nextSibling);
@@ -350,8 +350,8 @@ define([
 
             var e = typeDeserializer.deserializeElement(element, xpath);
 
-            expect(e.getName()).to.equal('x');
-            expect(e.getType()).to.equal(type);
+            expect(e.name).to.equal('x');
+            expect(e.type).to.equal(type);
             expect(e.isOptional()).to.be.true;
 
             expect(deserializeSpy).to.be.called;
@@ -406,7 +406,7 @@ define([
 
             var e = typeDeserializer.deserializeElement(element, xpath);
 
-            expect(e.getType()).to.equal(type);
+            expect(e.type).to.equal(type);
 
             expect(deserializeSpy).to.be.called;
             expect(deserializeSpy.getCall(0).args[0]).to.equal(element.firstChild);
@@ -431,7 +431,7 @@ define([
 
             var e = typeDeserializer.deserializeElement(element, xpath);
 
-            expect(e.getType()).to.equal(type);
+            expect(e.type).to.equal(type);
 
             expect(deserializeSpy).to.be.called;
             expect(deserializeSpy.getCall(0).args[0]).to.equal(element.firstChild);

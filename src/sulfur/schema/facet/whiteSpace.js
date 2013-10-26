@@ -14,14 +14,15 @@ define([
 
   'use strict';
 
+  var qname = QName.create('whiteSpace', 'http://www.w3.org/2001/XMLSchema');
+
   var $ = Facet.clone({
 
-    getQName: util.returns(
-      QName.create('whiteSpace', 'http://www.w3.org/2001/XMLSchema')),
+    get qname() { return qname; },
 
     isShadowingLowerRestrictions: util.returns(true),
 
-    getMutualExclusiveFacets: util.returns([])
+    get mutualExclusiveFacets() { return []; }
 
   });
 
@@ -39,8 +40,8 @@ define([
       if (!whiteSpaceFacet) {
         return true;
       }
-      var thisValue = this.getValue();
-      var otherValue = whiteSpaceFacet.getValue();
+      var thisValue = this.value;
+      var otherValue = whiteSpaceFacet.value;
       if (otherValue === 'collapse') {
         return thisValue === 'collapse';
       }

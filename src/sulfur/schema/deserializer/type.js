@@ -110,8 +110,8 @@ define([
         this._referenceStack.push(refName);
         var ref = xpath.first('/xs:schema/xs:element[@name = "' + refName + '"]', undefined, NS);
         ref = this.deserializeElement(ref, xpath);
-        type = ref.getType();
-        name = ref.getName();
+        type = ref.type;
+        name = ref.name;
         this._referenceStack.pop();
       } else {
         name = element.getAttribute('name');

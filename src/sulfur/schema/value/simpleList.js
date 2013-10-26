@@ -20,18 +20,18 @@ define([
   /**
    * @abstract
    *
-   * @implement .getItemValueType()
+   * @implement .itemValueType
    */
   var $ = ListValue.clone({
 
     typed: function (itemValueType) {
       return this.clone({
-        getItemValueType: util.returns(itemValueType)
+        get itemValueType() { return itemValueType; }
       });
     },
 
     parse: function (s) {
-      var itemValueType = this.getItemValueType();
+      var itemValueType = this.itemValueType;
       var values = normalize(s).split(' ').map(function (s) {
         return itemValueType.parse(s);
       });

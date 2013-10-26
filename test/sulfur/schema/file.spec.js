@@ -24,17 +24,17 @@ define([
       it("should accept a Blob", function () {
         var blob = new Blob([], { type: 'image/jpeg' });
         var f = File.create(blob);
-        expect(f.getMediaType()).to.eql(MediaType.create('image', 'jpeg'));
+        expect(f.mediaType).to.eql(MediaType.create('image', 'jpeg'));
       });
 
     });
 
-    describe('#getMediaType()', function () {
+    describe('#mediaType', function () {
 
       it("should return the media type", function () {
         var blob = new Blob([], { type: 'text/plain' });
         var f = File.create(blob);
-        expect(f.getMediaType()).to.eql(MediaType.create('text', 'plain'));
+        expect(f.mediaType).to.eql(MediaType.create('text', 'plain'));
       });
 
     });

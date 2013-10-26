@@ -38,7 +38,6 @@ define([
   var expect = shared.expect;
   var sinon = shared.sinon;
   var bind = shared.bind;
-  var returns = shared.returns;
 
   describe('sulfur/schema/facet/length', function () {
 
@@ -46,10 +45,10 @@ define([
       expect(Facet).to.be.prototypeOf(LengthFacet);
     });
 
-    describe('.getQName()', function () {
+    describe('.qname', function () {
 
       it("should return {http://www.w3.org/2001/XMLSchema}length", function () {
-        expect(LengthFacet.getQName())
+        expect(LengthFacet.qname)
           .to.eql(QName.create('length', 'http://www.w3.org/2001/XMLSchema'));
       });
 
@@ -63,10 +62,10 @@ define([
 
     });
 
-    describe('.getMutualExclusiveFacets()', function () {
+    describe('.mutualExclusiveFacets', function () {
 
       it("should return sulfur/schema/facet/maxLength and sulfur/schema/facet/minLength", function () {
-        expect(LengthFacet.getMutualExclusiveFacets())
+        expect(LengthFacet.mutualExclusiveFacets)
           .to.eql([ MaxLengthFacet, MinLengthFacet ]);
       });
 
@@ -215,7 +214,7 @@ define([
       var facets;
 
       beforeEach(function () {
-        var dummyFacet = { getQName: returns(QName.create('x', 'urn:y')) };
+        var dummyFacet = { qname: QName.create('x', 'urn:y') };
         facet = LengthFacet.create(0);
         facets = Facets.create([ dummyFacet ]);
       });
@@ -264,12 +263,12 @@ define([
 
     describe('#createValidator()', function () {
 
-      it("should return a validator/property on 'getLength' with a validator/equal", function () {
+      it("should return a validator/property on 'length' with a validator/equal", function () {
         var facet = LengthFacet.create(0);
         var v = facet.createValidator();
         expect(v).to.eql(
           PropertyValidator.create(
-            'getLength',
+            'length',
             EqualValidator.create(0)
           )
         );

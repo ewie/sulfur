@@ -67,7 +67,7 @@ define(['sulfur/util/factory'], function (Factory) {
      *
      * @return {boolean} the boolean value
      */
-    getValue: function () {
+    get value() {
       return this._value;
     },
 
@@ -77,7 +77,7 @@ define(['sulfur/util/factory'], function (Factory) {
      * @return {string} the canonical string representation
      */
     toString: function () {
-      return this._value ? 'true' : 'false';
+      return this.value ? 'true' : 'false';
     },
 
     /**
@@ -88,7 +88,7 @@ define(['sulfur/util/factory'], function (Factory) {
      * @return {boolean} whether this is equal to `other`
      */
     eq: function (other) {
-      return this._value === other._value;
+      return this.value === other.value;
     }
 
   });

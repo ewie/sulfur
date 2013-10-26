@@ -23,7 +23,7 @@ define([
 
       it("should create an XML document with the given namespace URI and qualified name", function () {
         var doc = Document.make('urn:y', 'y:x');
-        var d = doc.getDocument();
+        var d = doc.document;
         var e = d.documentElement;
         expect(e.nodeName).to.equal('y:x');
         expect(e.namespaceURI).to.equal('urn:y');
@@ -31,22 +31,22 @@ define([
 
     });
 
-    describe('#getDocument()', function () {
+    describe('#document', function () {
 
       it("should return the underlying XML document", function () {
         var d = {};
         var doc = Document.create(d);
-        expect(doc.getDocument()).to.equal(d);
+        expect(doc.document).to.equal(d);
       });
 
     });
 
-    describe('#getRoot()', function () {
+    describe('#root', function () {
 
       it("should return the root element", function () {
         var d = document.implementation.createDocument('urn:x', 'x:y', null);
         var doc = Document.create(d);
-        expect(doc.getRoot()).to.equal(d.documentElement);
+        expect(doc.root).to.equal(d.documentElement);
       });
 
     });
@@ -72,19 +72,19 @@ define([
 
       it("should declare the given namespace on the given element", function () {
         var e = doc.createElement('urn:foo', 'foo:bar');
-        doc.getRoot().appendChild(e);
+        doc.root.appendChild(e);
         doc.declareNamespace('urn:bar', 'bar', e);
         expect(e.getAttribute('xmlns:bar')).to.equal('urn:bar');
       });
 
       it("should default to the root element if no element is given", function () {
         doc.declareNamespace('urn:bar', 'bar');
-        expect(doc.getRoot().getAttribute('xmlns:bar')).to.equal('urn:bar');
+        expect(doc.root.getAttribute('xmlns:bar')).to.equal('urn:bar');
       });
 
       it("should handle an empty prefix", function () {
         doc.declareNamespace('urn:bar', '');
-        expect(doc.getRoot().getAttribute('xmlns')).to.equal('urn:bar');
+        expect(doc.root.getAttribute('xmlns')).to.equal('urn:bar');
       });
 
       context("when the prefix is already declared", function () {
@@ -134,22 +134,22 @@ define([
       });
 
       it("should return the namespace URI for the given prefix when declared", function () {
-        var e = doc.getRoot().firstChild;
+        var e = doc.root.firstChild;
         expect(doc.lookupNamespaceURI('x', e)).to.equal('urn:y');
       });
 
       it("should return the most locally declared namespace URI for the given context element", function () {
-        var e = doc.getRoot().firstChild.firstChild;
+        var e = doc.root.firstChild.firstChild;
         expect(doc.lookupNamespaceURI('x', e)).to.equal('urn:y');
       });
 
       it("should handle the empty prefix", function () {
-        var e = doc.getRoot().firstChild.firstChild;
+        var e = doc.root.firstChild.firstChild;
         expect(doc.lookupNamespaceURI('', e)).to.equal('urn:void');
       });
 
       it("should accept null as empty prefix", function () {
-        var e = doc.getRoot().firstChild.firstChild;
+        var e = doc.root.firstChild.firstChild;
         expect(doc.lookupNamespaceURI(null, e)).to.equal('urn:void');
       });
 
@@ -170,20 +170,20 @@ define([
       context("with a manually declared namespace", function () {
 
         it("should return the namespace URI for the given prefix when declared", function () {
-          var e = doc.getRoot().firstChild;
+          var e = doc.root.firstChild;
           e.setAttribute('xmlns:foo', 'urn:foo');
           expect(doc.lookupNamespaceURI('foo', e)).to.equal('urn:foo');
         });
 
         it("should return the most locally declared namespace URI for the given context element", function () {
-          var f = doc.getRoot().firstChild;
+          var f = doc.root.firstChild;
           f.setAttribute('xmlns:bar', 'urn:bar');
           var e = f.firstChild;
           expect(doc.lookupNamespaceURI('bar', e)).to.equal('urn:bar');
         });
 
         it("should handle the empty prefix", function () {
-          var e = doc.getRoot();
+          var e = doc.root;
           e.setAttribute('xmlns', 'urn:empty');
           expect(doc.lookupNamespaceURI('', e)).to.equal('urn:empty');
         });
@@ -220,17 +220,17 @@ define([
       });
 
       it("should return the prefix for the given namespace URI when declared", function () {
-        var e = doc.getRoot().firstChild;
+        var e = doc.root.firstChild;
         expect(doc.lookupPrefix('urn:x', e)).to.equal('y');
       });
 
       it("should return the most locally declared prefix for the given context element", function () {
-        var e = doc.getRoot().firstChild.firstChild;
+        var e = doc.root.firstChild.firstChild;
         expect(doc.lookupPrefix('urn:x', e)).to.equal('y');
       });
 
       it("should handle the empty prefix", function () {
-        var e = doc.getRoot().firstChild.firstChild;
+        var e = doc.root.firstChild.firstChild;
         expect(doc.lookupPrefix('urn:void', e)).to.equal('');
       });
 
@@ -257,20 +257,20 @@ define([
       context("with a manually declared namespace", function () {
 
         it("should return the prefix for the given namespace URI when declared", function () {
-          var e = doc.getRoot().firstChild;
+          var e = doc.root.firstChild;
           e.setAttribute('xmlns:foo', 'urn:foo');
           expect(doc.lookupPrefix('urn:foo', e)).to.equal('foo');
         });
 
         it("should return the most locally declared prefix for the given context element", function () {
-          var f = doc.getRoot().firstChild;
+          var f = doc.root.firstChild;
           f.setAttribute('xmlns:bar', 'urn:bar');
           var e = f.firstChild;
           expect(doc.lookupPrefix('urn:bar', e)).to.equal('bar');
         });
 
         it("should handle the empty prefix", function () {
-          var e = doc.getRoot();
+          var e = doc.root;
           e.setAttribute('xmlns', 'urn:empty');
           expect(doc.lookupPrefix('urn:empty', e)).to.equal('');
         });

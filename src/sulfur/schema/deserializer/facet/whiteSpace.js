@@ -6,16 +6,13 @@
 
 /* global define */
 
-define([
-  'sulfur/schema/facet/whiteSpace',
-  'sulfur/util'
-], function (WhiteSpaceFacet, util) {
+define(['sulfur/schema/facet/whiteSpace'], function (WhiteSpaceFacet) {
 
   'use strict';
 
   return {
 
-    getFacet: util.returns(WhiteSpaceFacet),
+    get facet() { return WhiteSpaceFacet; },
 
     parseValue: function (s) {
       return s;

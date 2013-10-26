@@ -15,7 +15,7 @@ define([
 
   return {
 
-    getFacet: util.returns(MaxLengthFacet),
+    get facet() { return MaxLengthFacet; },
 
     parseValue: function (s) {
       return parseInt(s, 10);

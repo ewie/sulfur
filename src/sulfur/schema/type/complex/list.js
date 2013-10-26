@@ -30,34 +30,36 @@ define([
 
     initialize: function (element, options) {
       this._element = element;
-      this._maxLength = options && options.maxLength;
-      this._minLength = options && options.minLength;
+      if (options) {
+        this._maxLength = options.maxLength;
+        this._minLength = options.minLength;
+      }
     },
 
-    getElement: function () {
+    get element() {
       return this._element;
     },
 
-    getMaxLength: function () {
+    get maxLength() {
       return this._maxLength;
     },
 
-    getMinLength: function () {
+    get minLength() {
       return this._minLength;
     },
 
     createValidator: function () {
       var validators = [
         PropertyValidator.create('toArray',
-          EachValidator.create(this._element.getType().createValidator()))
+          EachValidator.create(this.element.type.createValidator()))
       ];
-      if (util.isDefined(this._maxLength)) {
-        validators.push(PropertyValidator.create('getLength',
-          MaximumValidator.create(this._maxLength)));
+      if (util.isDefined(this.maxLength)) {
+        validators.push(PropertyValidator.create('length',
+          MaximumValidator.create(this.maxLength)));
       }
-      if (util.isDefined(this._minLength)) {
-        validators.push(PropertyValidator.create('getLength',
-          MinimumValidator.create(this._minLength)));
+      if (util.isDefined(this.minLength)) {
+        validators.push(PropertyValidator.create('length',
+          MinimumValidator.create(this.minLength)));
       }
       return AllValidator.create(validators);
     }

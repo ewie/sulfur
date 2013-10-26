@@ -15,7 +15,7 @@ define([
 
   return {
 
-    getFacet: util.returns(FractionDigitsFacet),
+    get facet() { return FractionDigitsFacet; },
 
     parseValue: function (s) {
       return parseInt(s, 10);

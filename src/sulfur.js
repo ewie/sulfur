@@ -12,7 +12,7 @@ define(function () {
 
   return {
 
-    getNamespaceURI: function () {
+    get namespaceURI() {
       return 'https://vsr.informatik.tu-chemnitz.de/projects/2013/sulfur';
     }
 

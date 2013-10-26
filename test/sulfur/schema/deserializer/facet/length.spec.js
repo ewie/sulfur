@@ -19,10 +19,10 @@ define([
 
   describe('sulfur/schema/deserializer/facet/length', function () {
 
-    describe('.getFacet()', function () {
+    describe('.facet', function () {
 
       it("should return sulfur/schema/facet/length", function () {
-        expect(LengthFacetDeserializer.getFacet()).to.equal(LengthFacet);
+        expect(LengthFacetDeserializer.facet).to.equal(LengthFacet);
       });
 
     });

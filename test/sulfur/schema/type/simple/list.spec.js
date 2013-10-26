@@ -57,35 +57,35 @@ define([
       sandbox.restore();
     });
 
-    describe('#getItemType()', function () {
+    describe('#itemType', function () {
 
       it("should return the item type", function () {
-        var itemType = { getValueType: returns({}) };
+        var itemType = { valueType: {} };
         var type = ListType.create(itemType);
-        expect(type.getItemType()).to.equal(itemType);
+        expect(type.itemType).to.equal(itemType);
       });
 
     });
 
-    describe('#getValueType()', function () {
+    describe('#valueType', function () {
 
       it("should return a sulfur/schema/value/simpleList using the item type's value type", function () {
-        var itemType = { getValueType: returns({}) };
+        var itemType = { valueType: {} };
         var listType = ListType.create(itemType);
-        var listValue = listType.getValueType();
+        var listValue = listType.valueType;
         expect(SimpleListValue).to.be.prototypeOf(listValue);
-        expect(listValue.getItemValueType()).to.equal(itemType.getValueType());
+        expect(listValue.itemValueType).to.equal(itemType.valueType);
       });
 
       it("should return the same object on future calls", function () {
-        var itemType = { getValueType: returns({}) };
+        var itemType = { valueType: {} };
         var listType = ListType.create(itemType);
-        expect(listType.getValueType()).to.equal(listType.getValueType());
+        expect(listType.valueType).to.equal(listType.valueType);
       });
 
     });
 
-    describe('#getAllowedFacets()', function () {
+    describe('#allowedFacets', function () {
 
       [
         EnumerationFacet,
@@ -95,12 +95,12 @@ define([
         PatternFacet
       ].forEach(function (facet) {
 
-        var qname = facet.getQName();
+        var qname = facet.qname;
 
         it("should include facet " + qname, function () {
-          var itemType = { getValueType: returns({}) };
+          var itemType = { valueType: {} };
           var type = ListType.create(itemType);
-          expect(type.getAllowedFacets().getFacet(qname)).to.equal(facet);
+          expect(type.allowedFacets.getByQName(qname)).to.equal(facet);
         });
 
       });
@@ -109,13 +109,13 @@ define([
 
     describe('#isRestrictionOf()', function () {
 
-      it("should return true when the other type is the same sulfur/schema/type/simple/list", function () {
-        var itemType = { getValueType: returns({}) };
+      it("should return true when this and the other type are the same", function () {
+        var itemType = { valueType: {} };
         var type = ListType.create(itemType);
         expect(type.isRestrictionOf(type)).to.be.true;
       });
 
-      context("when sulfur/schema/type/simple/primitive#isRestrictionOf() returns false", function () {
+      context("when this and the other type are not the same", function () {
 
         var itemType;
         var otherItemType;
@@ -124,10 +124,10 @@ define([
 
         beforeEach(function () {
           itemType = {
-            isRestrictionOf: function () {},
-            getValueType: returns({})
+            isRestrictionOf: returns(false),
+            valueType: {}
           };
-          otherItemType = { getValueType: returns({}) };
+          otherItemType = { valueType: {} };
           type = ListType.create(itemType);
           other = ListType.create(otherItemType);
         });
@@ -159,7 +159,7 @@ define([
       beforeEach(function () {
         var itemType = {
           createValidator: returns({ validate: returns() }),
-          getValueType: returns({})
+          valueType: {}
         };
         type = ListType.create(itemType);
       });
@@ -168,7 +168,7 @@ define([
         var v = type.createValidator();
         expect(v).to.eql(
           PropertyValidator.create('toArray',
-            EachValidator.create(type.getItemType().createValidator())));
+            EachValidator.create(type.itemType.createValidator())));
       });
 
     });
@@ -180,7 +180,7 @@ define([
       beforeEach(function () {
         var itemType = {
           createValidator: returns({ validate: returns() }),
-          getValueType: returns({})
+          valueType: {}
         };
         type = ListType.create(itemType);
       });
@@ -196,7 +196,7 @@ define([
         var restriction = RestrictedType.create(type,
           Facets.create([ LengthFacet.create(0) ]));
         var v = type.createRestrictionValidator(restriction);
-        expect(v.getValidators())
+        expect(v.validators)
           .to.include.something.eql(type.createValidator());
       });
 
@@ -205,7 +205,7 @@ define([
         var restriction = RestrictedType.create(type,
           Facets.create([ facet ]));
         var v = type.createRestrictionValidator(restriction);
-        expect(v.getValidators())
+        expect(v.validators)
           .to.include.something.eql(facet.createValidator());
       });
 
@@ -214,7 +214,7 @@ define([
         var restriction = RestrictedType.create(type,
           Facets.create([ facet ]));
         var v = type.createRestrictionValidator(restriction);
-        expect(v.getValidators())
+        expect(v.validators)
           .to.include.something.eql(facet.createValidator());
       });
 
@@ -223,7 +223,7 @@ define([
         var restriction = RestrictedType.create(type,
           Facets.create([ facet ]));
         var v = type.createRestrictionValidator(restriction);
-        expect(v.getValidators())
+        expect(v.validators)
           .to.include.something.eql(facet.createValidator());
       });
 
@@ -232,7 +232,7 @@ define([
         var restriction = RestrictedType.create(type,
           Facets.create([ facet ]));
         var v = type.createRestrictionValidator(restriction);
-        expect(v.getValidators())
+        expect(v.validators)
           .to.include.something.eql(facet.createValidator());
       });
 
@@ -244,7 +244,7 @@ define([
         var restriction = RestrictedType.create(base,
           Facets.create([ facet ]));
         var v = type.createRestrictionValidator(restriction);
-        expect(v.getValidators())
+        expect(v.validators)
           .to.include.something.eql(
             PatternFacet.createConjunctionValidator([ facet, baseFacet ]));
       });

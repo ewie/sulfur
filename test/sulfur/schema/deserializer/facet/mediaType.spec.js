@@ -21,10 +21,10 @@ define([
 
   describe('sulfur/schema/deserializer/facet/mediaType', function () {
 
-    describe('.getFacet()', function () {
+    describe('.facet', function () {
 
       it("should return sulfur/schema/facet/mediaType", function () {
-        expect(MediaTypeFacetDeserializer.getFacet()).to.equal(MediaTypeFacet);
+        expect(MediaTypeFacetDeserializer.facet).to.equal(MediaTypeFacet);
       });
 
     });

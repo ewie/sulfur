@@ -17,14 +17,15 @@ define([
 
   'use strict';
 
+  var qname = QName.create('totalDigits', 'http://www.w3.org/2001/XMLSchema');
+
   var $ = Facet.clone({
 
-    getQName: util.returns(
-      QName.create('totalDigits', 'http://www.w3.org/2001/XMLSchema')),
+    get qname() { return qname; },
 
     isShadowingLowerRestrictions: util.returns(true),
 
-    getMutualExclusiveFacets: util.returns([])
+    get mutualExclusiveFacets() { return []; }
 
   });
 
@@ -40,7 +41,7 @@ define([
     isRestrictionOf: function (type) {
       var totalDigitsFacet = this.factory.getEffectiveFacet(type);
       if (totalDigitsFacet) {
-        return this.getValue() <= totalDigitsFacet.getValue();
+        return this.value <= totalDigitsFacet.value;
       }
       return true;
     },
@@ -52,7 +53,7 @@ define([
     createValidator: function () {
       return PropertyValidator.create(
         'countDigits',
-        MaximumValidator.create(this.getValue())
+        MaximumValidator.create(this.value)
       );
     }
 

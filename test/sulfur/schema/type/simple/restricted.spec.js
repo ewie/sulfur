@@ -37,8 +37,8 @@ define([
       var shadowing = typeof options.shadowing === 'undefined' ? true : options.shadowing;
       var restriction = options.hasOwnProperty('restriction') ? options.restriction : true;
       var facet = Facet.clone({
-        getQName: returns(qname),
-        getMutualExclusiveFacets: returns(options.mutex || []),
+        qname: qname,
+        mutualExclusiveFacets: options.mutex || [],
         isShadowingLowerRestrictions: returns(shadowing)
       });
       facet.augment({
@@ -66,18 +66,12 @@ define([
       });
 
       it("should reject facets prohibited due to mutual exclusion", function () {
-        var facet1 = {
-          getQName: returns(QName.create('x', 'urn:z')),
-          getMutualExclusiveFacets: function () {
-            return [ facet2 ];
-          }
-        };
+        var facet1 = { qname: QName.create('x', 'urn:z') };
         var facet2 = {
-          getQName: returns(QName.create('y', 'urn:z')),
-          getMutualExclusiveFacets: function () {
-            return [ facet1 ];
-          }
+          qname: QName.create('y', 'urn:z'),
+          mutualExclusiveFacets: [ facet1 ]
         };
+        facet1.mutualExclusiveFacets = [ facet2 ];
         var base = PrimitiveType.create({
           facets: Facets.create([ facet1, facet2 ])
         });
@@ -114,7 +108,7 @@ define([
 
     });
 
-    describe('#getBasePrimitive()', function () {
+    describe('#primitive', function () {
 
       it("should return the base when its a sulfur/schema/type/simple/primitive", function () {
         var allowedFacet = mockFacet(QName.create('x', 'urn:y'));
@@ -122,7 +116,7 @@ define([
         var base = PrimitiveType.create({ facets: allowedFacets });
         var facets = Facets.create([ allowedFacet.create() ]);
         var restriction = RestrictedType.create(base, facets);
-        expect(restriction.getBasePrimitive()).to.equal(base);
+        expect(restriction.primitive).to.equal(base);
       });
 
       it("should return the base's base primitive when its a sulfur/schema/type/simple/restricted", function () {
@@ -133,12 +127,12 @@ define([
         var base = RestrictedType.create(primitive, baseFacets);
         var facets = Facets.create([ allowedFacet.create() ]);
         var restriction = RestrictedType.create(base, facets);
-        expect(restriction.getBasePrimitive()).to.equal(base.getBasePrimitive());
+        expect(restriction.primitive).to.equal(base.primitive);
       });
 
     });
 
-    describe('#getBase()', function () {
+    describe('#base', function () {
 
       it("should return the base", function () {
         var dummyFacet = mockFacet(
@@ -149,12 +143,12 @@ define([
         });
         var facets = Facets.create([ dummyFacet.create() ]);
         var restriction = RestrictedType.create(base, facets);
-        expect(restriction.getBase()).to.equal(base);
+        expect(restriction.base).to.equal(base);
       });
 
     });
 
-    describe('#getValueType()', function () {
+    describe('#valueType', function () {
 
       it("should return the value type of the base", function () {
         var dummyFacet = mockFacet(
@@ -166,12 +160,12 @@ define([
         });
         var facets = Facets.create([ dummyFacet.create() ]);
         var restriction = RestrictedType.create(base, facets);
-        expect(restriction.getValueType()).to.equal(base.getValueType());
+        expect(restriction.valueType).to.equal(base.valueType);
       });
 
     });
 
-    describe('#getAllowedFacets()', function () {
+    describe('#allowedFacets', function () {
 
       it("should return the allowed facets of the base", function () {
         var dummyFacet = mockFacet(
@@ -182,12 +176,12 @@ define([
         });
         var facets = Facets.create([ dummyFacet.create() ]);
         var restriction = RestrictedType.create(base, facets);
-        expect(restriction.getAllowedFacets()).to.equal(base.getAllowedFacets());
+        expect(restriction.allowedFacets).to.equal(base.allowedFacets);
       });
 
     });
 
-    describe('#getFacets()', function () {
+    describe('#facets', function () {
 
       it("should return the facets defined on this restriction", function () {
         var dummyFacet = mockFacet(
@@ -198,7 +192,7 @@ define([
         });
         var facets = Facets.create([ dummyFacet.create() ]);
         var restriction = RestrictedType.create(base, facets);
-        expect(restriction.getFacets()).to.equal(facets);
+        expect(restriction.facets).to.equal(facets);
       });
 
     });
@@ -251,7 +245,7 @@ define([
             var allowedFacet = mockFacet(QName.create('x', 'urn:z'));
             var mutexFacet = mockFacet(QName.create('y', 'urn:z'),
               { mutex: [ allowedFacet ] });
-            allowedFacet.getMutualExclusiveFacets = returns([ mutexFacet ]);
+            allowedFacet.mutualExclusiveFacets = [ mutexFacet ];
             var primitive = PrimitiveType.create({
               facets: Facets.create([ allowedFacet, mutexFacet ])
             });
@@ -302,7 +296,7 @@ define([
             isRestrictionOf: function (type) {
               var effectiveFacets = this.factory.getEffectiveFacets(type);
               if (effectiveFacets) {
-                return this.getValue() < effectiveFacets[0].getValue();
+                return this.value < effectiveFacets[0].value;
               }
               return true;
             }
@@ -336,7 +330,7 @@ define([
             var allowedFacet = mockFacet(QName.create('x', 'urn:z'));
             var mutexFacet = mockFacet(QName.create('y', 'urn:z'),
               { mutex: [ allowedFacet ] });
-            allowedFacet.getMutualExclusiveFacets = returns([ mutexFacet ]);
+            allowedFacet.mutualExclusiveFacets = [ mutexFacet ];
 
             var dummyFacet = mockFacet(QName.create('dummy', 'urn:void'));
 
@@ -360,12 +354,12 @@ define([
                 isRestrictionOf: function (type) {
                   var effectiveFacets = allowedFacet.getEffectiveFacets(type);
                   if (effectiveFacets) {
-                    return this.getValue() < effectiveFacets[0].getValue();
+                    return this.value < effectiveFacets[0].value;
                   }
                   return true;
                 }
               });
-              allowedFacet.getMutualExclusiveFacets = returns([ mutexFacet ]);
+              allowedFacet.mutualExclusiveFacets = [ mutexFacet ];
 
               var primitive = PrimitiveType.create({
                 facets: Facets.create([ allowedFacet, mutexFacet ])
@@ -383,7 +377,7 @@ define([
                 { mutex: [ allowedFacet ],
                   restriction: undefined
                 });
-              allowedFacet.getMutualExclusiveFacets = returns([ mutexFacet ]);
+              allowedFacet.mutualExclusiveFacets = [ mutexFacet ];
 
               var primitive = PrimitiveType.create({
                 facets: Facets.create([ allowedFacet, mutexFacet ])

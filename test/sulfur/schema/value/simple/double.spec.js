@@ -82,75 +82,75 @@ define([
 
       it("should parse an integer literal", function () {
         var f = DoubleValue.parse('123');
-        expect(f.getValue()).to.equal(123);
+        expect(f.value).to.equal(123);
       });
 
       it("should parse an optional fractional part", function () {
         var f = DoubleValue.parse('0.123');
-        expect(f.getValue()).to.equal(0.123);
+        expect(f.value).to.equal(0.123);
       });
 
       it("should parse optional leading zeros", function () {
         var f = DoubleValue.parse('01');
-        expect(f.getValue()).to.equal(1);
+        expect(f.value).to.equal(1);
       });
 
       it("should parse optional trailing zeros", function () {
         var f = DoubleValue.parse('0.1230');
-        expect(f.getValue()).to.equal(0.123);
+        expect(f.value).to.equal(0.123);
       });
 
       it("should parse a negative literal", function () {
         var f = DoubleValue.parse('-1');
-        expect(f.getValue()).to.equal(-1);
+        expect(f.value).to.equal(-1);
       });
 
       it("should parse an optional positive sign", function () {
         var f = DoubleValue.parse('+1');
-        expect(f.getValue()).to.equal(1);
+        expect(f.value).to.equal(1);
       });
 
       it("should parse 'E' as exponent mark", function () {
         var f = DoubleValue.parse('1E0');
-        expect(f.getValue()).to.equal(1);
+        expect(f.value).to.equal(1);
       });
 
       it("should parse 'e' as exponent mark", function () {
         var f = DoubleValue.parse('1e0');
-        expect(f.getValue()).to.equal(1);
+        expect(f.value).to.equal(1);
       });
 
       it("should parse a negative exponent", function () {
         var f = DoubleValue.parse('1E-1');
-        expect(f.getValue()).to.equal(0.1);
+        expect(f.value).to.equal(0.1);
       });
 
       it("should parse an exponent with optional positive sign", function () {
         var f = DoubleValue.parse('1E+1');
-        expect(f.getValue()).to.equal(10);
+        expect(f.value).to.equal(10);
       });
 
       it("should parse an exponent with leading zeros", function () {
         var f = DoubleValue.parse('1E01');
-        expect(f.getValue()).to.equal(10);
+        expect(f.value).to.equal(10);
       });
 
-      it("should reject a value less than -(.getMaxValue())", function () {
+      it("should reject a value less than -(.maxValue)", function () {
         expect(bind(DoubleValue, 'parse', '-1.8E309'))
-          .to.throw("must not be less than " + -DoubleValue.getMaxValue());
+          .to.throw("must not be less than " + -DoubleValue.maxValue);
       });
 
-      it("should reject a value greater than .getMaxValue()", function () {
+      it("should reject a value greater than .maxValue", function () {
         expect(bind(DoubleValue, 'parse', '1.8E309'))
-          .to.throw("must not be greater than " + DoubleValue.getMaxValue());
+          .to.throw("must not be greater than " + DoubleValue.maxValue);
       });
 
     });
 
-    describe('.getMaxValue()', function () {
+    describe('.maxValue', function () {
 
       it("should return 1.7976931348623157e+308", function () {
-        expect(DoubleValue.getMaxValue()).to.equal(1.7976931348623157e+308);
+        expect(DoubleValue.maxValue).to.equal(1.7976931348623157e+308);
       });
 
     });
@@ -159,12 +159,12 @@ define([
 
       it("should use zero as default value", function () {
         var f = DoubleValue.create();
-        expect(f.getValue()).to.equal(0);
+        expect(f.value).to.equal(0);
       });
 
       it("should use the provided value", function () {
         var f = DoubleValue.create(123);
-        expect(f.getValue()).to.equal(123);
+        expect(f.value).to.equal(123);
       });
 
       it("should reject a value not of type number", function () {
@@ -174,11 +174,11 @@ define([
 
     });
 
-    describe('#getValue()', function () {
+    describe('#value', function () {
 
       it("should return the initialization value", function () {
         var f = DoubleValue.create(123.456);
-        expect(f.getValue()).to.equal(123.456);
+        expect(f.value).to.equal(123.456);
       });
 
     });

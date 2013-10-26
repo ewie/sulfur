@@ -33,19 +33,20 @@ define([
   var requireMaxLengthFacet = requireFacet('maxLength');
   var requireMinLengthFacet = requireFacet('minLength');
 
+  var qname = QName.create('length', 'http://www.w3.org/2001/XMLSchema');
+
   var $ = Facet.clone({
 
-    getQName: util.returns(
-      QName.create('length', 'http://www.w3.org/2001/XMLSchema')),
+    get qname() { return qname; },
 
     isShadowingLowerRestrictions: util.returns(true),
 
-    getMutualExclusiveFacets: util.once(function () {
+    get mutualExclusiveFacets() {
       return [
         requireMaxLengthFacet(),
         requireMinLengthFacet()
       ];
-    })
+    }
 
   });
 
@@ -65,17 +66,17 @@ define([
 
     isRestrictionOf: function (type) {
       var lengthFacet = this.factory.getEffectiveFacet(type);
-      if (lengthFacet && this.getValue() !== lengthFacet.getValue()) {
+      if (lengthFacet && this.value !== lengthFacet.value) {
         return false;
       }
 
       var maxLengthFacet = requireMaxLengthFacet().getEffectiveFacet(type);
-      if (maxLengthFacet && this.getValue() > maxLengthFacet.getValue()) {
+      if (maxLengthFacet && this.value > maxLengthFacet.value) {
         return false;
       }
 
       var minLengthFacet = requireMinLengthFacet().getEffectiveFacet(type);
-      if (minLengthFacet && this.getValue() < minLengthFacet.getValue()) {
+      if (minLengthFacet && this.value < minLengthFacet.value) {
         return false;
       }
 
@@ -83,13 +84,13 @@ define([
     },
 
     validate: function (type, errors) {
-      if (type.hasFacet(requireMaxLengthFacet().getQName())) {
+      if (type.hasByQName(requireMaxLengthFacet().qname)) {
         if (errors) {
           errors.push("cannot be used along with facet 'maxLength'");
         }
         return false;
       }
-      if (type.hasFacet(requireMinLengthFacet().getQName())) {
+      if (type.hasByQName(requireMinLengthFacet().qname)) {
         if (errors) {
           errors.push("cannot be used along with facet 'minLength'");
         }
@@ -99,8 +100,8 @@ define([
     },
 
     createValidator: function () {
-      return PropertyValidator.create('getLength',
-        EqualValidator.create(this.getValue()));
+      return PropertyValidator.create('length',
+        EqualValidator.create(this.value));
     }
 
   });

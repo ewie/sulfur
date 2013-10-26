@@ -41,10 +41,10 @@ define([
       expect(Facet).to.be.prototypeOf(TotalDigitsFacet);
     });
 
-    describe('.getQName()', function () {
+    describe('.qname', function () {
 
       it("should return {http://www.w3.org/2001/XMLSchema}totalDigits", function () {
-        expect(TotalDigitsFacet.getQName())
+        expect(TotalDigitsFacet.qname)
           .to.eql(QName.create('totalDigits', 'http://www.w3.org/2001/XMLSchema'));
       });
 
@@ -58,10 +58,10 @@ define([
 
     });
 
-    describe('.getMutualExclusiveFacets()', function () {
+    describe('.mutualExclusiveFacets', function () {
 
       it("should return an empty array", function () {
-        expect(TotalDigitsFacet.getMutualExclusiveFacets()).to.eql([]);
+        expect(TotalDigitsFacet.mutualExclusiveFacets).to.eql([]);
       });
 
     });

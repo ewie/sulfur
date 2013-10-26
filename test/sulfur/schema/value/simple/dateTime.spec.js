@@ -216,32 +216,32 @@ define([
 
       it("should use 1 as default year", function () {
         var dt = DateTimeValue.create();
-        expect(dt.getYear()).to.equal(1);
+        expect(dt.year).to.equal(1);
       });
 
       it("should use 1 as default month", function () {
         var dt = DateTimeValue.create();
-        expect(dt.getMonth()).to.equal(1);
+        expect(dt.month).to.equal(1);
       });
 
       it("should use 1 as default day", function () {
         var dt = DateTimeValue.create();
-        expect(dt.getDay()).to.equal(1);
+        expect(dt.day).to.equal(1);
       });
 
       it("should use zero as default hour", function () {
         var dt = DateTimeValue.create();
-        expect(dt.getHour()).to.equal(0);
+        expect(dt.hour).to.equal(0);
       });
 
       it("should use zero as default minute", function () {
         var dt = DateTimeValue.create();
-        expect(dt.getMinute()).to.equal(0);
+        expect(dt.minute).to.equal(0);
       });
 
       it("should use zero as default second", function () {
         var dt = DateTimeValue.create();
-        expect(dt.getSecond()).to.eql(DecimalValue.create());
+        expect(dt.second).to.eql(DecimalValue.create());
       });
 
       it("should reject year less than 1", function () {
@@ -444,56 +444,56 @@ define([
 
     });
 
-    describe('#getYear()', function () {
+    describe('#year', function () {
 
       it("should return the year", function () {
         var dt = DateTimeValue.create();
-        expect(dt.getYear()).to.equal(1);
+        expect(dt.year).to.equal(1);
       });
 
     });
 
-    describe('#getMonth()', function () {
+    describe('#month', function () {
 
       it("should return the month", function () {
         var dt = DateTimeValue.create();
-        expect(dt.getMonth()).to.equal(1);
+        expect(dt.month).to.equal(1);
       });
 
     });
 
-    describe('#getDay()', function () {
+    describe('#day', function () {
 
       it("should return the day", function () {
         var dt = DateTimeValue.create();
-        expect(dt.getDay()).to.equal(1);
+        expect(dt.day).to.equal(1);
       });
 
     });
 
-    describe('#getHour()', function () {
+    describe('#hour', function () {
 
       it("should return the hour", function () {
         var dt = DateTimeValue.create();
-        expect(dt.getHour()).to.equal(0);
+        expect(dt.hour).to.equal(0);
       });
 
     });
 
-    describe('#getMinute()', function () {
+    describe('#minute', function () {
 
       it("should return the minute", function () {
         var dt = DateTimeValue.create();
-        expect(dt.getMinute()).to.equal(0);
+        expect(dt.minute).to.equal(0);
       });
 
     });
 
-    describe('#getSecond()', function () {
+    describe('#second', function () {
 
       it("should return the second", function () {
         var dt = DateTimeValue.create();
-        expect(dt.getSecond()).to.eql(DecimalValue.create());
+        expect(dt.second).to.eql(DecimalValue.create());
       });
 
     });

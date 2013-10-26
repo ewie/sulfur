@@ -52,7 +52,7 @@ define([
     it("should be a sulfur/schema/type/complex/primitive", function () {
       expect(GeolocationType).to.eql(
         PrimitiveType.create(
-          { qname: QName.create('geolocation', sulfur.getNamespaceURI()),
+          { qname: QName.create('geolocation', sulfur.namespaceURI),
             valueType: GeolocationValue,
             elements: Elements.create(
               [ Element.create('longitude',

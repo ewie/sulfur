@@ -61,14 +61,14 @@ define([
     /**
      * @return {string} the type
      */
-    getType: function () {
+    get type() {
       return this._type;
     },
 
     /**
      * @return {string} the subtype
      */
-    getSubtype: function () {
+    get subtype() {
       return this._subtype;
     },
 
@@ -76,7 +76,7 @@ define([
      * @return {string} the string representation
      */
     toString: function () {
-      return (this._type || '*') + '/' + (this._subtype || '*');
+      return (this.type || '*') + '/' + (this.subtype || '*');
     },
 
     /**
@@ -88,16 +88,16 @@ define([
      * @return {boolean} whether LHS matches RHS or not
      */
     matches: function (other) {
-      if (util.isUndefined(this._type)) {
+      if (util.isUndefined(this.type)) {
         return true;
       }
-      if (this._type !== other._type) {
+      if (this.type !== other.type) {
         return false;
       }
-      if (util.isUndefined(this._subtype)) {
+      if (util.isUndefined(this.subtype)) {
         return true;
       }
-      return this._subtype === other._subtype;
+      return this.subtype === other.subtype;
     }
 
   });

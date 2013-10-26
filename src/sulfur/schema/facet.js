@@ -17,7 +17,7 @@ define([
   /**
    * @abstract
    *
-   * @implement {sulfur/schema/qname} .getQName()
+   * @implement {sulfur/schema/qname} .qname
    * @implement {boolean} .isShadowingLowerRestrictions()
    * @implement {.validate()} #createValidator()
    * @implement {boolean} #validate({any})
@@ -31,24 +31,24 @@ define([
 
       function anyMutexFacet(facets, mutexFacets) {
         return mutexFacets.some(function (mutexFacet) {
-          return facets.hasFacet(mutexFacet.getQName());
+          return facets.hasByQName(mutexFacet.qname);
         });
       }
 
       return function (restriction) {
-        var mutexFacets = this.getMutualExclusiveFacets();
+        var mutexFacets = this.mutualExclusiveFacets;
         var effectiveFacets = [];
-        while (restriction.getFacets) {
-          var facets = restriction.getFacets();
+        while (restriction.facets) {
+          var facets = restriction.facets;
           if (anyMutexFacet(facets, mutexFacets)) {
             break;
           }
-          var facet = facets.getFacet(this.getQName());
+          var facet = facets.getByQName(this.qname);
           facet && effectiveFacets.push(facet);
           if (this.isShadowingLowerRestrictions()) {
             break;
           }
-          restriction = restriction.getBase();
+          restriction = restriction.base;
         }
         if (effectiveFacets.length > 0) {
           return effectiveFacets;
@@ -92,8 +92,8 @@ define([
      *
      * @return {string} the facet's name
      */
-    getQName: function () {
-      return this.factory.getQName();
+    get qname() {
+      return this.factory.qname;
     },
 
     isShadowingLowerRestrictions: function () {
@@ -105,7 +105,7 @@ define([
      *
      * @return {any} the facet's value
      */
-    getValue: function () {
+    get value() {
       return this._value;
     }
 

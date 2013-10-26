@@ -46,10 +46,10 @@ define([
 
     });
 
-    describe('#getLength()', function () {
+    describe('#length', function () {
 
       it("should return the number of items", function () {
-        expect(list.getLength()).to.equal(values.length);
+        expect(list.length).to.equal(values.length);
       });
 
     });

@@ -14,21 +14,21 @@ define(['sulfur/util/factory'], function (Factory) {
 
     initialize: function (base, facets) {
 
-      var allowedFacets = base.getAllowedFacets();
+      var allowedFacets = base.allowedFacets;
 
       allowedFacets.toArray().forEach(function (allowedFacet) {
-        if (facets.hasFacet(allowedFacet.getQName())) {
-          allowedFacet.getMutualExclusiveFacets().forEach(function (mutexFacet) {
-            if (facets.hasFacet(mutexFacet.getQName())) {
-              throw new Error("facets " + allowedFacet.getQName() + " and " +
-                mutexFacet.getQName() + " are mutual exclusive");
+        if (facets.hasByQName(allowedFacet.qname)) {
+          allowedFacet.mutualExclusiveFacets.forEach(function (mutexFacet) {
+            if (facets.hasByQName(mutexFacet.qname)) {
+              throw new Error("facets " + allowedFacet.qname + " and " +
+                mutexFacet.qname + " are mutual exclusive");
             }
           });
         }
       });
 
       var hasUnexpectedFacets = facets.toArray().some(function (facet) {
-        return !allowedFacets.getFacet(facet.getQName());
+        return !allowedFacets.hasByQName(facet.qname);
       });
       if (hasUnexpectedFacets) {
         throw new Error("expecting only facets defined by the base");
@@ -45,44 +45,44 @@ define(['sulfur/util/factory'], function (Factory) {
       this._facets = facets;
     },
 
-    getBasePrimitive: function () {
-      if (this._base.getBasePrimitive) {
-        return this._base.getBasePrimitive();
+    get primitive() {
+      if (this.base.primitive) {
+        return this.base.primitive;
       }
+      return this.base;
+    },
+
+    get base() {
       return this._base;
     },
 
-    getBase: function () {
-      return this._base;
-    },
-
-    getFacets: function () {
+    get facets() {
       return this._facets;
     },
 
-    getValueType: function () {
-      return this._base.getValueType();
+    get valueType() {
+      return this.base.valueType;
     },
 
-    getAllowedFacets: function () {
-      return this._base.getAllowedFacets();
+    get allowedFacets() {
+      return this.base.allowedFacets;
     },
 
     isRestrictionOf: function (other) {
-      var basePrimitive = this.getBasePrimitive();
+      var primitive = this.primitive;
 
       // Trivial if the other type is this restriction's base primitive.
-      if (basePrimitive === other) {
+      if (primitive === other) {
         return true;
       }
 
       // Assert if the other type is a restriction and has the same base
       // primitive as this restriction.
-      if (!other.getBasePrimitive || basePrimitive !== other.getBasePrimitive()) {
+      if (!other.primitive || primitive !== other.primitive) {
         return false;
       }
 
-      return other.getAllowedFacets().toArray().every(function (allowedFacet) {
+      return other.allowedFacets.toArray().every(function (allowedFacet) {
         // Ignore allowed facets when the other type has no effective instances.
         // This also checks any mutual exclusive facet, because the allowed
         // facets must include all mutual exclusive facets.
@@ -99,7 +99,7 @@ define(['sulfur/util/factory'], function (Factory) {
 
         // Check if any mutual exclusive facet is in effect and, if so, a
         // restriction of the other type.
-        var mutexFacets = allowedFacet.getMutualExclusiveFacets();
+        var mutexFacets = allowedFacet.mutualExclusiveFacets;
         return mutexFacets.some(function (mutexFacet) {
           var effectiveFacets = mutexFacet.getEffectiveFacets(this);
           return effectiveFacets && effectiveFacets[0].isRestrictionOf(other);
@@ -108,7 +108,7 @@ define(['sulfur/util/factory'], function (Factory) {
     },
 
     createValidator: function () {
-      return this.getBasePrimitive().createRestrictionValidator(this);
+      return this.primitive.createRestrictionValidator(this);
     }
 
   });

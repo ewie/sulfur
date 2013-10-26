@@ -19,10 +19,10 @@ define([
 
   describe('sulfur/schema/deserializer/facet/whiteSpace', function () {
 
-    describe('.getFacet()', function () {
+    describe('.facet', function () {
 
       it("should return sulfur/schema/facet/whiteSpace", function () {
-        expect(WhiteSpaceFacetDeserializer.getFacet()).to.equal(WhiteSpaceFacet);
+        expect(WhiteSpaceFacetDeserializer.facet).to.equal(WhiteSpaceFacet);
       });
 
     });

@@ -7,15 +7,14 @@
 /* global define */
 
 define([
+  'sulfur/util',
   'sulfur/util/factory',
   'sulfur/util/orderedMap'
-], function (Factory, OrderedMap) {
+], function (util, Factory, OrderedMap) {
 
   'use strict';
 
-  function keyfn(facet) {
-    return facet.getQName().toString();
-  }
+  var keyfn = util.property('qname');
 
   return Factory.derive({
 
@@ -33,16 +32,16 @@ define([
       }, OrderedMap.create(keyfn));
     },
 
-    hasFacet: function (qname) {
-      return !!this.getFacet(qname);
+    hasByQName: function (qname) {
+      return this._index.containsKey(qname);
     },
 
-    getFacet: function (qname) {
-      return this._index.getItemByKey(qname.toString());
+    getByQName: function (qname) {
+      return this._index.getItemByKey(qname);
     },
 
-    getSize: function () {
-      return this._index.getSize();
+    get size() {
+      return this._index.size;
     },
 
     toArray: function () {

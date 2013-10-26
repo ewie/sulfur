@@ -64,7 +64,7 @@ define([
         var subvalidator = createFacetsValidator(restriction);
 
         var whiteSpaceFacet = WhiteSpaceFacet.getEffectiveFacet(restriction);
-        var value = whiteSpaceFacet ? whiteSpaceFacet.getValue() : 'preserve';
+        var value = whiteSpaceFacet ? whiteSpaceFacet.value : 'preserve';
         if (value !== 'preserve') {
           subvalidator = PropertyValidator.create(value + 'WhiteSpace', subvalidator);
         }

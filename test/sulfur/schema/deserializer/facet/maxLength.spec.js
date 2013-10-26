@@ -19,10 +19,10 @@ define([
 
   describe('sulfur/schema/deserializer/facet/maxLength', function () {
 
-    describe('.getFacet()', function () {
+    describe('.facet', function () {
 
       it("should return sulfur/schema/facet/maxLength", function () {
-        expect(MaxLengthFacetDeserializer.getFacet()).to.equal(MaxLengthFacet);
+        expect(MaxLengthFacetDeserializer.facet).to.equal(MaxLengthFacet);
       });
 
     });

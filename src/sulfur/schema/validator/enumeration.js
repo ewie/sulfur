@@ -55,7 +55,7 @@ define([
      * @return {string} the name of the test method when defined
      * @return {undefined} when no test method is defined
      */
-    getTestMethodName: function () {
+    get testMethodName() {
       return this._testMethodName;
     },
 

@@ -8,15 +8,14 @@
 
 define([
   'sulfur/schema/facet/mediaType',
-  'sulfur/schema/mediaType',
-  'sulfur/util'
-], function (MediaTypeFacet, MediaType, util) {
+  'sulfur/schema/mediaType'
+], function (MediaTypeFacet, MediaType) {
 
   'use strict';
 
   return {
 
-    getFacet: util.returns(MediaTypeFacet),
+    get facet() { return MediaTypeFacet; },
 
     parseValue: function (s) {
       return MediaType.parse(s);

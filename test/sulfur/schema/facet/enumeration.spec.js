@@ -44,10 +44,10 @@ define([
       expect(Facet).to.be.prototypeOf(EnumerationFacet);
     });
 
-    describe('.getQName()', function () {
+    describe('.qname', function () {
 
       it("should return {http://www.w3.org/2001/XMLSchema}enumeration", function () {
-        expect(EnumerationFacet.getQName())
+        expect(EnumerationFacet.qname)
           .to.eql(QName.create('enumeration',
             'http://www.w3.org/2001/XMLSchema'));
       });
@@ -62,10 +62,10 @@ define([
 
     });
 
-    describe('.getMutualExclusiveFacets()', function () {
+    describe('.mutualExclusiveFacets', function () {
 
       it("should return an empty array", function () {
-        expect(EnumerationFacet.getMutualExclusiveFacets()).to.eql([]);
+        expect(EnumerationFacet.mutualExclusiveFacets).to.eql([]);
       });
 
     });
@@ -95,7 +95,7 @@ define([
           { toString: function () { return 'x'; } }
         ];
         var facet = EnumerationFacet.create(values);
-        expect(facet.getValue()).to.eql(values.slice(0, 1));
+        expect(facet.value).to.eql(values.slice(0, 1));
       });
 
       it("should reject an empty array", function () {
@@ -149,12 +149,12 @@ define([
       });
 
       it("should return true when all values are of the given type", function () {
-        var type = { getValueType: function () { return StringValue; } };
+        var type = { valueType: StringValue };
         expect(facet.validate(type)).to.be.true;
       });
 
       it("should return false when any value is not of the given type", function () {
-        var type = { getValueType: function () { return IntegerValue; } };
+        var type = { valueType: IntegerValue };
         expect(facet.validate(type)).to.be.false;
       });
 
@@ -167,7 +167,7 @@ define([
         var v = facet.createValidator();
         expect(v).to.eql(
           EnumerationValidator.create(
-            facet.getValue(),
+            facet.value,
             { testMethod: 'eq' }
           )
         );

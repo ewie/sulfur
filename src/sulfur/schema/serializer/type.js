@@ -46,19 +46,19 @@ define([
     },
 
     serializeElement: function (element, context) {
-      var type = element.getType();
+      var type = element.type;
       var e = context.createElement(XSD_NS, 'xs:element');
-      e.setAttribute('name', element.getName());
+      e.setAttribute('name', element.name);
       if (element.isOptional()) {
         e.setAttribute('minOccurs', '0');
       }
-      if (type.getQName) {
-        var qname = type.getQName();
+      if (type.qname) {
+        var qname = type.qname;
         if (!this.hasTypeWithQualifiedName(qname)) {
           throw new Error("element of unknown type " + qname);
         }
-        var prefix = context.getNamespacePrefix(qname.getNamespaceURI());
-        e.setAttribute('type', prefix + ':' + qname.getLocalName());
+        var prefix = context.getNamespacePrefix(qname.namespaceURI);
+        e.setAttribute('type', prefix + ':' + qname.localName);
       } else {
         e.appendChild(this.serializeType(type, context));
       }

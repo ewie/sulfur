@@ -25,22 +25,22 @@ define([
   return Factory.derive({
 
     initialize: function (primitive, elements) {
-      var allowedElements = primitive.getAllowedElements();
+      var allowedElements = primitive.allowedElements;
 
       allowedElements.toArray().forEach(function (allowedElement) {
-        var name = allowedElement.getName();
-        if (!elements.getElement(name)) {
+        var name = allowedElement.name;
+        if (!elements.getByName(name)) {
           throw new Error('expecting element with name "' + name + '"');
         }
       });
 
       elements.toArray().forEach(function (element) {
-        var name = element.getName();
-        var allowedElement = allowedElements.getElement(name);
+        var name = element.name;
+        var allowedElement = allowedElements.getByName(name);
         if (!allowedElement) {
           throw new Error('unexpected element with name "' + name + '"');
         }
-        if (!element.getType().isRestrictionOf(allowedElement.getType())) {
+        if (!element.type.isRestrictionOf(allowedElement.type)) {
           throw new Error('element "' + name + '" is not a restriction of the corresponding primitive element');
         }
       });
@@ -49,37 +49,37 @@ define([
       this._elements = elements;
     },
 
-    getPrimitive: function () {
+    get primitive() {
       return this._primitive;
     },
 
-    getValueType: function () {
-      return this._primitive.getValueType();
+    get valueType() {
+      return this.primitive.valueType;
     },
 
-    getElements: function () {
+    get elements() {
       return this._elements;
     },
 
     isRestrictionOf: function (other) {
       if (PrimitiveType.prototype.isPrototypeOf(other)) {
-        return this._primitive.isRestrictionOf(other);
+        return this.primitive.isRestrictionOf(other);
       }
       if (this.factory.prototype.isPrototypeOf(other)) {
-        var otherElements = other.getElements();
-        return this._primitive.isRestrictionOf(other.getPrimitive()) &&
-          this._elements.toArray().every(function (element) {
-            var otherElement = otherElements.getElement(element.getName());
-            return element.getType().isRestrictionOf(otherElement.getType());
+        var otherElements = other.elements;
+        return this._primitive.isRestrictionOf(other.primitive) &&
+          this.elements.toArray().every(function (element) {
+            var otherElement = otherElements.getByName(element.name);
+            return element.type.isRestrictionOf(otherElement.type);
           });
       }
     },
 
     createValidator: function () {
-      var validators = [ PrototypeValidator.create(this.getValueType().prototype) ];
-      this._elements.toArray().reduce(function (validators, element) {
-        var validator = PropertyValidator.create('getValue',
-          element.getType().createValidator(), [ element.getName() ]);
+      var validators = [ PrototypeValidator.create(this.valueType.prototype) ];
+      this.elements.toArray().reduce(function (validators, element) {
+        var validator = PropertyValidator.create('value',
+          element.type.createValidator(), [ element.name ]);
         validators.push(validator);
         return validators;
       }, validators);

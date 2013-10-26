@@ -115,6 +115,12 @@ define(['sulfur/util/orderedMap'], function (OrderedMap) {
       };
     },
 
+    property: function (name) {
+      return function (obj) {
+        return obj[name];
+      };
+    },
+
     /**
      * Create a function returning a given value.
      *

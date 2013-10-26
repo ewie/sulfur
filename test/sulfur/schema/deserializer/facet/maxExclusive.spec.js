@@ -20,10 +20,10 @@ define([
 
   describe('sulfur/schema/deserializer/facet/maxExclusive', function () {
 
-    describe('.getFacet()', function () {
+    describe('.facet', function () {
 
       it("should return sulfur/schema/facet/maxExclusive", function () {
-        expect(MaxExclusiveFacetDeserializer.getFacet()).to.equal(MaxExclusiveFacet);
+        expect(MaxExclusiveFacetDeserializer.facet).to.equal(MaxExclusiveFacet);
       });
 
     });

@@ -31,7 +31,7 @@ define([
         var valueType = {};
         var simpleList = SimpleListValue.typed(valueType);
         expect(SimpleListValue).to.be.prototypeOf(simpleList);
-        expect(simpleList.getItemValueType()).to.equal(valueType);
+        expect(simpleList.itemValueType).to.equal(valueType);
       });
 
     });

@@ -6,16 +6,13 @@
 
 /* global define */
 
-define([
-  'sulfur/schema/facet/length',
-  'sulfur/util'
-], function (LengthFacet, util) {
+define(['sulfur/schema/facet/length'], function (LengthFacet) {
 
   'use strict';
 
   return {
 
-    getFacet: util.returns(LengthFacet),
+    get facet() { return LengthFacet; },
 
     parseValue: function (s) {
       return parseInt(s, 10);

@@ -99,9 +99,9 @@ define([
           var simpleType;
 
           beforeEach(function () {
-            var facet = { getQName: returns(QName.create('x', 'urn:y')) };
+            var facet = { qname: QName.create('x', 'urn:y') };
             var facetDeserializer = {
-              getFacet: returns(facet)
+              getByQName: returns(facet)
             };
             simpleType = PrimitiveType.create(
               { qname: QName.create('knownType', 'urn:y'),

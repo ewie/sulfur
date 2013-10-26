@@ -34,8 +34,8 @@ define([
       var doc = Document.make(XSD_NS, 'xs:schema', null);
 
       var root = doc.createElement(XSD_NS, 'xs:element');
-      root.setAttribute('name', schema.getName());
-      doc.getRoot().appendChild(root);
+      root.setAttribute('name', schema.name);
+      doc.root.appendChild(root);
 
       var complexType = doc.createElement(XSD_NS, 'xs:complexType');
       root.appendChild(complexType);
@@ -45,12 +45,12 @@ define([
 
       var context = Context.create(doc);
 
-      schema.getElements().toArray().forEach(function (element) {
+      schema.elements.toArray().forEach(function (element) {
         var e = this._typeSerializer.serializeElement(element, context);
         all.appendChild(e);
       }.bind(this));
 
-      return doc.getDocument();
+      return doc.document;
     }
 
   });

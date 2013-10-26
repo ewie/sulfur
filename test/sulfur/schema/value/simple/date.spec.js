@@ -161,17 +161,17 @@ define([
 
       it("should use 1 as default year", function () {
         var dt = DateValue.create();
-        expect(dt.getYear()).to.equal(1);
+        expect(dt.year).to.equal(1);
       });
 
       it("should use 1 as default month", function () {
         var dt = DateValue.create();
-        expect(dt.getMonth()).to.equal(1);
+        expect(dt.month).to.equal(1);
       });
 
       it("should use 1 as default day", function () {
         var dt = DateValue.create();
-        expect(dt.getDay()).to.equal(1);
+        expect(dt.day).to.equal(1);
       });
 
       it("should reject year less than 1", function () {
@@ -317,29 +317,29 @@ define([
 
     });
 
-    describe('#getYear()', function () {
+    describe('#year', function () {
 
       it("should return the year", function () {
         var dt = DateValue.create();
-        expect(dt.getYear()).to.equal(1);
+        expect(dt.year).to.equal(1);
       });
 
     });
 
-    describe('#getMonth()', function () {
+    describe('#month', function () {
 
       it("should return the month", function () {
         var dt = DateValue.create();
-        expect(dt.getMonth()).to.equal(1);
+        expect(dt.month).to.equal(1);
       });
 
     });
 
-    describe('#getDay()', function () {
+    describe('#day', function () {
 
       it("should return the day", function () {
         var dt = DateValue.create();
-        expect(dt.getDay()).to.equal(1);
+        expect(dt.day).to.equal(1);
       });
 
     });
@@ -407,7 +407,7 @@ define([
 
     });
 
-    describe('#getRecoverableTimezone()', function () {
+    describe('#getRecoverableTimezone', function () {
 
       it("should return undefined when no timezone is defined", function () {
         var dt = DateValue.create();

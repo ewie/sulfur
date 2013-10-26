@@ -39,14 +39,14 @@ define(['sulfur/util/factory'], function (Factory) {
     /**
      * @return {Document} the document set on initialization
      */
-    getDocument: function () {
+    get document() {
       return this._document;
     },
 
     /**
      * @return {Element} the underlying document's root element
      */
-    getRoot: function () {
+    get root() {
       return this._document.documentElement;
     },
 
@@ -85,7 +85,7 @@ define(['sulfur/util/factory'], function (Factory) {
       }
 
       return function (namespaceURI, prefix, element) {
-        element || (element = this.getRoot());
+        element || (element = this.root);
         var colon = prefix ? ':' : '';
         var name = 'xmlns' + colon + prefix;
         if (hasDeclarationWithPrefix(prefix, element)) {
@@ -132,7 +132,7 @@ define(['sulfur/util/factory'], function (Factory) {
       }
 
       return function (prefix, element) {
-        element || (element = this.getRoot());
+        element || (element = this.root);
 
         if (!prefix || prefix.length === 0) {
           prefix = null;
@@ -195,7 +195,7 @@ define(['sulfur/util/factory'], function (Factory) {
       }
 
       return function (namespaceURI, element) {
-        element || (element = this.getRoot());
+        element || (element = this.root);
 
         var prefix = element.lookupPrefix(namespaceURI);
         if (prefix !== null) {

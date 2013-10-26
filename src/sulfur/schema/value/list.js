@@ -20,7 +20,7 @@ define(['sulfur/util/factory'], function (Factory) {
       return this._values[index];
     },
 
-    getLength: function () {
+    get length() {
       return this._values.length;
     },
 
@@ -29,7 +29,7 @@ define(['sulfur/util/factory'], function (Factory) {
     },
 
     eq: function (other) {
-      if (this.getLength() !== other.getLength()) {
+      if (this.length !== other.length) {
         return false;
       }
       return this._values.every(function (value, i) {

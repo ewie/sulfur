@@ -37,10 +37,10 @@ define([
       expect(Facet).to.be.prototypeOf(WhiteSpaceFacet);
     });
 
-    describe('.getQName()', function () {
+    describe('.qname', function () {
 
       it("should return {http://www.w3.org/2001/XMLSchema}whiteSpace", function () {
-        expect(WhiteSpaceFacet.getQName()).to.eql(
+        expect(WhiteSpaceFacet.qname).to.eql(
           QName.create('whiteSpace', 'http://www.w3.org/2001/XMLSchema'));
       });
 
@@ -54,10 +54,10 @@ define([
 
     });
 
-    describe('.getMutualExclusiveFacets()', function () {
+    describe('.mutualExclusiveFacets', function () {
 
       it("should return an empty array", function () {
-        expect(WhiteSpaceFacet.getMutualExclusiveFacets()).to.eql([]);
+        expect(WhiteSpaceFacet.mutualExclusiveFacets).to.eql([]);
       });
 
     });

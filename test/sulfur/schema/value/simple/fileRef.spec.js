@@ -20,46 +20,29 @@ define([
 
   describe('sulfur/schema/value/simple/fileRef', function () {
 
-    describe('#initialize()', function () {
-
-      it("should accept a sulfur/schema/string as ID", function () {
-        var id = StringValue.create();
-        var fr = FileRefValue.create(id);
-        expect(fr.getIdentifier()).to.equal(id);
-      });
-
-      it("should accept an optional sulfur/schema/file", function () {
-        var id = StringValue.create();
-        var file = File.create();
-        var fr = FileRefValue.create(id, file);
-        expect(fr.getFile()).to.equal(file);
-      });
-
-    });
-
-    describe('#getIdentifier()', function () {
+    describe('#identifier', function () {
 
       it("should return the ID", function () {
         var id = StringValue.create();
         var fr = FileRefValue.create(id);
-        expect(fr.getIdentifier()).to.equal(id);
+        expect(fr.identifier).to.equal(id);
       });
 
     });
 
-    describe('#getFile()', function () {
+    describe('#file()', function () {
 
       it("should return the file when set", function () {
         var id = StringValue.create();
-        var file = File.create();
+        var file = File.create(new Blob());
         var fr = FileRefValue.create(id, file);
-        expect(fr.getFile()).to.equal(file);
+        expect(fr.file).to.equal(file);
       });
 
       it("should return undefined when no file is set", function () {
         var id = StringValue.create();
         var fr = FileRefValue.create(id);
-        expect(fr.getFile()).to.be.undefined;
+        expect(fr.file).to.be.undefined;
       });
 
     });

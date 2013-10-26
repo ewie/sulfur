@@ -16,20 +16,20 @@ define(['sulfur/util/factory'], function (Factory) {
       this._facet = facet;
     },
 
-    getFacet: function () {
+    get facet() {
       return this._facet;
     },
 
     serializeFacet: function (facet, context) {
-      var values = facet.getValue();
+      var values = facet.value;
       if (!Array.isArray(values)) {
         values = [ values ];
       }
-      var qname = this._facet.getQName();
-      var prefix = context.getNamespacePrefix(qname.getNamespaceURI());
-      var nodeName = prefix + ':' + qname.getLocalName();
+      var qname = this.facet.qname;
+      var prefix = context.getNamespacePrefix(qname.namespaceURI);
+      var nodeName = prefix + ':' + qname.localName;
       return values.map(function (value) {
-        var e = context.createElement(qname.getNamespaceURI(), nodeName);
+        var e = context.createElement(qname.namespaceURI, nodeName);
         e.setAttribute('value', value);
         return e;
       }.bind(this));

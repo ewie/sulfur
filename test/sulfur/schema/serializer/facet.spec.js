@@ -19,16 +19,15 @@ define([
 
   var expect = shared.expect;
   var sinon = shared.sinon;
-  var returns = shared.returns;
 
   describe('sulfur/schema/serializer/facet', function () {
 
-    describe('#getFacet()', function () {
+    describe('#facet', function () {
 
       it("should return the facet", function () {
         var facet = {};
         var facetSerializer = FacetSerializer.create(facet);
-        expect(facetSerializer.getFacet()).to.equal(facet);
+        expect(facetSerializer.facet).to.equal(facet);
       });
 
     });
@@ -43,8 +42,8 @@ define([
       });
 
       it("should use a prefix", function () {
-        var facet = { getQName: returns(QName.create('x', 'urn:y')) };
-        var obj = { getValue: returns('z') };
+        var facet = { qname: QName.create('x', 'urn:y') };
+        var obj = { value: 'z' };
         var facetSerializer = FacetSerializer.create(facet);
         var spy = sinon.spy(ctx, 'getNamespacePrefix');
         facetSerializer.serializeFacet(obj, ctx);
@@ -54,8 +53,8 @@ define([
       });
 
       it("should return an array containing a DOM element for the value when the given facet's value is not an array", function () {
-        var facet = { getQName: returns(QName.create('x', 'urn:y')) };
-        var obj = { getValue: returns('z') };
+        var facet = { qname: QName.create('x', 'urn:y') };
+        var obj = { value: 'z' };
         var facetSerializer = FacetSerializer.create(facet);
         var e = facetSerializer.serializeFacet(obj, ctx);
         expect(e).to.have.length(1);
@@ -65,8 +64,8 @@ define([
       });
 
       it("should return an array with a DOM element for each value when the given facet's value is an array", function () {
-        var facet = { getQName: returns(QName.create('foo', 'urn:bar')) };
-        var obj = { getValue: returns([ 'a', 'b' ]) };
+        var facet = { qname: QName.create('foo', 'urn:bar') };
+        var obj = { value: [ 'a', 'b' ] };
         var facetSerializer = FacetSerializer.create(facet);
         var e = facetSerializer.serializeFacet(obj, ctx);
         expect(e).to.have.length(2);

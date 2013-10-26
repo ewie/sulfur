@@ -51,12 +51,12 @@ define(['sulfur/util/factory'], function (Factory) {
 
     }()),
 
-    getSize: function () {
+    get size() {
       return this._items.length;
     },
 
     isEmpty: function () {
-      return this.getSize() === 0;
+      return this.size === 0;
     },
 
     /**

@@ -26,10 +26,10 @@ define([
     if (value.isNaN()) {
       throw new Error(name + " must not be NaN");
     }
-    if (value.getValue() < -max) {
+    if (value.value < -max) {
       throw new Error(name + " must not be less than -" + max);
     }
-    if (value.getValue() > max) {
+    if (value.value > max) {
       throw new Error(name + " must not be greater than " + max);
     }
   }

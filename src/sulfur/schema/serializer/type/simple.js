@@ -18,10 +18,10 @@ define([
 
   var XSD_NS = 'http://www.w3.org/2001/XMLSchema';
 
-  var typeKeyFn = util.method('getQName');
+  var typeKeyFn = util.property('qname');
 
   function facetSerializerKeyFn(facetSerializer) {
-    return typeKeyFn(facetSerializer.getFacet());
+    return typeKeyFn(facetSerializer.facet);
   }
 
   return Factory.derive({
@@ -37,12 +37,12 @@ define([
       }, OrderedMap.create(facetSerializerKeyFn));
 
       var typeIndex = types.reduce(function (index, type) {
-        var qname = type.getQName();
+        var qname = type.qname;
         if (index.containsKey(qname)) {
           throw new Error("type with duplicate qualified name " + qname);
         }
-        type.getAllowedFacets().toArray().forEach(function (allowedFacet) {
-          var qname = allowedFacet.getQName();
+        type.allowedFacets.toArray().forEach(function (allowedFacet) {
+          var qname = allowedFacet.qname;
           if (!facetSerializerIndex.containsKey(qname)) {
             throw new Error("expecting a facet serializer for facet " + qname);
           }
@@ -63,11 +63,11 @@ define([
 
       function serializeListType(type, typeSerializer, context) {
         var e = context.createElement(XSD_NS, 'xs:list');
-        var itemType = type.getItemType();
-        if (itemType.getQName) {
-          var qname = itemType.getQName();
-          var prefix = context.getNamespacePrefix(qname.getNamespaceURI());
-          e.setAttribute('itemType', prefix + ':' + qname.getLocalName());
+        var itemType = type.itemType;
+        if (itemType.qname) {
+          var qname = itemType.qname;
+          var prefix = context.getNamespacePrefix(qname.namespaceURI);
+          e.setAttribute('itemType', prefix + ':' + qname.localName);
         } else {
           var f = typeSerializer.serializeType(itemType, context);
           e.appendChild(f);
@@ -77,22 +77,22 @@ define([
 
       function serializeRestrictedType(self, type, typeSerializer, context) {
         var e = context.createElement(XSD_NS, 'xs:restriction');
-        var baseType = type.getBase();
-        if (baseType.getQName) {
-          var qname = baseType.getQName();
-          var prefix = context.getNamespacePrefix(qname.getNamespaceURI());
-          e.setAttribute('base', prefix + ':' + qname.getLocalName());
+        var baseType = type.base;
+        if (baseType.qname) {
+          var qname = baseType.qname;
+          var prefix = context.getNamespacePrefix(qname.namespaceURI);
+          e.setAttribute('base', prefix + ':' + qname.localName);
         } else {
           var f = typeSerializer.serializeType(baseType, context);
           e.appendChild(f);
         }
 
-        var part = util.bipart(type.getFacets().toArray(), function (facet) {
-          return facet.getQName().getNamespaceURI() === XSD_NS;
+        var part = util.bipart(type.facets.toArray(), function (facet) {
+          return facet.qname.namespaceURI === XSD_NS;
         });
 
         part.true.forEach(function (facet) {
-          var qname = facet.getQName();
+          var qname = facet.qname;
           var facetSerializer = this._facetSerializerIndex.getItemByKey(qname);
           var f = facetSerializer.serializeFacet(facet, context);
           f.forEach(function (f) {
@@ -108,7 +108,7 @@ define([
           an.appendChild(ai);
 
           part.false.forEach(function (facet) {
-            var qname = facet.getQName();
+            var qname = facet.qname;
             var facetSerializer = this._facetSerializerIndex.getItemByKey(qname);
             var f = facetSerializer.serializeFacet(facet, context);
             f.forEach(function (f) {

@@ -36,8 +36,8 @@ define([
 
     function mockFacet(qname, shadowing, initialize, createValidator) {
       var facet = Facet.clone({
-        getQName: returns(qname),
-        getMutualExclusiveFacets: returns([]),
+        qname: qname,
+        mutualExclusiveFacets: [],
         isShadowingLowerRestrictions: returns(shadowing)
       });
       facet.augment({
@@ -76,26 +76,26 @@ define([
         });
     });
 
-    describe('#getQName()', function () {
+    describe('#qname', function () {
 
       it("should return the qualified name", function () {
-        expect(type.getQName()).to.equal(qname);
+        expect(type.qname).to.equal(qname);
       });
 
     });
 
-    describe('#getValueType()', function () {
+    describe('#valueType', function () {
 
       it("should return the value type", function () {
-        expect(type.getValueType()).to.equal(valueType);
+        expect(type.valueType).to.equal(valueType);
       });
 
     });
 
-    describe('#getAllowedFacets()', function () {
+    describe('#allowedFacets', function () {
 
       it("should return the allowed facets", function () {
-        expect(type.getAllowedFacets()).to.equal(facets);
+        expect(type.allowedFacets).to.equal(facets);
       });
 
     });
@@ -118,7 +118,7 @@ define([
       it("should return a sulfur/schema/validator/prototype using the value type's prototype", function () {
         var v = type.createValidator();
         expect(v).to.eql(PrototypeValidator.create(valueType.prototype));
-        expect(v.getPrototype()).to.equal(valueType.prototype);
+        expect(v.prototype).to.equal(valueType.prototype);
       });
 
     });
@@ -130,16 +130,16 @@ define([
         var restriction = RestrictedType.create(type, facets);
         var v = type.createRestrictionValidator(restriction);
         expect(AllValidator.prototype).to.be.prototypeOf(v);
-        expect(v.getValidators())
+        expect(v.validators)
           .to.include.something.equal(
-            facets.getFacet(shadowingFacet.getQName()).createValidator());
+            facets.getByQName(shadowingFacet.qname).createValidator());
       });
 
       it("should include this type's validator", function () {
         var facets = Facets.create([ shadowingFacet.create(0) ]);
         var restriction = RestrictedType.create(type, facets);
         var v = type.createRestrictionValidator(restriction);
-        expect(v.getValidators())
+        expect(v.validators)
           .to.include.something.eql(type.createValidator());
       });
 
@@ -149,11 +149,11 @@ define([
         var facets = Facets.create([ nonShadowingFacet.create(2) ]);
         var restriction = RestrictedType.create(base, facets);
         var v = type.createRestrictionValidator(restriction);
-        expect(v.getValidators())
+        expect(v.validators)
           .to.include.something.eql(
             AllValidator.create(
-              [ facets.getFacet(nonShadowingFacet.getQName()).createValidator(),
-                baseFacets.getFacet(nonShadowingFacet.getQName()).createValidator()
+              [ facets.getByQName(nonShadowingFacet.qname).createValidator(),
+                baseFacets.getByQName(nonShadowingFacet.qname).createValidator()
               ]));
       });
 

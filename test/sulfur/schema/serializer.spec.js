@@ -32,7 +32,7 @@ define([
         return p.parseFromString(s, 'text/xml');
       }
 
-      it("should return a XML Schema document", function () {
+      it("should return an XML Schema document", function () {
         var schema = Schema.create('foo', { toArray: returns([]) });
         var serializer = Serializer.create();
         var doc = serializer.serialize(schema);
@@ -60,7 +60,7 @@ define([
           serializeElement: function (element) {
             var e = document.createElementNS('http://www.w3.org/2001/XMLSchema',
               'xs:element');
-            e.setAttribute('name', element.getName());
+            e.setAttribute('name', element.name);
             e.setAttribute('type', 'xs:dummy');
             return e;
           }

@@ -17,7 +17,7 @@ define(['sulfur/util/factory'], function (Factory) {
      *
      * @return {number}
      */
-    getMaxValue: function () {
+    get maxValue() {
       return 1.7976931348623157e+308;
     },
 
@@ -69,10 +69,10 @@ define(['sulfur/util/factory'], function (Factory) {
           // A syntactical valid literal representing a finite value may
           // evaluate to +/- infinity if it lies outside the range of double
           // values.
-          if (value < -this.getMaxValue()) {
-            throw new Error("must not be less than " + -this.getMaxValue());
-          } else if (value > this.getMaxValue()) {
-            throw new Error("must not be greater than " + this.getMaxValue());
+          if (value < -this.maxValue) {
+            throw new Error("must not be less than " + -this.maxValue);
+          } else if (value > this.maxValue) {
+            throw new Error("must not be greater than " + this.maxValue);
           }
 
           return this.create(value);
@@ -105,7 +105,7 @@ define(['sulfur/util/factory'], function (Factory) {
      *
      * @return {number}
      */
-    getValue: function () {
+    get value() {
       return this._value;
     },
 
@@ -121,7 +121,7 @@ define(['sulfur/util/factory'], function (Factory) {
       var _isFinite = Number.isFinite || isFinite;
 
       return function () {
-        return _isFinite(this._value);
+        return _isFinite(this.value);
       };
 
     }()),
@@ -137,7 +137,7 @@ define(['sulfur/util/factory'], function (Factory) {
       var _isNaN = Number.isNaN || isNaN;
 
       return function () {
-        return _isNaN(this._value);
+        return _isNaN(this.value);
       };
 
     }()),
@@ -148,7 +148,7 @@ define(['sulfur/util/factory'], function (Factory) {
      * @return {boolean} whether the value is positive or not
      */
     isPositive: function () {
-      return this._value > 0;
+      return this.value > 0;
     },
 
     /**
@@ -157,10 +157,10 @@ define(['sulfur/util/factory'], function (Factory) {
      * @return {string} the canonical representation
      */
     toString: function () {
-      if (this._value === 0) {
+      if (this.value === 0) {
         return '0.0E0';
       }
-      return this._value.toExponential().replace(/e\+?/, 'E');
+      return this.value.toExponential().replace(/e\+?/, 'E');
     },
 
     /**
@@ -174,10 +174,10 @@ define(['sulfur/util/factory'], function (Factory) {
      * @return {undefined} if either LHS or RHS is NaN
      */
     cmp: function (other) {
-      if (this._value < other._value) {
+      if (this.value < other.value) {
         return -1;
       }
-      if (this._value > other._value) {
+      if (this.value > other.value) {
         return 1;
       }
       if (this.isNaN() ^ other.isNaN()) {

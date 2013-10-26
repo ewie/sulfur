@@ -25,7 +25,7 @@ define([
   'use strict';
 
   return PrimitiveType.create({
-    qname: QName.create('fileRef', sulfur.getNamespaceURI()),
+    qname: QName.create('fileRef', sulfur.namespaceURI),
     valueType: FileRefValue,
     facets: Facets.create([ MediaTypeFacet ])
   });

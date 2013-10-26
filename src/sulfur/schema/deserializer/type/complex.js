@@ -31,9 +31,7 @@ define([
   var XSD_NAMESPACE = 'http://www.w3.org/2001/XMLSchema';
   var NS = { xs: XSD_NAMESPACE };
 
-  function keyfn(type) {
-    return type.getQName().toString();
-  }
+  var keyfn = util.property('qname');
 
   return Factory.derive({
 
@@ -55,7 +53,7 @@ define([
     },
 
     resolveQualifiedName: function (qname) {
-      return this._typeIndex.getItemByKey(qname.toString());
+      return this._typeIndex.getItemByKey(qname);
     },
 
     deserializeElement: (function () {
@@ -111,11 +109,11 @@ define([
 
         // Find all types definining all mandatory elements.
         types = types.filter(function (type) {
-          var allowedElements = type.getAllowedElements();
+          var allowedElements = type.allowedElements;
           return mandatoryElements.every(function (element) {
-            var allowedElement = allowedElements.getElement(element.getName());
+            var allowedElement = allowedElements.getByName(element.name);
             return allowedElement &&
-              element.getType().isRestrictionOf(allowedElement.getType());
+              element.type.isRestrictionOf(allowedElement.type);
           });
         });
 
@@ -123,18 +121,18 @@ define([
         // define additional elements.
         if (optionalElements.length === 0) {
           return util.first(types, function (type) {
-            return type.getAllowedElements().getSize() === mandatoryElements.length;
+            return type.allowedElements.size === mandatoryElements.length;
           });
         }
 
         // Calculate the number of elements of each type matched by an optional
         // element.
         var scores = types.map(function (type) {
-          var allowedElements = type.getAllowedElements();
+          var allowedElements = type.allowedElements;
           return optionalElements.reduce(function (score, element) {
-            var allowedElement = allowedElements.getElement(element.getName());
+            var allowedElement = allowedElements.getByName(element.name);
             var match = allowedElement &&
-              element.getType().isRestrictionOf(allowedElement.getType());
+              element.type.isRestrictionOf(allowedElement.type);
             if (match) {
               score += 1;
             }

@@ -33,11 +33,11 @@ define([
   var NS = { xs: XSD_NAMESPACE };
 
   function typeKeyFn(type) {
-    return type.getQName().toString();
+    return type.qname;
   }
 
   function facetDeserializerKeyFn(facetDeserializer) {
-    return typeKeyFn(facetDeserializer.getFacet());
+    return typeKeyFn(facetDeserializer.getByQName());
   }
 
   function isFactoryOf(f, x) {
@@ -80,8 +80,8 @@ define([
         if (index.containsKey(qname)) {
           throw new Error("type with duplicate qualified name " + qname);
         }
-        type.getAllowedFacets().toArray().forEach(function (allowedFacet) {
-          var qname = allowedFacet.getQName().toString();
+        type.allowedFacets.toArray().forEach(function (allowedFacet) {
+          var qname = allowedFacet.qname;
           if (!facetDeserializerIndex.containsKey(qname)) {
             throw new Error("expecting a facet deserializer for facet " + qname);
           }
@@ -95,7 +95,7 @@ define([
     },
 
     resolveQualifiedName: function (qname) {
-      return this._typeIndex.getItemByKey(qname.toString());
+      return this._typeIndex.getItemByKey(qname);
     },
 
     deserializeElement: (function () {
@@ -119,13 +119,13 @@ define([
           parentElement, xpath)
       {
         return allowedFacets.reduce(function (facets, allowedFacet) {
-          var qname = allowedFacet.getQName();
-          var name = qname.getLocalName();
-          var namespace = qname.getNamespaceURI();
+          var qname = allowedFacet.qname;
+          var name = qname.localName;
+          var namespace = qname.namespaceURI;
           var ns = { ns: namespace };
           var facetElements = xpath.all('ns:' + name, parentElement, ns);
           if (facetElements.length > 0) {
-            var facetDeserializer = facetDeserializers.getItemByKey(qname.toString());
+            var facetDeserializer = facetDeserializers.getItemByKey(qname);
             var values = facetElements.map(function (facetElement) {
               var value = facetElement.getAttribute('value');
               return facetDeserializer.parseValue(value, valueType);
@@ -151,7 +151,7 @@ define([
           restriction, xpath)
       {
         var part = util.bipart(allowedFacets.toArray(), function (facet) {
-          return facet.getQName().getNamespaceURI() === XSD_NAMESPACE;
+          return facet.qname.namespaceURI === XSD_NAMESPACE;
         });
 
         var stdFacets = resolveAnyFacets(facetDeserializers, part.true, valueType,
@@ -174,8 +174,8 @@ define([
           baseType = resolveInlinedBase(restriction, typeDeserializer, xpath);
         }
 
-        var facets = resolveFacets(facetDeserializers, baseType.getAllowedFacets(),
-          baseType.getValueType(), restriction, xpath);
+        var facets = resolveFacets(facetDeserializers, baseType.allowedFacets,
+          baseType.valueType, restriction, xpath);
 
         if (facets) {
           return RestrictedType.create(baseType, facets);

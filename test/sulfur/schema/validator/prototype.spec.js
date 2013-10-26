@@ -27,10 +27,10 @@ define([
       validator = PrototypeValidator.create(prototype);
     });
 
-    describe('#getPrototype()', function () {
+    describe('#prototype()', function () {
 
       it("should return the prototype object", function () {
-        expect(validator.getPrototype()).to.equal(prototype);
+        expect(validator.prototype).to.equal(prototype);
       });
 
     });

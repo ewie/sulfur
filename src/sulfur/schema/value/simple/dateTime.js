@@ -426,42 +426,42 @@ define([
     /**
      * @return {number} the year
      */
-    getYear: function () {
+    get year() {
       return this._year;
     },
 
     /**
      * @return {number} the month
      */
-    getMonth: function () {
+    get month() {
       return this._month;
     },
 
     /**
      * @return {number} the day
      */
-    getDay: function () {
+    get day() {
       return this._day;
     },
 
     /**
      * @return {number} the hour
      */
-    getHour: function () {
+    get hour() {
       return this._hour;
     },
 
     /**
      * @return {number} the minute
      */
-    getMinute: function () {
+    get minute() {
       return this._minute;
     },
 
     /**
      * @return {sulfur/schema/value/simple/decimal} the second
      */
-    getSecond: function () {
+    get second() {
       return this._second;
     },
 

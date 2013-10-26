@@ -47,10 +47,10 @@ define([
       expect(Facet).to.be.prototypeOf(MaxInclusiveFacet);
     });
 
-    describe('.getQName()', function () {
+    describe('.qname', function () {
 
       it("should return {http://www.w3.org/2001/XMLSchema}maxInclusive", function () {
-        expect(MaxInclusiveFacet.getQName())
+        expect(MaxInclusiveFacet.qname)
           .to.eql(QName.create('maxInclusive', 'http://www.w3.org/2001/XMLSchema'));
       });
 
@@ -64,10 +64,10 @@ define([
 
     });
 
-    describe('.getMutualExclusiveFacets()', function () {
+    describe('.mutualExclusiveFacets', function () {
 
       it("should return sulfur/schema/facet/maxExclusive", function () {
-        expect(MaxInclusiveFacet.getMutualExclusiveFacets())
+        expect(MaxInclusiveFacet.mutualExclusiveFacets)
           .to.eql([ MaxExclusiveFacet ]);
       });
 
@@ -115,16 +115,16 @@ define([
       });
 
       it("should return true when valid", function () {
-        var dummyFacet = { getQName: returns(QName.create('x', 'urn:y')) };
+        var dummyFacet = { qname: QName.create('x', 'urn:y') };
         type = Facets.create([ dummyFacet ]);
-        type.getValueType = function () { return IntegerValue; };
+        type.valueType = IntegerValue;
         expect(facet.validate(type)).to.be.true;
       });
 
       it("should return false when the value is not of the given type", function () {
-        var dummyFacet = { getQName: returns(QName.create('x', 'urn:y')) };
+        var dummyFacet = { qname: QName.create('x', 'urn:y') };
         type = Facets.create([ dummyFacet ]);
-        type.getValueType = function () { return { prototype: {} }; };
+        type.valueType = { prototype: {} };
         expect(facet.validate(type)).to.be.false;
       });
 
@@ -132,7 +132,7 @@ define([
 
         beforeEach(function () {
           type = Facets.create([ MaxExclusiveFacet.create() ]);
-          type.getValueType = function () { return IntegerValue; };
+          type.valueType = IntegerValue;
         });
 
         it("should reject", function () {
@@ -153,7 +153,7 @@ define([
           type = Facets.create([
             MinExclusiveFacet.create(IntegerValue.parse('2'))
           ]);
-          type.getValueType = function () { return IntegerValue; };
+          type.valueType = IntegerValue;
         });
 
         it("should reject", function () {
@@ -174,7 +174,7 @@ define([
           type = Facets.create([
             MinExclusiveFacet.create(IntegerValue.create())
           ]);
-          type.getValueType = function () { return IntegerValue; };
+          type.valueType = IntegerValue;
         });
 
         it("should reject", function () {
@@ -195,7 +195,7 @@ define([
           type = Facets.create([
             MinInclusiveFacet.create(IntegerValue.parse('2'))
           ]);
-          type.getValueType = function () { return IntegerValue; };
+          type.valueType = IntegerValue;
         });
 
         it("should reject", function () {
@@ -218,7 +218,7 @@ define([
         var facet = MaxInclusiveFacet.create(0);
         var v = facet.createValidator();
         expect(v).to.eql(
-          MaximumValidator.create(facet.getValue())
+          MaximumValidator.create(facet.value)
         );
       });
 

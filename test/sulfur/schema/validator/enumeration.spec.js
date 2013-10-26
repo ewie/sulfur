@@ -33,7 +33,7 @@ define([
           var v = EnumerationValidator.create(
             [{ test: function () {} }],
             { testMethod: 'test' });
-          expect(v.getTestMethodName()).to.equal('test');
+          expect(v.testMethodName).to.equal('test');
         });
 
         it("should reject when none of the allowed values responds to the test method", function () {
@@ -45,18 +45,18 @@ define([
 
     });
 
-    describe('#getTestMethodName()', function () {
+    describe('#testMethodName', function () {
 
       it("should return the name of the test method when defined", function () {
         var v = EnumerationValidator.create(
           [{ matches: function () {} }],
           { testMethod: 'matches' });
-        expect(v.getTestMethodName()).to.equal('matches');
+        expect(v.testMethodName).to.equal('matches');
       });
 
       it("should return undefined when the test method name is not defined", function () {
         var v = EnumerationValidator.create([{}]);
-        expect(v.getTestMethodName()).to.be.undefined;
+        expect(v.testMethodName).to.be.undefined;
       });
 
     });

@@ -24,15 +24,15 @@ define([
       this._allowedElements = options.elements;
     },
 
-    getQName: function () {
+    get qname() {
       return this._qname;
     },
 
-    getValueType: function () {
+    get valueType() {
       return this._valueType;
     },
 
-    getAllowedElements: function () {
+    get allowedElements() {
       return this._allowedElements;
     },
 
@@ -41,10 +41,10 @@ define([
     },
 
     createValidator: function () {
-      var validators = [ PrototypeValidator.create(this._valueType.prototype) ];
-      this._allowedElements.toArray().reduce(function (validators, element) {
-        var validator = PropertyValidator.create('getValue',
-          element.getType().createValidator(), [ element.getName() ]);
+      var validators = [ PrototypeValidator.create(this.valueType.prototype) ];
+      this.allowedElements.toArray().reduce(function (validators, element) {
+        var validator = PropertyValidator.create('value',
+          element.type.createValidator(), [ element.name ]);
         validators.push(validator);
         return validators;
       }, validators);

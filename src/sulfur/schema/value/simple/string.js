@@ -73,7 +73,7 @@ define([
      *
      * @return {number}
      */
-    getLength: function () {
+    get length() {
       return this._value.length;
     },
 

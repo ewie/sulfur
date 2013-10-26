@@ -18,13 +18,13 @@ define([
 
   var XSD_NS = 'http://www.w3.org/2001/XMLSchema';
 
-  var keyfn = util.method('getQName');
+  var keyfn = util.property('qname');
 
   return Factory.derive({
 
     initialize: function (types) {
       this._typeIndex = types.reduce(function (index, type) {
-        var qname = type.getQName();
+        var qname = type.qname;
         if (index.containsKey(qname)) {
           throw new Error("type with duplicate qualified name " + qname);
         }
@@ -42,15 +42,15 @@ define([
       function serializeListType(type, typeSerializer, context) {
         var e = context.createElement(XSD_NS, 'xs:sequence');
 
-        var maxOccurs = type.getMaxLength();
-        var minOccurs = type.getMinLength() || 0;
+        var maxOccurs = type.maxLength;
+        var minOccurs = type.minLength || 0;
 
         util.isUndefined(maxOccurs) && (maxOccurs = 'unbounded');
 
         e.setAttribute('maxOccurs', maxOccurs);
         e.setAttribute('minOccurs', minOccurs);
 
-        var f = typeSerializer.serializeElement(type.getElement(), context);
+        var f = typeSerializer.serializeElement(type.element, context);
         e.appendChild(f);
 
         return e;
@@ -59,7 +59,7 @@ define([
       function serializeRestrictedType(type, typeSerializer, context) {
         var e = context.createElement(XSD_NS, 'xs:all');
 
-        type.getElements().toArray().forEach(function (element) {
+        type.elements.toArray().forEach(function (element) {
           var f = typeSerializer.serializeElement(element, context);
           e.appendChild(f);
         });

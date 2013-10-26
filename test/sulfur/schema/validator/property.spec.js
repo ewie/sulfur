@@ -20,32 +20,32 @@ define([
 
   describe('sulfur/schema/validator/property', function () {
 
-    describe('#getPropertyName()', function () {
+    describe('#propertyName', function () {
 
       it("should return the property name", function () {
         var name = 'foo';
         var validator = PropertyValidator.create(name);
-        expect(validator.getPropertyName()).to.equal(name);
+        expect(validator.propertyName).to.equal(name);
       });
 
     });
 
-    describe('#getArguments()', function () {
+    describe('#args', function () {
 
       it("should return an array with arguments to the property", function () {
         var args = [];
         var validator = PropertyValidator.create('', {}, args);
-        expect(validator.getArguments()).to.eql(args);
+        expect(validator.args).to.eql(args);
       });
 
     });
 
-    describe('#getValidator()', function () {
+    describe('#validator', function () {
 
       it("should return the subvalidator", function () {
         var subvalidator = {};
         var validator = PropertyValidator.create('', subvalidator);
-        expect(validator.getValidator()).to.equal(subvalidator);
+        expect(validator.validator).to.equal(subvalidator);
       });
 
     });

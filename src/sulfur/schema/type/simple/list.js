@@ -17,8 +17,7 @@ define([
   'sulfur/schema/value/simpleList',
   'sulfur/schema/validator/all',
   'sulfur/schema/validator/each',
-  'sulfur/schema/validator/property',
-  'sulfur/util'
+  'sulfur/schema/validator/property'
 ], function (
     Factory,
     EnumerationFacet,
@@ -30,47 +29,49 @@ define([
     SimpleListValue,
     AllValidator,
     EachValidator,
-    PropertyValidator,
-    util
+    PropertyValidator
 ) {
 
   'use strict';
+
+  var allowedFacets = Facets.create([
+    EnumerationFacet,
+    LengthFacet,
+    MaxLengthFacet,
+    MinLengthFacet,
+    PatternFacet
+  ]);
 
   return Factory.derive({
 
     initialize: function (itemType) {
       this._itemType = itemType;
-      this._valueType = SimpleListValue.typed(this._itemType.getValueType());
+      this._valueType = SimpleListValue.typed(itemType.valueType);
     },
 
-    getItemType: function () {
+    get itemType() {
       return this._itemType;
     },
 
-    getValueType: function () {
+    get valueType() {
       return this._valueType;
     },
 
-    getAllowedFacets: util.returns(
-      Facets.create(
-        [ EnumerationFacet,
-          LengthFacet,
-          MaxLengthFacet,
-          MinLengthFacet,
-          PatternFacet
-        ])),
+    get allowedFacets() {
+      return allowedFacets;
+    },
 
     isRestrictionOf: function (other) {
-      return this === other || this._itemType.isRestrictionOf(other._itemType);
+      return this === other || this.itemType.isRestrictionOf(other.itemType);
     },
 
     createValidator: function () {
       return PropertyValidator.create('toArray',
-        EachValidator.create(this._itemType.createValidator()));
+        EachValidator.create(this.itemType.createValidator()));
     },
 
     createRestrictionValidator: function (restriction) {
-      var allowedFacets = this.getAllowedFacets().toArray();
+      var allowedFacets = this.allowedFacets.toArray();
       var validators = allowedFacets.reduce(function (validators, allowedFacet) {
         var facets = allowedFacet.getEffectiveFacets(restriction);
         if (facets) {

@@ -44,8 +44,8 @@ define([
 
       it("should reject types with duplicate qualified name", function () {
         var types = [
-          { getQName: returns(QName.create('x', 'urn:y')) },
-          { getQName: returns(QName.create('x', 'urn:y')) }
+          { qname: QName.create('x', 'urn:y') },
+          { qname: QName.create('x', 'urn:y') }
         ];
         expect(bind(ComplexTypeSerializer, 'create', types))
           .to.throw("type with duplicate qualified name {urn:y}x");
@@ -59,7 +59,7 @@ define([
       var typeSerializer;
 
       beforeEach(function () {
-        type = { getQName: returns(QName.create('x', 'urn:y')) };
+        type = { qname: QName.create('x', 'urn:y') };
         typeSerializer = ComplexTypeSerializer.create([ type ]);
       });
 
@@ -98,7 +98,7 @@ define([
           var doc = Document.make('http://www.w3.org/2001/XMLSchema', 'xs:schema');
           ctx = Context.create(doc);
 
-          var type = { getQName: returns(QName.create('x', 'urn:y')) };
+          var type = { qname: QName.create('x', 'urn:y') };
           element = Element.create('foo', type);
 
           complexTypeSerializer = ComplexTypeSerializer.create([]);
@@ -176,20 +176,20 @@ define([
           ctx = Context.create(doc);
 
           var baseType = {
-            getQName: returns(QName.create('x', 'urn:y')),
-            getAllowedElements: returns(Elements.create([
+            qname: QName.create('x', 'urn:y'),
+            allowedElements: Elements.create([
               Element.create('foo', {}),
               Element.create('bar', {})
-            ]))
+            ])
           };
 
           var elements = Elements.create([
             Element.create('foo', {
-              getQName: returns(QName.create('y', 'urn:z')),
+              qname: QName.create('y', 'urn:z'),
               isRestrictionOf: returns(true)
             }),
             Element.create('bar', {
-              getQName: returns(QName.create('y', 'urn:z')),
+              qname: QName.create('y', 'urn:z'),
               isRestrictionOf: returns(true)
             })
           ]);
@@ -216,7 +216,7 @@ define([
 
         it("should serialize each element", function () {
           var spy = sinon.spy(typeSerializer, 'serializeElement');
-          var elements = type.getElements().toArray();
+          var elements = type.elements.toArray();
 
           var e = complexTypeSerializer.serializeType(type, typeSerializer, ctx);
 

@@ -183,7 +183,7 @@ define([
           expect(obj.foo).to.be.calledOn(obj);
         });
 
-        it("should return the result of callong the method", function () {
+        it("should return the result of calling the method", function () {
           var result = {};
           var obj = { foo: function () { return result; } };
           var fn = util.method('foo');
@@ -217,6 +217,24 @@ define([
         var q = g.call({});
         expect(f).to.be.calledOnce;
         expect(r).to.equal(q);
+      });
+
+    });
+
+    describe('.property()', function () {
+
+      it("should return a function", function () {
+        expect(util.property()).to.be.a('function');
+      });
+
+      describe("the returned function", function () {
+
+        it("should return the named property of an object provided as argument", function () {
+          var obj = { foo: {} };
+          var fn = util.property('foo');
+          expect(fn(obj)).to.equal(obj.foo);
+        });
+
       });
 
     });

@@ -28,14 +28,15 @@ define([
     return MediaType.prototype.isPrototypeOf(x);
   }
 
+  var qname = QName.create('mediaType', sulfur.namespaceURI);
+
   var $ = Facet.clone({
 
-    getQName: util.returns(
-      QName.create('mediaType', sulfur.getNamespaceURI())),
+    get qname() { return qname; },
 
     isShadowingLowerRestrictions: util.returns(true),
 
-    getMutualExclusiveFacets: util.returns([])
+    get mutualExclusiveFacets() { return []; }
 
   });
 
@@ -57,8 +58,8 @@ define([
       if (!mediaTypeFacet) {
         return true;
       }
-      var baseMediaTypes = mediaTypeFacet.getValue();
-      return this.getValue().every(function (mediaType) {
+      var baseMediaTypes = mediaTypeFacet.value;
+      return this.value.every(function (mediaType) {
         return baseMediaTypes.some(function (baseMediaType) {
           return baseMediaType.matches(mediaType);
         });
@@ -71,7 +72,7 @@ define([
 
     createValidator: function () {
       return EnumerationValidator.create(
-        this.getValue(),
+        this.value,
         { testMethod: 'matches' });
     }
 

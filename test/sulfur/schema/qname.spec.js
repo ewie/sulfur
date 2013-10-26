@@ -24,18 +24,18 @@ define([
       qname = QName.create('foo', 'urn:bar');
     });
 
-    describe('#getLocalName()', function () {
+    describe('#localName', function () {
 
       it("should return the local name", function () {
-        expect(qname.getLocalName()).to.equal('foo');
+        expect(qname.localName).to.equal('foo');
       });
 
     });
 
-    describe('#getNamespaceURI()', function () {
+    describe('#namespaceURI', function () {
 
       it("should return the namespace URI", function () {
-        expect(qname.getNamespaceURI()).to.equal('urn:bar');
+        expect(qname.namespaceURI).to.equal('urn:bar');
       });
 
     });

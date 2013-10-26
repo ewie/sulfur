@@ -24,14 +24,15 @@ define([
 
   'use strict';
 
+  var qname = QName.create('pattern', 'http://www.w3.org/2001/XMLSchema');
+
   var $ = Facet.clone({
 
-    getQName: util.returns(
-      QName.create('pattern', 'http://www.w3.org/2001/XMLSchema')),
+    get qname() { return qname; },
 
     isShadowingLowerRestrictions: util.returns(false),
 
-    getMutualExclusiveFacets: util.returns([])
+    get mutualExclusiveFacets() { return []; }
 
   });
 
@@ -52,7 +53,7 @@ define([
     validate: util.returns(true),
 
     createValidator: function () {
-      return SomeValidator.create(this.getValue().map(function (pattern) {
+      return SomeValidator.create(this.value.map(function (pattern) {
         return PatternValidator.create(pattern);
       }));
     }

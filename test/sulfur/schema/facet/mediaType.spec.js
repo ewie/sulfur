@@ -43,11 +43,11 @@ define([
       expect(Facet).to.be.prototypeOf(MediaTypeFacet);
     });
 
-    describe('.getQName()', function () {
+    describe('.qname', function () {
 
-      it("should return {" + sulfur.getNamespaceURI() + "}mediaType", function () {
-        expect(MediaTypeFacet.getQName())
-          .to.eql(QName.create('mediaType', sulfur.getNamespaceURI()));
+      it("should return {" + sulfur.namespaceURI + "}mediaType", function () {
+        expect(MediaTypeFacet.qname)
+          .to.eql(QName.create('mediaType', sulfur.namespaceURI));
       });
 
     });
@@ -60,10 +60,10 @@ define([
 
     });
 
-    describe('.getMutualExclusiveFacets()', function () {
+    describe('.mutualExclusiveFacets', function () {
 
       it("should return an empty array", function () {
-        expect(MediaTypeFacet.getMutualExclusiveFacets()).to.eql([]);
+        expect(MediaTypeFacet.mutualExclusiveFacets).to.eql([]);
       });
 
     });
@@ -93,7 +93,7 @@ define([
           MediaType.create('text', 'plain')
         ];
         var facet = MediaTypeFacet.create(value);
-        expect(facet.getValue()).to.eql(value.slice(0, 1));
+        expect(facet.value).to.eql(value.slice(0, 1));
       });
 
       it("should reject an empty array", function () {

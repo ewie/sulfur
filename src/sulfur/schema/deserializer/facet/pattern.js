@@ -8,15 +8,14 @@
 
 define([
   'sulfur/schema/facet/pattern',
-  'sulfur/schema/pattern',
-  'sulfur/util'
-], function (PatternFacet, Pattern, util) {
+  'sulfur/schema/pattern'
+], function (PatternFacet, Pattern) {
 
   'use strict';
 
   return {
 
-    getFacet: util.returns(PatternFacet),
+    get facet() { return PatternFacet; },
 
     parseValue: function (s) {
       return Pattern.create(s);

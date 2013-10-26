@@ -24,7 +24,7 @@ define(['sulfur/util/factory'], function (Factory) {
     /**
      * @return {array} the validators
      */
-    getValidators: function () {
+    get validators() {
       return this._validators;
     },
 
@@ -36,7 +36,7 @@ define(['sulfur/util/factory'], function (Factory) {
      * @return {boolean} whether `value` passes all validators or not
      */
     validate: function (value) {
-      return this._validators.every(function (validator) {
+      return this.validators.every(function (validator) {
         return validator.validate(value);
       });
     }

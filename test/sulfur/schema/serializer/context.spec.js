@@ -25,7 +25,7 @@ define([
       it("should delegate to the document's .createElement()", function () {
         var doc = Document.make('urn:x', 'x:y');
         var spy = sinon.spy(doc, 'createElement');
-        var context = Context.create(doc, doc.getRoot());
+        var context = Context.create(doc, doc.root);
         var element = context.createElement('urn:foo', 'foo:bar');
         expect(spy)
           .to.be.calledWith('urn:foo', 'foo:bar')
@@ -59,7 +59,7 @@ define([
           .to.be.calledWith(
             'urn:y',
             prefix,
-            sinon.match.same(doc.getRoot()));
+            sinon.match.same(doc.root));
         expect(prefix).to.equal('ns1');
       });
 

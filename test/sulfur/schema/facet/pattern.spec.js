@@ -36,10 +36,10 @@ define([
       expect(Facet).to.be.prototypeOf(PatternFacet);
     });
 
-    describe('.getQName()', function () {
+    describe('.qname', function () {
 
       it("should return {http://www.w3.org/2001/XMLSchema}pattern", function () {
-        expect(PatternFacet.getQName())
+        expect(PatternFacet.qname)
           .to.eql(QName.create('pattern', 'http://www.w3.org/2001/XMLSchema'));
       });
 
@@ -53,10 +53,10 @@ define([
 
     });
 
-    describe('.getMutualExclusiveFacets()', function () {
+    describe('.mutualExclusiveFacets', function () {
 
       it("should return an empty array", function () {
-        expect(PatternFacet.getMutualExclusiveFacets()).to.eql([]);
+        expect(PatternFacet.mutualExclusiveFacets).to.eql([]);
       });
 
     });
@@ -69,7 +69,7 @@ define([
           Pattern.create('')
         ];
         var facet = PatternFacet.create(patterns);
-        expect(facet.getValue()).to.eql(patterns.slice(0, 1));
+        expect(facet.value).to.eql(patterns.slice(0, 1));
       });
 
       it("should reject an empty array", function () {

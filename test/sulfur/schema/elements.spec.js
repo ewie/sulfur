@@ -22,11 +22,9 @@ define([
     describe('#initialize()', function () {
 
       it("should initialize with the given elements", function () {
-        var element = {
-          getName: function () { return 'foo'; }
-        };
+        var element = { name: 'foo' };
         var elements = Elements.create([ element ]);
-        expect(elements.getElement('foo')).to.equal(element);
+        expect(elements.getByName('foo')).to.equal(element);
       });
 
       it("should reject an empty array of elements", function () {
@@ -36,12 +34,8 @@ define([
 
       it("should reject elements with duplicate names", function () {
         var elements = [
-          {
-            getName: function () { return 'x'; }
-          },
-          {
-            getName: function () { return 'x'; }
-          }
+          { name: 'x' },
+          { name: 'x' }
         ];
         expect(bind(Elements, 'create', elements))
           .to.throw('element with duplicate name "x"');
@@ -49,36 +43,34 @@ define([
 
     });
 
-    describe('#getElement()', function () {
+    describe('#getByName()', function () {
 
       var element;
       var elements;
 
       beforeEach(function () {
-        element = {
-          getName: function () { return 'bar'; }
-        };
+        element = { name: 'bar' };
         elements = Elements.create([ element ]);
       });
 
       it("should return the element with the given name when existent", function () {
-        expect(elements.getElement('bar')).to.equal(element);
+        expect(elements.getByName('bar')).to.equal(element);
       });
 
       it("should return undefined when no element with the given name exists", function () {
-        expect(elements.getElement('xxx')).to.be.undefined;
+        expect(elements.getByName('xxx')).to.be.undefined;
       });
 
     });
 
-    describe('#getSize()', function () {
+    describe('#size', function () {
 
       it("should return the number of elements", function () {
         var element = {
           getName: function () { return 'foo'; }
         };
         var elements = Elements.create([ element ]);
-        expect(elements.getSize()).to.equal(1);
+        expect(elements.size).to.equal(1);
       });
 
     });
@@ -87,12 +79,8 @@ define([
 
       it("should return an array of elements in initialization order", function () {
         var els = [
-          {
-            getName: function () { return 'x'; }
-          },
-          {
-            getName: function () { return 'y'; }
-          }
+          { name: 'x' },
+          { name: 'y' }
         ];
         var elements = Elements.create(els);
         expect(elements.toArray()).to.eql(els);

@@ -49,26 +49,26 @@ define([
 
       it("should use '*' as default type", function () {
         var mt = MediaType.create();
-        expect(mt.getType()).to.be.undefined;
+        expect(mt.type).to.be.undefined;
       });
 
       it("should use '*' as default subtype", function () {
         var mt = MediaType.create();
-        expect(mt.getSubtype()).to.be.undefined;
+        expect(mt.subtype).to.be.undefined;
       });
 
       'application audio image text video'.split(' ').forEach(function (type) {
 
         it("should accept type '" + type + "'", function () {
           var mt = MediaType.create(type);
-          expect(mt.getType()).to.equal(type);
+          expect(mt.type).to.equal(type);
         });
 
       });
 
       it("should treat type '*' as wildcard", function () {
         var mt = MediaType.create('*');
-        expect(mt.getType()).to.be.undefined;
+        expect(mt.type).to.be.undefined;
       });
 
       it("should reject an invalid type", function () {
@@ -78,12 +78,12 @@ define([
 
       it("should accept a subtype", function () {
         var mt = MediaType.create('text', 'plain');
-        expect(mt.getSubtype()).to.equal('plain');
+        expect(mt.subtype).to.equal('plain');
       });
 
       it("should treat subtype '*' as wildcard", function () {
         var mt = MediaType.create('text', '*');
-        expect(mt.getSubtype()).to.be.undefined;
+        expect(mt.subtype).to.be.undefined;
       });
 
       it("should reject an invalid subtype when given", function () {
@@ -106,30 +106,30 @@ define([
 
     });
 
-    describe('#getType()', function () {
+    describe('#type', function () {
 
       it("should return the type when defined", function () {
         var mt = MediaType.create('text');
-        expect(mt.getType()).to.equal('text');
+        expect(mt.type).to.equal('text');
       });
 
       it("should return undefined when no type is defined", function () {
         var mt = MediaType.create();
-        expect(mt.getType()).to.be.undefined;
+        expect(mt.type).to.be.undefined;
       });
 
     });
 
-    describe('#getSubtype()', function () {
+    describe('#subtype', function () {
 
       it("should return the subtype when defined", function () {
         var mt = MediaType.create('image', 'jpeg');
-        expect(mt.getSubtype()).to.equal('jpeg');
+        expect(mt.subtype).to.equal('jpeg');
       });
 
       it("should return undefined when no subtype is defined", function () {
         var mt = MediaType.create();
-        expect(mt.getSubtype()).to.be.undefined;
+        expect(mt.subtype).to.be.undefined;
       });
 
     });

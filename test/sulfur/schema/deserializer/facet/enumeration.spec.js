@@ -20,10 +20,10 @@ define([
 
   describe('sulfur/schema/deserializer/facet/enumeration', function () {
 
-    describe('.getFacet()', function () {
+    describe('.facet', function () {
 
       it("should return sulfur/schema/facet/enumeration", function () {
-        expect(EnumerationFacetDeserializer.getFacet()).to.equal(EnumerationFacet);
+        expect(EnumerationFacetDeserializer.facet).to.equal(EnumerationFacet);
       });
 
     });

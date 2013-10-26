@@ -125,22 +125,22 @@ define([
     /**
      * @return {number} the year
      */
-    getYear: function () {
-      return this._midpoint.getYear();
+    get year() {
+      return this._midpoint.year;
     },
 
     /**
      * @return {number} the month
      */
-    getMonth: function () {
-      return this._midpoint.getMonth();
+    get month() {
+      return this._midpoint.month;
     },
 
     /**
      * @return {number} the day
      */
-    getDay: function () {
-      return this._midpoint.getDay();
+    get day() {
+      return this._midpoint.day;
     },
 
     /**
@@ -170,9 +170,9 @@ define([
 
       return function () {
         var s =
-          toString(this.getYear(), 4) + '-' +
-          toString(this.getMonth(), 2) + '-' +
-          toString(this.getDay(), 2);
+          toString(this.year, 4) + '-' +
+          toString(this.month, 2) + '-' +
+          toString(this.day, 2);
 
         if (this.hasTimezone()) {
           var tz = this.getRecoverableTimezone();
@@ -219,15 +219,15 @@ define([
       var dtn = this._midpoint;
 
       var dtu = DateTimeValue.create({
-        year: this.getYear(),
-        month: this.getMonth(),
-        day: this.getDay(),
+        year: this.year,
+        month: this.month,
+        day: this.day,
         hour: 12,
         tzhour: 0
       });
 
-      var tzhour = dtu.getHour() - dtn.getHour();
-      var tzminute = dtu.getMinute() - dtn.getMinute();
+      var tzhour = dtu.hour - dtn.hour;
+      var tzminute = dtu.minute - dtn.minute;
 
       // Handle an eventual overflow of the timezone minute.
       if (tzhour > 0 && tzminute < 0) {

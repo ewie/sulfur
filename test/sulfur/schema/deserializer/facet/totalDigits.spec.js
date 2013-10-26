@@ -19,10 +19,10 @@ define([
 
   describe('sulfur/schema/deserializer/facet/totalDigits', function () {
 
-    describe('.getFacet()', function () {
+    describe('.facet', function () {
 
       it("should return sulfur/schema/facet/totalDigits", function () {
-        expect(TotalDigitsFacetDeserializer.getFacet()).to.equal(TotalDigitsFacet);
+        expect(TotalDigitsFacetDeserializer.facet).to.equal(TotalDigitsFacet);
       });
 
     });

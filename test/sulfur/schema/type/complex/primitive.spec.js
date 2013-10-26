@@ -52,26 +52,26 @@ define([
       });
     });
 
-    describe('#getQName()', function () {
+    describe('#qname', function () {
 
       it("should return the qualified name", function () {
-        expect(type.getQName()).to.equal(qname);
+        expect(type.qname).to.equal(qname);
       });
 
     });
 
-    describe('#getValueType()', function () {
+    describe('#valueType', function () {
 
       it("should return the value type", function () {
-        expect(type.getValueType()).to.equal(valueType);
+        expect(type.valueType).to.equal(valueType);
       });
 
     });
 
-    describe('#getAllowedElements()', function () {
+    describe('#allowedElements', function () {
 
       it("should return the elements", function () {
-        expect(type.getAllowedElements()).to.equal(elements);
+        expect(type.allowedElements).to.equal(elements);
       });
 
     });
@@ -94,15 +94,15 @@ define([
 
       it("should include a sulfur/schema/validator/prototype using the value type's prototype", function () {
         var v = type.createValidator();
-        expect(v.getValidators()).to.include.something.eql(
+        expect(v.validators).to.include.something.eql(
           PrototypeValidator.create(valueType.prototype));
       });
 
-      it("should include a sulfur/schema/validator/property with method 'getValue', the element name as argument, and the element type's validator", function () {
+      it("should include a sulfur/schema/validator/property with property 'value', the element name as argument, and the element type's validator", function () {
         var v = type.createValidator();
-        expect(v.getValidators()).to.include.something.eql(
-          PropertyValidator.create('getValue',
-            elements.getElement('x').getType().createValidator(),
+        expect(v.validators).to.include.something.eql(
+          PropertyValidator.create('value',
+            elements.getByName('x').type.createValidator(),
             [ 'x' ]));
       });
 

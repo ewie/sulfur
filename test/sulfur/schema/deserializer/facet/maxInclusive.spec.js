@@ -20,10 +20,10 @@ define([
 
   describe('sulfur/schema/deserializer/facet/maxInclusive', function () {
 
-    describe('.getFacet()', function () {
+    describe('.facet', function () {
 
       it("should return sulfur/schema/facet/maxInclusive", function () {
-        expect(MaxInclusiveFacetDeserializer.getFacet()).to.equal(MaxInclusiveFacet);
+        expect(MaxInclusiveFacetDeserializer.facet).to.equal(MaxInclusiveFacet);
       });
 
     });

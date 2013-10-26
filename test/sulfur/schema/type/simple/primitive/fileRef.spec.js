@@ -36,7 +36,7 @@ define([
     it("should be a sulfur/schema/type/simple/primitive", function () {
       expect(FileRefType).to.eql(
         PrimitiveType.create({
-          qname: QName.create('fileRef', sulfur.getNamespaceURI()),
+          qname: QName.create('fileRef', sulfur.namespaceURI),
           valueType: FileRefValue,
           facets: Facets.create([ MediaTypeFacet ])
         })

@@ -15,14 +15,15 @@ define([
 
   'use strict';
 
+  var qname = QName.create('enumeration', 'http://www.w3.org/2001/XMLSchema');
+
   var $ = Facet.clone({
 
-    getQName: util.returns(
-      QName.create('enumeration', 'http://www.w3.org/2001/XMLSchema')),
+    get qname() { return qname; },
 
     isShadowingLowerRestrictions: util.returns(true),
 
-    getMutualExclusiveFacets: util.returns([])
+    get mutualExclusiveFacets() { return []; }
 
   });
 
@@ -37,19 +38,19 @@ define([
 
     isRestrictionOf: function (type) {
       var v = type.createValidator();
-      return this.getValue().every(function (value) {
+      return this.value.every(function (value) {
         return v.validate(value);
       });
     },
 
     validate: function (type) {
-      return this.getValue().every(function (value) {
-        return type.getValueType().prototype.isPrototypeOf(value);
+      return this.value.every(function (value) {
+        return type.valueType.prototype.isPrototypeOf(value);
       });
     },
 
     createValidator: function () {
-      return EnumerationValidator.create(this.getValue(), { testMethod: 'eq' });
+      return EnumerationValidator.create(this.value, { testMethod: 'eq' });
     }
 
   });

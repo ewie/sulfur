@@ -17,14 +17,15 @@ define([
 
   'use strict';
 
+  var qname = QName.create('fractionDigits', 'http://www.w3.org/2001/XMLSchema');
+
   var $ = Facet.clone({
 
-    getQName: util.returns(
-      QName.create('fractionDigits', 'http://www.w3.org/2001/XMLSchema')),
+    get qname() { return qname; },
 
     isShadowingLowerRestrictions: util.returns(true),
 
-    getMutualExclusiveFacets: util.returns([])
+    get mutualExclusiveFacets() { return []; }
 
   });
 
@@ -37,14 +38,10 @@ define([
       Facet.prototype.initialize.call(this, value);
     },
 
-    getValueArray: function () {
-      return [ this.getValue() ];
-    },
-
     isRestrictionOf: function (type) {
       var fractionDigitsFacet = this.factory.getEffectiveFacet(type);
       if (fractionDigitsFacet) {
-        return this.getValue() <= fractionDigitsFacet.getValue();
+        return this.value <= fractionDigitsFacet.value;
       }
       return true;
     },
@@ -56,7 +53,7 @@ define([
     createValidator: function () {
       return PropertyValidator.create(
         'countFractionDigits',
-        MaximumValidator.create(this.getValue())
+        MaximumValidator.create(this.value)
       );
     }
 

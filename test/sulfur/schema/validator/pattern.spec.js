@@ -29,7 +29,7 @@ define([
         validator = PatternValidator.create(pattern);
       });
 
-      it("should return the result of calling #test() on the pattern with value#toString() as argument", function () {
+      it("should return the result of calling .test() on the pattern with value.toString() as argument", function () {
         var spy = sinon.spy(pattern, 'test');
         var value = { toString: sinon.stub().returns('a') };
         var result = validator.validate(value);

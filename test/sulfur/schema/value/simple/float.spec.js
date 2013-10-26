@@ -35,10 +35,10 @@ define([
       expect(DoubleValue).to.be.prototypeOf(FloatValue);
     });
 
-    describe('.getMaxValue()', function () {
+    describe('.maxValue', function () {
 
       it("should return 3.4028234663852886E+38", function () {
-        expect(FloatValue.getMaxValue()).to.equal(3.4028234663852886E+38);
+        expect(FloatValue.maxValue).to.equal(3.4028234663852886E+38);
       });
 
     });
@@ -52,14 +52,14 @@ define([
         expect(doubleInitializeSpy).to.be.calledOn(f).and.be.calledWith(value);
       });
 
-      it("should reject a finite value less than -(.getMinValue())", function () {
-        expect(bind(FloatValue, 'create', -FloatValue.getMaxValue() * 2))
-          .to.throw("must not be less than " + -FloatValue.getMaxValue());
+      it("should reject a finite value less than -(.maxValue)", function () {
+        expect(bind(FloatValue, 'create', -FloatValue.maxValue * 2))
+          .to.throw("must not be less than " + -FloatValue.maxValue);
       });
 
-      it("should reject a finite value greater than .getMaxValue()", function () {
-        expect(bind(FloatValue, 'create', FloatValue.getMaxValue() * 2))
-          .to.throw("must not be greater than " + FloatValue.getMaxValue());
+      it("should reject a finite value greater than .maxValue", function () {
+        expect(bind(FloatValue, 'create', FloatValue.maxValue * 2))
+          .to.throw("must not be greater than " + FloatValue.maxValue);
       });
 
     });

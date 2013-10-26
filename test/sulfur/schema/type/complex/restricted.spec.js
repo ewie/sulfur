@@ -81,7 +81,7 @@ define([
 
     });
 
-    describe('#getPrimitive()', function () {
+    describe('#primitive()', function () {
 
       it("should return the primitive type", function () {
         var type = { isRestrictionOf: returns(true) };
@@ -92,12 +92,12 @@ define([
         var elements = Elements.create(
           [ Element.create('foo', type) ]);
         var restriction = RestrictedType.create(primitive, elements);
-        expect(restriction.getPrimitive()).to.equal(primitive);
+        expect(restriction.primitive).to.equal(primitive);
       });
 
     });
 
-    describe('#getValueType()', function () {
+    describe('#valueType', function () {
 
       it("should return the primitive's value type", function () {
         var type = { isRestrictionOf: returns(true) };
@@ -110,12 +110,12 @@ define([
         var elements = Elements.create(
           [ Element.create('foo', type) ]);
         var restriction = RestrictedType.create(primitive, elements);
-        expect(restriction.getValueType()).to.equal(valueType);
+        expect(restriction.valueType).to.equal(valueType);
       });
 
     });
 
-    describe('#getElements()', function () {
+    describe('#elements', function () {
 
       it("should return the elements", function () {
         var type = { isRestrictionOf: returns(true) };
@@ -126,7 +126,7 @@ define([
         var elements = Elements.create(
           [ Element.create('foo', type) ]);
         var restriction = RestrictedType.create(base, elements);
-        expect(restriction.getElements()).to.equal(elements);
+        expect(restriction.elements).to.equal(elements);
       });
 
     });
@@ -246,15 +246,15 @@ define([
 
       it("should include a sulfur/schema/validator/prototype using the value type's prototype", function () {
         var v = restriction.createValidator();
-        expect(v.getValidators()).to.include.something.eql(
+        expect(v.validators).to.include.something.eql(
           PrototypeValidator.create(valueType.prototype));
       });
 
-      it("should include a sulfur/schema/validator/property with method 'getValue', the element name as argument, and the element type's validator", function () {
+      it("should include a sulfur/schema/validator/property with property 'value', the element name as argument, and the element type's validator", function () {
         var v = restriction.createValidator();
-        expect(v.getValidators()).to.include.something.eql(
-          PropertyValidator.create('getValue',
-            elements.getElement('foo').getType().createValidator(),
+        expect(v.validators).to.include.something.eql(
+          PropertyValidator.create('value',
+            elements.getByName('foo').type.createValidator(),
             [ 'foo' ]));
       });
 

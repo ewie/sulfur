@@ -17,7 +17,6 @@ define([
 
   var expect = shared.expect;
   var bind = shared.bind;
-  var returns = shared.returns;
 
   describe('sulfur/schema', function () {
 
@@ -27,9 +26,7 @@ define([
 
     beforeEach(function () {
       name = 'bar';
-      elements = Elements.create([
-        { getName: returns('name') }
-      ]);
+      elements = Elements.create([ { name: 'name' } ]);
       schema = Schema.create(name, elements);
     });
 
@@ -42,18 +39,18 @@ define([
 
     });
 
-    describe('#getName()', function () {
+    describe('#name', function () {
 
       it("should return the schema name", function () {
-        expect(schema.getName()).to.equal(name);
+        expect(schema.name).to.equal(name);
       });
 
     });
 
-    describe('#getElements()', function () {
+    describe('#elements', function () {
 
       it("should return the element collection", function () {
-        expect(schema.getElements()).to.equal(elements);
+        expect(schema.elements).to.equal(elements);
       });
 
     });

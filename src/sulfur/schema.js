@@ -21,11 +21,11 @@ define(['sulfur/util/factory'], function (Factory) {
       this._elements = elements;
     },
 
-    getName: function () {
+    get name() {
       return this._name;
     },
 
-    getElements: function () {
+    get elements() {
       return this._elements;
     }
 

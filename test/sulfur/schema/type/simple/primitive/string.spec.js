@@ -53,25 +53,25 @@ define([
       expect(PrimitiveType.prototype).to.be.prototypeOf(StringType);
     });
 
-    describe('.getQName()', function () {
+    describe('.qname', function () {
 
       it("should return {http://www.w3.org/2001/XMLSchema}string", function () {
-        expect(StringType.getQName())
+        expect(StringType.qname)
           .to.eql(QName.create('string', 'http://www.w3.org/2001/XMLSchema'));
       });
 
 
     });
 
-    describe('.getValueType()', function () {
+    describe('.valueType', function () {
 
       it("should return sulfur/schema/value/simple/string", function () {
-        expect(StringType.getValueType()).to.equal(StringValue);
+        expect(StringType.valueType).to.equal(StringValue);
       });
 
     });
 
-    describe('.getAllowedFacets()', function () {
+    describe('.allowedFacets', function () {
 
       [
         EnumerationFacet,
@@ -82,11 +82,11 @@ define([
         WhiteSpaceFacet
       ].forEach(function (facet) {
 
-        var qname = facet.getQName();
-        var name = qname.getLocalName();
+        var qname = facet.qname;
+        var name = qname.localName;
 
         it("should include sulfur/schema/facet/" + name, function () {
-          expect(StringType.getAllowedFacets().getFacet(qname)).to.equal(facet);
+          expect(StringType.allowedFacets.getByQName(qname)).to.equal(facet);
         });
 
       });
@@ -106,7 +106,7 @@ define([
         var restriction = RestrictedType.create(StringType,
           Facets.create([ LengthFacet.create(0) ]));
         var v = StringType.createRestrictionValidator(restriction);
-        expect(v.getValidators())
+        expect(v.validators)
           .to.include.something.eql(StringType.createValidator());
       });
 
@@ -119,8 +119,8 @@ define([
           var restriction2 = RestrictedType.create(StringType,
             Facets.create([ facet ]));
           var v = StringType.createRestrictionValidator(restriction);
-          var v2 = v.getValidators()[1];
-          expect(v2).to.eql(StringType.createRestrictionValidator(restriction2).getValidators()[1]);
+          var v2 = v.validators[1];
+          expect(v2).to.eql(StringType.createRestrictionValidator(restriction2).validators[1]);
         });
 
         context("with value 'collapse'", function () {
@@ -139,22 +139,22 @@ define([
 
           it("should include a sulfur/schema/validator/property", function () {
             var v = StringType.createRestrictionValidator(restriction);
-            var v2 = v.getValidators()[1];
+            var v2 = v.validators[1];
             expect(PropertyValidator.prototype).to.be.prototypeOf(v2);
           });
 
           it("should use method 'collapseWhiteSpace'", function () {
             var v = StringType.createRestrictionValidator(restriction);
-            var v2 = v.getValidators()[1];
-            expect(v2.getPropertyName()).to.equal('collapseWhiteSpace');
+            var v2 = v.validators[1];
+            expect(v2.propertyName).to.equal('collapseWhiteSpace');
           });
 
           it("should use the nested sulfur/schema/validator/all that whould have been created if facet 'whiteSpace' is not defined", function () {
             var v = StringType.createRestrictionValidator(restriction);
-            var v2 = v.getValidators()[1].getValidator();
+            var v2 = v.validators[1].validator;
             expect(v2).to.eql(
               StringType.createRestrictionValidator(
-                restrictionWithoutWhiteSpace).getValidators()[1]);
+                restrictionWithoutWhiteSpace).validators[1]);
           });
 
         });
@@ -175,22 +175,22 @@ define([
 
           it("should include a sulfur/schema/validator/property", function () {
             var v = StringType.createRestrictionValidator(restriction);
-            var v2 = v.getValidators()[1];
+            var v2 = v.validators[1];
             expect(PropertyValidator.prototype).to.be.prototypeOf(v2);
           });
 
           it("should use method 'replaceWhiteSpace'", function () {
             var v = StringType.createRestrictionValidator(restriction);
-            var v2 = v.getValidators()[1];
-            expect(v2.getPropertyName()).to.equal('replaceWhiteSpace');
+            var v2 = v.validators[1];
+            expect(v2.propertyName).to.equal('replaceWhiteSpace');
           });
 
           it("should use the nested sulfur/schema/validator/all that whould have been created if facet 'whiteSpace' is not defined", function () {
             var v = StringType.createRestrictionValidator(restriction);
-            var v2 = v.getValidators()[1].getValidator();
+            var v2 = v.validators[1].validator;
             expect(v2).to.eql(
               StringType.createRestrictionValidator(
-                restrictionWithoutWhiteSpace).getValidators()[1]);
+                restrictionWithoutWhiteSpace).validators[1]);
           });
 
         });
@@ -204,7 +204,7 @@ define([
           var restriction = RestrictedType.create(StringType,
             Facets.create([ facet ]));
           var v = StringType.createRestrictionValidator(restriction);
-          var v2 = v.getValidators()[1];
+          var v2 = v.validators[1];
           expect(AllValidator.prototype).to.be.prototypeOf(v2);
         });
 
@@ -215,7 +215,7 @@ define([
             var restriction = RestrictedType.create(StringType,
               Facets.create([ facet ]));
             var v = StringType.createRestrictionValidator(restriction);
-            expect(v.getValidators()[1].getValidators())
+            expect(v.validators[1].validators)
               .to.include.something.eql(facet.createValidator());
           });
 
@@ -224,7 +224,7 @@ define([
             var restriction = RestrictedType.create(StringType,
               Facets.create([ facet ]));
             var v = StringType.createRestrictionValidator(restriction);
-            expect(v.getValidators()[1].getValidators())
+            expect(v.validators[1].validators)
               .to.include.something.eql(facet.createValidator());
           });
 
@@ -233,7 +233,7 @@ define([
             var restriction = RestrictedType.create(StringType,
               Facets.create([ facet ]));
             var v = StringType.createRestrictionValidator(restriction);
-            expect(v.getValidators()[1].getValidators())
+            expect(v.validators[1].validators)
               .to.include.something.eql(facet.createValidator());
           });
 
@@ -242,7 +242,7 @@ define([
             var restriction = RestrictedType.create(StringType,
               Facets.create([ facet ]));
             var v = StringType.createRestrictionValidator(restriction);
-            expect(v.getValidators()[1].getValidators())
+            expect(v.validators[1].validators)
               .to.include.something.eql(facet.createValidator());
           });
 
@@ -254,7 +254,7 @@ define([
             var restriction = RestrictedType.create(base,
               Facets.create([ facet ]));
             var v = StringType.createRestrictionValidator(restriction);
-            expect(v.getValidators()[1].getValidators())
+            expect(v.validators[1].validators)
               .to.include.something.eql(
                 PatternFacet.createConjunctionValidator([ facet, baseFacet ]));
           });

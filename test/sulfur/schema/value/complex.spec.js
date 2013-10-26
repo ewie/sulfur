@@ -42,7 +42,7 @@ define([
 
     });
 
-    describe('#getValue()', function () {
+    describe('#value', function () {
 
       var type;
       var values;

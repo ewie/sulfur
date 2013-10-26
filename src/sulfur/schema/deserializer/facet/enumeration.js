@@ -6,16 +6,13 @@
 
 /* global define */
 
-define([
-  'sulfur/schema/facet/enumeration',
-  'sulfur/util'
-], function (EnumerationFacet, util) {
+define(['sulfur/schema/facet/enumeration'], function (EnumerationFacet) {
 
   'use strict';
 
   return {
 
-    getFacet: util.returns(EnumerationFacet),
+    get facet() { return EnumerationFacet; },
 
     parseValue: function (s, p) {
       return p.parse(s);

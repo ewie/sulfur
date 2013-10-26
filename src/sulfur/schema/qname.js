@@ -17,16 +17,16 @@ define(['sulfur/util/factory'], function (Factory) {
       this._namespaceURI = namespaceURI;
     },
 
-    getLocalName: function () {
+    get localName() {
       return this._localName;
     },
 
-    getNamespaceURI: function () {
+    get namespaceURI() {
       return this._namespaceURI;
     },
 
     toString: function () {
-      return '{' + this._namespaceURI + '}' + this._localName;
+      return '{' + this.namespaceURI + '}' + this.localName;
     }
 
   });

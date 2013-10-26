@@ -24,7 +24,7 @@ define(['sulfur/util/factory'], function (Factory) {
     /**
      * @return {object} the prototype to match
      */
-    getPrototype: function () {
+    get prototype() {
       return this._prototype;
     },
 

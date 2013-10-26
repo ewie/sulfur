@@ -22,15 +22,15 @@ define([
       this._qname = options.qname;
     },
 
-    getQName: function () {
+    get qname() {
       return this._qname;
     },
 
-    getValueType: function () {
+    get valueType() {
       return this._valueType;
     },
 
-    getAllowedFacets: function () {
+    get allowedFacets() {
       return this._allowedFacets;
     },
 
@@ -39,11 +39,11 @@ define([
     },
 
     createValidator: function () {
-      return PrototypeValidator.create(this.getValueType().prototype);
+      return PrototypeValidator.create(this.valueType.prototype);
     },
 
     createRestrictionValidator: function (restriction) {
-      var allowedFacets = this.getAllowedFacets().toArray();
+      var allowedFacets = this.allowedFacets.toArray();
       var validators = allowedFacets.reduce(function (validators, allowedFacet) {
         var facets = allowedFacet.getEffectiveFacets(restriction);
         if (facets) {

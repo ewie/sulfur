@@ -24,7 +24,7 @@ define(['sulfur/util/factory'], function (Factory) {
     /**
      * @return {sulfur/schema/value/simple/string} the reference's identifier
      */
-    getIdentifier: function () {
+    get identifier() {
       return this._id;
     },
 
@@ -32,7 +32,7 @@ define(['sulfur/util/factory'], function (Factory) {
      * @return {sulfur/schema/file} the file when defined
      * @return {undefined} when no file is defined
      */
-    getFile: function () {
+    get file() {
       return this._file;
     }
 

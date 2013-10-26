@@ -35,16 +35,17 @@ define([
   var requireLengthFacet = requireFacet('length');
   var requireMaxLengthFacet = requireFacet('maxLength');
 
+  var qname = QName.create('minLength', 'http://www.w3.org/2001/XMLSchema');
+
   var $ = Facet.clone({
 
-    getQName: util.returns(
-      QName.create('minLength', 'http://www.w3.org/2001/XMLSchema')),
+    get qname() { return qname; },
 
     isShadowingLowerRestrictions: util.returns(true),
 
-    getMutualExclusiveFacets: util.once(function () {
+    get mutualExclusiveFacets() {
       return [ requireLengthFacet() ];
-    })
+    }
 
   });
 
@@ -57,12 +58,12 @@ define([
       }
 
       var maxLengthFacet = requireMaxLengthFacet().getEffectiveFacet(type);
-      if (maxLengthFacet && this.getValue() > maxLengthFacet.getValue()) {
+      if (maxLengthFacet && this.value > maxLengthFacet.value) {
         return false;
       }
 
       var minLengthFacet = this.factory.getEffectiveFacet(type);
-      if (minLengthFacet && this.getValue() < minLengthFacet.getValue()) {
+      if (minLengthFacet && this.value < minLengthFacet.value) {
         return false;
       }
 
@@ -70,8 +71,8 @@ define([
     },
 
     validate: function (type, errors) {
-      var maxLengthFacet = type.getFacet(requireMaxLengthFacet().getQName());
-      if (maxLengthFacet && this._value > maxLengthFacet.getValue()) {
+      var maxLengthFacet = type.getByQName(requireMaxLengthFacet().qname);
+      if (maxLengthFacet && this._value > maxLengthFacet.value) {
         if (errors) {
           errors.push("must not be greater than facet 'maxLength'");
         }
@@ -82,8 +83,8 @@ define([
 
     createValidator: function () {
       return PropertyValidator.create(
-        'getLength',
-        MinimumValidator.create(this.getValue())
+        'length',
+        MinimumValidator.create(this.value)
       );
     }
 

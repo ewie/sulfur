@@ -51,27 +51,27 @@ define([
 
       it("should parse 'true' as true", function () {
         var b = BooleanValue.parse('true');
-        expect(b.getValue()).to.be.true;
+        expect(b.value).to.be.true;
       });
 
       it("should parse 'false' as false", function () {
         var b = BooleanValue.parse('false');
-        expect(b.getValue()).to.be.false;
+        expect(b.value).to.be.false;
       });
 
       it("should parse '1' as true", function () {
         var b = BooleanValue.parse('1');
-        expect(b.getValue()).to.be.true;
+        expect(b.value).to.be.true;
       });
 
       it("should parse '0' as false", function () {
         var b = BooleanValue.parse('0');
-        expect(b.getValue()).to.be.false;
+        expect(b.value).to.be.false;
       });
 
       it("should ignore leading and trailing white space", function () {
         var b = BooleanValue.parse('\x09\x0A\x0D true \x09\x0A\x0D');
-        expect(b.getValue()).to.be.true;
+        expect(b.value).to.be.true;
       });
 
       it("should reject an invalid literal", function () {
@@ -90,26 +90,26 @@ define([
 
       it("should accept true", function () {
         var b = BooleanValue.create(true);
-        expect(b.getValue()).to.be.true;
+        expect(b.value).to.be.true;
       });
 
       it("should accept false", function () {
         var b = BooleanValue.create(false);
-        expect(b.getValue()).to.be.false;
+        expect(b.value).to.be.false;
       });
 
     });
 
-    describe('#getValue()', function () {
+    describe('#value', function () {
 
       it("should return true when initialized with true", function () {
         var b = BooleanValue.create(true);
-        expect(b.getValue()).to.be.true;
+        expect(b.value).to.be.true;
       });
 
       it("should return false when initialized with false", function () {
         var b = BooleanValue.create(false);
-        expect(b.getValue()).to.be.false;
+        expect(b.value).to.be.false;
       });
 
     });

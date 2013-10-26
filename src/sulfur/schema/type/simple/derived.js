@@ -19,11 +19,11 @@ define(['sulfur/schema/type/simple/restricted'], function (RestrictedType) {
       this._valueType = options.valueType;
     },
 
-    getQName: function () {
+    get qname() {
       return this._qname;
     },
 
-    getValueType: function () {
+    get valueType() {
       return this._valueType;
     }
 

@@ -36,7 +36,7 @@ define(['sulfur/util/factory'], function(Factory) {
         if (prefix === null) {
           prefix = findUniquePrefix(this._document);
           this._document.declareNamespace(namespaceURI, prefix,
-            this._document.getRoot());
+            this._document.root);
         }
         return prefix;
       };

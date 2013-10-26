@@ -37,7 +37,7 @@ define([
   'use strict';
 
   return PrimitiveType.create(
-    { qname: QName.create('geolocation', sulfur.getNamespaceURI()),
+    { qname: QName.create('geolocation', sulfur.namespaceURI),
       valueType: GeolocationValue,
       elements: Elements.create(
         [ Element.create('longitude',

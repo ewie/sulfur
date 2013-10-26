@@ -25,12 +25,12 @@ define([
 
       it("should initialize the element with the given name", function () {
         var element = Element.create(name, type);
-        expect(element.getName()).to.equal(name);
+        expect(element.name).to.equal(name);
       });
 
       it("should initialize the element with the given type", function () {
         var element = Element.create(name, type);
-        expect(element.getType()).to.equal(type);
+        expect(element.type).to.equal(type);
       });
 
       it("should initialize the element as optional when specified", function () {
@@ -50,21 +50,21 @@ define([
 
     });
 
-    describe('#getName()', function () {
+    describe('#name', function () {
 
       it("should return the element's name", function () {
         var element = Element.create('foo');
-        expect(element.getName()).to.equal('foo');
+        expect(element.name).to.equal('foo');
       });
 
     });
 
-    describe('#getType()', function () {
+    describe('#type', function () {
 
       it("should return the element's type", function () {
         var type = {};
         var element = Element.create('', type);
-        expect(element.getType()).to.equal(type);
+        expect(element.type).to.equal(type);
       });
 
     });

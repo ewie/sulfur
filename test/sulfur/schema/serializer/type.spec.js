@@ -120,8 +120,8 @@ define([
 
       it("should return an xs:element", function () {
         var element = {
-          getType: returns({}),
-          getName: returns('foo'),
+          type: {},
+          name: 'foo',
           isOptional: returns(false)
         };
         sinon.stub(typeSerializer, 'serializeType')
@@ -133,8 +133,8 @@ define([
 
       it("should add attribute @name with the element name as value", function () {
         var element = {
-          getType: returns({}),
-          getName: returns('foo'),
+          type: {},
+          name: 'foo',
           isOptional: returns(false)
         };
         sinon.stub(typeSerializer, 'serializeType')
@@ -146,8 +146,8 @@ define([
       it("should add attribute @minOccurs with value zero when the element is optional", function () {
         var type = {};
         var element = {
-          getName: returns('foo'),
-          getType: returns(type),
+          name: 'foo',
+          type: type,
           isOptional: returns(true)
         };
         var child = ctx.createElement('urn:z', 'z:y');
@@ -156,11 +156,11 @@ define([
         expect(e.getAttribute('minOccurs')).to.equal('0');
       });
 
-      it("should add the serialize type as child when the element's type does not respond to .getQName()", function () {
+      it("should add the serialize type as child when the element's type does not respond to .qname", function () {
         var type = {};
         var element = {
-          getName: returns('foo'),
-          getType: returns(type),
+          name: 'foo',
+          type: type,
           isOptional: returns(false)
         };
         var child = ctx.createElement('urn:z', 'z:y');
@@ -172,7 +172,7 @@ define([
         expect(e.firstChild).to.equal(child);
       });
 
-      context("when the element's type responds to .getQName()", function () {
+      context("when the element's type responds to .qname", function () {
 
         var qname;
         var element;
@@ -180,8 +180,8 @@ define([
         beforeEach(function () {
           qname = QName.create('bar', 'urn:foo');
           element = {
-            getName: returns('bar'),
-            getType: returns({ getQName: returns(qname) }),
+            name: 'bar',
+            type: { qname: qname },
             isOptional: returns(false)
           };
         });
@@ -201,7 +201,7 @@ define([
           expect(e.namespaceURI).to.equal('http://www.w3.org/2001/XMLSchema');
           expect(e.getAttribute('name')).to.equal('bar');
           expect(e.getAttribute('type')).to.equal('ns1:bar');
-          expect(spy).to.be.calledWith(qname.getNamespaceURI());
+          expect(spy).to.be.calledWith(qname.namespaceURI);
         });
 
       });

@@ -163,7 +163,7 @@ define([
         complexTypeDeserializer = ComplexTypeDeserializer.create(
           [ complexType, complexType2, complexType3, complexType4 ]);
         var facetDeserializer = {
-          getFacet: returns(MinInclusiveFacet),
+          getByQName: returns(MinInclusiveFacet),
           parseValue: function (s) { return parseInt(s, 10); },
           createFacet: function (values) {
             return MinInclusiveFacet.create(DoubleValue.create(values[0]));

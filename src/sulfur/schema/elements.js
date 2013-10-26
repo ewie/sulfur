@@ -14,7 +14,7 @@ define([
 
   'use strict';
 
-  var keyfn = util.method('getName');
+  var keyfn = util.property('name');
 
   return Factory.derive({
 
@@ -23,7 +23,7 @@ define([
         throw new Error("expecting one or more elements");
       }
       this._index = elements.reduce(function (index, element) {
-        var name = element.getName();
+        var name = element.name;
         if (index.containsKey(name)) {
           throw new Error('element with duplicate name "' + name + '"');
         }
@@ -32,12 +32,12 @@ define([
       }, OrderedMap.create(keyfn));
     },
 
-    getElement: function (name) {
+    getByName: function (name) {
       return this._index.getItemByKey(name);
     },
 
-    getSize: function () {
-      return this._index.getSize();
+    get size() {
+      return this._index.size;
     },
 
     toArray: function () {
