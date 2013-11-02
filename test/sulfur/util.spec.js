@@ -293,7 +293,7 @@ define([
         values.forEach(function (value) {
           expect(value.toString).to.be.calledOn(value);
         });
-        expect(uniq).to.have.length(1);
+        expect(uniq).to.have.lengthOf(1);
         expect(uniq[0]).to.equal(values[0]);
       });
 
@@ -310,7 +310,7 @@ define([
           var keyfn = sinon.stub().returns('y');
           var values = [{}, {}];
           var uniq = util.uniq(values, keyfn);
-          expect(uniq).to.have.length(1);
+          expect(uniq).to.have.lengthOf(1);
           expect(uniq[0]).to.equal(values[0]);
         });
 

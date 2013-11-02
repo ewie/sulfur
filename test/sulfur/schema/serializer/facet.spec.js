@@ -57,7 +57,7 @@ define([
         var obj = { value: 'z' };
         var facetSerializer = FacetSerializer.create(facet);
         var e = facetSerializer.serializeFacet(obj, ctx);
-        expect(e).to.have.length(1);
+        expect(e).to.have.lengthOf(1);
         expect(e[0].nodeName).to.equal('ns1:x');
         expect(e[0].namespaceURI).to.equal('urn:y');
         expect(e[0].attributes.value.value).to.equal('z');
@@ -68,7 +68,7 @@ define([
         var obj = { value: [ 'a', 'b' ] };
         var facetSerializer = FacetSerializer.create(facet);
         var e = facetSerializer.serializeFacet(obj, ctx);
-        expect(e).to.have.length(2);
+        expect(e).to.have.lengthOf(2);
         expect(e[0].nodeName).to.equal('ns1:foo');
         expect(e[0].namespaceURI).to.equal('urn:bar');
         expect(e[0].attributes.value.value).to.equal('a');

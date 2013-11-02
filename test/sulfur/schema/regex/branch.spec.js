@@ -32,7 +32,7 @@ define([
 
         it("should create an empty branch", function () {
           var b = Branch.create();
-          expect(b.pieces).to.have.length(0);
+          expect(b.pieces).to.have.lengthOf(0);
         });
 
       });

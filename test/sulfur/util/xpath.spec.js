@@ -105,7 +105,7 @@ define([
         var doc = parse('<foo><bar/><baz/><bar/></foo>');
         var xpath = XPath.create(doc);
         var nodes = xpath.all('foo/bar');
-        expect(nodes).to.have.length(2);
+        expect(nodes).to.have.lengthOf(2);
         expect(nodes[0]).to.equal(doc.documentElement.firstChild);
         expect(nodes[1]).to.equal(doc.documentElement.lastChild);
       });
@@ -114,7 +114,7 @@ define([
         var doc = parse('<foo><bar/><baz/><bar/></foo>');
         var xpath = XPath.create(doc);
         var nodes = xpath.all('bar', doc.documentElement);
-        expect(nodes).to.have.length(2);
+        expect(nodes).to.have.lengthOf(2);
         expect(nodes[0]).to.equal(doc.documentElement.firstChild);
         expect(nodes[1]).to.equal(doc.documentElement.lastChild);
       });
@@ -123,7 +123,7 @@ define([
         var doc = parse('<foo xmlns:x="urn:x"><x:bar/><baz/><bar/></foo>');
         var xpath = XPath.create(doc);
         var nodes = xpath.all('x:bar', doc.documentElement, { x: 'urn:x' });
-        expect(nodes).to.have.length(1);
+        expect(nodes).to.have.lengthOf(1);
         expect(nodes[0]).to.equal(doc.documentElement.firstChild);
       });
 
