@@ -54,12 +54,12 @@ define([
           '</xs:schema>');
         var xpath = XPath.create(doc);
         var typeDeserializer = TypeDeserializer.create();
-        var deserializeSpy = sinon.stub(typeDeserializer, 'deserializeType').returns({});
+        var spy = sinon.stub(typeDeserializer, 'deserializeType').returns({});
         var type = typeDeserializer.resolveGlobalType('foo', xpath);
 
-        expect(deserializeSpy).to.have.returned(sinon.match.same(type));
-        expect(deserializeSpy.getCall(0).args[0]).to.equal(doc.documentElement.firstChild),
-        expect(deserializeSpy.getCall(0).args[1]).to.equal(xpath);
+        expect(spy).to.have.returned(sinon.match.same(type));
+        expect(spy.getCall(0).args[0]).to.equal(doc.documentElement.firstChild),
+        expect(spy.getCall(0).args[1]).to.equal(xpath);
       });
 
       it("should return the result of calling #deserializeType() with the xs:complexType of the given name when declared", function () {
@@ -69,12 +69,12 @@ define([
           '</xs:schema>');
         var xpath = XPath.create(doc);
         var typeDeserializer = TypeDeserializer.create();
-        var deserializeSpy = sinon.stub(typeDeserializer, 'deserializeType').returns({});
+        var spy = sinon.stub(typeDeserializer, 'deserializeType').returns({});
         var type = typeDeserializer.resolveGlobalType('bar', xpath);
 
-        expect(deserializeSpy).to.have.returned(sinon.match.same(type));
-        expect(deserializeSpy.getCall(0).args[0]).to.equal(doc.documentElement.firstChild),
-        expect(deserializeSpy.getCall(0).args[1]).to.equal(xpath);
+        expect(spy).to.have.returned(sinon.match.same(type));
+        expect(spy.getCall(0).args[0]).to.equal(doc.documentElement.firstChild),
+        expect(spy.getCall(0).args[1]).to.equal(xpath);
       });
 
     });
@@ -236,7 +236,7 @@ define([
 
         var typeDeserializer = TypeDeserializer.create();
         var someType = {};
-        sinon.stub(typeDeserializer, 'resolveGlobalType').returns(someType);
+        typeDeserializer.resolveGlobalType = returns(someType);
 
         var e = typeDeserializer.deserializeElement(element);
 
@@ -253,7 +253,7 @@ define([
 
         var typeDeserializer = TypeDeserializer.create();
         var someType = {};
-        sinon.stub(typeDeserializer, 'resolveGlobalType').returns(someType);
+        typeDeserializer.resolveGlobalType = returns(someType);
 
         var e = typeDeserializer.deserializeElement(element);
 
@@ -293,13 +293,12 @@ define([
 
           var typeDeserializer = TypeDeserializer.create();
           var type = {};
-          var deserializeSpy = sinon.stub(typeDeserializer,
-            'resolveGlobalType').returns(type);
+          var spy = sinon.stub(typeDeserializer, 'resolveGlobalType').returns(type);
 
           var e = typeDeserializer.deserializeElement(element);
 
           expect(e.type).to.equal(type);
-          expect(deserializeSpy).to.be.calledWith('someType');
+          expect(spy).to.be.calledWith('someType');
         });
 
         it("should return an element with the resolved named type when the referenced type is not a global type", function () {
@@ -314,14 +313,13 @@ define([
 
           var typeDeserializer = TypeDeserializer.create();
           var type = {};
-          var deserializeSpy = sinon.stub(typeDeserializer,
-            'resolveNamedType').returns(type);
-          sinon.stub(typeDeserializer, 'resolveGlobalType').returns(undefined);
+          var spy = sinon.stub(typeDeserializer, 'resolveNamedType').returns(type);
+          typeDeserializer.resolveGlobalType = returns(undefined);
 
           var e = typeDeserializer.deserializeElement(element);
 
           expect(e.type).to.equal(type);
-          expect(deserializeSpy).to.be.calledWith(QName.create('bar', 'urn:foo'));
+          expect(spy).to.be.calledWith(QName.create('bar', 'urn:foo'));
         });
 
       });
@@ -343,7 +341,7 @@ define([
             var typeDeserializer = TypeDeserializer.create();
             var type = {};
             var deserializeSpy = sinon.spy(typeDeserializer, 'deserializeElement');
-            sinon.stub(typeDeserializer, 'resolveGlobalType').returns(type);
+            typeDeserializer.resolveGlobalType = returns(type);
 
             var e = typeDeserializer.deserializeElement(element, xpath);
 
@@ -368,7 +366,7 @@ define([
             var typeDeserializer = TypeDeserializer.create();
             var type = {};
             var deserializeSpy = sinon.spy(typeDeserializer, 'deserializeElement');
-            sinon.stub(typeDeserializer, 'resolveGlobalType').returns(type);
+            typeDeserializer.resolveGlobalType = returns(type);
 
             var e = typeDeserializer.deserializeElement(element, xpath);
 
@@ -423,16 +421,15 @@ define([
             var xpath = XPath.create(doc);
             var typeDeserializer = TypeDeserializer.create();
             var type = {};
-            var deserializeSpy = sinon.stub(typeDeserializer,
-              'deserializeType').returns(type);
+            var spy = sinon.stub(typeDeserializer, 'deserializeType').returns(type);
 
             var e = typeDeserializer.deserializeElement(element, xpath);
 
             expect(e.type).to.equal(type);
 
-            expect(deserializeSpy).to.be.called;
-            expect(deserializeSpy.getCall(0).args[0]).to.equal(element.firstChild);
-            expect(deserializeSpy.getCall(0).args[1]).to.equal(xpath);
+            expect(spy).to.be.called;
+            expect(spy.getCall(0).args[0]).to.equal(element.firstChild);
+            expect(spy.getCall(0).args[1]).to.equal(xpath);
           });
 
           it("should return the result of calling #deserializeType() with child xs:complexType when declared", function () {
@@ -448,16 +445,15 @@ define([
             var xpath = XPath.create(doc);
             var typeDeserializer = TypeDeserializer.create();
             var type = {};
-            var deserializeSpy = sinon.stub(typeDeserializer,
-              'deserializeType').returns(type);
+            var spy = sinon.stub(typeDeserializer, 'deserializeType').returns(type);
 
             var e = typeDeserializer.deserializeElement(element, xpath);
 
             expect(e.type).to.equal(type);
 
-            expect(deserializeSpy).to.be.called;
-            expect(deserializeSpy.getCall(0).args[0]).to.equal(element.firstChild);
-            expect(deserializeSpy.getCall(0).args[1]).to.equal(xpath);
+            expect(spy).to.be.called;
+            expect(spy.getCall(0).args[0]).to.equal(element.firstChild);
+            expect(spy.getCall(0).args[1]).to.equal(xpath);
           });
 
         });

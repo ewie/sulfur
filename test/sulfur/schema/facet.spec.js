@@ -133,7 +133,7 @@ define([
         it("should return the first instance when the facet is shadowing lower restrictions", function () {
           var first = {};
           var facet = mockFacet();
-          sinon.stub(facet, 'getEffectiveFacets').returns([ first ]);
+          facet.getEffectiveFacets = returns([ first ]);
           var restriction = {};
           expect(facet.getEffectiveFacet(restriction)).to.equal(first);
         });

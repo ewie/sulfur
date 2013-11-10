@@ -16,6 +16,7 @@ define([
 
   var expect = shared.expect;
   var sinon = shared.sinon;
+  var returns = shared.returns;
 
   describe('sulfur/schema/value/list', function () {
 
@@ -93,7 +94,7 @@ define([
         it("should return true if each value is equal to the corresponding value of the other list at the same index", function () {
           var values = [ value() ];
           values.forEach(function (value) {
-            sinon.stub(value, 'eq').returns(true);
+            value.eq = returns(true);
           });
           var otherValues = [ {} ];
           var list = ListValue.create(values);
@@ -104,7 +105,7 @@ define([
         it("should return false if any value is not equal to the corresponding value of the other list at the same index", function () {
           var values = [ value() ];
           values.forEach(function (value) {
-            sinon.stub(value, 'eq').returns(false);
+            value.eq = returns(false);
           });
           var otherValues = [ {} ];
           var list = ListValue.create(values);

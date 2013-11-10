@@ -15,8 +15,8 @@ define([
   'use strict';
 
   var expect = shared.expect;
-  var bind = shared.bind;
   var sinon = shared.sinon;
+  var bind = shared.bind;
 
   describe('sulfur/schema/validator/enumeration', function () {
 

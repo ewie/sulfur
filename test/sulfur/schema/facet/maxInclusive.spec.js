@@ -94,12 +94,12 @@ define([
       });
 
       it("should return true when the value satisfies the validator", function () {
-        sinon.stub(validator, 'validate').returns(true);
+        validator.validate = returns(true);
         expect(facet.isRestrictionOf(type)).to.be.true;
       });
 
       it("should return false when the value does not satisfy the validator", function () {
-        sinon.stub(validator, 'validate').returns(false);
+        validator.validate = returns(false);
         expect(facet.isRestrictionOf(type)).to.be.false;
       });
 

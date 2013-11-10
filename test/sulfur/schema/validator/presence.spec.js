@@ -16,6 +16,7 @@ define([
 
   var expect = shared.expect;
   var sinon = shared.sinon;
+  var returns = shared.returns;
 
   describe('sulfur/schema/validator/presence', function () {
 
@@ -50,12 +51,12 @@ define([
         });
 
         it("should return true when the subvalidator returns true", function () {
-          sinon.stub(subvalidator, 'validate').returns(true);
+          subvalidator.validate = returns(true);
           expect(validator.validate(value)).to.be.true;
         });
 
         it("should return false when the subvalidator returns false", function () {
-          sinon.stub(subvalidator, 'validate').returns(false);
+          subvalidator.validate = returns(false);
           expect(validator.validate(value)).to.be.false;
         });
 
@@ -79,12 +80,12 @@ define([
         });
 
         it("should return true when the subvalidator returns true", function () {
-          sinon.stub(subvalidator, 'validate').returns(true);
+          subvalidator.validate = returns(true);
           expect(validator.validate(value)).to.be.true;
         });
 
         it("should return false when the subvalidator returns false", function () {
-          sinon.stub(subvalidator, 'validate').returns(false);
+          subvalidator.validate = returns(false);
           expect(validator.validate(value)).to.be.false;
         });
 

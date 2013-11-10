@@ -124,8 +124,7 @@ define([
           name: 'foo',
           isOptional: returns(false)
         };
-        sinon.stub(typeSerializer, 'serializeType')
-          .returns(ctx.createElement('urn:dummy', 'dummy:void'));
+        typeSerializer.serializeType = returns(ctx.createElement('urn:dummy', 'dummy:void'));
         var e = typeSerializer.serializeElement(element, ctx);
         expect(e.nodeName).to.equal('xs:element');
         expect(e.namespaceURI).to.equal('http://www.w3.org/2001/XMLSchema');
@@ -137,8 +136,7 @@ define([
           name: 'foo',
           isOptional: returns(false)
         };
-        sinon.stub(typeSerializer, 'serializeType')
-          .returns(ctx.createElement('urn:dummy', 'dummy:void'));
+        typeSerializer.serializeType = returns(ctx.createElement('urn:dummy', 'dummy:void'));
         var e = typeSerializer.serializeElement(element, ctx);
         expect(e.getAttribute('name')).to.equal('foo');
       });
@@ -151,7 +149,7 @@ define([
           isOptional: returns(true)
         };
         var child = ctx.createElement('urn:z', 'z:y');
-        sinon.stub(typeSerializer, 'serializeType').returns(child);
+        typeSerializer.serializeType = returns(child);
         var e = typeSerializer.serializeElement(element, ctx);
         expect(e.getAttribute('minOccurs')).to.equal('0');
       });
@@ -167,7 +165,7 @@ define([
         };
         var spy = sinon.spy(value, 'toString');
         var child = ctx.createElement('urn:z', 'z:y');
-        sinon.stub(typeSerializer, 'serializeType').returns(child);
+        typeSerializer.serializeType = returns(child);
         var e = typeSerializer.serializeElement(element, ctx);
         expect(e.getAttribute('default')).to.equal('bar');
         expect(spy).to.be.called;
@@ -211,7 +209,7 @@ define([
         });
 
         it("should return an xs:element with attribute @type and the qualified name as value when #hasTypeWithQualifiedName() is true", function () {
-          sinon.stub(typeSerializer, 'hasTypeWithQualifiedName').returns(true);
+          typeSerializer.hasTypeWithQualifiedName = returns(true);
           var spy = sinon.spy(ctx, 'getNamespacePrefix');
           var e = typeSerializer.serializeElement(element, ctx);
           expect(e.nodeName).to.equal('xs:element');
