@@ -52,6 +52,9 @@ define([
       if (element.isOptional()) {
         e.setAttribute('minOccurs', '0');
       }
+      if (element.default) {
+        e.setAttribute('default', element.default);
+      }
       if (type.qname) {
         var qname = type.qname;
         if (!this.hasTypeWithQualifiedName(qname)) {

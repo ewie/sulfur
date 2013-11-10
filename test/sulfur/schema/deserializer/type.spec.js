@@ -19,6 +19,7 @@ define([
   var expect = shared.expect;
   var sinon = shared.sinon;
   var bind = shared.bind;
+  var returns = shared.returns;
 
   describe('sulfur/schema/deserializer/type', function () {
 
@@ -257,6 +258,27 @@ define([
         var e = typeDeserializer.deserializeElement(element);
 
         expect(e.isOptional()).to.be.true;
+      });
+
+      it("should parse the value of attribute @default and use it as default value when specified", function () {
+        var doc = parse(
+          '<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">' +
+           '<xs:element name="foo" type="someType" default="xyz"/>' +
+          '</xs:schema>');
+        var root = doc.documentElement;
+        var element = root.firstChild;
+
+        var typeDeserializer = TypeDeserializer.create();
+        var value = {};
+        var valueType = { parse: returns(value) };
+        var someType = { valueType: valueType };
+        var spy = sinon.spy(valueType, 'parse');
+        typeDeserializer.resolveGlobalType = returns(someType);
+
+        var e = typeDeserializer.deserializeElement(element);
+
+        expect(spy).to.be.calledWith('xyz');
+        expect(e.default).to.equal(value);
       });
 
       context("with attribute @type", function () {

@@ -52,7 +52,7 @@ define([
 
     describe('#name', function () {
 
-      it("should return the element's name", function () {
+      it("should return the name", function () {
         var element = Element.create('foo');
         expect(element.name).to.equal('foo');
       });
@@ -61,10 +61,25 @@ define([
 
     describe('#type', function () {
 
-      it("should return the element's type", function () {
+      it("should return the type", function () {
         var type = {};
         var element = Element.create('', type);
         expect(element.type).to.equal(type);
+      });
+
+    });
+
+    describe('#default', function () {
+
+      it("should return the default value when defined", function () {
+        var value = {};
+        var element = Element.create('', {}, { default: value });
+        expect(element.default).to.equal(value);
+      });
+
+      it("should return undefined when no default value is defined", function () {
+        var element = Element.create('', {});
+        expect(element.default).to.be.undefined;
       });
 
     });

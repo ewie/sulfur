@@ -130,7 +130,15 @@ define([
         }
       }
       var optional = element.getAttribute('minOccurs') === '0';
-      return Element.create(name, type, { optional: optional });
+      var defaultValue;
+      if (element.hasAttribute('default')) {
+        var s = element.getAttribute('default');
+        defaultValue = type.valueType.parse(s);
+      }
+      return Element.create(name, type, {
+        optional: optional,
+        default: defaultValue
+      });
     },
 
     resolveQualifiedName: function (qname, element) {

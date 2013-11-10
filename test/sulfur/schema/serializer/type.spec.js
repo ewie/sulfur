@@ -156,6 +156,23 @@ define([
         expect(e.getAttribute('minOccurs')).to.equal('0');
       });
 
+      it("should add attribute @default with the canonical value of the elements default value when defined", function () {
+        var type = {};
+        var value = { toString: returns('bar') };
+        var element = {
+          name: 'foo',
+          type: type,
+          default: value,
+          isOptional: returns(false)
+        };
+        var spy = sinon.spy(value, 'toString');
+        var child = ctx.createElement('urn:z', 'z:y');
+        sinon.stub(typeSerializer, 'serializeType').returns(child);
+        var e = typeSerializer.serializeElement(element, ctx);
+        expect(e.getAttribute('default')).to.equal('bar');
+        expect(spy).to.be.called;
+      });
+
       it("should add the serialize type as child when the element's type does not respond to .qname", function () {
         var type = {};
         var element = {

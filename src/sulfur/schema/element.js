@@ -13,9 +13,11 @@ define(['sulfur/util/factory'], function (Factory) {
   return Factory.derive({
 
     initialize: function (name, type, options) {
+      options || (options = {});
       this._name = name;
       this._type = type;
-      this._optional = options && options.optional || false;
+      this._optional = options.optional || false;
+      this._default = options.default;
     },
 
     get name() {
@@ -24,6 +26,10 @@ define(['sulfur/util/factory'], function (Factory) {
 
     get type() {
       return this._type;
+    },
+
+    get default() {
+      return this._default;
     },
 
     isOptional: function () {
