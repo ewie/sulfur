@@ -151,9 +151,6 @@ define([
 
     consumeCodepoint: function () {
       var pair = unicode.decodeCharacterFromUtf16(this.source);
-      if (pair[1].length > 1) {
-        console.log(pair);
-      }
       this.advance(pair[1]);
       return pair[0];
     }
