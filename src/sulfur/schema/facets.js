@@ -9,12 +9,10 @@
 define([
   'sulfur/util',
   'sulfur/util/factory',
-  'sulfur/util/orderedMap'
-], function (util, Factory, OrderedMap) {
+  'sulfur/util/orderedStringMap'
+], function (util, Factory, OrderedStringMap) {
 
   'use strict';
-
-  var keyfn = util.property('qname');
 
   return Factory.derive({
 
@@ -23,21 +21,21 @@ define([
         throw new Error("expecting one or more facets");
       }
       this._index = facets.reduce(function (index, facet) {
-        var qname = index.getKey(facet);
-        if (index.containsKey(qname)) {
+        var qname = facet.qname;
+        if (index.contains(qname)) {
           throw new Error("facet with duplicate qualified name " + qname);
         }
-        index.insert(facet);
+        index.set(qname, facet);
         return index;
-      }, OrderedMap.create(keyfn));
+      }, OrderedStringMap.create());
     },
 
     hasByQName: function (qname) {
-      return this._index.containsKey(qname);
+      return this._index.contains(qname);
     },
 
     getByQName: function (qname) {
-      return this._index.getItemByKey(qname);
+      return this._index.get(qname);
     },
 
     get size() {
@@ -45,7 +43,7 @@ define([
     },
 
     toArray: function () {
-      return this._index.toArray();
+      return this._index.values;
     }
 
   });

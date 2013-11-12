@@ -14,7 +14,7 @@ define([
   'sulfur/schema/type/simple/primitive',
   'sulfur/schema/type/simple/restricted',
   'sulfur/util',
-  'sulfur/util/orderedMap'
+  'sulfur/util/stringMap'
 ], function (
     Factory,
     Facets,
@@ -23,7 +23,7 @@ define([
     PrimitiveType,
     RestrictedType,
     util,
-    OrderedMap
+    StringMap
 ) {
 
   'use strict';
@@ -31,14 +31,6 @@ define([
   var XSD_NAMESPACE = 'http://www.w3.org/2001/XMLSchema';
 
   var NS = { xs: XSD_NAMESPACE };
-
-  function typeKeyFn(type) {
-    return type.qname;
-  }
-
-  function facetDeserializerKeyFn(facetDeserializer) {
-    return typeKeyFn(facetDeserializer.getByQName());
-  }
 
   function isFactoryOf(f, x) {
     return f.prototype.isPrototypeOf(x);
@@ -64,38 +56,38 @@ define([
       }
 
       var facetDeserializerIndex = facetDeserializers.reduce(function (index, facetDeserializer) {
-        var qname = index.getKey(facetDeserializer);
-        if (index.containsKey(qname)) {
+        var qname = facetDeserializer.facet.qname;
+        if (index.contains(qname)) {
           throw new Error("facet deserializer with duplicate facet " + qname);
         }
-        index.insert(facetDeserializer);
+        index.set(qname, facetDeserializer);
         return index;
-      }, OrderedMap.create(facetDeserializerKeyFn));
+      }, StringMap.create());
 
       var typeIndex = types.reduce(function (index, type) {
         if (!isAtomicType(type) && !isDerivedType(type)) {
           throw new Error("expecting only sulfur/schema/type/simple/{derived,primitive} types");
         }
-        var qname = index.getKey(type);
-        if (index.containsKey(qname)) {
+        var qname = type.qname;
+        if (index.contains(qname)) {
           throw new Error("type with duplicate qualified name " + qname);
         }
         type.allowedFacets.toArray().forEach(function (allowedFacet) {
           var qname = allowedFacet.qname;
-          if (!facetDeserializerIndex.containsKey(qname)) {
+          if (!facetDeserializerIndex.contains(qname)) {
             throw new Error("expecting a facet deserializer for facet " + qname);
           }
         });
-        index.insert(type);
+        index.set(qname, type);
         return index;
-      }, OrderedMap.create(typeKeyFn));
+      }, StringMap.create());
 
       this._typeIndex = typeIndex;
       this._facetDeserializerIndex = facetDeserializerIndex;
     },
 
     resolveQualifiedName: function (qname) {
-      return this._typeIndex.getItemByKey(qname);
+      return this._typeIndex.get(qname);
     },
 
     deserializeElement: (function () {
@@ -125,7 +117,7 @@ define([
           var ns = { ns: namespace };
           var facetElements = xpath.all('ns:' + name, parentElement, ns);
           if (facetElements.length > 0) {
-            var facetDeserializer = facetDeserializers.getItemByKey(qname);
+            var facetDeserializer = facetDeserializers.get(qname);
             var values = facetElements.map(function (facetElement) {
               var value = facetElement.getAttribute('value');
               return facetDeserializer.parseValue(value, valueType);

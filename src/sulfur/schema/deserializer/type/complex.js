@@ -14,7 +14,7 @@ define([
   'sulfur/schema/type/complex/primitive',
   'sulfur/schema/type/complex/restricted',
   'sulfur/util',
-  'sulfur/util/orderedMap'
+  'sulfur/util/stringMap'
 ], function (
     Factory,
     Element,
@@ -23,15 +23,13 @@ define([
     PrimitiveType,
     RestrictedType,
     util,
-    OrderedMap
+    StringMap
 ) {
 
   'use strict';
 
   var XSD_NAMESPACE = 'http://www.w3.org/2001/XMLSchema';
   var NS = { xs: XSD_NAMESPACE };
-
-  var keyfn = util.property('qname');
 
   return Factory.derive({
 
@@ -43,17 +41,17 @@ define([
         if (!PrimitiveType.prototype.isPrototypeOf(type)) {
           throw new Error("expecting only sulfur/schema/type/complex types");
         }
-        var qname = index.getKey(type);
-        if (index.containsKey(qname)) {
+        var qname = type.qname;
+        if (index.contains(qname)) {
           throw new Error("type with duplicate qualified name " + qname);
         }
-        index.insert(type);
+        index.set(qname, type);
         return index;
-      }, OrderedMap.create(keyfn));
+      }, StringMap.create());
     },
 
     resolveQualifiedName: function (qname) {
-      return this._typeIndex.getItemByKey(qname);
+      return this._typeIndex.get(qname);
     },
 
     deserializeElement: (function () {
@@ -236,7 +234,7 @@ define([
         }
 
         if (xpath.contains('xs:all', element, NS)) {
-          return resolveAll(element, typeDeserializer, xpath, this._typeIndex.toArray());
+          return resolveAll(element, typeDeserializer, xpath, this._typeIndex.values);
         }
 
         if (xpath.contains('xs:sequence', element, NS)) {

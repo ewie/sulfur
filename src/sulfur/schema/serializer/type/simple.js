@@ -11,52 +11,46 @@ define([
   'sulfur/schema/type/simple/restricted',
   'sulfur/util',
   'sulfur/util/factory',
-  'sulfur/util/orderedMap'
-], function (ListType, RestrictedType, util, Factory, OrderedMap) {
+  'sulfur/util/stringMap'
+], function (ListType, RestrictedType, util, Factory, StringMap) {
 
   'use strict';
 
   var XSD_NS = 'http://www.w3.org/2001/XMLSchema';
 
-  var typeKeyFn = util.property('qname');
-
-  function facetSerializerKeyFn(facetSerializer) {
-    return typeKeyFn(facetSerializer.facet);
-  }
-
   return Factory.derive({
 
     initialize: function (types, facetSerializers) {
       var facetSerializerIndex = facetSerializers.reduce(function (index, facetSerializer) {
-        var qname = index.getKey(facetSerializer);
-        if (index.containsKey(qname)) {
+        var qname = facetSerializer.facet.qname;
+        if (index.contains(qname)) {
           throw new Error("facet serializer with duplicate facet " + qname);
         }
-        index.insert(facetSerializer);
+        index.set(qname, facetSerializer);
         return index;
-      }, OrderedMap.create(facetSerializerKeyFn));
+      }, StringMap.create());
 
       var typeIndex = types.reduce(function (index, type) {
         var qname = type.qname;
-        if (index.containsKey(qname)) {
+        if (index.contains(qname)) {
           throw new Error("type with duplicate qualified name " + qname);
         }
         type.allowedFacets.toArray().forEach(function (allowedFacet) {
           var qname = allowedFacet.qname;
-          if (!facetSerializerIndex.containsKey(qname)) {
+          if (!facetSerializerIndex.contains(qname)) {
             throw new Error("expecting a facet serializer for facet " + qname);
           }
         });
-        index.insert(type);
+        index.set(qname, type);
         return index;
-      }, OrderedMap.create(typeKeyFn));
+      }, StringMap.create());
 
       this._typeIndex = typeIndex;
       this._facetSerializerIndex = facetSerializerIndex;
     },
 
     hasTypeWithQualifiedName: function (qname) {
-      return this._typeIndex.containsKey(qname);
+      return this._typeIndex.contains(qname);
     },
 
     serializeType: (function () {
@@ -93,7 +87,7 @@ define([
 
         part.true.forEach(function (facet) {
           var qname = facet.qname;
-          var facetSerializer = this._facetSerializerIndex.getItemByKey(qname);
+          var facetSerializer = this._facetSerializerIndex.get(qname);
           var f = facetSerializer.serializeFacet(facet, context);
           f.forEach(function (f) {
             e.appendChild(f);
@@ -109,7 +103,7 @@ define([
 
           part.false.forEach(function (facet) {
             var qname = facet.qname;
-            var facetSerializer = this._facetSerializerIndex.getItemByKey(qname);
+            var facetSerializer = this._facetSerializerIndex.get(qname);
             var f = facetSerializer.serializeFacet(facet, context);
             f.forEach(function (f) {
               ai.appendChild(f);

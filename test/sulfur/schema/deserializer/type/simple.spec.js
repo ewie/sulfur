@@ -70,7 +70,7 @@ define([
             facets: Facets.create(
               [ facet ])
           });
-        var facetDeserializer = { getByQName: returns(facet) };
+        var facetDeserializer = { facet: facet };
         expect(bind(SimpleTypeDeserializer, 'create', [ type ], [ facetDeserializer ]))
           .to.not.throw();
       });
@@ -86,7 +86,7 @@ define([
             qname: QName.create('z', 'urn:y'),
             facets: Facets.create([ facet.create() ])
           });
-        var facetDeserializer = { getByQName: returns(facet) };
+        var facetDeserializer = { facet: facet };
         expect(bind(SimpleTypeDeserializer, 'create', [ type ], [ facetDeserializer ]))
           .to.not.throw();
       });
@@ -98,8 +98,7 @@ define([
 
       it("should reject types which are not a sulfur/schema/type/simple/{derived,primitive}", function () {
         var facetDeserializer = {
-          getByQName: returns(
-            { qname: QName.create('foo', 'urn:bar') })
+          facet: { qname: QName.create('foo', 'urn:bar') }
         };
         expect(bind(SimpleTypeDeserializer, 'create', [{}], [ facetDeserializer ]))
           .to.throw("expecting only sulfur/schema/type/simple/{derived,primitive} types");
@@ -117,7 +116,7 @@ define([
               facets: Facets.create([ facet ])
             })
         ];
-        var facetDeserializer = { getByQName: returns(facet) };
+        var facetDeserializer = { facet: facet };
         expect(bind(SimpleTypeDeserializer, 'create', types, [ facetDeserializer ]))
           .to.throw("type with duplicate qualified name {urn:bar}foo");
       });
@@ -138,8 +137,8 @@ define([
         ];
         var facet = { qname: QName.create('foo', 'urn:bar') };
         var facetDeserializers = [
-          { getByQName: returns(facet) },
-          { getByQName: returns(facet) }
+          { facet: facet },
+          { facet: facet }
         ];
         expect(bind(SimpleTypeDeserializer, 'create', types, facetDeserializers))
           .to.throw("facet deserializer with duplicate facet {urn:bar}foo");
@@ -155,7 +154,7 @@ define([
         ];
         var someFacet = { qname: QName.create('x', 'urn:z') };
         var facetDeserializers = [
-          { getByQName: returns(someFacet) }
+          { facet: someFacet }
         ];
         expect(bind(SimpleTypeDeserializer, 'create', types, facetDeserializers))
           .to.throw("expecting a facet deserializer for facet {urn:y}x");
@@ -174,7 +173,7 @@ define([
           { qname: QName.create('x', 'urn:y'),
             facets: Facets.create([ facet ])
           });
-        var facetDeserializer = { getByQName: returns(facet) };
+        var facetDeserializer = { facet: facet };
         simpleTypeDeserializer = SimpleTypeDeserializer.create([ type ], [ facetDeserializer ]);
       });
 
@@ -219,7 +218,7 @@ define([
 
         function createFacetDeserializer(facet) {
           return {
-            getByQName: returns(facet),
+            facet: facet,
             parseValue: parseFn,
             createFacet: function (values) {
               return facet.create(values);

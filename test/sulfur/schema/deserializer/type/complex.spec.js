@@ -49,7 +49,6 @@ define([
 
   var expect = shared.expect;
   var bind = shared.bind;
-  var returns = shared.returns;
 
   describe('sulfur/schema/deserializer/type/complex', function () {
 
@@ -163,7 +162,7 @@ define([
         complexTypeDeserializer = ComplexTypeDeserializer.create(
           [ complexType, complexType2, complexType3, complexType4 ]);
         var facetDeserializer = {
-          getByQName: returns(MinInclusiveFacet),
+          facet: MinInclusiveFacet,
           parseValue: function (s) { return parseInt(s, 10); },
           createFacet: function (values) {
             return MinInclusiveFacet.create(DoubleValue.create(values[0]));

@@ -11,30 +11,28 @@ define([
   'sulfur/schema/type/complex/restricted',
   'sulfur/util',
   'sulfur/util/factory',
-  'sulfur/util/orderedMap'
-], function (ListType, RestrictedType, util, Factory, OrderedMap) {
+  'sulfur/util/stringMap'
+], function (ListType, RestrictedType, util, Factory, StringMap) {
 
   'use strict';
 
   var XSD_NS = 'http://www.w3.org/2001/XMLSchema';
-
-  var keyfn = util.property('qname');
 
   return Factory.derive({
 
     initialize: function (types) {
       this._typeIndex = types.reduce(function (index, type) {
         var qname = type.qname;
-        if (index.containsKey(qname)) {
+        if (index.contains(qname)) {
           throw new Error("type with duplicate qualified name " + qname);
         }
-        index.insert(type);
+        index.set(qname, type);
         return index;
-      }, OrderedMap.create(keyfn));
+      }, StringMap.create());
     },
 
     hasTypeWithQualifiedName: function (qname) {
-      return this._typeIndex.containsKey(qname);
+      return this._typeIndex.contains(qname);
     },
 
     serializeType: (function () {

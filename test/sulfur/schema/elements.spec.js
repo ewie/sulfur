@@ -66,9 +66,7 @@ define([
     describe('#size', function () {
 
       it("should return the number of elements", function () {
-        var element = {
-          getName: function () { return 'foo'; }
-        };
+        var element = { name: 'foo' };
         var elements = Elements.create([ element ]);
         expect(elements.size).to.equal(1);
       });

@@ -9,12 +9,10 @@
 define([
   'sulfur/util/factory',
   'sulfur/util',
-  'sulfur/util/orderedMap'
-], function (Factory, util, OrderedMap) {
+  'sulfur/util/orderedStringMap'
+], function (Factory, util, OrderedStringMap) {
 
   'use strict';
-
-  var keyfn = util.property('name');
 
   return Factory.derive({
 
@@ -24,16 +22,16 @@ define([
       }
       this._index = elements.reduce(function (index, element) {
         var name = element.name;
-        if (index.containsKey(name)) {
+        if (index.contains(name)) {
           throw new Error('element with duplicate name "' + name + '"');
         }
-        index.insert(element);
+        index.set(name, element);
         return index;
-      }, OrderedMap.create(keyfn));
+      }, OrderedStringMap.create());
     },
 
     getByName: function (name) {
-      return this._index.getItemByKey(name);
+      return this._index.get(name);
     },
 
     get size() {
@@ -41,7 +39,7 @@ define([
     },
 
     toArray: function () {
-      return this._index.toArray();
+      return this._index.values;
     }
 
   });

@@ -6,7 +6,7 @@
 
 /* global define */
 
-define(['sulfur/util/orderedMap'], function (OrderedMap) {
+define(['sulfur/util/orderedStringMap'], function (OrderedStringMap) {
 
   'use strict';
 
@@ -147,23 +147,23 @@ define(['sulfur/util/orderedMap'], function (OrderedMap) {
     },
 
     /**
-     * Remove duplicate elements from an array by using a string key.
+     * Remove duplicate values from an array by using a string key.
      *
-     * @param {array} elements
-     * @param {function} key (optional) a function returning a string key for
-     *   each element
+     * @param {array} values
+     * @param {function} key (optional) a function returning a value's string key
      *
-     * @return {array} an array without duplicate elements based on each
-     *   element's key
+     * @return {array} an array without duplicate values based on each value's key
      */
-    uniq: function (elements, key) {
-      var map = OrderedMap.create(key);
-      elements.forEach(function (element) {
-        if (map.canBeInserted(element)) {
-          map.insert(element);
+    uniq: function (values, key) {
+      key || (key = this.method('toString'));
+      var index = values.reduce(function (index, value) {
+        var k = key(value);
+        if (!index.contains(k)) {
+          index.set(k, value);
         }
-      });
-      return map.toArray();
+        return index;
+      }, OrderedStringMap.create());
+      return index.values;
     }
 
   };

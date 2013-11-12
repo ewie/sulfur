@@ -12,14 +12,14 @@ define([
   'sulfur/schema/value/complex',
   'sulfur/schema/value/simple/integer',
   'sulfur/schema/value/simple/string'
-], function (shared, $_complexValue, IntegerValue, StringValue) {
+], function (shared, ComplexValue, IntegerValue, StringValue) {
 
   'use strict';
 
   var expect = shared.expect;
   var bind = shared.bind;
 
-  describe('sulfur/schema/value/_complex', function () {
+  describe('sulfur/schema/value/complex', function () {
 
     describe('#initialize()', function () {
 
@@ -27,7 +27,7 @@ define([
         var values = [
           [ 'foo', StringValue.create() ]
         ];
-        var type = $_complexValue.create(values);
+        var type = ComplexValue.create(values);
         expect(type.getValue('foo')).to.equal(values[0][1]);
       });
 
@@ -36,20 +36,20 @@ define([
           [ 'foo', StringValue.create() ],
           [ 'foo', StringValue.create() ]
         ];
-        expect(bind($_complexValue, 'create', values))
+        expect(bind(ComplexValue, 'create', values))
           .to.throw('duplicate name "foo"');
       });
 
     });
 
-    describe('#value', function () {
+    describe('#getValue()', function () {
 
       var type;
       var values;
 
       beforeEach(function () {
         values = [ [ 'foo', StringValue.create() ] ];
-        type = $_complexValue.create(values);
+        type = ComplexValue.create(values);
       });
 
       it("should return the value associated with the given name", function () {

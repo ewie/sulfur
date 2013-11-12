@@ -32,7 +32,6 @@ define([
   var expect = shared.expect;
   var sinon = shared.sinon;
   var bind = shared.bind;
-  var returns = shared.returns;
 
   describe('sulfur/schema/deserializer', function () {
 
@@ -100,9 +99,7 @@ define([
 
           beforeEach(function () {
             var facet = { qname: QName.create('x', 'urn:y') };
-            var facetDeserializer = {
-              getByQName: returns(facet)
-            };
+            var facetDeserializer = { facet: facet };
             simpleType = PrimitiveType.create(
               { qname: QName.create('knownType', 'urn:y'),
                 facets: Facets.create([ facet ])

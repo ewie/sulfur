@@ -8,14 +8,10 @@
 
 define([
   'sulfur/util/factory',
-  'sulfur/util/orderedMap'
-], function (Factory, OrderedMap) {
+  'sulfur/util/stringMap'
+], function (Factory, StringMap) {
 
   'use strict';
-
-  function keyfn(value) {
-    return value.name;
-  }
 
   return Factory.derive({
 
@@ -23,20 +19,19 @@ define([
       var index = values.reduce(function (index, pair) {
         var name = pair[0];
         var value = pair[1];
-        var item = { name: name, value: value };
-        if (index.containsKey(index.getKey(item))) {
+        if (index.contains(name)) {
           throw new Error('duplicate name "' + name + '"');
         }
-        index.insert(item);
+        index.set(name, value);
         return index;
-      }, OrderedMap.create(keyfn));
-      this._values = index;
+      }, StringMap.create());
+      this._index = index;
     },
 
     getValue: function (name) {
-      var item = this._values.getItemByKey(name);
+      var item = this._index.get(name);
       if (item) {
-        return item.value;
+        return item;
       }
       throw new Error('name "' + name + '" is not associated with any value');
     }

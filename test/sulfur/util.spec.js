@@ -16,6 +16,7 @@ define([
 
   var expect = shared.expect;
   var sinon = shared.sinon;
+  var returns = shared.returns;
 
   describe('sulfur/util', function () {
 
@@ -274,17 +275,17 @@ define([
 
     describe('.uniq()', function () {
 
-      it("should create an array without duplicate elements", function () {
+      it("should create an array without duplicate values", function () {
         var values = ['a', 'a'];
         expect(util.uniq(values)).to.eql(['a']);
       });
 
-      it("should keep the element's order", function () {
+      it("should keep the value order", function () {
         var values = ['b', 'a', 'b'];
         expect(util.uniq(values)).to.eql(['b', 'a']);
       });
 
-      it("should use each element's #toString() as key when no key function is given", function () {
+      it("should use each value's #toString() as key when no key function is given", function () {
         var values = [
           { toString: sinon.stub().returns('x') },
           { toString: sinon.stub().returns('x') }
@@ -299,15 +300,15 @@ define([
 
       context("with a key function", function () {
 
-        it("should call it for each element", function () {
-          var keyfn = sinon.spy();
+        it("should call it for each value", function () {
+          var keyfn = sinon.stub().returns('x');
           var values = [{}];
           util.uniq(values, keyfn);
           expect(keyfn).to.be.calledWith(sinon.match.same(values[0]));
         });
 
         it("should use the return value as key", function () {
-          var keyfn = sinon.stub().returns('y');
+          var keyfn = returns('y');
           var values = [{}, {}];
           var uniq = util.uniq(values, keyfn);
           expect(uniq).to.have.lengthOf(1);
