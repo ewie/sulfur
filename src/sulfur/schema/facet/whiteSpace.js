@@ -16,7 +16,7 @@ define([
 
   var qname = QName.create('whiteSpace', 'http://www.w3.org/2001/XMLSchema');
 
-  var $ = Facet.clone({
+  return Facet.clone({
 
     get qname() { return qname; },
 
@@ -24,9 +24,7 @@ define([
 
     get mutualExclusiveFacets() { return []; }
 
-  });
-
-  $.augment({
+  }).augment({
 
     initialize: function (value) {
       if (value !== 'collapse' && value !== 'preserve' && value !== 'replace') {
@@ -60,7 +58,5 @@ define([
     }
 
   });
-
-  return $;
 
 });

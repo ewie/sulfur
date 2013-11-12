@@ -7,10 +7,9 @@
 /* global define */
 
 define([
-  'sulfur/util',
   'sulfur/util/factory',
   'sulfur/util/orderedStringMap'
-], function (util, Factory, OrderedStringMap) {
+], function (Factory, OrderedStringMap) {
 
   'use strict';
 

@@ -6,10 +6,7 @@
 
 /* global define */
 
-define([
-  'sulfur/util',
-  'sulfur/util/factory'
-], function(util, Factory) {
+define(['sulfur/util/factory'], function(Factory) {
 
   'use strict';
 

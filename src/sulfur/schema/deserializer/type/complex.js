@@ -8,7 +8,6 @@
 
 define([
   'sulfur/util/factory',
-  'sulfur/schema/element',
   'sulfur/schema/elements',
   'sulfur/schema/type/complex/list',
   'sulfur/schema/type/complex/primitive',
@@ -17,7 +16,6 @@ define([
   'sulfur/util/stringMap'
 ], function (
     Factory,
-    Element,
     Elements,
     ListType,
     PrimitiveType,

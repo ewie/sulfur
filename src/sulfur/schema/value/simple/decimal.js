@@ -28,7 +28,7 @@ define([
    */
   var LITERAL_PATTERN = /^[\x09\x0A\x0D\x20]*([+-])?([0-9]+)(?:\.([0-9]+))?[\x09\x0A\x0D\x20]*$/;
 
-  var $ = Factory.clone({
+  return Factory.clone({
 
     /**
      * Check if a string represents a valid decimal value.
@@ -62,9 +62,7 @@ define([
       });
     }
 
-  });
-
-  $.augment({
+  }).augment({
 
     /**
      * @param {object} options (opional)
@@ -231,7 +229,5 @@ define([
     }
 
   });
-
-  return $;
 
 });

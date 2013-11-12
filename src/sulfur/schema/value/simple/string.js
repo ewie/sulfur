@@ -10,11 +10,11 @@ define([
   'sulfur/util/factory',
   'sulfur/util',
   'unorm'
-], function (Factory, util, Unorm) {
+], function (Factory, util, unorm) {
 
   'use strict';
 
-  var $ = Factory.clone({
+  return Factory.clone({
 
     /**
      * Check if a string contains only valid codeunits.
@@ -33,9 +33,7 @@ define([
 
     }())
 
-  });
-
-  $.augment({
+  }).augment({
 
     /**
      * Initialize with a string value.
@@ -56,7 +54,7 @@ define([
         throw new Error("invalid string value");
       }
 
-      this._value = Unorm.nfc(value);
+      this._value = unorm.nfc(value);
     },
 
     /**
@@ -107,7 +105,7 @@ define([
     collapseWhiteSpace: function () {
       var s = this._value.replace(/[\x09\x0A\x0D\x20]+/g, ' ')
         .replace(/^\x20|\x20$/g, '');
-      return $.create(s);
+      return this.factory.create(s);
     },
 
     /**
@@ -117,7 +115,7 @@ define([
      */
     replaceWhiteSpace: function () {
       var s = this._value.replace(/[\x09\x0A\x0D\x20]/g, ' ');
-      return $.create(s);
+      return this.factory.create(s);
     },
 
     /**
@@ -132,7 +130,5 @@ define([
     }
 
   });
-
-  return $;
 
 });

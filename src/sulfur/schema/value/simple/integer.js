@@ -19,7 +19,7 @@ define(['sulfur/schema/value/simple/decimal'], function (DecimalValue) {
    */
   var LITERAL_PATTERN = /^[\x09\x0A\x0D\x20]*([+-]?)([0-9]+)[\x09\x0A\x0D\x20]*$/;
 
-  var $ = DecimalValue.clone({
+  return DecimalValue.clone({
 
     /**
      * Check if a string represents a valid integer value.
@@ -53,9 +53,7 @@ define(['sulfur/schema/value/simple/decimal'], function (DecimalValue) {
       });
     }
 
-  });
-
-  $.augment({
+  }).augment({
 
     /**
      * @param {object} options
@@ -85,7 +83,5 @@ define(['sulfur/schema/value/simple/decimal'], function (DecimalValue) {
     }
 
   });
-
-  return $;
 
 });

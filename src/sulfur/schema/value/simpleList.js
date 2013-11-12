@@ -22,7 +22,7 @@ define([
    *
    * @implement .itemValueType
    */
-  var $ = ListValue.clone({
+  return ListValue.clone({
 
     typed: function (itemValueType) {
       return this.clone({
@@ -38,9 +38,7 @@ define([
       return this.create(values);
     }
 
-  });
-
-  $.augment({
+  }).augment({
 
     toString: function () {
       var s = this._values.map(util.method('toString')).join(' ');
@@ -48,7 +46,5 @@ define([
     }
 
   });
-
-  return $;
 
 });

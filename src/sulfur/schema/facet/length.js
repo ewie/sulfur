@@ -35,7 +35,7 @@ define([
 
   var qname = QName.create('length', 'http://www.w3.org/2001/XMLSchema');
 
-  var $ = Facet.clone({
+  return Facet.clone({
 
     get qname() { return qname; },
 
@@ -48,9 +48,7 @@ define([
       ];
     }
 
-  });
-
-  $.augment({
+  }).augment({
 
     /**
      * @param {number} value
@@ -105,7 +103,5 @@ define([
     }
 
   });
-
-  return $;
 
 });

@@ -28,7 +28,8 @@ define(function () {
     Array.prototype.forEach.call(args, fn);
   }
 
-  var $ = Object.create(Object.prototype, {
+  var Factory = Object.create(Object.prototype, {
+
     /**
      * Create an object from .prototype and call .initialize() on the new
      * object with any arguments.
@@ -146,12 +147,13 @@ define(function () {
         return this;
       }
     }
+
   });
 
   /**
    * The prototype used to create new objects.
    */
-  Object.defineProperty($, 'prototype', {
+  Object.defineProperty(Factory, 'prototype', {
     value: Object.create(Object.prototype, {
       /**
        * A dummy initialize function.
@@ -162,10 +164,10 @@ define(function () {
         value: function () {}
       },
 
-      factory: { value: $ }
+      factory: { value: Factory }
     })
   });
 
-  return $;
+  return Factory;
 
 });

@@ -10,7 +10,7 @@ define(['sulfur/util/factory'], function (Factory) {
 
   'use strict';
 
-  var $ = Factory.derive({
+  return Factory.derive({
 
     initialize: function (base, facets) {
 
@@ -112,7 +112,5 @@ define(['sulfur/util/factory'], function (Factory) {
     }
 
   });
-
-  return $;
 
 });

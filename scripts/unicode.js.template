@@ -27,7 +27,7 @@ define(['sulfur/util'], function (util) {
     return 0 <= value && value <= 0x10FFFF;
   }
 
-  var $ = {
+  var unicode = {
     /**
      * Decode a character represented by a string into its UCS codepoint value.
      *
@@ -327,6 +327,6 @@ define(['sulfur/util'], function (util) {
 
   var XML_NAME_CHARACTERS = disjoin(sort(XML_NAME_START_CHARACTERS.concat(%XML_NAME_CHARACTERS%)));
 
-  return $;
+  return unicode;
 
 });

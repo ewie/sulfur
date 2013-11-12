@@ -7,11 +7,10 @@
 /* global define */
 
 define([
-  'sulfur/util/factory',
   'sulfur/schema/value/complex',
   'sulfur/schema/value/simple/double',
   'sulfur/util'
-], function (Factory, ComplexValue, DoubleValue, util) {
+], function (ComplexValue, DoubleValue, util) {
 
   'use strict';
 

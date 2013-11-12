@@ -10,7 +10,6 @@ define([
   'require',
   'sulfur/schema/facet',
   'sulfur/schema/qname',
-  'sulfur/schema/type/simple/restricted',
   'sulfur/schema/validator/minimum',
   'sulfur/schema/validator/property',
   'sulfur/util'
@@ -18,7 +17,6 @@ define([
     require,
     Facet,
     QName,
-    RestrictedType,
     MinimumValidator,
     PropertyValidator,
     util
@@ -37,7 +35,7 @@ define([
 
   var qname = QName.create('minLength', 'http://www.w3.org/2001/XMLSchema');
 
-  var $ = Facet.clone({
+  return Facet.clone({
 
     get qname() { return qname; },
 
@@ -47,9 +45,7 @@ define([
       return [ requireLengthFacet() ];
     }
 
-  });
-
-  $.augment({
+  }).augment({
 
     isRestrictionOf: function (type) {
       var lengthFacet = requireLengthFacet().getEffectiveFacet(type);
@@ -89,7 +85,5 @@ define([
     }
 
   });
-
-  return $;
 
 });

@@ -39,7 +39,7 @@ define([
     return year % 400 === 0 || year % 100 !== 0 && year % 4 === 0;
   }
 
-  var $ = Factory.clone({
+  return Factory.clone({
 
     /**
      * Check if a string represents a valid dateTime according to XML Schema 1.0
@@ -120,9 +120,7 @@ define([
 
     }())
 
-  });
-
-  $.augment({
+  }).augment({
 
     /**
      * Initialize the datetime with year, month, day, hour, minute, second and
@@ -604,7 +602,5 @@ define([
     }
 
   });
-
-  return $;
 
 });

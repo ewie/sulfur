@@ -27,7 +27,7 @@ define(['sulfur/util'], function (util) {
     return 0 <= value && value <= 0x10FFFF;
   }
 
-  var $ = {
+  var unicode = {
     /**
      * Decode a character represented by a string into its UCS codepoint value.
      *
@@ -943,7 +943,7 @@ define(['sulfur/util'], function (util) {
     [0x309D,0x309E],[0x30FC,0x30FE]
   ])));
 
-  return $;
+  return unicode;
 
 });
 

@@ -28,7 +28,7 @@ define([
 
   var qname = QName.create('minExclusive', 'http://www.w3.org/2001/XMLSchema');
 
-  var $ = Facet.clone({
+  return Facet.clone({
 
     get qname() { return qname; },
 
@@ -38,9 +38,7 @@ define([
       return [ requireMinInclusiveFacet() ];
     }
 
-  });
-
-  $.augment({
+  }).augment({
 
     isRestrictionOf: function (type) {
       return type.createValidator().validate(this.value);
@@ -82,7 +80,5 @@ define([
     }
 
   });
-
-  return $;
 
 });

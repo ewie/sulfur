@@ -10,7 +10,6 @@
 define([
   'shared',
   'sulfur/schema/facet',
-  'sulfur/schema/facet/enumeration',
   'sulfur/schema/facets',
   'sulfur/schema/deserializer/type',
   'sulfur/schema/deserializer/type/simple',
@@ -23,7 +22,6 @@ define([
 ], function (
     shared,
     Facet,
-    EnumerationFacet,
     Facets,
     TypeDeserializer,
     SimpleTypeDeserializer,

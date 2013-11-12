@@ -12,10 +12,9 @@ define([
   'sulfur/schema',
   'sulfur/schema/element',
   'sulfur/schema/elements',
-  'sulfur/schema/qname',
   'sulfur/schema/serializer',
   'sulfur/schema/serializer/context'
-], function (shared, Schema, Element, Elements, QName, Serializer, Context) {
+], function (shared, Schema, Element, Elements, Serializer, Context) {
 
   'use strict';
 

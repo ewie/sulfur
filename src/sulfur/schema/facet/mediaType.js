@@ -30,7 +30,7 @@ define([
 
   var qname = QName.create('mediaType', sulfur.namespaceURI);
 
-  var $ = Facet.clone({
+  return Facet.clone({
 
     get qname() { return qname; },
 
@@ -38,9 +38,7 @@ define([
 
     get mutualExclusiveFacets() { return []; }
 
-  });
-
-  $.augment({
+  }).augment({
 
     initialize: function (value) {
       if (value.length === 0) {
@@ -77,7 +75,5 @@ define([
     }
 
   });
-
-  return $;
 
 });

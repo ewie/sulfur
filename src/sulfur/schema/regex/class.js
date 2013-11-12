@@ -24,7 +24,7 @@ define([
    * A multi character escape using a character class.
    */
 
-  var $ = Factory.derive({
+  return Factory.derive({
     /**
      * @param {string} name of the character class
      * @param {boolean} whether to match codepoints of that class or the inverse
@@ -36,10 +36,6 @@ define([
       this.name = name;
       this.positive = typeof positive === 'undefined' ? true : positive;
     }
-  });
-
-  $.extend(CLASSES);
-
-  return $;
+  }).extend(CLASSES);
 
 });

@@ -10,7 +10,7 @@ define(['sulfur/util/factory'], function (Factory) {
 
   'use strict';
 
-  var $ = Factory.clone({
+  return Factory.clone({
 
     /**
      * Get the maximum finite value.
@@ -81,9 +81,7 @@ define(['sulfur/util/factory'], function (Factory) {
 
     }())
 
-  });
-
-  $.augment({
+  }).augment({
 
     /**
      * Initialize the float with a value.
@@ -242,7 +240,5 @@ define(['sulfur/util/factory'], function (Factory) {
     }
 
   });
-
-  return $;
 
 });

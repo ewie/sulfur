@@ -29,7 +29,7 @@ define([
    *     instance defines a timezone
    */
 
-  var $ = Factory.clone({
+  return Factory.clone({
 
     /**
      * Check if a string represents a valid date literal.
@@ -90,9 +90,7 @@ define([
 
     }())
 
-  });
-
-  $.augment({
+  }).augment({
 
     /**
      * Initialize the date with year, month, day and timezone. Normalizes the
@@ -307,7 +305,5 @@ define([
     }
 
   });
-
-  return $;
 
 });

@@ -11,10 +11,7 @@ define([
   'shared',
   'sulfur/schema/facet',
   'sulfur/schema/facet/enumeration',
-  'sulfur/schema/facets',
   'sulfur/schema/qname',
-  'sulfur/schema/type/simple/primitive',
-  'sulfur/schema/type/simple/restricted',
   'sulfur/schema/validator/enumeration',
   'sulfur/schema/value/simple/integer',
   'sulfur/schema/value/simple/string'
@@ -22,10 +19,7 @@ define([
     shared,
     Facet,
     EnumerationFacet,
-    Facets,
     QName,
-    PrimitiveType,
-    RestrictedType,
     EnumerationValidator,
     IntegerValue,
     StringValue

@@ -9,12 +9,11 @@
 
 define([
   'shared',
-  'sulfur/schema/facets',
   'sulfur/schema/qname',
   'sulfur/schema/type/simple/derived',
   'sulfur/schema/type/simple/primitive',
   'sulfur/schema/type/simple/restricted'
-], function (shared, Facets, QName, DerivedType, PrimitiveType, RestrictedType) {
+], function (shared, QName, DerivedType, PrimitiveType, RestrictedType) {
 
   'use strict';
 

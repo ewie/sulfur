@@ -17,7 +17,7 @@ define([
 
   var qname = QName.create('enumeration', 'http://www.w3.org/2001/XMLSchema');
 
-  var $ = Facet.clone({
+  return Facet.clone({
 
     get qname() { return qname; },
 
@@ -25,9 +25,7 @@ define([
 
     get mutualExclusiveFacets() { return []; }
 
-  });
-
-  $.augment({
+  }).augment({
 
     initialize: function (values) {
       if (values.length === 0) {
@@ -54,7 +52,5 @@ define([
     }
 
   });
-
-  return $;
 
 });

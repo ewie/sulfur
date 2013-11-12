@@ -18,7 +18,7 @@ define([
    * Provides a simple interface to match a string against the pattern.
    */
 
-  var $ = Factory.clone({
+  return Factory.clone({
 
     /**
      * Check if a string represents a valid XSD pattern.
@@ -36,9 +36,7 @@ define([
       return true;
     }
 
-  });
-
-  $.augment({
+  }).augment({
 
     /**
      * Initialize the pattern by compiling the given source.
@@ -79,7 +77,5 @@ define([
     }
 
   });
-
-  return $;
 
 });

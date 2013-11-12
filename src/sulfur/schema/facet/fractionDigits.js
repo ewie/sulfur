@@ -9,17 +9,16 @@
 define([
   'sulfur/schema/facet',
   'sulfur/schema/qname',
-  'sulfur/schema/type/simple/restricted',
   'sulfur/schema/validator/maximum',
   'sulfur/schema/validator/property',
   'sulfur/util'
-], function (Facet, QName, RestrictedType, MaximumValidator, PropertyValidator, util) {
+], function (Facet, QName, MaximumValidator, PropertyValidator, util) {
 
   'use strict';
 
   var qname = QName.create('fractionDigits', 'http://www.w3.org/2001/XMLSchema');
 
-  var $ = Facet.clone({
+  return Facet.clone({
 
     get qname() { return qname; },
 
@@ -27,9 +26,7 @@ define([
 
     get mutualExclusiveFacets() { return []; }
 
-  });
-
-  $.augment({
+  }).augment({
 
     initialize: function (value) {
       if (!util.isInteger(value) || value < 0) {
@@ -58,7 +55,5 @@ define([
     }
 
   });
-
-  return $;
 
 });

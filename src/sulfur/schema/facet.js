@@ -25,7 +25,7 @@ define([
    *
    * @api private
    */
-  var $ = Factory.clone({
+  return Factory.clone({
 
     getEffectiveFacets: (function () {
 
@@ -72,9 +72,7 @@ define([
       return AllValidator.create(facets.map(util.method('createValidator')));
     }
 
-  });
-
-  $.augment({
+  }).augment({
 
     /**
      * Initialize the facet with a value.
@@ -110,7 +108,5 @@ define([
     }
 
   });
-
-  return $;
 
 });

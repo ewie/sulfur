@@ -10,9 +10,8 @@
 define([
   'shared',
   'sulfur/schema/value/complex',
-  'sulfur/schema/value/simple/integer',
   'sulfur/schema/value/simple/string'
-], function (shared, ComplexValue, IntegerValue, StringValue) {
+], function (shared, ComplexValue, StringValue) {
 
   'use strict';
 

@@ -16,7 +16,7 @@ define([
   var TYPE_PATTERN = /^(?:application|audio|image|text|video)$/;
   var SUBTYPE_PATTERN = /^[^\x00-\x20\x7F()<>@,;:\\"/\[\]?.=]+$/;
 
-  var $ = Factory.clone({
+  return Factory.clone({
 
     parse: function (s) {
       var p = s.indexOf('/');
@@ -28,9 +28,7 @@ define([
       return this.create(type, subtype);
     }
 
-  });
-
-  $.augment({
+  }).augment({
 
     /**
      * Initialize the media type with a type and subtype.
@@ -101,7 +99,5 @@ define([
     }
 
   });
-
-  return $;
 
 });

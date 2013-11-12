@@ -16,8 +16,6 @@ define([
   'sulfur/schema/facet/minInclusive',
   'sulfur/schema/facets',
   'sulfur/schema/qname',
-  'sulfur/schema/type/simple/primitive',
-  'sulfur/schema/type/simple/restricted',
   'sulfur/schema/validator/maximum',
   'sulfur/schema/value/simple/integer'
 ], function (
@@ -29,8 +27,6 @@ define([
     MinInclusiveFacet,
     Facets,
     QName,
-    PrimitiveType,
-    RestrictedType,
     MaximumValidator,
     IntegerValue
 ) {

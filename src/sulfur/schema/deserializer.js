@@ -10,9 +10,8 @@ define([
   'sulfur/util/factory',
   'sulfur/schema',
   'sulfur/schema/deserializer/type',
-  'sulfur/schema/element',
   'sulfur/util/xpath'
-], function (Factory, Schema, TypeDeserializer, Element, XPath) {
+], function (Factory, Schema, TypeDeserializer, XPath) {
 
   'use strict';
 

@@ -10,7 +10,7 @@ define(['sulfur/schema/value/simple/double'], function (DoubleValue) {
 
   'use strict';
 
-  var $ = DoubleValue.clone({
+  return DoubleValue.clone({
 
     /**
      * Get the maximum finite value.
@@ -21,9 +21,7 @@ define(['sulfur/schema/value/simple/double'], function (DoubleValue) {
       return 3.4028234663852886E+38;
     }
 
-  });
-
-  $.augment({
+  }).augment({
 
     /**
      * Initialize the float with a value.
@@ -52,7 +50,5 @@ define(['sulfur/schema/value/simple/double'], function (DoubleValue) {
     }())
 
   });
-
-  return $;
 
 });

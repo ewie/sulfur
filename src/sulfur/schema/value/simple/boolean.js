@@ -10,7 +10,7 @@ define(['sulfur/util/factory'], function (Factory) {
 
   'use strict';
 
-  var $ = Factory.clone({
+  return Factory.clone({
 
     /**
      * Check if a string represents a boolean literal.
@@ -44,9 +44,7 @@ define(['sulfur/util/factory'], function (Factory) {
       return this.create(value);
     }
 
-  });
-
-  $.augment({
+  }).augment({
 
     /**
      * Initialize with a boolean value.
@@ -92,7 +90,5 @@ define(['sulfur/util/factory'], function (Factory) {
     }
 
   });
-
-  return $;
 
 });

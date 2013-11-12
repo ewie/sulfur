@@ -21,7 +21,6 @@ define([
   'sulfur/schema/type/complex/list',
   'sulfur/schema/type/complex/restricted',
   'sulfur/schema/type/simple/primitive',
-  'sulfur/schema/type/simple/list',
   'sulfur/schema/type/simple/restricted',
   'sulfur/schema/value/simple/double',
   'sulfur/util/xpath'
@@ -39,7 +38,6 @@ define([
     ComplexListType,
     ComplexRestrictedType,
     SimplePrimitiveType,
-    ListType,
     SimpleRestrictedType,
     DoubleValue,
     XPath

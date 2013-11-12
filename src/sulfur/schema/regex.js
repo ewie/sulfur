@@ -57,7 +57,7 @@ define([
    *     these do not represent valid characters)
    */
 
-  var $ = Factory.clone({
+  return Factory.clone({
     /**
      * Parse a regular expression as defined by XML Schema 1.0
      *
@@ -87,9 +87,7 @@ define([
     compile: function (source) {
       return this.parse(source).translate().compile();
     }
-  });
-
-  $.augment({
+  }).augment({
 
     /**
      * Initialize the regular expression with the given pattern.
@@ -153,7 +151,5 @@ define([
     }
 
   });
-
-  return $;
 
 });

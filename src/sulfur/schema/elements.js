@@ -8,9 +8,8 @@
 
 define([
   'sulfur/util/factory',
-  'sulfur/util',
   'sulfur/util/orderedStringMap'
-], function (Factory, util, OrderedStringMap) {
+], function (Factory, OrderedStringMap) {
 
   'use strict';
 

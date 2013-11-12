@@ -142,7 +142,7 @@ define([
     return index - offset;
   }
 
-  var $ = Factory.derive({
+  return Factory.derive({
     /**
      * Initialize the range collection with an array of ranges that will be
      * sorted and disjoined and be made available as #array.
@@ -177,7 +177,7 @@ define([
         ranges.push([ this.array[this.array.length - 1][1] + 1, 0xFFFF ]);
       }
 
-      return $.create(ranges);
+      return this.factory.create(ranges);
     },
 
     /**
@@ -214,7 +214,7 @@ define([
         }
       }
 
-      return $.create(results);
+      return this.factory.create(results);
     },
 
     /**
@@ -224,10 +224,8 @@ define([
      *   and the other collection.
      */
     add: function (other) {
-      return $.create(this.array.concat(other.array));
+      return this.factory.create(this.array.concat(other.array));
     }
   });
-
-  return $;
 
 });
