@@ -13,6 +13,7 @@ define([
   'sulfur/schema/deserializer',
   'sulfur/schema/deserializer/type/simple',
   'sulfur/schema/element',
+  'sulfur/schema/elements',
   'sulfur/schema/facets',
   'sulfur/schema/qname',
   'sulfur/schema/type/simple/primitive'
@@ -22,6 +23,7 @@ define([
     Deserializer,
     SimpleTypeDeserializer,
     Element,
+    Elements,
     Facets,
     QName,
     PrimitiveType
@@ -109,6 +111,23 @@ define([
             deserializer = Deserializer.create([ simpleTypeDeserializer ]);
           });
 
+          it("should use the value of attribute xs:schema/@targetNamespace as the schema's namespace URI", function () {
+            var doc = parse(
+              '<schema targetNamespace="urn:bar"' +
+                ' xmlns="http://www.w3.org/2001/XMLSchema"' +
+                ' xmlns:y="urn:y">' +
+               '<element name="foo">' +
+                '<complexType>' +
+                 '<all>' +
+                  '<element name="x" type="y:knownType"/>' +
+                 '</all>' +
+                '</complexType>' +
+               '</element>' +
+              '</schema>');
+            var schema = deserializer.deserialize(doc);
+            expect(schema.qname).to.eql(QName.create('foo', 'urn:bar'));
+          });
+
           it("should use the first root element declaration which only declares elements with compatible types", function () {
             var doc = parse(
               '<schema' +
@@ -131,11 +150,11 @@ define([
                '</element>' +
               '</schema>');
             var schema = deserializer.deserialize(doc);
-            expect(schema).to.eql(
-              Schema.create('bar',
-                [ Element.create('x', simpleType),
-                  Element.create('y', simpleType)
-                ]));
+            expect(schema.elements).to.eql(
+              Elements.create([
+                Element.create('x', simpleType),
+                Element.create('y', simpleType)
+              ]));
           });
 
           it("should ignore prohibited elements declarations", function () {
@@ -153,9 +172,8 @@ define([
                '</element>' +
               '</schema>');
             var schema = deserializer.deserialize(doc);
-            expect(schema).to.eql(
-              Schema.create('bar',
-                [ Element.create('x', simpleType) ]));
+            expect(schema.elements).to.eql(
+              Elements.create([ Element.create('x', simpleType) ]));
           });
 
           it("should ignore optional element declarations with incompatible type", function () {
@@ -173,9 +191,8 @@ define([
                '</element>' +
               '</schema>');
             var schema = deserializer.deserialize(doc);
-            expect(schema).to.eql(
-              Schema.create('bar',
-                [ Element.create('y', simpleType) ]));
+            expect(schema.elements).to.eql(
+              Elements.create([ Element.create('y', simpleType) ]));
           });
 
         });

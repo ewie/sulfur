@@ -10,8 +10,10 @@ define([
   'sulfur/util/factory',
   'sulfur/schema',
   'sulfur/schema/deserializer/type',
+  'sulfur/schema/elements',
+  'sulfur/schema/qname',
   'sulfur/util/xpath'
-], function (Factory, Schema, TypeDeserializer, XPath) {
+], function (Factory, Schema, TypeDeserializer, Elements, QName, XPath) {
 
   'use strict';
 
@@ -45,6 +47,7 @@ define([
         if (!xpath.contains('xs:complexType/xs:all', _root, ns)) {
           continue;
         }
+
         var els = xpath.all('xs:complexType/xs:all/xs:element', _root, ns);
         var elements = [];
         var compatible = true;
@@ -66,8 +69,13 @@ define([
           }
           elements.push(element);
         }
+
+        // use the first compatible root element declaration and stop
         if (compatible) {
-          return Schema.create(_root.getAttribute('name'), elements);
+          var qname = QName.create(
+            _root.getAttribute('name'),
+            root.getAttribute('targetNamespace'));
+          return Schema.create(qname, Elements.create(elements));
         }
       }
 

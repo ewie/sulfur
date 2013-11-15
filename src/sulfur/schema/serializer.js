@@ -32,9 +32,10 @@ define([
      */
     serialize: function (schema) {
       var doc = Document.make(XSD_NS, 'xs:schema', null);
+      doc.root.setAttribute('targetNamespace', schema.qname.namespaceURI);
 
       var root = doc.createElement(XSD_NS, 'xs:element');
-      root.setAttribute('name', schema.name);
+      root.setAttribute('name', schema.qname.localName);
       doc.root.appendChild(root);
 
       var complexType = doc.createElement(XSD_NS, 'xs:complexType');

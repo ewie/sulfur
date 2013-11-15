@@ -31,8 +31,14 @@ define([
         return p.parseFromString(s, 'text/xml');
       }
 
+      function normalizeXML(doc) {
+        var s = new XMLSerializer();
+        return parse(s.serializeToString(doc));
+      }
+
       it("should return an XML Schema document", function () {
-        var schema = Schema.create('foo', { toArray: returns([]) });
+        var qname = {};
+        var schema = Schema.create(qname, { toArray: returns([]) });
         var serializer = Serializer.create();
         var doc = serializer.serialize(schema);
         var e = doc.documentElement;
@@ -40,8 +46,18 @@ define([
         expect(e.namespaceURI).to.equal('http://www.w3.org/2001/XMLSchema');
       });
 
-      it("should include a root element declaration using the schema name", function () {
-        var schema = Schema.create('foo', { toArray: returns([]) });
+      it("should set attribute @targetNamespace", function () {
+        var qname = { namespaceURI: 'urn:bar' };
+        var schema = Schema.create(qname, { toArray: returns([]) });
+        var serializer = Serializer.create();
+        var doc = serializer.serialize(schema);
+        var e = doc.documentElement;
+        expect(e.getAttribute('targetNamespace')).to.equal(qname.namespaceURI);
+      });
+
+      it("should include a root element declaration using the schema's local name", function () {
+        var qname = { localName: 'foo' };
+        var schema = Schema.create(qname, { toArray: returns([]) });
         var serializer = Serializer.create();
         var doc = serializer.serialize(schema);
         var e = doc.documentElement.firstChild;
@@ -53,7 +69,11 @@ define([
       it("should serialize the schema elements", function () {
         var element1 = Element.create('x');
         var element2 = Element.create('y');
-        var schema = Schema.create('bar',
+        var qname = {
+          localName: 'bar',
+          namespaceURI: 'urn:foo'
+        };
+        var schema = Schema.create(qname,
           Elements.create([ element1, element2 ]));
         var typeSerializer = {
           serializeElement: function (element) {
@@ -68,7 +88,7 @@ define([
         var serializer = Serializer.create(typeSerializer);
         var doc = serializer.serialize(schema);
         var x = parse(
-          '<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">' +
+          '<xs:schema targetNamespace="urn:foo" xmlns:xs="http://www.w3.org/2001/XMLSchema">' +
            '<xs:element name="bar">' +
             '<xs:complexType>' +
              '<xs:all>' +
@@ -83,7 +103,7 @@ define([
         expect(Context.prototype).to.be.prototypeOf(spy.getCall(0).args[1]);
         expect(spy.getCall(1).args[0]).to.equal(element2);
         expect(Context.prototype).to.be.prototypeOf(spy.getCall(1).args[1]);
-        expect(doc.documentElement.firstChild.isEqualNode(x.documentElement.firstChild)).to.be.true;
+        expect(normalizeXML(doc).isEqualNode(x)).to.be.true;
       });
 
     });

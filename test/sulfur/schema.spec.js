@@ -16,33 +16,23 @@ define([
   'use strict';
 
   var expect = shared.expect;
-  var bind = shared.bind;
 
   describe('sulfur/schema', function () {
 
-    var name;
+    var qname;
     var elements;
     var schema;
 
     beforeEach(function () {
-      name = 'bar';
+      qname = {};
       elements = Elements.create([ { name: 'name' } ]);
-      schema = Schema.create(name, elements);
+      schema = Schema.create(qname, elements);
     });
 
-    describe('#initialize()', function () {
+    describe('#qname', function () {
 
-      it("should reject an empty name", function () {
-        expect(bind(Schema, 'create', ''))
-          .to.throw("schema name must not be empty");
-      });
-
-    });
-
-    describe('#name', function () {
-
-      it("should return the schema name", function () {
-        expect(schema.name).to.equal(name);
+      it("should return the qualified name", function () {
+        expect(schema.qname).to.equal(qname);
       });
 
     });

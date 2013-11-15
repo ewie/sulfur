@@ -12,17 +12,13 @@ define(['sulfur/util/factory'], function (Factory) {
 
   return Factory.derive({
 
-    initialize: function (name, elements) {
-      if (!name) {
-        throw new Error("schema name must not be empty");
-      }
-
-      this._name = name;
+    initialize: function (qname, elements) {
+      this._qname = qname;
       this._elements = elements;
     },
 
-    get name() {
-      return this._name;
+    get qname() {
+      return this._qname;
     },
 
     get elements() {
