@@ -33,6 +33,8 @@ define([
     serialize: function (schema) {
       var doc = Document.make(XSD_NS, 'xs:schema', null);
       doc.root.setAttribute('targetNamespace', schema.qname.namespaceURI);
+      doc.root.setAttribute('elementFormDefault', 'qualified');
+      doc.root.setAttribute('attributeFormDefault', 'unqualified');
 
       var root = doc.createElement(XSD_NS, 'xs:element');
       root.setAttribute('name', schema.qname.localName);

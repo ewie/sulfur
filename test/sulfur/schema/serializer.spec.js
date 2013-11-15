@@ -55,6 +55,24 @@ define([
         expect(e.getAttribute('targetNamespace')).to.equal(qname.namespaceURI);
       });
 
+      it("should set attribute @elementFormDefault to 'qualified'", function () {
+        var qname = { namespaceURI: 'urn:bar' };
+        var schema = Schema.create(qname, { toArray: returns([]) });
+        var serializer = Serializer.create();
+        var doc = serializer.serialize(schema);
+        var e = doc.documentElement;
+        expect(e.getAttribute('elementFormDefault')).to.equal('qualified');
+      });
+
+      it("should set attribute @attributeFormDefault to 'unqualified'", function () {
+        var qname = { namespaceURI: 'urn:bar' };
+        var schema = Schema.create(qname, { toArray: returns([]) });
+        var serializer = Serializer.create();
+        var doc = serializer.serialize(schema);
+        var e = doc.documentElement;
+        expect(e.getAttribute('attributeFormDefault')).to.equal('unqualified');
+      });
+
       it("should include a root element declaration using the schema's local name", function () {
         var qname = { localName: 'foo' };
         var schema = Schema.create(qname, { toArray: returns([]) });
@@ -88,7 +106,10 @@ define([
         var serializer = Serializer.create(typeSerializer);
         var doc = serializer.serialize(schema);
         var x = parse(
-          '<xs:schema targetNamespace="urn:foo" xmlns:xs="http://www.w3.org/2001/XMLSchema">' +
+          '<xs:schema targetNamespace="urn:foo"' +
+            ' elementFormDefault="qualified"' +
+            ' attributeFormDefault="unqualified"' +
+            ' xmlns:xs="http://www.w3.org/2001/XMLSchema">' +
            '<xs:element name="bar">' +
             '<xs:complexType>' +
              '<xs:all>' +
