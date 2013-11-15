@@ -9,10 +9,10 @@
 
 define([
   'shared',
-  'sulfur/schema/facet/pattern',
   'sulfur/schema/deserializer/facet/pattern',
+  'sulfur/schema/facet/pattern',
   'sulfur/schema/pattern'
-], function (shared, PatternFacet, PatternFacetDeserializer, Pattern) {
+], function (shared, PatternFacetResolver, PatternFacet, Pattern) {
 
   'use strict';
 
@@ -24,7 +24,7 @@ define([
     describe('.facet', function () {
 
       it("should return sulfur/schema/facet/pattern", function () {
-        expect(PatternFacetDeserializer.facet).to.equal(PatternFacet);
+        expect(PatternFacetResolver.facet).to.equal(PatternFacet);
       });
 
     });
@@ -44,7 +44,7 @@ define([
       it("should pass the given string to sulfur/schema/pattern.create()", function () {
         var spy = sandbox.stub(Pattern, 'create').returns({});
         var s = 'foo';
-        var value = PatternFacetDeserializer.parseValue(s);
+        var value = PatternFacetResolver.parseValue(s);
         expect(spy)
           .to.be.calledWith(s)
           .to.have.returned(sinon.match.same(value));
@@ -56,7 +56,7 @@ define([
 
       it("should return a sulfur/schema/facet/pattern with the given values", function () {
         var values = [ Pattern.create('') ];
-        expect(PatternFacetDeserializer.createFacet(values))
+        expect(PatternFacetResolver.createFacet(values))
           .to.eql(PatternFacet.create(values));
       });
 

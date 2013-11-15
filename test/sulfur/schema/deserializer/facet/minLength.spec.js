@@ -9,9 +9,9 @@
 
 define([
   'shared',
-  'sulfur/schema/facet/minLength',
-  'sulfur/schema/deserializer/facet/minLength'
-], function (shared, MinLengthFacet, MinLengthFacetDeserializer) {
+  'sulfur/schema/deserializer/facet/minLength',
+  'sulfur/schema/facet/minLength'
+], function (shared, MinLengthFacetResolver, MinLengthFacet) {
 
   'use strict';
 
@@ -22,7 +22,7 @@ define([
     describe('.facet', function () {
 
       it("should return sulfur/schema/facet/minLength", function () {
-        expect(MinLengthFacetDeserializer.facet).to.equal(MinLengthFacet);
+        expect(MinLengthFacetResolver.facet).to.equal(MinLengthFacet);
       });
 
     });
@@ -30,7 +30,7 @@ define([
     describe('.parseValue()', function () {
 
       it("should parse a decimal integer", function () {
-        expect(MinLengthFacetDeserializer.parseValue('123')).to.equal(123);
+        expect(MinLengthFacetResolver.parseValue('123')).to.equal(123);
       });
 
     });
@@ -38,7 +38,7 @@ define([
     describe('.createFacet()', function () {
 
       it("should return a sulfur/schema/facet/minLength using the largest value", function () {
-        expect(MinLengthFacetDeserializer.createFacet([ 1, 3, 2 ]))
+        expect(MinLengthFacetResolver.createFacet([ 1, 3, 2 ]))
           .to.eql(MinLengthFacet.create(3));
       });
 

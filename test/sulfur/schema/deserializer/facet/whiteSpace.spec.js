@@ -9,9 +9,9 @@
 
 define([
   'shared',
-  'sulfur/schema/facet/whiteSpace',
-  'sulfur/schema/deserializer/facet/whiteSpace'
-], function (shared, WhiteSpaceFacet, WhiteSpaceFacetDeserializer) {
+  'sulfur/schema/deserializer/facet/whiteSpace',
+  'sulfur/schema/facet/whiteSpace'
+], function (shared, WhiteSpaceFacetDeserializer, WhiteSpaceFacet) {
 
   'use strict';
 

@@ -9,9 +9,9 @@
 
 define([
   'shared',
-  'sulfur/schema/facet/fractionDigits',
-  'sulfur/schema/deserializer/facet/fractionDigits'
-], function (shared, FractionDigitsFacet, FractionDigitsFacetDeserializer) {
+  'sulfur/schema/deserializer/facet/fractionDigits',
+  'sulfur/schema/facet/fractionDigits'
+], function (shared, FractionDigitsFacetResolver, FractionDigitsFacet) {
 
   'use strict';
 
@@ -22,7 +22,7 @@ define([
     describe('.facet', function () {
 
       it("should return sulfur/schema/facet/fractionDigits", function () {
-        expect(FractionDigitsFacetDeserializer.facet).to.equal(FractionDigitsFacet);
+        expect(FractionDigitsFacetResolver.facet).to.equal(FractionDigitsFacet);
       });
 
     });
@@ -30,7 +30,7 @@ define([
     describe('.parseValue()', function () {
 
       it("should parse a decimal integer", function () {
-        expect(FractionDigitsFacetDeserializer.parseValue('123')).to.equal(123);
+        expect(FractionDigitsFacetResolver.parseValue('123')).to.equal(123);
       });
 
     });
@@ -38,7 +38,7 @@ define([
     describe('.createFacet()', function () {
 
       it("should return a sulfur/schema/facet/fractionDigits using the smallest value", function () {
-        expect(FractionDigitsFacetDeserializer.createFacet([ 1, 0, 2 ]))
+        expect(FractionDigitsFacetResolver.createFacet([ 1, 0, 2 ]))
           .to.eql(FractionDigitsFacet.create(0));
       });
 

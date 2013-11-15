@@ -9,10 +9,10 @@
 
 define([
   'shared',
-  'sulfur/schema/facet/mediaType',
   'sulfur/schema/deserializer/facet/mediaType',
+  'sulfur/schema/facet/mediaType',
   'sulfur/schema/mediaType'
-], function (shared, MediaTypeFacet, MediaTypeFacetDeserializer, MediaType) {
+], function (shared, MediaTypeFacetResolver, MediaTypeFacet, MediaType) {
 
   'use strict';
 
@@ -24,7 +24,7 @@ define([
     describe('.facet', function () {
 
       it("should return sulfur/schema/facet/mediaType", function () {
-        expect(MediaTypeFacetDeserializer.facet).to.equal(MediaTypeFacet);
+        expect(MediaTypeFacetResolver.facet).to.equal(MediaTypeFacet);
       });
 
     });
@@ -44,7 +44,7 @@ define([
       it("should pass the given string to sulfur/schema/mediaType.parse()", function () {
         var spy = sandbox.stub(MediaType, 'parse').returns({});
         var s = 'foo';
-        var value = MediaTypeFacetDeserializer.parseValue(s);
+        var value = MediaTypeFacetResolver.parseValue(s);
         expect(spy)
           .to.be.calledWith(s)
           .to.have.returned(sinon.match.same(value));
@@ -56,7 +56,7 @@ define([
 
       it("should return a sulfur/schema/facet/mediaType with the given values", function () {
         var values = [ MediaType.create('text', 'plain') ];
-        expect(MediaTypeFacetDeserializer.createFacet(values))
+        expect(MediaTypeFacetResolver.createFacet(values))
           .to.eql(MediaTypeFacet.create(values));
       });
 

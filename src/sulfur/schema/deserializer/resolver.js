@@ -9,8 +9,9 @@
 define([
   'sulfur/schema/element',
   'sulfur/schema/qname',
-  'sulfur/util/factory'
-], function (Element, QName, Factory) {
+  'sulfur/util/factory',
+  'sulfur/util/xpath'
+], function (Element, QName, Factory, XPath) {
 
   'use strict';
 
@@ -19,46 +20,48 @@ define([
   return Factory.derive({
 
     /**
-     * @param {array} typeDeserializers an array of type deserializers used in
+     * @param {array} typeResolvers an array of type resolvers used in
      *   the given order
      */
-    initialize: function (typeDeserializers) {
-      this._typeDeserializers = typeDeserializers;
+    initialize: function (document, typeResolvers) {
+      this._document = document;
+      this._targetNamespace = document.documentElement.getAttribute('targetNamespace');
+      this._typeResolvers = typeResolvers;
       this._referenceStack = [];
     },
 
-    resolveGlobalType: function (name, xpath) {
-      var expr = '(/xs:schema/xs:simpleType|/xs:schema/xs:complexType)' +
-        '[@name = "' + name + '"]';
-      var element = xpath.first(expr, undefined, NS);
-      if (element) {
-        return this.deserializeType(element, xpath);
-      }
-    },
-
     /**
-     * @throw {Error} when the type element cannot be deserialized by any type deserializer
-     * @throw {Error} when a type deserializer throws an error
+     * @throw {Error} when the type element cannot be resolved by any type resolver
+     * @throw {Error} when a type resolver throws an error
      */
-    deserializeType: function (element, xpath) {
-      for (var i = 0; i < this._typeDeserializers.length; i += 1) {
-        var c = this._typeDeserializers[i];
-        var t = c.deserializeElement(element, this, xpath);
+    resolveTypeElement: function (element) {
+      for (var i = 0; i < this._typeResolvers.length; i += 1) {
+        var c = this._typeResolvers[i];
+        var t = c.resolveTypeElement(element, this);
         if (t) {
           return t;
         }
       }
-      throw new Error("cannot deserialize type element " +
+      throw new Error("cannot resolve type element " +
         "{" + element.namespaceURI + "}" + element.localName);
     },
 
     /**
-     * @throw {Error} when the type element cannot be resolved by any type deserializer
-     * @throw {Error} when a type deserializer throws an error
+     * @throw {Error} when the type element cannot be resolved by any type resolver
+     * @throw {Error} when a type resolver throws an error
      */
     resolveNamedType: function (qname) {
-      for (var i = 0; i < this._typeDeserializers.length; i += 1) {
-        var c = this._typeDeserializers[i];
+      if (qname.namespaceURI === this._targetNamespace) {
+        var xpath = XPath.create(this._document);
+        var expr = '(/xs:schema/xs:simpleType|/xs:schema/xs:complexType)' +
+          '[@name = "' + qname.localName + '"]';
+        var element = xpath.first(expr, undefined, NS);
+        if (element) {
+          return this.resolveTypeElement(element);
+        }
+      }
+      for (var i = 0; i < this._typeResolvers.length; i += 1) {
+        var c = this._typeResolvers[i];
         var t = c.resolveQualifiedName(qname);
         if (t) {
           return t;
@@ -69,7 +72,7 @@ define([
 
     /**
      * Check if an element would create a recursive type when passed to
-     * #deserializeElement().
+     * #resolveElementDeclaration().
      *
      * @param {Element} element an XML Schema element declaration
      *
@@ -78,7 +81,7 @@ define([
      * @return {true} when the element references an element whose deserialization
      *   has not yet been completed
      */
-    isRecursiveElement: function (element) {
+    isRecursiveElementDeclaration: function (element) {
       if (!element.hasAttribute('ref')) {
         return false;
       }
@@ -87,19 +90,19 @@ define([
     },
 
     /**
-     * Deserialize an element and its type.
+     * Resolve an element declaration.
      *
      * Does not resolve attribute "subsitutionGroup".
      *
      * @param {Element} element an XML Schema element declaration
-     * @param {sulfur/util/xpath} xpath
      *
      * @return {sulfur/schema/element}
      *
      * @throw {Error} when the type declaration cannot be resolved
      * @throw {Error} when the type is recursive
      */
-    deserializeElement: function (element, xpath) {
+    resolveElementDeclaration: function (element) {
+      var xpath = XPath.create(element);
       var name;
       var type;
       if (element.hasAttribute('ref')) {
@@ -109,7 +112,7 @@ define([
         }
         this._referenceStack.push(refName);
         var ref = xpath.first('/xs:schema/xs:element[@name = "' + refName + '"]', undefined, NS);
-        ref = this.deserializeElement(ref, xpath);
+        ref = this.resolveElementDeclaration(ref);
         type = ref.type;
         name = ref.name;
         this._referenceStack.pop();
@@ -117,16 +120,18 @@ define([
         name = element.getAttribute('name');
         if (element.hasAttribute('type')) {
           var typeName = element.getAttribute('type');
-          var globalType = this.resolveGlobalType(typeName, xpath);
-          if (globalType) {
-            type = globalType;
-          } else {
-            var qname = this.resolveQualifiedName(typeName, element);
-            type = this.resolveNamedType(qname);
-          }
+          //var globalType = this.resolveGlobalType(typeName);
+          //if (globalType) {
+          //  type = globalType;
+          //} else {
+          //  var qname = this.resolveQualifiedName(typeName, element);
+          //  type = this.resolveNamedType(qname);
+          //}
+          var qname = this.resolveQualifiedName(typeName, element);
+          type = this.resolveNamedType(qname);
         } else {
           var child = xpath.first('xs:complexType|xs:simpleType', element, NS);
-          type = this.deserializeType(child, xpath);
+          type = this.resolveTypeElement(child);
         }
       }
       var optional = element.getAttribute('minOccurs') === '0';
@@ -144,15 +149,23 @@ define([
     resolveQualifiedName: function (qname, element) {
       var p = qname.indexOf(':');
       var prefix;
-      var name;
+      var localName;
       if (p === -1) {
         prefix = '';
-        name = qname;
+        localName = qname;
       } else {
         prefix = qname.substr(0, p);
-        name = qname.substr(p + 1);
+        localName = qname.substr(p + 1);
       }
-      return QName.create(name, this.resolvePrefix(prefix, element));
+      var namespaceURI = this.resolvePrefix(prefix, element);
+      if (!namespaceURI) {
+        if (!prefix) {
+          namespaceURI = null;
+        } else {
+          throw new Error('cannot resolve prefix "' + prefix + '"');
+        }
+      }
+      return QName.create(localName, namespaceURI);
     },
 
     resolvePrefix: function (prefix, element) {
@@ -166,7 +179,6 @@ define([
         }
         element = element.parentElement;
       } while (element);
-      throw new Error('cannot resolve undeclared prefix "' + prefix + '"');
     }
 
   });

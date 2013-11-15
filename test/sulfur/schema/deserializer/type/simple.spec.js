@@ -11,26 +11,24 @@ define([
   'shared',
   'sulfur/schema/facet',
   'sulfur/schema/facets',
-  'sulfur/schema/deserializer/type',
+  'sulfur/schema/deserializer/resolver',
   'sulfur/schema/deserializer/type/simple',
   'sulfur/schema/qname',
   'sulfur/schema/type/simple/primitive',
   'sulfur/schema/type/simple/derived',
   'sulfur/schema/type/simple/list',
-  'sulfur/schema/type/simple/restricted',
-  'sulfur/util/xpath'
+  'sulfur/schema/type/simple/restricted'
 ], function (
     shared,
     Facet,
     Facets,
-    TypeDeserializer,
-    SimpleTypeDeserializer,
+    Resolver,
+    SimpleResolver,
     QName,
     PrimitiveType,
     DerivedType,
     ListType,
-    RestrictedType,
-    XPath
+    RestrictedType
 ) {
 
   'use strict';
@@ -68,8 +66,8 @@ define([
             facets: Facets.create(
               [ facet ])
           });
-        var facetDeserializer = { facet: facet };
-        expect(bind(SimpleTypeDeserializer, 'create', [ type ], [ facetDeserializer ]))
+        var facetResolver = { facet: facet };
+        expect(bind(SimpleResolver, 'create', [ type ], [ facetResolver ]))
           .to.not.throw();
       });
 
@@ -84,21 +82,21 @@ define([
             qname: QName.create('z', 'urn:y'),
             facets: Facets.create([ facet.create() ])
           });
-        var facetDeserializer = { facet: facet };
-        expect(bind(SimpleTypeDeserializer, 'create', [ type ], [ facetDeserializer ]))
+        var facetResolver = { facet: facet };
+        expect(bind(SimpleResolver, 'create', [ type ], [ facetResolver ]))
           .to.not.throw();
       });
 
       it("should reject an empty array of types", function () {
-        expect(bind(SimpleTypeDeserializer, 'create', []))
+        expect(bind(SimpleResolver, 'create', []))
           .to.throw("expecting an array of one or more types");
       });
 
       it("should reject types which are not a sulfur/schema/type/simple/{derived,primitive}", function () {
-        var facetDeserializer = {
+        var facetResolver = {
           facet: { qname: QName.create('foo', 'urn:bar') }
         };
-        expect(bind(SimpleTypeDeserializer, 'create', [{}], [ facetDeserializer ]))
+        expect(bind(SimpleResolver, 'create', [{}], [ facetResolver ]))
           .to.throw("expecting only sulfur/schema/type/simple/{derived,primitive} types");
       });
 
@@ -114,35 +112,35 @@ define([
               facets: Facets.create([ facet ])
             })
         ];
-        var facetDeserializer = { facet: facet };
-        expect(bind(SimpleTypeDeserializer, 'create', types, [ facetDeserializer ]))
+        var facetResolver = { facet: facet };
+        expect(bind(SimpleResolver, 'create', types, [ facetResolver ]))
           .to.throw("type with duplicate qualified name {urn:bar}foo");
       });
 
-      it("should reject an empty array of facet deserializers", function () {
+      it("should reject an empty array of facet resolvers", function () {
         var types = [
           PrimitiveType.create(
             { qname: QName.create('foo', 'urn:bar') })
         ];
-        expect(bind(SimpleTypeDeserializer, 'create', types, []))
-          .to.throw("expecting an array of one or more facet deserializers");
+        expect(bind(SimpleResolver, 'create', types, []))
+          .to.throw("expecting an array of one or more facet resolvers");
       });
 
-      it("should reject facet deserializers with duplicate facets", function () {
+      it("should reject facet resolvers with duplicate facets", function () {
         var types = [
           PrimitiveType.create(
             { qname: QName.create('foo', 'urn:bar') })
         ];
         var facet = { qname: QName.create('foo', 'urn:bar') };
-        var facetDeserializers = [
+        var facetResolvers = [
           { facet: facet },
           { facet: facet }
         ];
-        expect(bind(SimpleTypeDeserializer, 'create', types, facetDeserializers))
-          .to.throw("facet deserializer with duplicate facet {urn:bar}foo");
+        expect(bind(SimpleResolver, 'create', types, facetResolvers))
+          .to.throw("facet resolver with duplicate facet {urn:bar}foo");
       });
 
-      it("should reject missing facet deserializers", function () {
+      it("should reject missing facet resolvers", function () {
         var allowedFacet = { qname: QName.create('x', 'urn:y') };
         var types = [
           PrimitiveType.create(
@@ -151,11 +149,11 @@ define([
             })
         ];
         var someFacet = { qname: QName.create('x', 'urn:z') };
-        var facetDeserializers = [
+        var facetResolvers = [
           { facet: someFacet }
         ];
-        expect(bind(SimpleTypeDeserializer, 'create', types, facetDeserializers))
-          .to.throw("expecting a facet deserializer for facet {urn:y}x");
+        expect(bind(SimpleResolver, 'create', types, facetResolvers))
+          .to.throw("expecting a facet resolver for facet {urn:y}x");
       });
 
     });
@@ -163,7 +161,7 @@ define([
     describe('#resolveQualifiedName()', function () {
 
       var type;
-      var simpleTypeDeserializer;
+      var simpleResolver;
 
       beforeEach(function () {
         var facet = { qname: QName.create('foo', 'urn:bar') };
@@ -171,33 +169,33 @@ define([
           { qname: QName.create('x', 'urn:y'),
             facets: Facets.create([ facet ])
           });
-        var facetDeserializer = { facet: facet };
-        simpleTypeDeserializer = SimpleTypeDeserializer.create([ type ], [ facetDeserializer ]);
+        var facetResolver = { facet: facet };
+        simpleResolver = SimpleResolver.create([ type ], [ facetResolver ]);
       });
 
       it("should return the type matching the name and namespace", function () {
-        var t = simpleTypeDeserializer.resolveQualifiedName(QName.create('x', 'urn:y'));
+        var t = simpleResolver.resolveQualifiedName(QName.create('x', 'urn:y'));
         expect(t).to.equal(type);
       });
 
       it("should return undefined when no type with the given name is defined", function () {
-        expect(simpleTypeDeserializer.resolveQualifiedName(QName.create('z', 'urn:y'))).to.be.undefined;
+        expect(simpleResolver.resolveQualifiedName(QName.create('z', 'urn:y'))).to.be.undefined;
       });
 
       it("should return undefined when no type with the given namespace is defined", function () {
-        expect(simpleTypeDeserializer.resolveQualifiedName(QName.create('x', 'urn:z'))).to.be.undefined;
+        expect(simpleResolver.resolveQualifiedName(QName.create('x', 'urn:z'))).to.be.undefined;
       });
 
     });
 
-    describe('#deserializeElement()', function () {
+    describe('#resolveTypeElement()', function () {
 
       var type;
-      var simpleTypeDeserializer;
-      var typeDeserializers;
+      var simpleResolver;
+      var resolvers;
       var valueType;
       var allowedFacets;
-      var facetDeserializers;
+      var facetResolvers;
 
       beforeEach(function () {
         var parseFn = function (s) { return '{' + s + '}'; };
@@ -214,7 +212,7 @@ define([
             facets: allowedFacets
           });
 
-        function createFacetDeserializer(facet) {
+        function createFacetResolver(facet) {
           return {
             facet: facet,
             parseValue: parseFn,
@@ -224,24 +222,24 @@ define([
           };
         }
 
-        facetDeserializers = [
-          createFacetDeserializer(allowedFacets.getByQName(QName.create('foo', 'http://www.w3.org/2001/XMLSchema'))),
-          createFacetDeserializer(allowedFacets.getByQName(QName.create('bar', 'http://www.w3.org/2001/XMLSchema'))),
-          createFacetDeserializer(allowedFacets.getByQName(QName.create('abc', 'urn:bar'))),
-          createFacetDeserializer(allowedFacets.getByQName(QName.create('def', 'urn:foo')))
+        facetResolvers = [
+          createFacetResolver(allowedFacets.getByQName(QName.create('foo', 'http://www.w3.org/2001/XMLSchema'))),
+          createFacetResolver(allowedFacets.getByQName(QName.create('bar', 'http://www.w3.org/2001/XMLSchema'))),
+          createFacetResolver(allowedFacets.getByQName(QName.create('abc', 'urn:bar'))),
+          createFacetResolver(allowedFacets.getByQName(QName.create('def', 'urn:foo')))
         ];
-        simpleTypeDeserializer = SimpleTypeDeserializer.create([ type ], facetDeserializers);
-        typeDeserializers = [ simpleTypeDeserializer ];
+        simpleResolver = SimpleResolver.create([ type ], facetResolvers);
+        resolvers = [ simpleResolver ];
       });
 
       it("should return undefined when the element's local name is not 'simpleType", function () {
         var element = { localName: 'notASimpleType' };
-        expect(simpleTypeDeserializer.deserializeElement(element)).to.be.undefined;
+        expect(simpleResolver.resolveTypeElement(element)).to.be.undefined;
       });
 
       it("should return undefined when the element's namespace is not 'http://www.w3.org/2001/XMLSchema'", function () {
         var element = { localName: 'simpleType', namespaceURI: 'urn:void' };
-        expect(simpleTypeDeserializer.deserializeElement(element)).to.be.undefined;
+        expect(simpleResolver.resolveTypeElement(element)).to.be.undefined;
       });
 
       context("with element xs:simpleType", function () {
@@ -249,9 +247,8 @@ define([
         it("should return undefined when it does not have child xs:list nor xs:restriction", function () {
           var doc = parse('<simpleType xmlns="http://www.w3.org/2001/XMLSchema"/>');
           var element = doc.documentElement;
-          var xpath = XPath.create(doc);
-          var typeDeserializer = TypeDeserializer.create();
-          expect(simpleTypeDeserializer.deserializeElement(element, typeDeserializer, xpath)).to.be.undefined;
+          var resolver = Resolver.create(doc);
+          expect(simpleResolver.resolveTypeElement(element, resolver)).to.be.undefined;
         });
 
         context("with child xs:restriction", function () {
@@ -268,7 +265,7 @@ define([
 
           context("with child xs:simpleType", function () {
 
-            it("should recursively deserialize child xs:simpleType", function () {
+            it("should recursively resolve child xs:simpleType", function () {
               var doc = parse(
                 '<xs:schema' +
                   ' xmlns:xs="http://www.w3.org/2001/XMLSchema"' +
@@ -282,11 +279,10 @@ define([
                  '</xs:simpleType>' +
                 '</xs:schema>');
               var root = doc.documentElement;
-              var xpath = XPath.create(doc);
-              var typeDeserializer = TypeDeserializer.create(typeDeserializers);
+              var resolver = Resolver.create(doc, resolvers);
 
-              var t = simpleTypeDeserializer.deserializeElement(
-                root.firstChild, typeDeserializer, xpath);
+              var t = simpleResolver.resolveTypeElement(
+                root.firstChild, resolver);
 
               expect(t).to.eql(type);
             });
@@ -308,27 +304,25 @@ define([
                  '</xs:simpleType>' +
                 '</xs:schema>');
               var root = doc.documentElement;
-              var xpath = XPath.create(doc);
-              var typeDeserializer = TypeDeserializer.create(typeDeserializers);
+              var resolver = Resolver.create(doc, resolvers);
 
-              var t = simpleTypeDeserializer.deserializeElement(
-                root.firstChild, typeDeserializer, xpath);
+              var t = simpleResolver.resolveTypeElement(
+                root.firstChild, resolver);
 
               expect(t).to.eql(type);
             });
 
-            it("should deserialize the qualified name when there's no global type declaration", function () {
+            it("should resolve the qualified name when there's no global type declaration", function () {
               var doc = parse(
                 '<xs:simpleType' +
                   ' xmlns:xs="http://www.w3.org/2001/XMLSchema"' +
                   ' xmlns:y="urn:y">' +
                  '<xs:restriction base="y:x"/>' +
                 '</xs:simpleType>');
-              var xpath = XPath.create(doc);
-              var typeDeserializer = TypeDeserializer.create(typeDeserializers);
+              var resolver = Resolver.create(doc, resolvers);
 
-              var t = simpleTypeDeserializer.deserializeElement(
-                doc.documentElement, typeDeserializer, xpath);
+              var t = simpleResolver.resolveTypeElement(
+                doc.documentElement, resolver);
 
               expect(t).to.eql(type);
             });
@@ -340,13 +334,10 @@ define([
                   ' xmlns:y="urn:y">' +
                  '<xs:restriction base="y:z"/>' +
                 '</xs:simpleType>');
-              var xpath = XPath.create(doc, {
-                xs: 'http://www.w3.org/2001/XMLSchema'
-              });
-              var typeDeserializer = TypeDeserializer.create(typeDeserializers);
+              var resolver = Resolver.create(doc, resolvers);
 
-              expect(bind(simpleTypeDeserializer, 'deserializeElement',
-                  doc.documentElement, typeDeserializer, xpath))
+              expect(bind(simpleResolver, 'resolveTypeElement',
+                  doc.documentElement, resolver))
                 .to.throw("cannot resolve type {urn:y}z");
             });
 
@@ -358,11 +349,11 @@ define([
             var createSpies;
 
             beforeEach(function () {
-              parseSpies = facetDeserializers.map(function (facetDeserializer) {
-                return sinon.spy(facetDeserializer, 'parseValue');
+              parseSpies = facetResolvers.map(function (facetResolver) {
+                return sinon.spy(facetResolver, 'parseValue');
               });
-              createSpies = facetDeserializers.map(function (facetDeserializer) {
-                return sinon.spy(facetDeserializer, 'createFacet');
+              createSpies = facetResolvers.map(function (facetResolver) {
+                return sinon.spy(facetResolver, 'createFacet');
               });
             });
 
@@ -379,11 +370,10 @@ define([
                 '</xs:simpleType>');
 
               var element = doc.documentElement;
-              var xpath = XPath.create(doc);
-              var typeDeserializer = TypeDeserializer.create(typeDeserializers);
+              var resolver = Resolver.create(doc, resolvers);
 
-              var t = simpleTypeDeserializer.deserializeElement(
-                element, typeDeserializer, xpath);
+              var t = simpleResolver.resolveTypeElement(
+                element, resolver);
 
               expect(parseSpies[0].getCall(0).args[0])
                 .to.equal('x');
@@ -434,11 +424,10 @@ define([
                 '</xs:simpleType>');
 
               var element = doc.documentElement;
-              var xpath = XPath.create(doc);
-              var typeDeserializer = TypeDeserializer.create(typeDeserializers);
+              var resolver = Resolver.create(doc, resolvers);
 
-              var t = simpleTypeDeserializer.deserializeElement(
-                element, typeDeserializer, xpath);
+              var t = simpleResolver.resolveTypeElement(
+                element, resolver);
 
               expect(parseSpies[2].getCall(0).args[0])
                 .to.equal('1');
@@ -476,7 +465,7 @@ define([
 
         context("with child xs:list", function () {
 
-          it("should deserialize child xs:simpleType when declared", function () {
+          it("should resolve child xs:simpleType when declared", function () {
             var doc = parse(
               '<xs:schema' +
                 ' xmlns:xs="http://www.w3.org/2001/XMLSchema"' +
@@ -490,11 +479,10 @@ define([
                '</xs:simpleType>' +
               '</xs:schema>');
             var element = doc.documentElement.firstChild;
-            var xpath = XPath.create(doc);
-            var typeDeserializer = TypeDeserializer.create(typeDeserializers);
+            var resolver = Resolver.create(doc, resolvers);
 
-            var t = simpleTypeDeserializer.deserializeElement(
-              element, typeDeserializer, xpath);
+            var t = simpleResolver.resolveTypeElement(
+              element, resolver);
 
             expect(ListType.prototype).to.be.prototypeOf(t);
             expect(t.itemType).to.equal(type);
@@ -515,17 +503,16 @@ define([
                  '</xs:simpleType>' +
                 '</xs:schema>');
               var element = doc.documentElement.firstChild;
-              var xpath = XPath.create(doc);
-              var typeDeserializer = TypeDeserializer.create(typeDeserializers);
+              var resolver = Resolver.create(doc, resolvers);
 
-              var t = simpleTypeDeserializer.deserializeElement(
-                element, typeDeserializer, xpath);
+              var t = simpleResolver.resolveTypeElement(
+                element, resolver);
 
               expect(ListType.prototype).to.be.prototypeOf(t);
               expect(t.itemType).to.equal(type);
             });
 
-            it("should deserialize the qualified name when there's no global type declaration", function () {
+            it("should resolve the qualified name when there's no global type declaration", function () {
               var doc = parse(
                 '<xs:simpleType' +
                   ' xmlns:xs="http://www.w3.org/2001/XMLSchema"' +
@@ -533,11 +520,10 @@ define([
                  '<xs:list itemType="y:x"/>' +
                 '</xs:simpleType>');
               var element = doc.documentElement;
-              var xpath = XPath.create(doc);
-              var typeDeserializer = TypeDeserializer.create(typeDeserializers);
+              var resolver = Resolver.create(doc, resolvers);
 
-              var t = simpleTypeDeserializer.deserializeElement(
-                element, typeDeserializer, xpath);
+              var t = simpleResolver.resolveTypeElement(
+                element, resolver);
 
               expect(ListType.prototype).to.be.prototypeOf(t);
               expect(t.itemType).to.equal(type);
@@ -550,11 +536,10 @@ define([
                   ' xmlns:y="urn:y">' +
                  '<xs:list itemType="y:z"/>' +
                 '</xs:simpleType>');
-              var xpath = XPath.create(doc);
-              var typeDeserializer = TypeDeserializer.create(typeDeserializers);
+              var resolver = Resolver.create(doc, resolvers);
 
-              expect(bind(simpleTypeDeserializer, 'deserializeElement',
-                  doc.documentElement, typeDeserializer, xpath))
+              expect(bind(simpleResolver, 'resolveTypeElement',
+                  doc.documentElement, resolver))
                 .to.throw("cannot resolve type {urn:y}z");
             });
 

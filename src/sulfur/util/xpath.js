@@ -1,41 +1,54 @@
-/* Copyright (c) 2013, Erik Wienhold
- * All rights reserved.
- *
- * Licensed under the BSD 3-Clause License.
- */
-
 /* global define */
 
 define(['sulfur/util/factory'], function (Factory) {
 
   'use strict';
 
-  function createNamespaceResolver(namespaces) {
-    return function (prefix) {
-      return namespaces[prefix] || null;
+  var createNamespaceResolver = (function () {
+
+    var hasOwn = Object.prototype.hasOwnProperty;
+
+    var nil = function () {
+      return null;
     };
-  }
+
+    var wrap = function (namespaces) {
+      return function (prefix) {
+        return (hasOwn.call(namespaces, prefix) && namespaces[prefix]) || null;
+      };
+    };
+
+    return function (namespaces) {
+      if (typeof namespaces === 'function') {
+        return namespaces;
+      } else if (namespaces) {
+        return wrap(namespaces);
+      } else {
+        return nil;
+      }
+    };
+
+  }());
 
   return Factory.derive({
 
-    initialize: function (document) {
-      this._document = document;
+    initialize: function (contextNode) {
+      this._contextNode = contextNode;
     },
 
     evaluate: function (expr, resultType, contextNode, namespaces) {
-      var namespaceResolver = createNamespaceResolver(namespaces || {});
-      return this._document.evaluate(expr, contextNode || this._document,
-        namespaceResolver, resultType, null);
+      var d = this._contextNode.ownerDocument || this._contextNode;
+      contextNode || (contextNode = this._contextNode);
+      var namespaceResolver = createNamespaceResolver(namespaces);
+      return d.evaluate(expr, contextNode, namespaceResolver, resultType, null);
     },
 
     all: function (expr, contextNode, namespaces) {
-      var result = this.evaluate(expr, XPathResult.ORDERED_NODE_ITERATOR_TYPE,
+      var result = this.evaluate(expr, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE,
         contextNode, namespaces);
       var nodes = [];
-      var node = result.iterateNext();
-      while (node) {
-        nodes.push(node);
-        node = result.iterateNext();
+      for (var i = 0; i < result.snapshotLength; i += 1) {
+        nodes.push(result.snapshotItem(i));
       }
       return nodes;
     },

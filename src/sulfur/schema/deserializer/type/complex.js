@@ -13,7 +13,8 @@ define([
   'sulfur/schema/type/complex/primitive',
   'sulfur/schema/type/complex/restricted',
   'sulfur/util',
-  'sulfur/util/stringMap'
+  'sulfur/util/stringMap',
+  'sulfur/util/xpath'
 ], function (
     Factory,
     Elements,
@@ -21,7 +22,8 @@ define([
     PrimitiveType,
     RestrictedType,
     util,
-    StringMap
+    StringMap,
+    XPath
 ) {
 
   'use strict';
@@ -52,7 +54,7 @@ define([
       return this._typeIndex.get(qname);
     },
 
-    deserializeElement: (function () {
+    resolveTypeElement: (function () {
 
       function declaresMandatoryAttributes(element, xpath) {
         var groups = xpath.all('xs:attributeGroup', element, NS);
@@ -66,13 +68,13 @@ define([
 
       /**
        * @param {Element} element
-       * @param {sulfur/schema/deserializer/type} typeDeserializer
+       * @param {sulfur/schema/resolver/type} resolver
        *
        * @return {undefined} when the element has an incompatible type and cannot be ignored
        * @return {null} when the element has an incompatible type but can be ignored
        * @return {sulfur/schema/element} an element with compatible type
        */
-      function resolveElement(element, typeDeserializer, xpath) {
+      function resolveElement(element, resolver, xpath) {
         var minOccurs = element.hasAttribute('minOccurs') ?
           parseInt(element.getAttribute('minOccurs'), 10) : 1;
 
@@ -84,13 +86,13 @@ define([
           return;
         }
 
-        if (typeDeserializer.isRecursiveElement(element)) {
+        if (resolver.isRecursiveElementDeclaration(element)) {
           return;
         }
 
         var e;
         try {
-          e = typeDeserializer.deserializeElement(element, xpath);
+          e = resolver.resolveElementDeclaration(element, xpath);
         } catch (ex) {
           return minOccurs > 0 ? undefined : null;
         }
@@ -149,12 +151,12 @@ define([
         });
       }
 
-      function resolveElements(element, typeDeserializer, xpath) {
+      function resolveElements(element, resolver, xpath) {
         var elements = xpath.all('xs:all/xs:element', element, NS);
 
         var es = [];
         for (var i = 0; i < elements.length; i += 1) {
-          var e = resolveElement(elements[i], typeDeserializer, xpath);
+          var e = resolveElement(elements[i], resolver, xpath);
           if (e === undefined) {
             return;
           }
@@ -167,12 +169,12 @@ define([
         return es;
       }
 
-      function resolveAll(element, typeDeserializer, xpath, types) {
+      function resolveAll(element, resolver, xpath, types) {
         if (declaresMandatoryAttributes(element, xpath)) {
           return;
         }
 
-        var elements = resolveElements(element, typeDeserializer, xpath);
+        var elements = resolveElements(element, resolver, xpath);
         if (!elements) {
           return;
         }
@@ -197,7 +199,7 @@ define([
         return 1;
       }
 
-      function resolveSequence(element, typeDeserializer, xpath) {
+      function resolveSequence(element, resolver, xpath) {
         var sequence = xpath.first('xs:sequence', element, NS);
 
         var mandatoryElementsExpr = 'xs:element[not(@minOccurs) or @minOccurs != "0"]';
@@ -216,7 +218,7 @@ define([
         var itemElement = xpath.first(mandatoryElementsExpr, sequence, NS) ||
           xpath.first(optionalElementsExpr, sequence, NS);
 
-        itemElement = resolveElement(itemElement, typeDeserializer, xpath);
+        itemElement = resolveElement(itemElement, resolver, xpath);
 
         return ListType.create(itemElement, {
           maxLength: getOccurs(sequence, 'max'),
@@ -224,19 +226,21 @@ define([
         });
       }
 
-      return function (element, typeDeserializer, xpath) {
+      return function (element, resolver) {
         if (element.localName !== 'complexType' ||
             element.namespaceURI !== XSD_NAMESPACE)
         {
           return;
         }
 
+        var xpath = XPath.create(element);
+
         if (xpath.contains('xs:all', element, NS)) {
-          return resolveAll(element, typeDeserializer, xpath, this._typeIndex.values);
+          return resolveAll(element, resolver, xpath, this._typeIndex.values);
         }
 
         if (xpath.contains('xs:sequence', element, NS)) {
-          return resolveSequence(element, typeDeserializer, xpath);
+          return resolveSequence(element, resolver, xpath);
         }
 
       };

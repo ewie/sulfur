@@ -9,11 +9,11 @@
 define([
   'sulfur/util/factory',
   'sulfur/schema',
-  'sulfur/schema/deserializer/type',
+  'sulfur/schema/deserializer/resolver',
   'sulfur/schema/elements',
   'sulfur/schema/qname',
   'sulfur/util/xpath'
-], function (Factory, Schema, TypeDeserializer, Elements, QName, XPath) {
+], function (Factory, Schema, Resolver, Elements, QName, XPath) {
 
   'use strict';
 
@@ -21,8 +21,8 @@ define([
 
   return Factory.derive({
 
-    initialize: function (typeDeserializers) {
-      this._typeDeserializers = typeDeserializers;
+    initialize: function (resolvers) {
+      this._resolvers = resolvers;
     },
 
     deserialize: function (document) {
@@ -36,8 +36,8 @@ define([
         throw new Error("expecting an XML Schema document");
       }
 
-      var xpath = XPath.create(document);
-      var typeDeserializer = TypeDeserializer.create(this._typeDeserializers);
+      var resolver = Resolver.create(document, this._resolvers);
+      var xpath = XPath.create(root);
 
       var ns = { xs: XSD_NAMESPACE };
       var roots = xpath.all('xs:element', root, ns);
@@ -58,7 +58,7 @@ define([
           }
           var element;
           try {
-            element = typeDeserializer.deserializeElement(el, xpath);
+            element = resolver.resolveElementDeclaration(el);
           } catch (e) {
             if (el.getAttribute('minOccurs') === '0') {
               continue;

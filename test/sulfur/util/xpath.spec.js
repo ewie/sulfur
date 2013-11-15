@@ -1,11 +1,5 @@
-/* Copyright (c) 2013, Erik Wienhold
- * All rights reserved.
- *
- * Licensed under the BSD 3-Clause License.
- */
-
 /* global define */
-/* global afterEach, beforeEach, describe, it */
+/* global beforeEach, context, describe, it */
 
 define([
   'shared',
@@ -16,6 +10,7 @@ define([
 
   var expect = shared.expect;
   var sinon = shared.sinon;
+  var returns = shared.returns;
 
   describe('sulfur/util/xpath', function () {
 
@@ -24,19 +19,9 @@ define([
       return p.parseFromString(s, 'text/xml');
     }
 
-    var sandbox;
-
-    beforeEach(function () {
-      sandbox = sinon.sandbox.create();
-    });
-
-    afterEach(function () {
-      sandbox.restore();
-    });
-
     describe('#evaluate()', function () {
 
-      it("should evaluate the XPath expression on the document when no context node is given", function () {
+      it("should evaluate the XPath expression on the initial context node when no context node is given", function () {
         var doc = parse('<foo><bar/></foo>');
         var xpath = XPath.create(doc);
         var spy = sinon.spy(doc, 'evaluate');
@@ -60,7 +45,8 @@ define([
         var doc = parse('<foo><bar/></foo>');
         var xpath = XPath.create(doc);
         var spy = sinon.spy(doc, 'evaluate');
-        var result = xpath.evaluate('bar', XPathResult.FIRST_ORDERED_NODE_TYPE, doc.documentElement);
+        var result = xpath.evaluate('bar', XPathResult.FIRST_ORDERED_NODE_TYPE,
+          doc.documentElement);
 
         var call = spy.getCall(0);
 
@@ -76,246 +62,250 @@ define([
         expect(call.returnValue).to.equal(result);
       });
 
-      it("should use the namespaces when given", function () {
-        var doc = parse('<foo xmlns:y="urn:bar"><y:bar/></foo>');
-        var xpath = XPath.create(doc);
-        var spy = sinon.spy(doc, 'evaluate');
-        var result = xpath.evaluate('foo/x:bar', XPathResult.FIRST_ORDERED_NODE_TYPE,
-          undefined, { x: 'urn:bar' });
+      context("with namespaces", function () {
 
-        var call = spy.getCall(0);
+        it("should use a function when given", function () {
+          var doc = parse('<foo xmlns:y="urn:bar"><y:bar/></foo>');
+          var xpath = XPath.create(doc);
+          var spy = sinon.spy(doc, 'evaluate');
+          var namespaces = returns('urn:bar');
+          var result = xpath.evaluate('foo/x:bar',
+            XPathResult.FIRST_ORDERED_NODE_TYPE, undefined, namespaces);
 
-        expect(call).to.exist;
+          var call = spy.getCall(0);
 
-        expect(call.thisValue).to.equal(doc);
+          expect(call).to.exist;
 
-        expect(call.args[0]).to.equal('foo/x:bar');
-        expect(call.args[1]).to.equal(doc);
-        expect(call.args[3]).to.equal(XPathResult.FIRST_ORDERED_NODE_TYPE);
-        expect(call.args[4]).to.equal(null);
+          expect(call.thisValue).to.equal(doc);
 
-        expect(call.returnValue).to.equal(result);
+          expect(call.args[0]).to.equal('foo/x:bar');
+          expect(call.args[1]).to.equal(doc);
+          expect(call.args[2]).to.equal(namespaces);
+          expect(call.args[3]).to.equal(XPathResult.FIRST_ORDERED_NODE_TYPE);
+          expect(call.args[4]).to.equal(null);
+
+          expect(call.returnValue).to.equal(result);
+        });
+
+        context("with an object", function () {
+
+          it("should use a function wrapping the namespace object", function () {
+            var doc = parse('<foo xmlns:y="urn:bar"><y:bar/></foo>');
+            var xpath = XPath.create(doc);
+            var spy = sinon.spy(doc, 'evaluate');
+            var result = xpath.evaluate('foo/x:bar',
+              XPathResult.FIRST_ORDERED_NODE_TYPE, undefined, { x: 'urn:bar' });
+
+            var call = spy.getCall(0);
+
+            expect(call).to.exist;
+
+            expect(call.thisValue).to.equal(doc);
+
+            expect(call.args[0]).to.equal('foo/x:bar');
+            expect(call.args[1]).to.equal(doc);
+            expect(call.args[3]).to.equal(XPathResult.FIRST_ORDERED_NODE_TYPE);
+            expect(call.args[4]).to.equal(null);
+
+            expect(call.returnValue).to.equal(result);
+          });
+
+          describe("the used function", function () {
+
+            var doc;
+            var xpath;
+
+            beforeEach(function () {
+              doc = parse('<foo xmlns:y="urn:bar"><y:bar/></foo>');
+              xpath = XPath.create(doc);
+            });
+
+            it("should expose own properties", function () {
+              var spy = sinon.spy(doc, 'evaluate');
+              xpath.evaluate('foo/x:bar',
+                XPathResult.FIRST_ORDERED_NODE_TYPE, undefined, { x: 'urn:bar' });
+
+              var call = spy.getCall(0);
+              var fn = call.args[2];
+
+              expect(fn('x')).to.equal('urn:bar');
+            });
+
+            it("should ignore inherited properties", function () {
+              var spy = sinon.spy(doc, 'evaluate');
+              xpath.evaluate('foo/x:bar',
+                XPathResult.FIRST_ORDERED_NODE_TYPE, undefined,
+                Object.create({ y: 'urn:foo' }, { x: { value: 'urn:bar' } }));
+
+              var call = spy.getCall(0);
+              var fn = call.args[2];
+
+              expect(fn('y')).to.be.null;
+            });
+
+            it("should return null when a property is not defined", function () {
+              var spy = sinon.spy(doc, 'evaluate');
+              xpath.evaluate('foo/x:bar',
+                XPathResult.FIRST_ORDERED_NODE_TYPE, undefined,
+                Object.create(null, { x: { value: 'urn:bar' } }));
+
+              var call = spy.getCall(0);
+              var fn = call.args[2];
+
+              expect(fn('xxx')).to.be.null;
+            });
+
+            it("should return null when a property value is falsy", function () {
+              var spy = sinon.spy(doc, 'evaluate');
+              xpath.evaluate('foo/x:bar',
+                XPathResult.FIRST_ORDERED_NODE_TYPE, undefined,
+                Object.create(null, {
+                  x: { value: 'urn:bar' },
+                  y: { value: '' }
+                }));
+
+              var call = spy.getCall(0);
+              var fn = call.args[2];
+
+              expect(fn('y')).to.be.null;
+            });
+
+          });
+
+        });
+
       });
 
     });
 
     describe('#all()', function () {
 
-      it("should return an array of nodes matching the XPath expression", function () {
-        var doc = parse('<foo><bar/><baz/><bar/></foo>');
-        var xpath = XPath.create(doc);
-        var nodes = xpath.all('foo/bar');
-        expect(nodes).to.have.lengthOf(2);
-        expect(nodes[0]).to.equal(doc.documentElement.firstChild);
-        expect(nodes[1]).to.equal(doc.documentElement.lastChild);
+      var xpath;
+      var snapshot;
+
+      beforeEach(function () {
+        xpath = XPath.create();
+        var array = [ {}, {}, {} ];
+        snapshot = {
+          snapshotLength: array.length,
+          snapshotItem: function (i) {
+            return array[i];
+          }
+        };
       });
 
-      it("should use the context node when given", function () {
-        var doc = parse('<foo><bar/><baz/><bar/></foo>');
-        var xpath = XPath.create(doc);
-        var nodes = xpath.all('bar', doc.documentElement);
-        expect(nodes).to.have.lengthOf(2);
-        expect(nodes[0]).to.equal(doc.documentElement.firstChild);
-        expect(nodes[1]).to.equal(doc.documentElement.lastChild);
+      it("should call #evaluate() with the given expression, context node and namespaces", function () {
+        var spy = sinon.stub(xpath, 'evaluate').returns(snapshot);
+        var expr = {};
+        var contextNode = {};
+        var namespaces = {};
+        xpath.all(expr, contextNode, namespaces);
+        expect(spy).to.be.calledWith(
+          sinon.match.same(expr),
+          XPathResult.ORDERED_NODE_SNAPSHOT_TYPE,
+          sinon.match.same(contextNode),
+          sinon.match.same(namespaces));
       });
 
-      it("should use the namespaces when given", function () {
-        var doc = parse('<foo xmlns:x="urn:x"><x:bar/><baz/><bar/></foo>');
-        var xpath = XPath.create(doc);
-        var nodes = xpath.all('x:bar', doc.documentElement, { x: 'urn:x' });
-        expect(nodes).to.have.lengthOf(1);
-        expect(nodes[0]).to.equal(doc.documentElement.firstChild);
+      it("should convert the node snapshot to an array", function () {
+        xpath.evaluate = returns(snapshot);
+        var result = xpath.all();
+        expect(result).to.have.lengthOf(snapshot.snapshotLength);
+        result.forEach(function (r, i) {
+          expect(r).to.equal(snapshot.snapshotItem(i));
+        });
       });
 
     });
 
     describe('#first()', function () {
 
-      it("should get the first node matching the XPath expression", function () {
-        var doc = parse('<foo><bar/><bar/></foo>');
-        var xpath = XPath.create(doc);
-        var spy = sinon.spy(xpath, 'evaluate');
+      var xpath;
 
-        var result = xpath.first('foo/bar');
-
-        var call = spy.getCall(0);
-
-        expect(call).to.exist;
-
-        expect(call.thisValue).to.equal(xpath);
-
-        expect(call.args[0]).to.equal('foo/bar');
-        expect(call.args[1]).to.equal(XPathResult.FIRST_ORDERED_NODE_TYPE);
-
-        expect(result).to.equal(call.returnValue.singleNodeValue);
+      beforeEach(function () {
+        xpath = XPath.create();
       });
 
-      it("should use the context node when given", function () {
-        var doc = parse('<foo><bar/><bar/></foo>');
-        var xpath = XPath.create(doc);
-        var spy = sinon.spy(xpath, 'evaluate');
-
-        var result = xpath.first('bar', doc.documentElement);
-
-        var call = spy.getCall(0);
-
-        expect(call).to.exist;
-
-        expect(call.thisValue).to.equal(xpath);
-
-        expect(call.args[0]).to.equal('bar');
-        expect(call.args[1]).to.equal(XPathResult.FIRST_ORDERED_NODE_TYPE);
-        expect(call.args[2]).to.equal(doc.documentElement);
-
-        expect(result).to.equal(call.returnValue.singleNodeValue);
+      it("should call #evaluate() with the given expression, context node and namespaces", function () {
+        var spy = sinon.stub(xpath, 'evaluate').returns({});
+        var expr = {};
+        var contextNode = {};
+        var namespaces = {};
+        xpath.first(expr, contextNode, namespaces);
+        expect(spy).to.be.calledWith(
+          sinon.match.same(expr),
+          XPathResult.FIRST_ORDERED_NODE_TYPE,
+          sinon.match.same(contextNode),
+          sinon.match.same(namespaces));
       });
 
-      it("should use the namespaces when given", function () {
-        var doc = parse('<foo xmlns:x="urn:x"><x:bar/><bar/></foo>');
-        var xpath = XPath.create(doc);
-        var spy = sinon.spy(xpath, 'evaluate');
-
-        var namespaces = { x: 'urn:x' };
-        var result = xpath.first('x:bar', doc.documentElement, namespaces);
-
-        var call = spy.getCall(0);
-
-        expect(call).to.exist;
-
-        expect(call.thisValue).to.equal(xpath);
-
-        expect(call.args[0]).to.equal('x:bar');
-        expect(call.args[1]).to.equal(XPathResult.FIRST_ORDERED_NODE_TYPE);
-        expect(call.args[2]).to.equal(doc.documentElement);
-        expect(call.args[3]).to.equal(namespaces);
-
-        expect(result).to.equal(call.returnValue.singleNodeValue);
+      it("should return the node", function () {
+        var node = {};
+        xpath.evaluate = returns({ singleNodeValue: node });
+        var result = xpath.first();
+        expect(result).to.equal(node);
       });
 
     });
 
     describe('#count()', function () {
 
-      it("should count the nodes matching the XPath expression", function () {
-        var doc = parse('<foo><bar/></foo>');
-        var xpath = XPath.create(doc);
-        var spy = sinon.spy(xpath, 'evaluate');
+      var xpath;
 
-        var result = xpath.count('foo/bar');
-
-        var call = spy.getCall(0);
-
-        expect(call).to.exist;
-
-        expect(call.thisValue).to.equal(xpath);
-
-        expect(call.args[0]).to.equal('count(foo/bar)');
-        expect(call.args[1]).to.equal(XPathResult.NUMBER_TYPE);
-
-        expect(result).to.equal(call.returnValue.numberValue);
+      beforeEach(function () {
+        xpath = XPath.create();
       });
 
-      it("should use the context node when given", function () {
-        var doc = parse('<foo><bar/></foo>');
-        var xpath = XPath.create(doc);
-        var spy = sinon.spy(xpath, 'evaluate');
-
-        var result = xpath.count('bar', doc.documentElement);
-
-        var call = spy.getCall(0);
-
-        expect(call).to.exist;
-
-        expect(call.thisValue).to.equal(xpath);
-
-        expect(call.args[0]).to.equal('count(bar)');
-        expect(call.args[1]).to.equal(XPathResult.NUMBER_TYPE);
-        expect(call.args[2]).to.equal(doc.documentElement);
-
-        expect(result).to.equal(call.returnValue.numberValue);
+      it("should call #evaluate() with the given count(expression), context node and namespaces", function () {
+        var spy = sinon.stub(xpath, 'evaluate').returns({});
+        var expr = 'foo';
+        var contextNode = {};
+        var namespaces = {};
+        xpath.count(expr, contextNode, namespaces);
+        expect(spy).to.be.calledWith(
+          'count(foo)',
+          XPathResult.NUMBER_TYPE,
+          sinon.match.same(contextNode),
+          sinon.match.same(namespaces));
       });
 
-      it("should use the namespaces when given", function () {
-        var doc = parse('<foo xmlns:x="urn:x"><x:bar/></foo>');
-        var xpath = XPath.create(doc);
-        var spy = sinon.spy(xpath, 'evaluate');
-
-        var namespaces = { x: 'urn:x' };
-        var result = xpath.count('x:bar', doc.documentElement, namespaces);
-
-        var call = spy.getCall(0);
-
-        expect(call).to.exist;
-
-        expect(call.thisValue).to.equal(xpath);
-
-        expect(call.args[0]).to.equal('count(x:bar)');
-        expect(call.args[1]).to.equal(XPathResult.NUMBER_TYPE);
-        expect(call.args[2]).to.equal(doc.documentElement);
-        expect(call.args[3]).to.equal(namespaces);
-
-        expect(result).to.equal(call.returnValue.numberValue);
+      it("should return the number value", function () {
+        var value = {};
+        xpath.evaluate = returns({ numberValue: value });
+        var result = xpath.count();
+        expect(result).to.equal(value);
       });
 
     });
 
     describe('#contains()', function () {
 
+      var xpath;
+
+      beforeEach(function () {
+        xpath = XPath.create();
+      });
+
+      it("should call #count() with the given expression, context node and namespaces", function () {
+        var spy = sinon.stub(xpath, 'count');
+        var expr = {};
+        var contextNode = {};
+        var namespaces = {};
+        xpath.contains(expr, contextNode, namespaces);
+        expect(spy).to.be.calledWith(
+          sinon.match.same(expr),
+          sinon.match.same(contextNode),
+          sinon.match.same(namespaces));
+      });
+
       it("should return true when #count() returns non-zero", function () {
-        var xpath = XPath.create();
-        var spy = sinon.stub(xpath, 'count').returns(1);
-        var result = xpath.contains('foo/bar');
-
-        var call = spy.getCall(0);
-
-        expect(call).to.exist;
-        expect(call.thisValue).to.equal(xpath);
-        expect(call.args[0]).to.equal('foo/bar');
-        expect(result).to.be.true;
+        xpath.count = returns(1);
+        expect(xpath.contains()).to.be.true;
       });
 
       it("should return false when #count() returns zero", function () {
-        var xpath = XPath.create();
-        var spy = sinon.stub(xpath, 'count').returns(0);
-        var result = xpath.contains('foo/bar');
-
-        var call = spy.getCall(0);
-
-        expect(call).to.exist;
-        expect(call.thisValue).to.equal(xpath);
-        expect(call.args[0]).to.equal('foo/bar');
-        expect(result).to.be.false;
-      });
-
-      it("should use the context node when given", function () {
-        var doc = parse('<foo/>');
-        var xpath = XPath.create(doc);
-        var spy = sinon.spy(xpath, 'count');
-        xpath.contains('foo/bar', doc.documentElement);
-
-        var call = spy.getCall(0);
-
-        expect(call).to.exist;
-        expect(call.thisValue).to.equal(xpath);
-        expect(call.args[0]).to.equal('foo/bar');
-        expect(call.args[1]).to.equal(doc.documentElement);
-      });
-
-      it("should use the namespaces when given", function () {
-        var doc = parse('<foo/>');
-        var xpath = XPath.create(doc);
-        var spy = sinon.spy(xpath, 'count');
-
-        var namespaces = { x: 'urn:x' };
-        xpath.contains('foo/x:bar', doc.documentElement, namespaces);
-
-        var call = spy.getCall(0);
-
-        expect(call).to.exist;
-        expect(call.thisValue).to.equal(xpath);
-        expect(call.args[0]).to.equal('foo/x:bar');
-        expect(call.args[1]).to.equal(doc.documentElement);
-        expect(call.args[2]).to.equal(namespaces);
+        xpath.count = returns(0);
+        expect(xpath.contains()).to.be.false;
       });
 
     });

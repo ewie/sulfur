@@ -111,6 +111,23 @@ define([
             deserializer = Deserializer.create([ simpleTypeDeserializer ]);
           });
 
+          it("should return a sulfur/schema", function () {
+            var doc = parse(
+              '<schema targetNamespace="urn:bar"' +
+                ' xmlns="http://www.w3.org/2001/XMLSchema"' +
+                ' xmlns:y="urn:y">' +
+               '<element name="foo">' +
+                '<complexType>' +
+                 '<all>' +
+                  '<element name="x" type="y:knownType"/>' +
+                 '</all>' +
+                '</complexType>' +
+               '</element>' +
+              '</schema>');
+            var schema = deserializer.deserialize(doc);
+            expect(Schema.prototype).to.be.prototypeOf(schema);
+          });
+
           it("should use the value of attribute xs:schema/@targetNamespace as the schema's namespace URI", function () {
             var doc = parse(
               '<schema targetNamespace="urn:bar"' +

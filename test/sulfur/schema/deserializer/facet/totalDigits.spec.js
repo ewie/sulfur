@@ -9,9 +9,9 @@
 
 define([
   'shared',
-  'sulfur/schema/facet/totalDigits',
-  'sulfur/schema/deserializer/facet/totalDigits'
-], function (shared, TotalDigitsFacet, TotalDigitsFacetDeserializer) {
+  'sulfur/schema/deserializer/facet/totalDigits',
+  'sulfur/schema/facet/totalDigits'
+], function (shared, TotalDigitsFacetResolver, TotalDigitsFacet) {
 
   'use strict';
 
@@ -22,7 +22,7 @@ define([
     describe('.facet', function () {
 
       it("should return sulfur/schema/facet/totalDigits", function () {
-        expect(TotalDigitsFacetDeserializer.facet).to.equal(TotalDigitsFacet);
+        expect(TotalDigitsFacetResolver.facet).to.equal(TotalDigitsFacet);
       });
 
     });
@@ -30,7 +30,7 @@ define([
     describe('.parseValue()', function () {
 
       it("should parse a decimal integer", function () {
-        expect(TotalDigitsFacetDeserializer.parseValue('123')).to.equal(123);
+        expect(TotalDigitsFacetResolver.parseValue('123')).to.equal(123);
       });
 
     });
@@ -38,7 +38,7 @@ define([
     describe('.createFacet()', function () {
 
       it("should return a sulfur/schema/facet/totalDigits using the smallest value", function () {
-        expect(TotalDigitsFacetDeserializer.createFacet([ 3, 1, 2 ]))
+        expect(TotalDigitsFacetResolver.createFacet([ 3, 1, 2 ]))
           .to.eql(TotalDigitsFacet.create(1));
       });
 
