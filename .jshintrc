@@ -8,6 +8,7 @@
   "indent": 2,
   "latedef": true,
   "proto": true,
+  "lastsemic": true,
   "strict": true,
   "trailing": true,
   "undef": true,

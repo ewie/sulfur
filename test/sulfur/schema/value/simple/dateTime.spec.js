@@ -11,8 +11,9 @@ define([
   'shared',
   'sulfur/schema/value/simple/dateTime',
   'sulfur/schema/value/simple/decimal',
-  'sulfur/schema/value/simple/integer'
-], function (shared, DateTimeValue, DecimalValue, IntegerValue) {
+  'sulfur/schema/value/simple/integer',
+  'sulfur/schema/value/simple/numeric'
+], function (shared, DateTimeValue, DecimalValue, IntegerValue, NumericValue) {
 
   'use strict';
 
@@ -30,6 +31,10 @@ define([
 
     afterEach(function () {
       sandbox.restore();
+    });
+
+    it("should be derived from sulfur/schema/value/simple/numeric", function () {
+      expect(NumericValue).to.be.prototypeOf(DateTimeValue);
     });
 
     describe('.isValidLiteral()', function () {
@@ -686,106 +691,6 @@ define([
 
         });
 
-      });
-
-    });
-
-    describe('#eq()', function () {
-
-      it("should return true if #cmp() returns zero", function () {
-        var lhs = DateTimeValue.create();
-        var rhs = DateTimeValue.create();
-        var cmpStub = sandbox.stub(DateTimeValue.prototype, 'cmp').returns(0);
-        expect(lhs.eq(rhs)).to.be.true;
-        expect(cmpStub).to.be.calledOn(lhs).and.calledWith(rhs);
-      });
-
-      it("should return false if #cmp() return non-zero", function () {
-        var lhs = DateTimeValue.create();
-        var rhs = DateTimeValue.create();
-        var cmpStub = sandbox.stub(DateTimeValue.prototype, 'cmp').returns(1);
-        expect(lhs.eq(rhs)).to.be.false;
-        expect(cmpStub).to.be.calledOn(lhs).and.calledWith(rhs);
-      });
-
-    });
-
-    describe('#lt()', function () {
-
-      it("should return true if #cmp() returns less than zero", function () {
-        var lhs = DateTimeValue.create();
-        var rhs = DateTimeValue.create();
-        var cmpStub = sandbox.stub(DateTimeValue.prototype, 'cmp').returns(-1);
-        expect(lhs.lt(rhs)).to.be.true;
-        expect(cmpStub).to.be.calledOn(lhs).and.calledWith(rhs);
-      });
-
-      it("should return false if #cmp() returns non-negative", function () {
-        var lhs = DateTimeValue.create();
-        var rhs = DateTimeValue.create();
-        var cmpStub = sandbox.stub(DateTimeValue.prototype, 'cmp').returns(0);
-        expect(lhs.lt(rhs)).to.be.false;
-        expect(cmpStub).to.be.calledOn(lhs).and.calledWith(rhs);
-      });
-
-    });
-
-    describe('#gt()', function () {
-
-      it("should return true if #cmp() returns greater than zero", function () {
-        var lhs = DateTimeValue.create();
-        var rhs = DateTimeValue.create();
-        var cmpStub = sandbox.stub(DateTimeValue.prototype, 'cmp').returns(1);
-        expect(lhs.gt(rhs)).to.be.true;
-        expect(cmpStub).to.be.calledOn(lhs).and.calledWith(rhs);
-      });
-
-      it("should return false if #cmp() returns non-positive", function () {
-        var lhs = DateTimeValue.create();
-        var rhs = DateTimeValue.create();
-        var cmpStub = sandbox.stub(DateTimeValue.prototype, 'cmp').returns(0);
-        expect(lhs.gt(rhs)).to.be.false;
-        expect(cmpStub).to.be.calledOn(lhs).and.calledWith(rhs);
-      });
-
-    });
-
-    describe('#lteq()', function () {
-
-      it("should return false if #gt() returns true", function () {
-        var lhs = DateTimeValue.create();
-        var rhs = DateTimeValue.create();
-        var gtStub = sandbox.stub(DateTimeValue.prototype, 'gt').returns(true);
-        expect(lhs.lteq(rhs)).to.be.false;
-        expect(gtStub).to.be.calledOn(lhs).and.calledWith(rhs);
-      });
-
-      it("should return true if #gt() returns false", function () {
-        var lhs = DateTimeValue.create();
-        var rhs = DateTimeValue.create();
-        var gtStub = sandbox.stub(DateTimeValue.prototype, 'gt').returns(false);
-        expect(lhs.lteq(rhs)).to.be.true;
-        expect(gtStub).to.be.calledOn(lhs).and.calledWith(rhs);
-      });
-
-    });
-
-    describe('#gteq()', function () {
-
-      it("should return false if #lt() returns true", function () {
-        var lhs = DateTimeValue.create();
-        var rhs = DateTimeValue.create();
-        var ltStub = sandbox.stub(DateTimeValue.prototype, 'lt').returns(true);
-        expect(lhs.gteq(rhs)).to.be.false;
-        expect(ltStub).to.be.calledOn(lhs).and.calledWith(rhs);
-      });
-
-      it("should return true if #lt() returns false", function () {
-        var lhs = DateTimeValue.create();
-        var rhs = DateTimeValue.create();
-        var ltStub = sandbox.stub(DateTimeValue.prototype, 'lt').returns(false);
-        expect(lhs.gteq(rhs)).to.be.true;
-        expect(ltStub).to.be.calledOn(lhs).and.calledWith(rhs);
       });
 
     });

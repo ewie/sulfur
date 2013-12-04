@@ -6,11 +6,11 @@
 
 /* global define */
 
-define(['sulfur/util/factory'], function (Factory) {
+define(['sulfur/schema/value/simple/numeric'], function (NumericValue) {
 
   'use strict';
 
-  return Factory.clone({
+  return NumericValue.clone({
 
     /**
      * Get the maximum finite value.
@@ -182,61 +182,6 @@ define(['sulfur/util/factory'], function (Factory) {
         return undefined;
       }
       return 0;
-    },
-
-    /**
-     * Check for equality with another double.
-     *
-     * @param {sulfur/schema/value/simple/double} other
-     *
-     * @return {boolean} whether equal to `other` or not
-     */
-    eq: function (other) {
-      return this.cmp(other) === 0;
-    },
-
-    /**
-     * Check if less than another double.
-     *
-     * @param {sulfur/schema/value/simple/double} other
-     *
-     * @return {boolean} whether less than `other` or not
-     */
-    lt: function (other) {
-      return this.cmp(other) < 0;
-    },
-
-    /**
-     * Check if greater than another double.
-     *
-     * @param {sulfur/schema/value/simple/double} other
-     *
-     * @return {boolean} whether greater than `other` or not
-     */
-    gt: function (other) {
-      return this.cmp(other) > 0;
-    },
-
-    /**
-     * Check if less than or equal to another double.
-     *
-     * @param {sulfur/schema/value/simple/double} other
-     *
-     * @return {boolean} whether less than or equal `other` or not
-     */
-    lteq: function (other) {
-      return !this.gt(other);
-    },
-
-    /**
-     * Check if greater than or equal to another double.
-     *
-     * @param {sulfur/schema/value/simple/double} other
-     *
-     * @return {boolean} whether greater than or equal to `other` or not
-     */
-    gteq: function (other) {
-      return !this.lt(other);
     }
 
   });

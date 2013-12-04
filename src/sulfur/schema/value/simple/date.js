@@ -7,9 +7,9 @@
 /* global define */
 
 define([
-  'sulfur/util/factory',
-  'sulfur/schema/value/simple/dateTime'
-], function (Factory, DateTimeValue) {
+  'sulfur/schema/value/simple/dateTime',
+  'sulfur/schema/value/simple/numeric'
+], function (DateTimeValue, NumericValue) {
 
   'use strict';
 
@@ -29,7 +29,7 @@ define([
    *     instance defines a timezone
    */
 
-  return Factory.clone({
+  return NumericValue.clone({
 
     /**
      * Check if a string represents a valid date literal.
@@ -247,61 +247,6 @@ define([
      */
     cmp: function (other) {
       return this._midpoint.cmp(other._midpoint);
-    },
-
-    /**
-     * Check for equality with another date.
-     *
-     * @param {sulfur/schema/value/simple/date} other
-     *
-     * @return {boolean} whether equal to `other` or not
-     */
-    eq: function (other) {
-      return this.cmp(other) === 0;
-    },
-
-    /**
-     * Check if less than another date.
-     *
-     * @param {sulfur/schema/value/simple/date} other
-     *
-     * @return {boolean} whether less than `other` or not
-     */
-    lt: function (other) {
-      return this.cmp(other) < 0;
-    },
-
-    /**
-     * Check if greater than another date.
-     *
-     * @param {sulfur/schema/value/simple/date} other
-     *
-     * @return {boolean} whether greater than `other` or not
-     */
-    gt: function (other) {
-      return this.cmp(other) > 0;
-    },
-
-    /**
-     * Check if less than or equal to another date.
-     *
-     * @param {sulfur/schema/value/simple/date} other
-     *
-     * @return {boolean} whether less than or equal `other` or not
-     */
-    lteq: function (other) {
-      return !this.gt(other);
-    },
-
-    /**
-     * Check if greater than or equal to another date.
-     *
-     * @param {sulfur/schema/value/simple/date} other
-     *
-     * @return {boolean} whether greater than or equal to `other` or not
-     */
-    gteq: function (other) {
-      return !this.lt(other);
     }
 
   });

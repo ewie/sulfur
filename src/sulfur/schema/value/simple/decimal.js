@@ -7,9 +7,9 @@
 /* global define */
 
 define([
-  'sulfur/util/factory',
+  'sulfur/schema/value/simple/numeric',
   'sulfur/util'
-], function (Factory, util) {
+], function (NumericValue, util) {
 
   'use strict';
 
@@ -28,7 +28,7 @@ define([
    */
   var LITERAL_PATTERN = /^[\x09\x0A\x0D\x20]*([+-])?([0-9]+)(?:\.([0-9]+))?[\x09\x0A\x0D\x20]*$/;
 
-  return Factory.clone({
+  return NumericValue.clone({
 
     /**
      * Check if a string represents a valid decimal value.
@@ -171,61 +171,6 @@ define([
         return this.positive ? 1 : -1;
       }
       return 0;
-    },
-
-    /**
-     * Check if equal to another decimal.
-     *
-     * @param {sulfur/schema/value/simple/decimal} other
-     *
-     * @return {boolean} whether both decimals are equal
-     */
-    eq: function (other) {
-      return this.cmp(other) === 0;
-    },
-
-    /**
-     * Check if the decimal is less than another decimal.
-     *
-     * @param {sulfur/schema/value/simple/decimal} other
-     *
-     * @return {boolean} whether the decimal is less than the other
-     */
-    lt: function (other) {
-      return this.cmp(other) < 0;
-    },
-
-    /**
-     * Check if the decimal is greater than another decimal.
-     *
-     * @param {sulfur/schema/value/simple/decimal} other
-     *
-     * @return {boolean} whether the decimal is greater than the other
-     */
-    gt: function (other) {
-      return this.cmp(other) > 0;
-    },
-
-    /**
-     * Check if the decimal is less than or equal to another decimal.
-     *
-     * @param {sulfur/schema/value/simple/decimal} other
-     *
-     * @return {boolean} whether the decimal is less than or equal to the other
-     */
-    gteq: function (other) {
-      return !this.lt(other);
-    },
-
-    /**
-     * Check if the decimal is greater than or equal to another decimal.
-     *
-     * @param {sulfur/schema/value/simple/decimal} other
-     *
-     * @return {boolean} whether the decimal is greater than or equal to the other
-     */
-    lteq: function (other) {
-      return !this.gt(other);
     }
 
   });

@@ -9,8 +9,9 @@
 
 define([
   'shared',
-  'sulfur/schema/value/simple/double'
-],function (shared, DoubleValue) {
+  'sulfur/schema/value/simple/double',
+  'sulfur/schema/value/simple/numeric'
+],function (shared, DoubleValue, NumericValue) {
 
   'use strict';
 
@@ -28,6 +29,10 @@ define([
 
     afterEach(function () {
       sandbox.restore();
+    });
+
+    it("should be derived from sulfur/schema/value/simple/numeric", function () {
+      expect(NumericValue).to.be.prototypeOf(DoubleValue);
     });
 
     describe('.isValidLiteral()', function () {
@@ -290,126 +295,6 @@ define([
         var lhs = DoubleValue.create(2);
         var rhs = DoubleValue.create(1);
         expect(lhs.cmp(rhs)).to.equal(1);
-      });
-
-    });
-
-    describe('#eq()', function () {
-
-      var lhs;
-      var rhs;
-
-      beforeEach(function () {
-        lhs = DoubleValue.create();
-        rhs = DoubleValue.create();
-      });
-
-      it("should return true if #cmp() returns zero", function () {
-        var cmpStub = sandbox.stub(DoubleValue.prototype, 'cmp').returns(0);
-        expect(lhs.eq(rhs)).to.be.true;
-        expect(cmpStub).to.be.calledOn(lhs).and.calledWith(rhs);
-      });
-
-      it("should return false if #cmp() return non-zero", function () {
-        var cmpStub = sandbox.stub(DoubleValue.prototype, 'cmp').returns(1);
-        expect(lhs.eq(rhs)).to.be.false;
-        expect(cmpStub).to.be.calledOn(lhs).and.calledWith(rhs);
-      });
-
-    });
-
-    describe('#lt()', function () {
-
-      var lhs;
-      var rhs;
-
-      beforeEach(function () {
-        lhs = DoubleValue.create();
-        rhs = DoubleValue.create();
-      });
-
-      it("should return true if #cmp() returns less than zero", function () {
-        var cmpStub = sandbox.stub(DoubleValue.prototype, 'cmp').returns(-1);
-        expect(lhs.lt(rhs)).to.be.true;
-        expect(cmpStub).to.be.calledOn(lhs).and.calledWith(rhs);
-      });
-
-      it("should return false if #cmp() returns non-negative", function () {
-        var cmpStub = sandbox.stub(DoubleValue.prototype, 'cmp').returns(0);
-        expect(lhs.lt(rhs)).to.be.false;
-        expect(cmpStub).to.be.calledOn(lhs).and.calledWith(rhs);
-      });
-
-    });
-
-    describe('#gt()', function () {
-
-      var lhs;
-      var rhs;
-
-      beforeEach(function () {
-        lhs = DoubleValue.create();
-        rhs = DoubleValue.create();
-      });
-
-      it("should return true if #cmp() returns greater than zero", function () {
-        var cmpStub = sandbox.stub(DoubleValue.prototype, 'cmp').returns(1);
-        expect(lhs.gt(rhs)).to.be.true;
-        expect(cmpStub).to.be.calledOn(lhs).and.calledWith(rhs);
-      });
-
-      it("should return false if #cmp() returns non-positive", function () {
-        var cmpStub = sandbox.stub(DoubleValue.prototype, 'cmp').returns(0);
-        expect(lhs.gt(rhs)).to.be.false;
-        expect(cmpStub).to.be.calledOn(lhs).and.calledWith(rhs);
-      });
-
-    });
-
-    describe('#lteq()', function () {
-
-      var lhs;
-      var rhs;
-
-      beforeEach(function () {
-        lhs = DoubleValue.create();
-        rhs = DoubleValue.create();
-      });
-
-      it("should return false if #gt() returns true", function () {
-        var gtStub = sandbox.stub(DoubleValue.prototype, 'gt').returns(true);
-        expect(lhs.lteq(rhs)).to.be.false;
-        expect(gtStub).to.be.calledOn(lhs).and.calledWith(rhs);
-      });
-
-      it("should return true if #gt() returns false", function () {
-        var gtStub = sandbox.stub(DoubleValue.prototype, 'gt').returns(false);
-        expect(lhs.lteq(rhs)).to.be.true;
-        expect(gtStub).to.be.calledOn(lhs).and.calledWith(rhs);
-      });
-
-    });
-
-    describe('#gteq()', function () {
-
-      var lhs;
-      var rhs;
-
-      beforeEach(function () {
-        lhs = DoubleValue.create();
-        rhs = DoubleValue.create();
-      });
-
-      it("should return false if #lt() returns true", function () {
-        var ltStub = sandbox.stub(DoubleValue.prototype, 'lt').returns(true);
-        expect(lhs.gteq(rhs)).to.be.false;
-        expect(ltStub).to.be.calledOn(lhs).and.calledWith(rhs);
-      });
-
-      it("should return true if #lt() returns false", function () {
-        var ltStub = sandbox.stub(DoubleValue.prototype, 'lt').returns(false);
-        expect(lhs.gteq(rhs)).to.be.true;
-        expect(ltStub).to.be.calledOn(lhs).and.calledWith(rhs);
       });
 
     });

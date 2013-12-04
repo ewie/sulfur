@@ -10,8 +10,9 @@
 define([
   'shared',
   'sulfur/schema/value/simple/date',
-  'sulfur/schema/value/simple/dateTime'
-], function (shared, DateValue, DateTimeValue) {
+  'sulfur/schema/value/simple/dateTime',
+  'sulfur/schema/value/simple/numeric'
+], function (shared, DateValue, DateTimeValue, NumericValue) {
 
   'use strict';
 
@@ -29,6 +30,10 @@ define([
 
     afterEach(function () {
       sandbox.restore();
+    });
+
+    it("should be derived from sulfur/schema/value/simple/numeric", function () {
+      expect(NumericValue).to.be.prototypeOf(DateValue);
     });
 
     describe('.isValidLiteral()', function () {
@@ -463,14 +468,14 @@ define([
     describe('#cmp()', function () {
 
       it("should call sulfur/schema/dateTime#cmp() with datetimes based on both LHS' and RHS' midpoints", function () {
-        var cmpSpy = sandbox.spy(DateTimeValue.prototype, 'cmp');
+        var cmp = sandbox.spy(DateTimeValue.prototype, 'cmp');
 
         var lhs = DateValue.create({ year: 2000, month: 3, day: 17, tzhour: 5, tzminute: 13 });
         var rhs = DateValue.create({ year: 1999, month: 12, day: 6, tzhour: -12, tzminute: -3 });
 
         var r = lhs.cmp(rhs);
 
-        expect(cmpSpy).to.be.calledWith(DateTimeValue.create({
+        expect(cmp).to.be.calledWith(DateTimeValue.create({
           year: 1999,
           month: 12,
           day: 6,
@@ -479,7 +484,7 @@ define([
           tzminute: -3
         }));
 
-        expect(cmpSpy.getCall(0).thisValue).to.eql(DateTimeValue.create({
+        expect(cmp.getCall(0).thisValue).to.eql(DateTimeValue.create({
           year: 2000,
           month: 3,
           day: 17,
@@ -488,107 +493,7 @@ define([
           tzminute: 13
         }));
 
-        expect(cmpSpy).to.have.returned(r);
-      });
-
-    });
-
-    describe('#eq()', function () {
-
-      it("should return true if #cmp() returns zero", function () {
-        var lhs = DateValue.create();
-        var rhs = DateValue.create();
-        var cmpStub = sandbox.stub(DateValue.prototype, 'cmp').returns(0);
-        expect(lhs.eq(rhs)).to.be.true;
-        expect(cmpStub).to.be.calledOn(lhs).and.calledWith(rhs);
-      });
-
-      it("should return false if #cmp() return non-zero", function () {
-        var lhs = DateValue.create();
-        var rhs = DateValue.create();
-        var cmpStub = sandbox.stub(DateValue.prototype, 'cmp').returns(1);
-        expect(lhs.eq(rhs)).to.be.false;
-        expect(cmpStub).to.be.calledOn(lhs).and.calledWith(rhs);
-      });
-
-    });
-
-    describe('#lt()', function () {
-
-      it("should return true if #cmp() returns less than zero", function () {
-        var lhs = DateValue.create();
-        var rhs = DateValue.create();
-        var cmpStub = sandbox.stub(DateValue.prototype, 'cmp').returns(-1);
-        expect(lhs.lt(rhs)).to.be.true;
-        expect(cmpStub).to.be.calledOn(lhs).and.calledWith(rhs);
-      });
-
-      it("should return false if #cmp() returns non-negative", function () {
-        var lhs = DateValue.create();
-        var rhs = DateValue.create();
-        var cmpStub = sandbox.stub(DateValue.prototype, 'cmp').returns(0);
-        expect(lhs.lt(rhs)).to.be.false;
-        expect(cmpStub).to.be.calledOn(lhs).and.calledWith(rhs);
-      });
-
-    });
-
-    describe('#gt()', function () {
-
-      it("should return true if #cmp() returns greater than zero", function () {
-        var lhs = DateValue.create();
-        var rhs = DateValue.create();
-        var cmpStub = sandbox.stub(DateValue.prototype, 'cmp').returns(1);
-        expect(lhs.gt(rhs)).to.be.true;
-        expect(cmpStub).to.be.calledOn(lhs).and.calledWith(rhs);
-      });
-
-      it("should return false if #cmp() returns non-positive", function () {
-        var lhs = DateValue.create();
-        var rhs = DateValue.create();
-        var cmpStub = sandbox.stub(DateValue.prototype, 'cmp').returns(0);
-        expect(lhs.gt(rhs)).to.be.false;
-        expect(cmpStub).to.be.calledOn(lhs).and.calledWith(rhs);
-      });
-
-    });
-
-    describe('#lteq()', function () {
-
-      it("should return false if #gt() returns true", function () {
-        var lhs = DateValue.create();
-        var rhs = DateValue.create();
-        var gtStub = sandbox.stub(DateValue.prototype, 'gt').returns(true);
-        expect(lhs.lteq(rhs)).to.be.false;
-        expect(gtStub).to.be.calledOn(lhs).and.calledWith(rhs);
-      });
-
-      it("should return true if #gt() returns false", function () {
-        var lhs = DateValue.create();
-        var rhs = DateValue.create();
-        var gtStub = sandbox.stub(DateValue.prototype, 'gt').returns(false);
-        expect(lhs.lteq(rhs)).to.be.true;
-        expect(gtStub).to.be.calledOn(lhs).and.calledWith(rhs);
-      });
-
-    });
-
-    describe('#gteq()', function () {
-
-      it("should return false if #lt() returns true", function () {
-        var lhs = DateValue.create();
-        var rhs = DateValue.create();
-        var ltStub = sandbox.stub(DateValue.prototype, 'lt').returns(true);
-        expect(lhs.gteq(rhs)).to.be.false;
-        expect(ltStub).to.be.calledOn(lhs).and.calledWith(rhs);
-      });
-
-      it("should return true if #lt() returns false", function () {
-        var lhs = DateValue.create();
-        var rhs = DateValue.create();
-        var ltStub = sandbox.stub(DateValue.prototype, 'lt').returns(false);
-        expect(lhs.gteq(rhs)).to.be.true;
-        expect(ltStub).to.be.calledOn(lhs).and.calledWith(rhs);
+        expect(cmp).to.have.returned(r);
       });
 
     });

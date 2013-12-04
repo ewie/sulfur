@@ -9,8 +9,9 @@
 
 define([
   'shared',
-  'sulfur/schema/value/simple/decimal'
-], function (shared, DecimalValue) {
+  'sulfur/schema/value/simple/decimal',
+  'sulfur/schema/value/simple/numeric'
+], function (shared, DecimalValue, NumericValue) {
 
   'use strict';
 
@@ -28,6 +29,10 @@ define([
 
     afterEach(function () {
       sandbox.restore();
+    });
+
+    it("should be derived from sulfur/schema/value/simple/numeric", function () {
+      expect(NumericValue).to.be.prototypeOf(DecimalValue);
     });
 
     describe('.isValidLiteral()', function () {
@@ -328,96 +333,6 @@ define([
           expect(rhs.cmp(lhs)).to.equal(1);
         });
 
-      });
-
-    });
-
-    describe('#eq()', function () {
-
-      it("should return true if #cmp() returns zero", function () {
-        var lhs = DecimalValue.create();
-        var rhs = DecimalValue.create();
-        sandbox.stub(DecimalValue.prototype, 'cmp').returns(0);
-        expect(lhs.eq(rhs)).to.be.true;
-      });
-
-      it("should return false if #cmp() return non-zero", function () {
-        var lhs = DecimalValue.create();
-        var rhs = DecimalValue.create();
-        sandbox.stub(DecimalValue.prototype, 'cmp').returns(1);
-        expect(lhs.eq(rhs)).to.be.false;
-      });
-
-    });
-
-    describe('#lt()', function () {
-
-      it("should return true if #cmp() returns less than zero", function () {
-        var lhs = DecimalValue.create();
-        var rhs = DecimalValue.create();
-        sandbox.stub(DecimalValue.prototype, 'cmp').returns(-1);
-        expect(lhs.lt(rhs)).to.be.true;
-      });
-
-      it("should return false if #cmp() returns non-negative", function () {
-        var lhs = DecimalValue.create();
-        var rhs = DecimalValue.create();
-        sandbox.stub(DecimalValue.prototype, 'cmp').returns(0);
-        expect(lhs.lt(rhs)).to.be.false;
-      });
-
-    });
-
-    describe('#gt()', function () {
-
-      it("should return true if #cmp() returns greater than zero", function () {
-        var lhs = DecimalValue.create();
-        var rhs = DecimalValue.create();
-        sandbox.stub(DecimalValue.prototype, 'cmp').returns(1);
-        expect(lhs.gt(rhs)).to.be.true;
-      });
-
-      it("should return false if #cmp() returns non-positive", function () {
-        var lhs = DecimalValue.create();
-        var rhs = DecimalValue.create();
-        sandbox.stub(DecimalValue.prototype, 'cmp').returns(0);
-        expect(lhs.gt(rhs)).to.be.false;
-      });
-
-    });
-
-    describe('#lteq()', function () {
-
-      it("should return false if #gt() returns true", function () {
-        var lhs = DecimalValue.create();
-        var rhs = DecimalValue.create();
-        sandbox.stub(DecimalValue.prototype, 'gt').returns(true);
-        expect(lhs.lteq(rhs)).to.be.false;
-      });
-
-      it("should return true if #gt() returns false", function () {
-        var lhs = DecimalValue.create();
-        var rhs = DecimalValue.create();
-        sandbox.stub(DecimalValue.prototype, 'gt').returns(false);
-        expect(lhs.lteq(rhs)).to.be.true;
-      });
-
-    });
-
-    describe('#gteq()', function () {
-
-      it("should return false if #lt() returns true", function () {
-        var lhs = DecimalValue.create();
-        var rhs = DecimalValue.create();
-        sandbox.stub(DecimalValue.prototype, 'lt').returns(true);
-        expect(lhs.gteq(rhs)).to.be.false;
-      });
-
-      it("should return true if #lt() returns false", function () {
-        var lhs = DecimalValue.create();
-        var rhs = DecimalValue.create();
-        sandbox.stub(DecimalValue.prototype, 'lt').returns(false);
-        expect(lhs.gteq(rhs)).to.be.true;
       });
 
     });

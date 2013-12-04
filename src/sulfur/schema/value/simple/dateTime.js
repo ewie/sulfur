@@ -7,10 +7,10 @@
 /* global define */
 
 define([
-  'sulfur/util/factory',
   'sulfur/schema/value/simple/decimal',
+  'sulfur/schema/value/simple/numeric',
   'sulfur/util'
-], function (Factory, DecimalValue, util) {
+], function (DecimalValue, NumericValue, util) {
 
   'use strict';
 
@@ -39,7 +39,7 @@ define([
     return year % 400 === 0 || year % 100 !== 0 && year % 4 === 0;
   }
 
-  return Factory.clone({
+  return NumericValue.clone({
 
     /**
      * Check if a string represents a valid dateTime according to XML Schema 1.0
@@ -544,62 +544,7 @@ define([
 
       };
 
-    }()),
-
-    /**
-     * Check for equality with another datetime.
-     *
-     * @param {sulfur/schema/value/simple/dateTime} other
-     *
-     * @return {boolean} whether equal to `other` or not
-     */
-    eq: function (other) {
-      return this.cmp(other) === 0;
-    },
-
-    /**
-     * Check if less than another datetime.
-     *
-     * @param {sulfur/schema/value/simple/dateTime} other
-     *
-     * @return {boolean} whether less than `other` or not
-     */
-    lt: function (other) {
-      return this.cmp(other) < 0;
-    },
-
-    /**
-     * Check if greater than another datetime.
-     *
-     * @param {sulfur/schema/value/simple/dateTime} other
-     *
-     * @return {boolean} whether greater than `other` or not
-     */
-    gt: function (other) {
-      return this.cmp(other) > 0;
-    },
-
-    /**
-     * Check if less than or equal to another datetime.
-     *
-     * @param {sulfur/schema/value/simple/dateTime} other
-     *
-     * @return {boolean} whether less than or equal `other` or not
-     */
-    lteq: function (other) {
-      return !this.gt(other);
-    },
-
-    /**
-     * Check if greater than or equal to another datetime.
-     *
-     * @param {sulfur/schema/value/simple/dateTime} other
-     *
-     * @return {boolean} whether greater than or equal to `other` or not
-     */
-    gteq: function (other) {
-      return !this.lt(other);
-    }
+    }())
 
   });
 
