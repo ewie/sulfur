@@ -15,7 +15,6 @@ define(['sulfur/schema/type/simple/restricted'], function (RestrictedType) {
     initialize: function (options) {
       RestrictedType.prototype.initialize.call(this, options.base, options.facets);
       this._qname = options.qname;
-      this._namespace = options.namespace;
       this._valueType = options.valueType;
     },
 
