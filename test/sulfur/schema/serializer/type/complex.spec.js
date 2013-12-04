@@ -44,11 +44,11 @@ define([
 
       it("should reject types with duplicate qualified name", function () {
         var types = [
-          { qname: QName.create('x', 'urn:y') },
-          { qname: QName.create('x', 'urn:y') }
+          { qname: QName.create('x', 'urn:example:y') },
+          { qname: QName.create('x', 'urn:example:y') }
         ];
         expect(bind(ComplexTypeSerializer, 'create', types))
-          .to.throw("type with duplicate qualified name {urn:y}x");
+          .to.throw("type with duplicate qualified name {urn:example:y}x");
       });
 
     });
@@ -59,22 +59,22 @@ define([
       var typeSerializer;
 
       beforeEach(function () {
-        type = { qname: QName.create('x', 'urn:y') };
+        type = { qname: QName.create('x', 'urn:example:y') };
         typeSerializer = ComplexTypeSerializer.create([ type ]);
       });
 
       it("should return true when a type with matching qualified name is defined", function () {
-        var qname = QName.create('x', 'urn:y');
+        var qname = QName.create('x', 'urn:example:y');
         expect(typeSerializer.hasTypeWithQualifiedName(qname)).to.be.true;
       });
 
       it("should return false when no type with the given name is defined", function () {
-        var qname = QName.create('z', 'urn:y');
+        var qname = QName.create('z', 'urn:example:y');
         expect(typeSerializer.hasTypeWithQualifiedName(qname)).to.be.false;
       });
 
       it("should return false when no type with the given namespace is defined", function () {
-        var qname = QName.create('x', 'urn:z');
+        var qname = QName.create('x', 'urn:example:z');
         expect(typeSerializer.hasTypeWithQualifiedName(qname)).to.be.false;
       });
 
@@ -98,7 +98,7 @@ define([
           var doc = Document.make('http://www.w3.org/2001/XMLSchema', 'xs:schema');
           ctx = Context.create(doc);
 
-          var type = { qname: QName.create('x', 'urn:y') };
+          var type = { qname: QName.create('x', 'urn:example:y') };
           element = Element.create('foo', type);
 
           complexTypeSerializer = ComplexTypeSerializer.create([]);
@@ -176,7 +176,7 @@ define([
           ctx = Context.create(doc);
 
           var baseType = {
-            qname: QName.create('x', 'urn:y'),
+            qname: QName.create('x', 'urn:example:y'),
             allowedElements: Elements.create([
               Element.create('foo', {}),
               Element.create('bar', {})
@@ -185,11 +185,11 @@ define([
 
           var elements = Elements.create([
             Element.create('foo', {
-              qname: QName.create('y', 'urn:z'),
+              qname: QName.create('y', 'urn:example:z'),
               isRestrictionOf: returns(true)
             }),
             Element.create('bar', {
-              qname: QName.create('y', 'urn:z'),
+              qname: QName.create('y', 'urn:example:z'),
               isRestrictionOf: returns(true)
             })
           ]);

@@ -40,7 +40,7 @@ define([
     var elements;
 
     beforeEach(function () {
-      qname = QName.create('foo', 'urn:bar');
+      qname = QName.create('foo', 'urn:example:bar');
       valueType = {};
       elements = Elements.create([
         Element.create('x', { createValidator: returns({}) })

@@ -54,8 +54,8 @@ define([
     var facet;
 
     beforeEach(function () {
-      MutexFacet = mockFacet(QName.create('xxx', 'urn:void'));
-      DerivedFacet = mockFacet(QName.create('foo', 'urn:void'),
+      MutexFacet = mockFacet(QName.create('xxx', 'urn:example:void'));
+      DerivedFacet = mockFacet(QName.create('foo', 'urn:example:void'),
         { mutex: [ MutexFacet ] });
       facet = DerivedFacet.create();
     });
@@ -63,7 +63,7 @@ define([
     describe('.getEffectiveFacets()', function () {
 
       it("should return undefined when no facet of this factory is defined in any restriction step", function () {
-        var dummyFacet = mockFacet(QName.create('x', 'urn:y'));
+        var dummyFacet = mockFacet(QName.create('x', 'urn:example:y'));
         var base = PrimitiveType.create({
           facets: Facets.create([ dummyFacet ])
         });
@@ -93,7 +93,7 @@ define([
         });
 
         it("should return the facets of all restriction steps when not shadowing", function () {
-          var nonShadowingFacet = mockFacet(QName.create('x', 'urn:y'), { shadowing: false });
+          var nonShadowingFacet = mockFacet(QName.create('x', 'urn:example:y'), { shadowing: false });
           var primitive = PrimitiveType.create({
             facets: Facets.create([ nonShadowingFacet ])
           });

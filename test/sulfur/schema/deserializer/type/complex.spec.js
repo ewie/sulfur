@@ -67,11 +67,11 @@ define([
 
       it("should reject types with duplicate qualified name", function () {
         var types = [
-          ComplexPrimitiveType.create({ qname: QName.create('foo', 'urn:bar') }),
-          ComplexPrimitiveType.create({ qname: QName.create('foo', 'urn:bar') })
+          ComplexPrimitiveType.create({ qname: QName.create('foo', 'urn:example:bar') }),
+          ComplexPrimitiveType.create({ qname: QName.create('foo', 'urn:example:bar') })
         ];
         expect(bind(ComplexResolver, 'create', types))
-          .to.throw("type with duplicate qualified name {urn:bar}foo");
+          .to.throw("type with duplicate qualified name {urn:example:bar}foo");
       });
 
     });
@@ -83,23 +83,23 @@ define([
 
       beforeEach(function () {
         type = ComplexPrimitiveType.create(
-          { qname: QName.create('x', 'urn:y'),
+          { qname: QName.create('x', 'urn:example:y'),
             elements: Elements.create([ Element.create('foo') ])
           });
         complexResolver = ComplexResolver.create([ type ]);
       });
 
       it("should return an instance of the type matching the name and namespace", function () {
-        var t = complexResolver.resolveQualifiedName(QName.create('x', 'urn:y'));
+        var t = complexResolver.resolveQualifiedName(QName.create('x', 'urn:example:y'));
         expect(t).to.equal(type);
       });
 
       it("should return undefined when no type with the given name is defined", function () {
-        expect(complexResolver.resolveQualifiedName(QName.create('z', 'urn:y'))).to.be.undefined;
+        expect(complexResolver.resolveQualifiedName(QName.create('z', 'urn:example:y'))).to.be.undefined;
       });
 
       it("should return undefined when no type with the given namespace is defined", function () {
-        expect(complexResolver.resolveQualifiedName(QName.create('x', 'urn:z'))).to.be.undefined;
+        expect(complexResolver.resolveQualifiedName(QName.create('x', 'urn:example:z'))).to.be.undefined;
       });
 
     });
@@ -114,25 +114,25 @@ define([
 
       beforeEach(function () {
         simpleType = SimplePrimitiveType.create(
-          { qname: QName.create('simpleType', 'urn:y'),
+          { qname: QName.create('simpleType', 'urn:example:y'),
             facets: Facets.create([ MinInclusiveFacet ])
           });
         var simpleType2 = SimplePrimitiveType.create(
-          { qname: QName.create('simpleType2', 'urn:y'),
+          { qname: QName.create('simpleType2', 'urn:example:y'),
             valueType: DoubleValue,
             facets: Facets.create([ MinInclusiveFacet ])
           });
         var otherType = SimplePrimitiveType.create(
-          { qname: QName.create('otherType', 'urn:y'),
+          { qname: QName.create('otherType', 'urn:example:y'),
             facets: Facets.create([ MinInclusiveFacet ])
           });
         complexType = ComplexPrimitiveType.create(
-          { qname: QName.create('complexType', 'urn:y'),
+          { qname: QName.create('complexType', 'urn:example:y'),
             elements: Elements.create(
               [ Element.create('foo', simpleType) ])
           });
         var complexType2 = ComplexPrimitiveType.create(
-          { qname: QName.create('complexType2', 'urn:y'),
+          { qname: QName.create('complexType2', 'urn:example:y'),
             elements: Elements.create(
               [ Element.create('foo',
                   SimpleRestrictedType.create(simpleType2,
@@ -141,7 +141,7 @@ define([
               ])
           });
         complexType3 = ComplexPrimitiveType.create(
-          { qname: QName.create('complexType3', 'urn:y'),
+          { qname: QName.create('complexType3', 'urn:example:y'),
             elements: Elements.create(
               [ Element.create('foo', simpleType),
                 Element.create('bar', simpleType),
@@ -149,7 +149,7 @@ define([
               ])
           });
         var complexType4 = ComplexPrimitiveType.create(
-          { qname: QName.create('complexType4', 'urn:y'),
+          { qname: QName.create('complexType4', 'urn:example:y'),
             elements: Elements.create(
               [ Element.create('foo', simpleType),
                 Element.create('bar', simpleType)
@@ -175,7 +175,7 @@ define([
       });
 
       it("should return undefined when the element's namespace is not 'http://www.w3.org/2001/XMLSchema'", function () {
-        var element = { localName: 'complexType', namespaceURI: 'urn:void' };
+        var element = { localName: 'complexType', namespaceURI: 'urn:example:void' };
         expect(complexResolver.resolveTypeElement(element)).to.be.undefined;
       });
 
@@ -208,7 +208,7 @@ define([
               var doc = parse(
                 '<complexType' +
                   ' xmlns="http://www.w3.org/2001/XMLSchema"' +
-                  ' xmlns:y="urn:y">' +
+                  ' xmlns:y="urn:example:y">' +
                  '<all>' +
                   '<element name="foo" type="y:simpleType"/>' +
                  '</all>' +
@@ -226,7 +226,7 @@ define([
               var doc = parse(
                 '<complexType' +
                   ' xmlns="http://www.w3.org/2001/XMLSchema"' +
-                  ' xmlns:y="urn:y">' +
+                  ' xmlns:y="urn:example:y">' +
                  '<all>' +
                   '<element name="foo" type="y:simpleType"/>' +
                   '<element name="bar" type="y:simpleType" minOccurs="0"/>' +
@@ -249,7 +249,7 @@ define([
               var doc = parse(
                 '<complexType' +
                   ' xmlns="http://www.w3.org/2001/XMLSchema"' +
-                  ' xmlns:y="urn:y">' +
+                  ' xmlns:y="urn:example:y">' +
                  '<all>' +
                   '<element name="foo" type="y:simpleType"/>' +
                   '<element name="xxx" type="y:simpleType" minOccurs="0" maxOccurs="0"/>' +
@@ -272,7 +272,7 @@ define([
               var doc = parse(
                 '<complexType' +
                   ' xmlns="http://www.w3.org/2001/XMLSchema"' +
-                  ' xmlns:y="urn:y">' +
+                  ' xmlns:y="urn:example:y">' +
                  '<all>' +
                   '<element name="xxx" type="y:simpleType"/>' +
                  '</all>' +
@@ -286,7 +286,7 @@ define([
               var doc = parse(
                 '<complexType' +
                   ' xmlns="http://www.w3.org/2001/XMLSchema"' +
-                  ' xmlns:y="urn:y">' +
+                  ' xmlns:y="urn:example:y">' +
                  '<all>' +
                   '<element name="bar" type="y:simpleType"/>' +
                  '</all>' +
@@ -300,7 +300,7 @@ define([
               var doc = parse(
                 '<complexType' +
                   ' xmlns="http://www.w3.org/2001/XMLSchema"' +
-                  ' xmlns:y="urn:y">' +
+                  ' xmlns:y="urn:example:y">' +
                  '<all>' +
                   '<element name="foo" type="y:simpleType"/>' +
                   '<element name="additional" type="y:simpleType"/>' +
@@ -315,7 +315,7 @@ define([
               var doc = parse(
                 '<complexType' +
                   ' xmlns="http://www.w3.org/2001/XMLSchema"' +
-                  ' xmlns:y="urn:y">' +
+                  ' xmlns:y="urn:example:y">' +
                  '<all>' +
                   '<element name="foo" type="y:otherType"/>' +
                  '</all>' +
@@ -329,7 +329,7 @@ define([
               var doc = parse(
                 '<complexType' +
                   ' xmlns="http://www.w3.org/2001/XMLSchema"' +
-                  ' xmlns:y="urn:y">' +
+                  ' xmlns:y="urn:example:y">' +
                  '<all>' +
                   '<element name="foo">' +
                    '<simpleType>' +
@@ -369,7 +369,7 @@ define([
               var doc = parse(
                 '<complexType' +
                   ' xmlns="http://www.w3.org/2001/XMLSchema"' +
-                  ' xmlns:y="urn:y">' +
+                  ' xmlns:y="urn:example:y">' +
                  '<all>' +
                   '<element name="foo" type="y:simpleType"/>' +
                   '<element name="xxx" type="y:incompatibleType" minOccurs="0"/>' +
@@ -388,7 +388,7 @@ define([
               var doc = parse(
                 '<complexType' +
                   ' xmlns="http://www.w3.org/2001/XMLSchema"' +
-                  ' xmlns:ns="urn:void">' +
+                  ' xmlns:ns="urn:example:void">' +
                  '<all>' +
                   '<element name="foo" type="ns:incompatibleType"/>' +
                  '</all>' +
@@ -417,7 +417,7 @@ define([
               var doc = parse(
                 '<complexType' +
                   ' xmlns="http://www.w3.org/2001/XMLSchema"' +
-                  ' xmlns:y="urn:y">' +
+                  ' xmlns:y="urn:example:y">' +
                  '<all>' +
                   '<element name="foo" type="y:simpleType"/>' +
                  '</all>' +
@@ -454,7 +454,7 @@ define([
               var doc = parse(
                 '<complexType' +
                   ' xmlns="http://www.w3.org/2001/XMLSchema"' +
-                  ' xmlns:y="urn:y">' +
+                  ' xmlns:y="urn:example:y">' +
                  '<all>' +
                   '<element name="foo" type="y:simpleType"/>' +
                  '</all>' +
@@ -481,7 +481,7 @@ define([
             var doc = parse(
               '<complexType' +
                 ' xmlns="http://www.w3.org/2001/XMLSchema"' +
-                ' xmlns:y="urn:y">' +
+                ' xmlns:y="urn:example:y">' +
                '<sequence minOccurs="0">' +
                 '<element name="bar" type="y:simpleType"/>' +
                '</sequence>' +
@@ -499,7 +499,7 @@ define([
             var doc = parse(
               '<complexType' +
                 ' xmlns="http://www.w3.org/2001/XMLSchema"' +
-                ' xmlns:y="urn:y">' +
+                ' xmlns:y="urn:example:y">' +
                '<sequence>' +
                 '<element name="bar" type="y:simpleType"/>' +
                '</sequence>' +
@@ -517,7 +517,7 @@ define([
             var doc = parse(
               '<complexType' +
                 ' xmlns="http://www.w3.org/2001/XMLSchema"' +
-                ' xmlns:y="urn:y">' +
+                ' xmlns:y="urn:example:y">' +
                '<sequence>' +
                 '<element name="bar" type="y:simpleType"/>' +
                '</sequence>' +
@@ -537,7 +537,7 @@ define([
               var doc = parse(
                 '<complexType' +
                   ' xmlns="http://www.w3.org/2001/XMLSchema"' +
-                  ' xmlns:y="urn:y">' +
+                  ' xmlns:y="urn:example:y">' +
                  '<sequence maxOccurs="3">' +
                   '<element name="bar" type="y:simpleType"/>' +
                  '</sequence>' +
@@ -555,7 +555,7 @@ define([
               var doc = parse(
                 '<complexType' +
                   ' xmlns="http://www.w3.org/2001/XMLSchema"' +
-                  ' xmlns:y="urn:y">' +
+                  ' xmlns:y="urn:example:y">' +
                  '<sequence maxOccurs="unbounded">' +
                   '<element name="bar" type="y:simpleType"/>' +
                  '</sequence>' +
@@ -577,7 +577,7 @@ define([
               var doc = parse(
                 '<complexType' +
                   ' xmlns="http://www.w3.org/2001/XMLSchema"' +
-                  ' xmlns:y="urn:y">' +
+                  ' xmlns:y="urn:example:y">' +
                  '<sequence>' +
                   '<element name="bar" type="y:simpleType"/>' +
                  '</sequence>' +
@@ -595,7 +595,7 @@ define([
               var doc = parse(
                 '<complexType' +
                   ' xmlns="http://www.w3.org/2001/XMLSchema"' +
-                  ' xmlns:y="urn:y">' +
+                  ' xmlns:y="urn:example:y">' +
                  '<sequence>' +
                   '<element name="bar" type="y:simpleType"/>' +
                   '<element name="foo" type="y:simpleType"/>' +
@@ -610,7 +610,7 @@ define([
               var doc = parse(
                 '<complexType' +
                   ' xmlns="http://www.w3.org/2001/XMLSchema"' +
-                  ' xmlns:y="urn:y">' +
+                  ' xmlns:y="urn:example:y">' +
                  '<sequence>' +
                   '<element name="foo" type="y:simpleType" minOccurs="0"/>' +
                   '<element name="baz" type="y:simpleType" minOccurs="0"/>' +
@@ -636,7 +636,7 @@ define([
               var doc = parse(
                 '<complexType' +
                   ' xmlns="http://www.w3.org/2001/XMLSchema"' +
-                  ' xmlns:y="urn:y">' +
+                  ' xmlns:y="urn:example:y">' +
                  '<sequence>' +
                   '<element name="bar" type="y:simpleType" minOccurs="0"/>' +
                   '<element name="foo" type="y:simpleType" minOccurs="0"/>' +
@@ -651,7 +651,7 @@ define([
               var doc = parse(
                 '<complexType' +
                   ' xmlns="http://www.w3.org/2001/XMLSchema"' +
-                  ' xmlns:y="urn:y">' +
+                  ' xmlns:y="urn:example:y">' +
                  '<sequence>' +
                   '<element name="foo" type="y:simpleType" minOccurs="0"/>' +
                  '</sequence>' +

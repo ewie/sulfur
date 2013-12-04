@@ -65,10 +65,10 @@ define([
       context("with namespaces", function () {
 
         it("should use a function when given", function () {
-          var doc = parse('<foo xmlns:y="urn:bar"><y:bar/></foo>');
+          var doc = parse('<foo xmlns:y="urn:example:bar"><y:bar/></foo>');
           var xpath = XPath.create(doc);
           var spy = sinon.spy(doc, 'evaluate');
-          var namespaces = returns('urn:bar');
+          var namespaces = returns('urn:example:bar');
           var result = xpath.evaluate('foo/x:bar',
             XPathResult.FIRST_ORDERED_NODE_TYPE, undefined, namespaces);
 
@@ -90,11 +90,11 @@ define([
         context("with an object", function () {
 
           it("should use a function wrapping the namespace object", function () {
-            var doc = parse('<foo xmlns:y="urn:bar"><y:bar/></foo>');
+            var doc = parse('<foo xmlns:y="urn:example:bar"><y:bar/></foo>');
             var xpath = XPath.create(doc);
             var spy = sinon.spy(doc, 'evaluate');
             var result = xpath.evaluate('foo/x:bar',
-              XPathResult.FIRST_ORDERED_NODE_TYPE, undefined, { x: 'urn:bar' });
+              XPathResult.FIRST_ORDERED_NODE_TYPE, undefined, { x: 'urn:example:bar' });
 
             var call = spy.getCall(0);
 
@@ -116,26 +116,26 @@ define([
             var xpath;
 
             beforeEach(function () {
-              doc = parse('<foo xmlns:y="urn:bar"><y:bar/></foo>');
+              doc = parse('<foo xmlns:y="urn:example:bar"><y:bar/></foo>');
               xpath = XPath.create(doc);
             });
 
             it("should expose own properties", function () {
               var spy = sinon.spy(doc, 'evaluate');
               xpath.evaluate('foo/x:bar',
-                XPathResult.FIRST_ORDERED_NODE_TYPE, undefined, { x: 'urn:bar' });
+                XPathResult.FIRST_ORDERED_NODE_TYPE, undefined, { x: 'urn:example:bar' });
 
               var call = spy.getCall(0);
               var fn = call.args[2];
 
-              expect(fn('x')).to.equal('urn:bar');
+              expect(fn('x')).to.equal('urn:example:bar');
             });
 
             it("should ignore inherited properties", function () {
               var spy = sinon.spy(doc, 'evaluate');
               xpath.evaluate('foo/x:bar',
                 XPathResult.FIRST_ORDERED_NODE_TYPE, undefined,
-                Object.create({ y: 'urn:foo' }, { x: { value: 'urn:bar' } }));
+                Object.create({ y: 'urn:example:foo' }, { x: { value: 'urn:example:bar' } }));
 
               var call = spy.getCall(0);
               var fn = call.args[2];
@@ -147,7 +147,7 @@ define([
               var spy = sinon.spy(doc, 'evaluate');
               xpath.evaluate('foo/x:bar',
                 XPathResult.FIRST_ORDERED_NODE_TYPE, undefined,
-                Object.create(null, { x: { value: 'urn:bar' } }));
+                Object.create(null, { x: { value: 'urn:example:bar' } }));
 
               var call = spy.getCall(0);
               var fn = call.args[2];
@@ -160,7 +160,7 @@ define([
               xpath.evaluate('foo/x:bar',
                 XPathResult.FIRST_ORDERED_NODE_TYPE, undefined,
                 Object.create(null, {
-                  x: { value: 'urn:bar' },
+                  x: { value: 'urn:example:bar' },
                   y: { value: '' }
                 }));
 

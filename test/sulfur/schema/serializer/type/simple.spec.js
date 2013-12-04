@@ -45,42 +45,42 @@ define([
     describe('#initialize()', function () {
 
       it("should reject types with duplicate qualified name", function () {
-        var facet = { qname: QName.create('y', 'urn:z') };
+        var facet = { qname: QName.create('y', 'urn:example:z') };
         var facetSerializers = [ { facet: facet } ];
         var types = [
           {
-            qname: QName.create('x', 'urn:y'),
+            qname: QName.create('x', 'urn:example:y'),
             allowedFacets: Facets.create([ facet ])
           },
-          { qname: QName.create('x', 'urn:y') }
+          { qname: QName.create('x', 'urn:example:y') }
         ];
         expect(bind(SimpleTypeSerializer, 'create', types, facetSerializers))
-          .to.throw("type with duplicate qualified name {urn:y}x");
+          .to.throw("type with duplicate qualified name {urn:example:y}x");
       });
 
       it("should reject facet serializers with duplicate facets", function () {
-        var types = [ { qname: QName.create('x', 'urn:y') } ];
-        var facet = { qname: QName.create('foo', 'urn:bar') };
+        var types = [ { qname: QName.create('x', 'urn:example:y') } ];
+        var facet = { qname: QName.create('foo', 'urn:example:bar') };
         var facetSerializers = [
           { facet: facet },
           { facet: facet }
         ];
         expect(bind(SimpleTypeSerializer, 'create', types, facetSerializers))
-          .to.throw("facet serializer with duplicate facet {urn:bar}foo");
+          .to.throw("facet serializer with duplicate facet {urn:example:bar}foo");
       });
 
       it("should reject missing facet serializers", function () {
-        var allowedFacet = { qname: QName.create('x', 'urn:y') };
+        var allowedFacet = { qname: QName.create('x', 'urn:example:y') };
         var types = [
           {
-            qname: QName.create('foo', 'urn:bar'),
+            qname: QName.create('foo', 'urn:example:bar'),
             allowedFacets: Facets.create([ allowedFacet ])
           }
         ];
-        var someFacet = { qname: QName.create('x', 'urn:z') };
+        var someFacet = { qname: QName.create('x', 'urn:example:z') };
         var facetSerializers = [ { facet: someFacet } ];
         expect(bind(SimpleTypeSerializer, 'create', types, facetSerializers))
-          .to.throw("expecting a facet serializer for facet {urn:y}x");
+          .to.throw("expecting a facet serializer for facet {urn:example:y}x");
       });
 
     });
@@ -91,27 +91,27 @@ define([
       var typeSerializer;
 
       beforeEach(function () {
-        var facet = { qname: QName.create('y', 'urn:z') };
+        var facet = { qname: QName.create('y', 'urn:example:z') };
         var facetSerializer = { facet: facet };
         type = {
-          qname: QName.create('x', 'urn:y'),
+          qname: QName.create('x', 'urn:example:y'),
           allowedFacets: Facets.create([ facet ])
         };
         typeSerializer = SimpleTypeSerializer.create([ type ], [ facetSerializer ]);
       });
 
       it("should return true when a type with matching qualified name is defined", function () {
-        var qname = QName.create('x', 'urn:y');
+        var qname = QName.create('x', 'urn:example:y');
         expect(typeSerializer.hasTypeWithQualifiedName(qname)).to.be.true;
       });
 
       it("should return false when no type with the given name is defined", function () {
-        var qname = QName.create('z', 'urn:y');
+        var qname = QName.create('z', 'urn:example:y');
         expect(typeSerializer.hasTypeWithQualifiedName(qname)).to.be.false;
       });
 
       it("should return false when no type with the given namespace is defined", function () {
-        var qname = QName.create('x', 'urn:z');
+        var qname = QName.create('x', 'urn:example:z');
         expect(typeSerializer.hasTypeWithQualifiedName(qname)).to.be.false;
       });
 
@@ -138,13 +138,13 @@ define([
 
       beforeEach(function () {
         stdFacet = createFacet(QName.create('y', 'http://www.w3.org/2001/XMLSchema'));
-        nonStdFacet = createFacet(QName.create('z', 'urn:x'));
+        nonStdFacet = createFacet(QName.create('z', 'urn:example:x'));
         stdFacetSerializer = FacetSerializer.create(stdFacet);
         nonStdFacetSerializer = FacetSerializer.create(nonStdFacet);
         var facetSerializers = [ stdFacetSerializer, nonStdFacetSerializer ];
         var types = [
           {
-            qname: QName.create('x', 'urn:y'),
+            qname: QName.create('x', 'urn:example:y'),
             allowedFacets: Facets.create([ stdFacet, nonStdFacet ])
           }
         ];
@@ -162,7 +162,7 @@ define([
 
         it("should return an xs:simpleType", function () {
           var itemType = {
-            qname: QName.create('x', 'urn:y'),
+            qname: QName.create('x', 'urn:example:y'),
             valueType: {}
           };
           var type = ListType.create(itemType);
@@ -175,7 +175,7 @@ define([
 
         it("should append child xs:list", function () {
           var itemType = {
-            qname: QName.create('x', 'urn:y'),
+            qname: QName.create('x', 'urn:example:y'),
             valueType: {}
           };
           var type = ListType.create(itemType);
@@ -189,7 +189,7 @@ define([
 
         it("should add attribute @itemType when the list's item type has a qualified name", function () {
           var itemType = {
-            qname: QName.create('foo', 'urn:bar'),
+            qname: QName.create('foo', 'urn:example:bar'),
             valueType: {}
           };
           var type = ListType.create(itemType);
@@ -199,12 +199,12 @@ define([
 
           var attr = e.firstChild.attributes.itemType;
           expect(attr.value).to.equal('ns1:foo');
-          expect(spy).to.be.calledWith('urn:bar');
+          expect(spy).to.be.calledWith('urn:example:bar');
         });
 
         it("should recursively serialize the item type when it has no qualified name", function () {
           var baseType = {
-            qname: QName.create('x', 'urn:y'),
+            qname: QName.create('x', 'urn:example:y'),
             valueType: {},
             allowedFacets: Facets.create([ stdFacet ])
           };
@@ -228,7 +228,7 @@ define([
 
         it("should return an xs:simpleType", function () {
           var baseType = {
-            qname: QName.create('x', 'urn:z'),
+            qname: QName.create('x', 'urn:example:z'),
             valueType: {},
             allowedFacets: Facets.create([ stdFacet ])
           };
@@ -244,7 +244,7 @@ define([
 
         it("should append child xs:restriction", function () {
           var baseType = {
-            qname: QName.create('x', 'urn:z'),
+            qname: QName.create('x', 'urn:example:z'),
             valueType: {},
             allowedFacets: Facets.create([ stdFacet ])
           };
@@ -260,7 +260,7 @@ define([
 
         it("should add attribute @base when the restriction's base type has a qualified name", function () {
           var baseType = {
-            qname: QName.create('x', 'urn:z'),
+            qname: QName.create('x', 'urn:example:z'),
             valueType: {},
             allowedFacets: Facets.create([ stdFacet ])
           };
@@ -272,12 +272,12 @@ define([
 
           var attr = e.firstChild.attributes.base;
           expect(attr.value).to.equal('ns1:x');
-          expect(spy).to.be.calledWith('urn:z');
+          expect(spy).to.be.calledWith('urn:example:z');
         });
 
         it("should recursively serialize the base type when it has no qualified name", function () {
           var primitiveType = {
-            qname: QName.create('x', 'urn:z'),
+            qname: QName.create('x', 'urn:example:z'),
             valuetype: {},
             allowedFacets: Facets.create([ stdFacet ])
           };
@@ -298,7 +298,7 @@ define([
 
         it("should serialize standard facets as children of xs:restriction", function () {
           var baseType = {
-            qname: QName.create('x', 'urn:z'),
+            qname: QName.create('x', 'urn:example:z'),
             valuetype: {},
             allowedFacets: Facets.create([ stdFacet ])
           };
@@ -320,7 +320,7 @@ define([
 
         it("should serialize non-standard facets as children of xs:annotation/xs:appinfo", function () {
           var baseType = {
-            qname: QName.create('x', 'urn:z'),
+            qname: QName.create('x', 'urn:example:z'),
             valuetype: {},
             allowedFacets: Facets.create([ nonStdFacet ])
           };

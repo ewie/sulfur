@@ -52,23 +52,23 @@ define([
       var base;
 
       beforeEach(function () {
-        var baseFacet = mockFacet(QName.create('x', 'urn:y'));
+        var baseFacet = mockFacet(QName.create('x', 'urn:example:y'));
         base = PrimitiveType.create({
           facets: Facets.create([ baseFacet ])
         });
       });
 
       it("should reject facets not defined by the base", function () {
-        var facet = mockFacet(QName.create('z', 'urn:y'));
+        var facet = mockFacet(QName.create('z', 'urn:example:y'));
         var facets = Facets.create([ facet.create() ]);
         expect(bind(RestrictedType, 'create', base, facets))
           .to.throw("expecting only facets defined by the base");
       });
 
       it("should reject facets prohibited due to mutual exclusion", function () {
-        var facet1 = { qname: QName.create('x', 'urn:z') };
+        var facet1 = { qname: QName.create('x', 'urn:example:z') };
         var facet2 = {
-          qname: QName.create('y', 'urn:z'),
+          qname: QName.create('y', 'urn:example:z'),
           mutualExclusiveFacets: [ facet1 ]
         };
         facet1.mutualExclusiveFacets = [ facet2 ];
@@ -77,12 +77,12 @@ define([
         });
         var facets = Facets.create([ facet1, facet2 ]);
         expect(bind(RestrictedType, 'create', base, facets))
-          .to.throw("facets {urn:z}x and {urn:z}y are mutual exclusive");
+          .to.throw("facets {urn:example:z}x and {urn:example:z}y are mutual exclusive");
       });
 
       it("should reject facets that are not a restriction of the base", function () {
-        var derivedFacet = mockFacet(QName.create('x', 'urn:y'));
-        var facet = mockFacet(QName.create('x', 'urn:y'));
+        var derivedFacet = mockFacet(QName.create('x', 'urn:example:y'));
+        var facet = mockFacet(QName.create('x', 'urn:example:y'));
         var spy = sinon.stub(facet.prototype, 'isRestrictionOf').returns(false);
         var restriction = RestrictedType.create(base,
           Facets.create([ derivedFacet.create() ]));
@@ -94,8 +94,8 @@ define([
       });
 
       it("should accept facets whose #isRestrictionOf() returns undefined", function () {
-        var derivedFacet = mockFacet(QName.create('x', 'urn:y'));
-        var facet = mockFacet(QName.create('x', 'urn:y'));
+        var derivedFacet = mockFacet(QName.create('x', 'urn:example:y'));
+        var facet = mockFacet(QName.create('x', 'urn:example:y'));
         var spy = sinon.stub(facet.prototype, 'isRestrictionOf').returns(undefined);
         var restriction = RestrictedType.create(base,
           Facets.create([ derivedFacet.create() ]));
@@ -111,7 +111,7 @@ define([
     describe('#primitive', function () {
 
       it("should return the base when its a sulfur/schema/type/simple/primitive", function () {
-        var allowedFacet = mockFacet(QName.create('x', 'urn:y'));
+        var allowedFacet = mockFacet(QName.create('x', 'urn:example:y'));
         var allowedFacets = Facets.create([ allowedFacet ]);
         var base = PrimitiveType.create({ facets: allowedFacets });
         var facets = Facets.create([ allowedFacet.create() ]);
@@ -120,7 +120,7 @@ define([
       });
 
       it("should return the base's base primitive when its a sulfur/schema/type/simple/restricted", function () {
-        var allowedFacet = mockFacet(QName.create('x', 'urn:y'));
+        var allowedFacet = mockFacet(QName.create('x', 'urn:example:y'));
         var allowedFacets = Facets.create([ allowedFacet ]);
         var primitive = PrimitiveType.create({ facets: allowedFacets });
         var baseFacets = Facets.create([ allowedFacet.create() ]);
@@ -136,7 +136,7 @@ define([
 
       it("should return the base", function () {
         var dummyFacet = mockFacet(
-          QName.create('x', 'urn:y')
+          QName.create('x', 'urn:example:y')
         );
         var base = PrimitiveType.create({
           facets: Facets.create([ dummyFacet ])
@@ -152,7 +152,7 @@ define([
 
       it("should return the value type of the base", function () {
         var dummyFacet = mockFacet(
-          QName.create('x', 'urn:y')
+          QName.create('x', 'urn:example:y')
         );
         var base = PrimitiveType.create({
           facets: Facets.create([ dummyFacet ]),
@@ -169,7 +169,7 @@ define([
 
       it("should return the allowed facets of the base", function () {
         var dummyFacet = mockFacet(
-          QName.create('x', 'urn:y')
+          QName.create('x', 'urn:example:y')
         );
         var base = PrimitiveType.create({
           facets: Facets.create([ dummyFacet ])
@@ -185,7 +185,7 @@ define([
 
       it("should return the facets defined on this restriction", function () {
         var dummyFacet = mockFacet(
-          QName.create('x', 'urn:y')
+          QName.create('x', 'urn:example:y')
         );
         var base = PrimitiveType.create({
           facets: Facets.create([ dummyFacet ])
@@ -202,7 +202,7 @@ define([
       context("when this is a restriction of the other type", function () {
 
         it("should check if the other type is this type's base primitive", function () {
-          var allowedFacet = mockFacet(QName.create('foo', 'urn:bar'));
+          var allowedFacet = mockFacet(QName.create('foo', 'urn:example:bar'));
           var primitive = PrimitiveType.create({
             facets: Facets.create([ allowedFacet ])
           });
@@ -212,7 +212,7 @@ define([
         });
 
         it("should check that this and the other type have the same base primitive", function () {
-          var allowedFacet = mockFacet(QName.create('foo', 'urn:bar'));
+          var allowedFacet = mockFacet(QName.create('foo', 'urn:example:bar'));
           var primitive = PrimitiveType.create({
             facets: Facets.create([ allowedFacet ])
           });
@@ -226,7 +226,7 @@ define([
         context("when this and the other type have the same effective facet", function () {
 
           it("should check if the restriction's facet is a restriction of the other type", function () {
-            var allowedFacet = mockFacet(QName.create('foo', 'urn:bar'));
+            var allowedFacet = mockFacet(QName.create('foo', 'urn:example:bar'));
             var primitive = PrimitiveType.create({
               facets: Facets.create([ allowedFacet ])
             });
@@ -242,8 +242,8 @@ define([
         context("when this does not have an effective facet defined by the other type", function () {
 
           it("should check that any of that facet's mutual exclusive facets is a restriction of the other type", function () {
-            var allowedFacet = mockFacet(QName.create('x', 'urn:z'));
-            var mutexFacet = mockFacet(QName.create('y', 'urn:z'),
+            var allowedFacet = mockFacet(QName.create('x', 'urn:example:z'));
+            var mutexFacet = mockFacet(QName.create('y', 'urn:example:z'),
               { mutex: [ allowedFacet ] });
             allowedFacet.mutualExclusiveFacets = [ mutexFacet ];
             var primitive = PrimitiveType.create({
@@ -263,7 +263,7 @@ define([
       context("when this is not a restriction of the other type", function () {
 
         it("should detect if the other type is a primitive and not this type's base primitive", function () {
-          var allowedFacet = mockFacet(QName.create('foo', 'urn:bar'));
+          var allowedFacet = mockFacet(QName.create('foo', 'urn:example:bar'));
           var primitive = PrimitiveType.create({
             facets: Facets.create([ allowedFacet ])
           });
@@ -276,7 +276,7 @@ define([
         });
 
         it("should detect when this and the other type don't have the same base primitive", function () {
-          var allowedFacet = mockFacet(QName.create('foo', 'urn:bar'));
+          var allowedFacet = mockFacet(QName.create('foo', 'urn:example:bar'));
           var primitive = PrimitiveType.create({
             facets: Facets.create([ allowedFacet ])
           });
@@ -291,7 +291,7 @@ define([
         });
 
         it("should detect an effective facet, defined by this and the other type, which is not a restriction of the type", function () {
-          var allowedFacet = mockFacet(QName.create('foo', 'urn:bar'));
+          var allowedFacet = mockFacet(QName.create('foo', 'urn:example:bar'));
           allowedFacet.augment({
             isRestrictionOf: function (type) {
               var effectiveFacets = this.factory.getEffectiveFacets(type);
@@ -312,7 +312,7 @@ define([
         });
 
         it("should detect an effective facet, defined by this and the other type, for which it is undecidable if it's a restriction of the type", function () {
-          var allowedFacet = mockFacet(QName.create('foo', 'urn:bar'),
+          var allowedFacet = mockFacet(QName.create('foo', 'urn:example:bar'),
             { restriction: undefined });
           var primitive = PrimitiveType.create({
             facets: Facets.create([ allowedFacet ])
@@ -327,12 +327,12 @@ define([
         context("when this does not have an effective facet defined by the other type", function () {
 
           it("should detect when no mutual exclusive facet is in effect", function () {
-            var allowedFacet = mockFacet(QName.create('x', 'urn:z'));
-            var mutexFacet = mockFacet(QName.create('y', 'urn:z'),
+            var allowedFacet = mockFacet(QName.create('x', 'urn:example:z'));
+            var mutexFacet = mockFacet(QName.create('y', 'urn:example:z'),
               { mutex: [ allowedFacet ] });
             allowedFacet.mutualExclusiveFacets = [ mutexFacet ];
 
-            var dummyFacet = mockFacet(QName.create('dummy', 'urn:void'));
+            var dummyFacet = mockFacet(QName.create('dummy', 'urn:example:void'));
 
             var primitive = PrimitiveType.create({
               facets: Facets.create([ allowedFacet, mutexFacet, dummyFacet ])
@@ -347,8 +347,8 @@ define([
           context("when a mutual exclusive facet is in effect", function () {
 
             it("should detect when not a restriction of the other type", function () {
-              var allowedFacet = mockFacet(QName.create('x', 'urn:z'));
-              var mutexFacet = mockFacet(QName.create('y', 'urn:z'),
+              var allowedFacet = mockFacet(QName.create('x', 'urn:example:z'));
+              var mutexFacet = mockFacet(QName.create('y', 'urn:example:z'),
                 { mutex: [ allowedFacet ] });
               mutexFacet.augment({
                 isRestrictionOf: function (type) {
@@ -372,8 +372,8 @@ define([
             });
 
             it("should detect when it's not decidable if it's a restriction of the other type", function () {
-              var allowedFacet = mockFacet(QName.create('x', 'urn:z'));
-              var mutexFacet = mockFacet(QName.create('y', 'urn:z'),
+              var allowedFacet = mockFacet(QName.create('x', 'urn:example:z'));
+              var mutexFacet = mockFacet(QName.create('y', 'urn:example:z'),
                 { mutex: [ allowedFacet ],
                   restriction: undefined
                 });
@@ -400,7 +400,7 @@ define([
     describe('#createValidator()', function () {
 
       it("should return the validator created by the base primitive for this restriction", function () {
-        var facet = mockFacet(QName.create('x', 'urn:y'));
+        var facet = mockFacet(QName.create('x', 'urn:example:y'));
         var primitive = PrimitiveType.create({ facets: Facets.create([ facet ]) });
         var facets = Facets.create([ facet.create() ]);
         var restriction = RestrictedType.create(primitive, facets);

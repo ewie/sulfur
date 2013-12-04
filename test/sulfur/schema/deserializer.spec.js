@@ -63,7 +63,7 @@ define([
       });
 
       it("should reject when the root element's namespace is not {http://www.w3.org/2001/XMLSchema}", function () {
-        var doc = parse('<xs:schema xmlns:xs="urn:dummy"/>');
+        var doc = parse('<xs:schema xmlns:xs="urn:example:dummy"/>');
         expect(bind(deserializer, 'deserialize', doc))
           .to.throw("expecting an XML Schema document");
       });
@@ -100,10 +100,10 @@ define([
           var simpleType;
 
           beforeEach(function () {
-            var facet = { qname: QName.create('x', 'urn:y') };
+            var facet = { qname: QName.create('x', 'urn:example:y') };
             var facetDeserializer = { facet: facet };
             simpleType = PrimitiveType.create(
-              { qname: QName.create('knownType', 'urn:y'),
+              { qname: QName.create('knownType', 'urn:example:y'),
                 facets: Facets.create([ facet ])
               });
             var simpleTypeDeserializer = SimpleTypeDeserializer.create(
@@ -113,9 +113,9 @@ define([
 
           it("should return a sulfur/schema", function () {
             var doc = parse(
-              '<schema targetNamespace="urn:bar"' +
+              '<schema targetNamespace="urn:example:bar"' +
                 ' xmlns="http://www.w3.org/2001/XMLSchema"' +
-                ' xmlns:y="urn:y">' +
+                ' xmlns:y="urn:example:y">' +
                '<element name="foo">' +
                 '<complexType>' +
                  '<all>' +
@@ -130,9 +130,9 @@ define([
 
           it("should use the value of attribute xs:schema/@targetNamespace as the schema's namespace URI", function () {
             var doc = parse(
-              '<schema targetNamespace="urn:bar"' +
+              '<schema targetNamespace="urn:example:bar"' +
                 ' xmlns="http://www.w3.org/2001/XMLSchema"' +
-                ' xmlns:y="urn:y">' +
+                ' xmlns:y="urn:example:y">' +
                '<element name="foo">' +
                 '<complexType>' +
                  '<all>' +
@@ -142,14 +142,14 @@ define([
                '</element>' +
               '</schema>');
             var schema = deserializer.deserialize(doc);
-            expect(schema.qname).to.eql(QName.create('foo', 'urn:bar'));
+            expect(schema.qname).to.eql(QName.create('foo', 'urn:example:bar'));
           });
 
           it("should use the first root element declaration which only declares elements with compatible types", function () {
             var doc = parse(
               '<schema' +
                 ' xmlns="http://www.w3.org/2001/XMLSchema"' +
-                ' xmlns:y="urn:y">' +
+                ' xmlns:y="urn:example:y">' +
                '<element name="foo">' +
                 '<complexType>' +
                  '<all>' +
@@ -178,7 +178,7 @@ define([
             var doc = parse(
               '<schema' +
                 ' xmlns="http://www.w3.org/2001/XMLSchema"' +
-                ' xmlns:y="urn:y">' +
+                ' xmlns:y="urn:example:y">' +
                '<element name="bar">' +
                 '<complexType>' +
                  '<all>' +
@@ -197,7 +197,7 @@ define([
             var doc = parse(
               '<schema' +
                 ' xmlns="http://www.w3.org/2001/XMLSchema"' +
-                ' xmlns:y="urn:y">' +
+                ' xmlns:y="urn:example:y">' +
                '<element name="bar">' +
                 '<complexType>' +
                  '<all>' +

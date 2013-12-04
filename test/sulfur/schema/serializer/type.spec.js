@@ -113,7 +113,7 @@ define([
       var typeSerializer;
 
       beforeEach(function () {
-        var doc = Document.make('urn:x', 'x:y');
+        var doc = Document.make('urn:example:x', 'x:y');
         ctx = Context.create(doc);
         typeSerializer = TypeSerializer.create([]);
       });
@@ -124,7 +124,7 @@ define([
           name: 'foo',
           isOptional: returns(false)
         };
-        typeSerializer.serializeType = returns(ctx.createElement('urn:dummy', 'dummy:void'));
+        typeSerializer.serializeType = returns(ctx.createElement('urn:example:dummy', 'dummy:void'));
         var e = typeSerializer.serializeElement(element, ctx);
         expect(e.nodeName).to.equal('xs:element');
         expect(e.namespaceURI).to.equal('http://www.w3.org/2001/XMLSchema');
@@ -136,7 +136,7 @@ define([
           name: 'foo',
           isOptional: returns(false)
         };
-        typeSerializer.serializeType = returns(ctx.createElement('urn:dummy', 'dummy:void'));
+        typeSerializer.serializeType = returns(ctx.createElement('urn:example:dummy', 'dummy:void'));
         var e = typeSerializer.serializeElement(element, ctx);
         expect(e.getAttribute('name')).to.equal('foo');
       });
@@ -148,7 +148,7 @@ define([
           type: type,
           isOptional: returns(true)
         };
-        var child = ctx.createElement('urn:z', 'z:y');
+        var child = ctx.createElement('urn:example:z', 'z:y');
         typeSerializer.serializeType = returns(child);
         var e = typeSerializer.serializeElement(element, ctx);
         expect(e.getAttribute('minOccurs')).to.equal('0');
@@ -164,7 +164,7 @@ define([
           isOptional: returns(false)
         };
         var spy = sinon.spy(value, 'toString');
-        var child = ctx.createElement('urn:z', 'z:y');
+        var child = ctx.createElement('urn:example:z', 'z:y');
         typeSerializer.serializeType = returns(child);
         var e = typeSerializer.serializeElement(element, ctx);
         expect(e.getAttribute('default')).to.equal('bar');
@@ -178,7 +178,7 @@ define([
           type: type,
           isOptional: returns(false)
         };
-        var child = ctx.createElement('urn:z', 'z:y');
+        var child = ctx.createElement('urn:example:z', 'z:y');
         var spy = sinon.stub(typeSerializer, 'serializeType').returns(child);
         var e = typeSerializer.serializeElement(element, ctx);
         expect(spy).to.be.calledWith(
@@ -193,7 +193,7 @@ define([
         var element;
 
         beforeEach(function () {
-          qname = QName.create('bar', 'urn:foo');
+          qname = QName.create('bar', 'urn:example:foo');
           element = {
             name: 'bar',
             type: { qname: qname },
@@ -204,7 +204,7 @@ define([
         it("should reject the element when #hasTypeWithQualifiedName() returns false", function () {
           var spy = sinon.stub(typeSerializer, 'hasTypeWithQualifiedName').returns(false);
           expect(bind(typeSerializer, 'serializeElement', element, ctx))
-            .to.throw("element of unknown type {urn:foo}bar");
+            .to.throw("element of unknown type {urn:example:foo}bar");
           expect(spy).to.be.calledWith(sinon.match.same(qname));
         });
 

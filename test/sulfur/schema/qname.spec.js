@@ -21,7 +21,7 @@ define([
     var qname;
 
     beforeEach(function () {
-      qname = QName.create('foo', 'urn:bar');
+      qname = QName.create('foo', 'urn:example:bar');
     });
 
     describe('#localName', function () {
@@ -35,7 +35,7 @@ define([
     describe('#namespaceURI', function () {
 
       it("should return the namespace URI", function () {
-        expect(qname.namespaceURI).to.equal('urn:bar');
+        expect(qname.namespaceURI).to.equal('urn:example:bar');
       });
 
     });
@@ -43,7 +43,7 @@ define([
     describe('#toString()', function () {
 
       it("should return the Clark Notation", function () {
-        expect(qname.toString()).to.equal('{urn:bar}foo');
+        expect(qname.toString()).to.equal('{urn:example:bar}foo');
       });
 
     });

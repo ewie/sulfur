@@ -60,9 +60,9 @@ define([
     describe('#initialize()', function () {
 
       it("should accept types derived from sulfur/schema/type/simple/primitive", function () {
-        var facet = mockFacet(QName.create('foo', 'urn:bar'));
+        var facet = mockFacet(QName.create('foo', 'urn:example:bar'));
         var type = PrimitiveType.create(
-          { qname: QName.create('x', 'urn:y'),
+          { qname: QName.create('x', 'urn:example:y'),
             facets: Facets.create(
               [ facet ])
           });
@@ -72,14 +72,14 @@ define([
       });
 
       it("should accept types derived from sulfur/schema/type/simple/derived", function () {
-        var facet = mockFacet(QName.create('foo', 'urn:bar'));
+        var facet = mockFacet(QName.create('foo', 'urn:example:bar'));
         var base = PrimitiveType.create(
-          { qname: QName.create('x', 'urn:y'),
+          { qname: QName.create('x', 'urn:example:y'),
             facets: Facets.create([ facet ])
           });
         var type = DerivedType.create(
           { base: base,
-            qname: QName.create('z', 'urn:y'),
+            qname: QName.create('z', 'urn:example:y'),
             facets: Facets.create([ facet.create() ])
           });
         var facetResolver = { facet: facet };
@@ -94,33 +94,33 @@ define([
 
       it("should reject types which are not a sulfur/schema/type/simple/{derived,primitive}", function () {
         var facetResolver = {
-          facet: { qname: QName.create('foo', 'urn:bar') }
+          facet: { qname: QName.create('foo', 'urn:example:bar') }
         };
         expect(bind(SimpleResolver, 'create', [{}], [ facetResolver ]))
           .to.throw("expecting only sulfur/schema/type/simple/{derived,primitive} types");
       });
 
       it("should reject types with duplicate qualified name", function () {
-        var facet = { qname: QName.create('foo', 'urn:bar') };
+        var facet = { qname: QName.create('foo', 'urn:example:bar') };
         var types = [
           PrimitiveType.create(
-            { qname: QName.create('foo', 'urn:bar'),
+            { qname: QName.create('foo', 'urn:example:bar'),
               facets: Facets.create([ facet ])
            }),
           PrimitiveType.create(
-            { qname: QName.create('foo', 'urn:bar'),
+            { qname: QName.create('foo', 'urn:example:bar'),
               facets: Facets.create([ facet ])
             })
         ];
         var facetResolver = { facet: facet };
         expect(bind(SimpleResolver, 'create', types, [ facetResolver ]))
-          .to.throw("type with duplicate qualified name {urn:bar}foo");
+          .to.throw("type with duplicate qualified name {urn:example:bar}foo");
       });
 
       it("should reject an empty array of facet resolvers", function () {
         var types = [
           PrimitiveType.create(
-            { qname: QName.create('foo', 'urn:bar') })
+            { qname: QName.create('foo', 'urn:example:bar') })
         ];
         expect(bind(SimpleResolver, 'create', types, []))
           .to.throw("expecting an array of one or more facet resolvers");
@@ -129,31 +129,31 @@ define([
       it("should reject facet resolvers with duplicate facets", function () {
         var types = [
           PrimitiveType.create(
-            { qname: QName.create('foo', 'urn:bar') })
+            { qname: QName.create('foo', 'urn:example:bar') })
         ];
-        var facet = { qname: QName.create('foo', 'urn:bar') };
+        var facet = { qname: QName.create('foo', 'urn:example:bar') };
         var facetResolvers = [
           { facet: facet },
           { facet: facet }
         ];
         expect(bind(SimpleResolver, 'create', types, facetResolvers))
-          .to.throw("facet resolver with duplicate facet {urn:bar}foo");
+          .to.throw("facet resolver with duplicate facet {urn:example:bar}foo");
       });
 
       it("should reject missing facet resolvers", function () {
-        var allowedFacet = { qname: QName.create('x', 'urn:y') };
+        var allowedFacet = { qname: QName.create('x', 'urn:example:y') };
         var types = [
           PrimitiveType.create(
-            { qname: QName.create('foo', 'urn:bar'),
+            { qname: QName.create('foo', 'urn:example:bar'),
               facets: Facets.create([ allowedFacet ])
             })
         ];
-        var someFacet = { qname: QName.create('x', 'urn:z') };
+        var someFacet = { qname: QName.create('x', 'urn:example:z') };
         var facetResolvers = [
           { facet: someFacet }
         ];
         expect(bind(SimpleResolver, 'create', types, facetResolvers))
-          .to.throw("expecting a facet resolver for facet {urn:y}x");
+          .to.throw("expecting a facet resolver for facet {urn:example:y}x");
       });
 
     });
@@ -164,9 +164,9 @@ define([
       var simpleResolver;
 
       beforeEach(function () {
-        var facet = { qname: QName.create('foo', 'urn:bar') };
+        var facet = { qname: QName.create('foo', 'urn:example:bar') };
         type = PrimitiveType.create(
-          { qname: QName.create('x', 'urn:y'),
+          { qname: QName.create('x', 'urn:example:y'),
             facets: Facets.create([ facet ])
           });
         var facetResolver = { facet: facet };
@@ -174,16 +174,16 @@ define([
       });
 
       it("should return the type matching the name and namespace", function () {
-        var t = simpleResolver.resolveQualifiedName(QName.create('x', 'urn:y'));
+        var t = simpleResolver.resolveQualifiedName(QName.create('x', 'urn:example:y'));
         expect(t).to.equal(type);
       });
 
       it("should return undefined when no type with the given name is defined", function () {
-        expect(simpleResolver.resolveQualifiedName(QName.create('z', 'urn:y'))).to.be.undefined;
+        expect(simpleResolver.resolveQualifiedName(QName.create('z', 'urn:example:y'))).to.be.undefined;
       });
 
       it("should return undefined when no type with the given namespace is defined", function () {
-        expect(simpleResolver.resolveQualifiedName(QName.create('x', 'urn:z'))).to.be.undefined;
+        expect(simpleResolver.resolveQualifiedName(QName.create('x', 'urn:example:z'))).to.be.undefined;
       });
 
     });
@@ -203,11 +203,11 @@ define([
         allowedFacets = Facets.create(
           [ mockFacet(QName.create('foo', 'http://www.w3.org/2001/XMLSchema')),
             mockFacet(QName.create('bar', 'http://www.w3.org/2001/XMLSchema')),
-            mockFacet(QName.create('abc', 'urn:bar')),
-            mockFacet(QName.create('def', 'urn:foo'))
+            mockFacet(QName.create('abc', 'urn:example:bar')),
+            mockFacet(QName.create('def', 'urn:example:foo'))
           ]);
         type = PrimitiveType.create(
-          { qname: QName.create('x', 'urn:y'),
+          { qname: QName.create('x', 'urn:example:y'),
             valueType: valueType,
             facets: allowedFacets
           });
@@ -225,8 +225,8 @@ define([
         facetResolvers = [
           createFacetResolver(allowedFacets.getByQName(QName.create('foo', 'http://www.w3.org/2001/XMLSchema'))),
           createFacetResolver(allowedFacets.getByQName(QName.create('bar', 'http://www.w3.org/2001/XMLSchema'))),
-          createFacetResolver(allowedFacets.getByQName(QName.create('abc', 'urn:bar'))),
-          createFacetResolver(allowedFacets.getByQName(QName.create('def', 'urn:foo')))
+          createFacetResolver(allowedFacets.getByQName(QName.create('abc', 'urn:example:bar'))),
+          createFacetResolver(allowedFacets.getByQName(QName.create('def', 'urn:example:foo')))
         ];
         simpleResolver = SimpleResolver.create([ type ], facetResolvers);
         resolvers = [ simpleResolver ];
@@ -238,7 +238,7 @@ define([
       });
 
       it("should return undefined when the element's namespace is not 'http://www.w3.org/2001/XMLSchema'", function () {
-        var element = { localName: 'simpleType', namespaceURI: 'urn:void' };
+        var element = { localName: 'simpleType', namespaceURI: 'urn:example:void' };
         expect(simpleResolver.resolveTypeElement(element)).to.be.undefined;
       });
 
@@ -269,7 +269,7 @@ define([
               var doc = parse(
                 '<xs:schema' +
                   ' xmlns:xs="http://www.w3.org/2001/XMLSchema"' +
-                  ' xmlns:y="urn:y">' +
+                  ' xmlns:y="urn:example:y">' +
                  '<xs:simpleType>' +
                   '<xs:restriction>' +
                    '<xs:simpleType>' +
@@ -295,7 +295,7 @@ define([
               var doc = parse(
                 '<xs:schema' +
                   ' xmlns:xs="http://www.w3.org/2001/XMLSchema"' +
-                  ' xmlns:y="urn:y">' +
+                  ' xmlns:y="urn:example:y">' +
                  '<xs:simpleType>' +
                   '<xs:restriction base="foo"/>' +
                  '</xs:simpleType>' +
@@ -316,7 +316,7 @@ define([
               var doc = parse(
                 '<xs:simpleType' +
                   ' xmlns:xs="http://www.w3.org/2001/XMLSchema"' +
-                  ' xmlns:y="urn:y">' +
+                  ' xmlns:y="urn:example:y">' +
                  '<xs:restriction base="y:x"/>' +
                 '</xs:simpleType>');
               var resolver = Resolver.create(doc, resolvers);
@@ -331,14 +331,14 @@ define([
               var doc = parse(
                 '<xs:simpleType' +
                   ' xmlns:xs="http://www.w3.org/2001/XMLSchema"' +
-                  ' xmlns:y="urn:y">' +
+                  ' xmlns:y="urn:example:y">' +
                  '<xs:restriction base="y:z"/>' +
                 '</xs:simpleType>');
               var resolver = Resolver.create(doc, resolvers);
 
               expect(bind(simpleResolver, 'resolveTypeElement',
                   doc.documentElement, resolver))
-                .to.throw("cannot resolve type {urn:y}z");
+                .to.throw("cannot resolve type {urn:example:y}z");
             });
 
           });
@@ -361,7 +361,7 @@ define([
               var doc = parse(
                 '<xs:simpleType' +
                   ' xmlns:xs="http://www.w3.org/2001/XMLSchema"' +
-                  ' xmlns:y="urn:y">' +
+                  ' xmlns:y="urn:example:y">' +
                  '<xs:restriction base="y:x">' +
                   '<xs:foo value="x"/>' +
                   '<xs:bar value="y"/>' +
@@ -409,9 +409,9 @@ define([
               var doc = parse(
                 '<xs:simpleType' +
                   ' xmlns:xs="http://www.w3.org/2001/XMLSchema"' +
-                  ' xmlns:y="urn:y"' +
-                  ' xmlns:foo="urn:foo"' +
-                  ' xmlns:bar="urn:bar">' +
+                  ' xmlns:y="urn:example:y"' +
+                  ' xmlns:foo="urn:example:foo"' +
+                  ' xmlns:bar="urn:example:bar">' +
                  '<xs:restriction base="y:x">' +
                   '<xs:annotation>' +
                    '<xs:appinfo>' +
@@ -469,7 +469,7 @@ define([
             var doc = parse(
               '<xs:schema' +
                 ' xmlns:xs="http://www.w3.org/2001/XMLSchema"' +
-                ' xmlns:y="urn:y">' +
+                ' xmlns:y="urn:example:y">' +
                '<xs:simpleType>' +
                 '<xs:list>' +
                  '<xs:simpleType>' +
@@ -494,7 +494,7 @@ define([
               var doc = parse(
                 '<xs:schema' +
                   ' xmlns:xs="http://www.w3.org/2001/XMLSchema"' +
-                  ' xmlns:y="urn:y">' +
+                  ' xmlns:y="urn:example:y">' +
                  '<xs:simpleType>' +
                   '<xs:list itemType="foo"/>' +
                  '</xs:simpleType>' +
@@ -516,7 +516,7 @@ define([
               var doc = parse(
                 '<xs:simpleType' +
                   ' xmlns:xs="http://www.w3.org/2001/XMLSchema"' +
-                  ' xmlns:y="urn:y">' +
+                  ' xmlns:y="urn:example:y">' +
                  '<xs:list itemType="y:x"/>' +
                 '</xs:simpleType>');
               var element = doc.documentElement;
@@ -533,14 +533,14 @@ define([
               var doc = parse(
                 '<xs:simpleType' +
                   ' xmlns:xs="http://www.w3.org/2001/XMLSchema"' +
-                  ' xmlns:y="urn:y">' +
+                  ' xmlns:y="urn:example:y">' +
                  '<xs:list itemType="y:z"/>' +
                 '</xs:simpleType>');
               var resolver = Resolver.create(doc, resolvers);
 
               expect(bind(simpleResolver, 'resolveTypeElement',
                   doc.documentElement, resolver))
-                .to.throw("cannot resolve type {urn:y}z");
+                .to.throw("cannot resolve type {urn:example:y}z");
             });
 
           });

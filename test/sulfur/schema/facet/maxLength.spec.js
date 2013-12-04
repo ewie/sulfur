@@ -162,7 +162,7 @@ define([
       var type;
 
       beforeEach(function () {
-        var dummyFacet = { qname: QName.create('x', 'urn:y') };
+        var dummyFacet = { qname: QName.create('x', 'urn:example:y') };
         facet = MaxLengthFacet.create(0);
         type = Facets.create([ dummyFacet ]);
       });

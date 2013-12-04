@@ -56,15 +56,15 @@ define([
     var nonShadowingFacet;
 
     beforeEach(function () {
-      qname = QName.create('foo', 'urn:bar');
+      qname = QName.create('foo', 'urn:example:bar');
       valueType = { prototype: {} };
       shadowingFacet = mockFacet(
-        QName.create('x', 'urn:z'),
+        QName.create('x', 'urn:example:z'),
         true,
         function () {},
         returns({}));
       nonShadowingFacet = mockFacet(
-        QName.create('y', 'urn:z'),
+        QName.create('y', 'urn:example:z'),
         false,
         function (x) { this._x = x; },
         function () { return { x: this._x }; });

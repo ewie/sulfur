@@ -24,7 +24,7 @@ define([
 
       it("should initialize the facets", function () {
         var fs = [
-          { qname: QName.create('x', 'urn:z') }
+          { qname: QName.create('x', 'urn:example:z') }
         ];
         var facets = Facets.create(fs);
         expect(facets.toArray()).to.eql(fs);
@@ -37,11 +37,11 @@ define([
 
       it("should reject facets with duplicate qualified name", function () {
         var fs = [
-          { qname: QName.create('x', 'urn:y') },
-          { qname: QName.create('x', 'urn:y') }
+          { qname: QName.create('x', 'urn:example:y') },
+          { qname: QName.create('x', 'urn:example:y') }
         ];
         expect(bind(Facets, 'create', fs))
-          .to.throw("facet with duplicate qualified name {urn:y}x");
+          .to.throw("facet with duplicate qualified name {urn:example:y}x");
       });
 
     });
@@ -52,16 +52,16 @@ define([
       var facets;
 
       beforeEach(function () {
-        facet = { qname: QName.create('foo', 'urn:bar') };
+        facet = { qname: QName.create('foo', 'urn:example:bar') };
         facets = Facets.create([ facet ]);
       });
 
       it("should return true when a facet with the given qualified name is defined", function () {
-        expect(facets.hasByQName(QName.create('foo', 'urn:bar'))).to.be.true;
+        expect(facets.hasByQName(QName.create('foo', 'urn:example:bar'))).to.be.true;
       });
 
       it("should return false when no facet with the given qualified name is defined", function () {
-        expect(facets.hasByQName(QName.create('bar', 'urn:foo'))).to.be.false;
+        expect(facets.hasByQName(QName.create('bar', 'urn:example:foo'))).to.be.false;
       });
 
     });
@@ -72,16 +72,16 @@ define([
       var facets;
 
       beforeEach(function () {
-        facet = { qname: QName.create('foo', 'urn:bar') };
+        facet = { qname: QName.create('foo', 'urn:example:bar') };
         facets = Facets.create([ facet ]);
       });
 
       it("should return the facet when defined", function () {
-        expect(facets.getByQName(QName.create('foo', 'urn:bar'))).to.equal(facet);
+        expect(facets.getByQName(QName.create('foo', 'urn:example:bar'))).to.equal(facet);
       });
 
       it("should return undefined when no facet with the given qualified name is defined", function () {
-        expect(facets.getByQName(QName.create('bar', 'urn:foo'))).to.be.undefined;
+        expect(facets.getByQName(QName.create('bar', 'urn:example:foo'))).to.be.undefined;
       });
 
     });
@@ -90,7 +90,7 @@ define([
 
       it("should return the number of facets", function () {
         var fs = [
-          { qname: QName.create('x', 'urn:z') }
+          { qname: QName.create('x', 'urn:example:z') }
         ];
         var facets = Facets.create(fs);
         expect(facets.size).to.equal(1);
@@ -102,8 +102,8 @@ define([
 
       it("should return the facets in initialization order", function () {
         var fs = [
-          { qname: QName.create('x', 'urn:z') },
-          { qname: QName.create('y', 'urn:z') }
+          { qname: QName.create('x', 'urn:example:z') },
+          { qname: QName.create('y', 'urn:example:z') }
         ];
         var facets = Facets.create(fs);
         expect(facets.toArray()).to.eql(fs);

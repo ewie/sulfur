@@ -214,7 +214,7 @@ define([
       var facets;
 
       beforeEach(function () {
-        var dummyFacet = { qname: QName.create('x', 'urn:y') };
+        var dummyFacet = { qname: QName.create('x', 'urn:example:y') };
         facet = LengthFacet.create(0);
         facets = Facets.create([ dummyFacet ]);
       });

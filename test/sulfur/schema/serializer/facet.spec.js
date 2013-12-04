@@ -37,43 +37,43 @@ define([
       var ctx;
 
       beforeEach(function () {
-        var doc = Document.make('urn:x', 'x:y');
+        var doc = Document.make('urn:example:x', 'x:y');
         ctx = Context.create(doc);
       });
 
       it("should use a prefix", function () {
-        var facet = { qname: QName.create('x', 'urn:y') };
+        var facet = { qname: QName.create('x', 'urn:example:y') };
         var obj = { value: 'z' };
         var facetSerializer = FacetSerializer.create(facet);
         var spy = sinon.spy(ctx, 'getNamespacePrefix');
         facetSerializer.serializeFacet(obj, ctx);
         expect(spy)
-          .to.be.calledWith('urn:y')
+          .to.be.calledWith('urn:example:y')
           .to.have.returned('ns1');
       });
 
       it("should return an array containing a DOM element for the value when the given facet's value is not an array", function () {
-        var facet = { qname: QName.create('x', 'urn:y') };
+        var facet = { qname: QName.create('x', 'urn:example:y') };
         var obj = { value: 'z' };
         var facetSerializer = FacetSerializer.create(facet);
         var e = facetSerializer.serializeFacet(obj, ctx);
         expect(e).to.have.lengthOf(1);
         expect(e[0].nodeName).to.equal('ns1:x');
-        expect(e[0].namespaceURI).to.equal('urn:y');
+        expect(e[0].namespaceURI).to.equal('urn:example:y');
         expect(e[0].attributes.value.value).to.equal('z');
       });
 
       it("should return an array with a DOM element for each value when the given facet's value is an array", function () {
-        var facet = { qname: QName.create('foo', 'urn:bar') };
+        var facet = { qname: QName.create('foo', 'urn:example:bar') };
         var obj = { value: [ 'a', 'b' ] };
         var facetSerializer = FacetSerializer.create(facet);
         var e = facetSerializer.serializeFacet(obj, ctx);
         expect(e).to.have.lengthOf(2);
         expect(e[0].nodeName).to.equal('ns1:foo');
-        expect(e[0].namespaceURI).to.equal('urn:bar');
+        expect(e[0].namespaceURI).to.equal('urn:example:bar');
         expect(e[0].attributes.value.value).to.equal('a');
         expect(e[1].nodeName).to.equal('ns1:foo');
-        expect(e[1].namespaceURI).to.equal('urn:bar');
+        expect(e[1].namespaceURI).to.equal('urn:example:bar');
         expect(e[1].attributes.value.value).to.equal('b');
       });
 

@@ -47,7 +47,7 @@ define([
       });
 
       it("should set attribute @targetNamespace", function () {
-        var qname = { namespaceURI: 'urn:bar' };
+        var qname = { namespaceURI: 'urn:example:bar' };
         var schema = Schema.create(qname, { toArray: returns([]) });
         var serializer = Serializer.create();
         var doc = serializer.serialize(schema);
@@ -56,7 +56,7 @@ define([
       });
 
       it("should set attribute @elementFormDefault to 'qualified'", function () {
-        var qname = { namespaceURI: 'urn:bar' };
+        var qname = { namespaceURI: 'urn:example:bar' };
         var schema = Schema.create(qname, { toArray: returns([]) });
         var serializer = Serializer.create();
         var doc = serializer.serialize(schema);
@@ -65,7 +65,7 @@ define([
       });
 
       it("should set attribute @attributeFormDefault to 'unqualified'", function () {
-        var qname = { namespaceURI: 'urn:bar' };
+        var qname = { namespaceURI: 'urn:example:bar' };
         var schema = Schema.create(qname, { toArray: returns([]) });
         var serializer = Serializer.create();
         var doc = serializer.serialize(schema);
@@ -89,7 +89,7 @@ define([
         var element2 = Element.create('y');
         var qname = {
           localName: 'bar',
-          namespaceURI: 'urn:foo'
+          namespaceURI: 'urn:example:foo'
         };
         var schema = Schema.create(qname,
           Elements.create([ element1, element2 ]));
@@ -106,7 +106,7 @@ define([
         var serializer = Serializer.create(typeSerializer);
         var doc = serializer.serialize(schema);
         var x = parse(
-          '<xs:schema targetNamespace="urn:foo"' +
+          '<xs:schema targetNamespace="urn:example:foo"' +
             ' elementFormDefault="qualified"' +
             ' attributeFormDefault="unqualified"' +
             ' xmlns:xs="http://www.w3.org/2001/XMLSchema">' +

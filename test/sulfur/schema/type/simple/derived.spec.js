@@ -30,9 +30,9 @@ define([
     var facets;
 
     beforeEach(function () {
-      qname = QName.create('foo', 'urn:bar');
+      qname = QName.create('foo', 'urn:example:bar');
       base = PrimitiveType.create({
-        qname: QName.create('x', 'urn:y'),
+        qname: QName.create('x', 'urn:example:y'),
         valueType: {},
         facets: { toArray: returns([]) }
       });

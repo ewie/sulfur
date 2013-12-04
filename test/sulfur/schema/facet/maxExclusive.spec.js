@@ -111,14 +111,14 @@ define([
       });
 
       it("should return true when valid", function () {
-        var dummyFacet = { qname: QName.create('x', 'urn:y') };
+        var dummyFacet = { qname: QName.create('x', 'urn:example:y') };
         type = Facets.create([ dummyFacet ]);
         type.valueType = IntegerValue;
         expect(facet.validate(type)).to.be.true;
       });
 
       it("should return false when the value is not of the given type", function () {
-        var dummyFacet = { qname: QName.create('x', 'urn:y') };
+        var dummyFacet = { qname: QName.create('x', 'urn:example:y') };
         type = Facets.create([ dummyFacet ]);
         type.valueType = { prototype: {} };
         expect(facet.validate(type)).to.be.false;

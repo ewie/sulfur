@@ -49,7 +49,7 @@ define([
       });
 
       it("should return the result of the first type resolver whose .resolveTypeElement() returns a defined result", function () {
-        var doc = parse('<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:bar"/>');
+        var doc = parse('<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:example:bar"/>');
         var element = {};
         var resolver = Resolver.create(doc, typeResolvers);
         var spy = sinon.stub(typeResolvers[0], 'resolveTypeElement').returns({});
@@ -60,14 +60,14 @@ define([
       });
 
       it("should reject when every type resolver's .resolveTypeElement() returns undefined", function () {
-        var doc = parse('<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:bar"/>');
-        var element = { localName: 'x', namespaceURI: 'urn:y' };
+        var doc = parse('<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:example:bar"/>');
+        var element = { localName: 'x', namespaceURI: 'urn:example:y' };
         var resolver = Resolver.create(doc, typeResolvers);
         var spies = typeResolvers.map(function (resolver) {
           return sinon.spy(resolver, 'resolveTypeElement');
         });
         expect(bind(resolver, 'resolveTypeElement', element))
-          .to.throw("cannot resolve type element {urn:y}x");
+          .to.throw("cannot resolve type element {urn:example:y}x");
         spies.forEach(function (spy) {
           expect(spy.getCall(0).args[0]).to.equal(element);
           expect(spy.getCall(0).args[1]).to.equal(resolver);
@@ -93,13 +93,13 @@ define([
         var resolver;
 
         beforeEach(function () {
-          doc = parse('<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:bar"/>');
+          doc = parse('<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:example:bar"/>');
           resolver = Resolver.create(doc, typeResolvers);
         });
 
         it("should return the defined result of any type resolver's .resolveQualifiedName()", function () {
           var spy = sinon.stub(typeResolvers[0], 'resolveQualifiedName').returns({});
-          var qname = QName.create('bar', 'urn:foo');
+          var qname = QName.create('bar', 'urn:example:foo');
           var type = resolver.resolveNamedType(qname);
           expect(spy)
             .to.be.calledWith(sinon.match.same(qname))
@@ -110,9 +110,9 @@ define([
           var spies = typeResolvers.map(function (resolver) {
             return sinon.spy(resolver, 'resolveQualifiedName');
           });
-          var qname = QName.create('bar', 'urn:foo');
+          var qname = QName.create('bar', 'urn:example:foo');
           expect(bind(resolver, 'resolveNamedType', qname))
-            .to.throw("cannot resolve type {urn:foo}bar");
+            .to.throw("cannot resolve type {urn:example:foo}bar");
           spies.forEach(function (spy) {
             expect(spy).to.be.calledWith(sinon.match.same(qname));
           });
@@ -127,12 +127,12 @@ define([
           it("should resolve the type element when it's an xs:simpleType", function () {
             var doc = parse(
               '<schema xmlns="http://www.w3.org/2001/XMLSchema"' +
-                ' targetNamespace="urn:foo">' +
+                ' targetNamespace="urn:example:foo">' +
                '<simpleType name="bar"/>' +
               '</schema>');
             var resolver = Resolver.create(doc);
             var spy = sinon.stub(resolver, 'resolveTypeElement').returns({});
-            var type = resolver.resolveNamedType(QName.create('bar', 'urn:foo'));
+            var type = resolver.resolveNamedType(QName.create('bar', 'urn:example:foo'));
             expect(spy)
               .to.be.calledWith(sinon.match.same(doc.documentElement.firstChild))
               .to.have.returned(sinon.match.same(type));
@@ -141,12 +141,12 @@ define([
           it("should resolve the type element when it's an xs:complexType", function () {
             var doc = parse(
               '<schema xmlns="http://www.w3.org/2001/XMLSchema"' +
-                ' targetNamespace="urn:bar">' +
+                ' targetNamespace="urn:example:bar">' +
                '<complexType name="foo"/>' +
               '</schema>');
             var resolver = Resolver.create(doc);
             var spy = sinon.stub(resolver, 'resolveTypeElement').returns({});
-            var type = resolver.resolveNamedType(QName.create('foo', 'urn:bar'));
+            var type = resolver.resolveNamedType(QName.create('foo', 'urn:example:bar'));
             expect(spy)
               .to.be.calledWith(sinon.match.same(doc.documentElement.firstChild))
               .to.have.returned(sinon.match.same(type));
@@ -160,13 +160,13 @@ define([
           var resolver;
 
           beforeEach(function () {
-            doc = parse('<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:bar"/>');
+            doc = parse('<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:example:bar"/>');
             resolver = Resolver.create(doc, typeResolvers);
           });
 
           it("should return the defined result of any type resolver's .resolveQualifiedName()", function () {
             var spy = sinon.stub(typeResolvers[0], 'resolveQualifiedName').returns({});
-            var qname = QName.create('foo', 'urn:bar');
+            var qname = QName.create('foo', 'urn:example:bar');
             var type = resolver.resolveNamedType(qname);
             expect(spy)
               .to.be.calledWith(sinon.match.same(qname))
@@ -177,9 +177,9 @@ define([
             var spies = typeResolvers.map(function (resolver) {
               return sinon.spy(resolver, 'resolveQualifiedName');
             });
-            var qname = QName.create('foo', 'urn:bar');
+            var qname = QName.create('foo', 'urn:example:bar');
             expect(bind(resolver, 'resolveNamedType', qname))
-              .to.throw("cannot resolve type {urn:bar}foo");
+              .to.throw("cannot resolve type {urn:example:bar}foo");
             spies.forEach(function (spy) {
               expect(spy).to.be.calledWith(sinon.match.same(qname));
             });
@@ -195,7 +195,7 @@ define([
 
       it("should return false when the element does not have attribute @ref", function () {
         var doc = parse(
-          '<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:bar">' +
+          '<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="urn:example:bar">' +
            '<element/>' +
           '</schema>');
         var resolver = Resolver.create(doc);
@@ -339,7 +339,7 @@ define([
           var doc = parse(
             '<xs:schema' +
               ' xmlns:xs="http://www.w3.org/2001/XMLSchema"' +
-              ' xmlns:foo="urn:foo">' +
+              ' xmlns:foo="urn:example:foo">' +
              '<xs:element name="baz" type="foo:bar"/>' +
             '</xs:schema>');
           var root = doc.documentElement;
@@ -352,7 +352,7 @@ define([
           var e = resolver.resolveElementDeclaration(element);
 
           expect(e.type).to.equal(type);
-          expect(spy).to.be.calledWith(QName.create('bar', 'urn:foo'));
+          expect(spy).to.be.calledWith(QName.create('bar', 'urn:example:foo'));
         });
 
       });
@@ -494,7 +494,7 @@ define([
         var resolver;
 
         beforeEach(function () {
-          doc = parse('<foo xmlns:xxx="urn:baz"/>');
+          doc = parse('<foo xmlns:xxx="urn:example:baz"/>');
           resolver = Resolver.create(doc);
         });
 
@@ -503,7 +503,7 @@ define([
           var r = resolver.resolveQualifiedName('xxx:foo', doc.documentElement);
           expect(resolvePrefixSpy)
             .to.be.calledWith('xxx', sinon.match.same(doc.documentElement));
-          expect(r).to.eql(QName.create('foo', 'urn:baz'));
+          expect(r).to.eql(QName.create('foo', 'urn:example:baz'));
         });
 
         it("should reject when no namespace is declared for the prefix", function () {
@@ -516,13 +516,13 @@ define([
       context("with no prefix", function () {
 
         it("should return a sulfur/schema/qname with the local name and the namespace URI declared with the empty prefix", function () {
-          var doc = parse('<foo xmlns="urn:bar"/>');
+          var doc = parse('<foo xmlns="urn:example:bar"/>');
           var resolver = Resolver.create(doc);
           var resolvePrefixSpy = sinon.spy(resolver, 'resolvePrefix');
           var r = resolver.resolveQualifiedName('foo', doc.documentElement);
           expect(resolvePrefixSpy)
             .to.be.calledWith('', sinon.match.same(doc.documentElement));
-          expect(r).to.eql(QName.create('foo', 'urn:bar'));
+          expect(r).to.eql(QName.create('foo', 'urn:example:bar'));
         });
 
         it("should return a sulfur/schema/qname with no namespace URI no namespace for the empty prefix is declared", function () {
@@ -544,31 +544,31 @@ define([
       it("should resolve to the most local namespace declaration", function () {
         var doc = parse(
           '<foo>' +
-           '<bar xmlns:xxx="urn:bar"/>' +
+           '<bar xmlns:xxx="urn:example:bar"/>' +
           '</foo>');
         var resolver = Resolver.create(doc);
         var element = doc.documentElement.firstChild;
         var r = resolver.resolvePrefix('xxx', element);
-        expect(r).to.equal('urn:bar');
+        expect(r).to.equal('urn:example:bar');
       });
 
       it("should go up the document tree", function () {
         var doc = parse(
-          '<foo xmlns:bar="urn:foo">' +
+          '<foo xmlns:bar="urn:example:foo">' +
            '<bar/>' +
           '</foo>');
         var resolver = Resolver.create(doc);
         var element = doc.documentElement.firstChild;
         var r = resolver.resolvePrefix('bar', element);
-        expect(r).to.equal('urn:foo');
+        expect(r).to.equal('urn:example:foo');
       });
 
       it("should handle the empty prefix", function () {
-        var doc = parse('<foo xmlns="urn:bar"/>');
+        var doc = parse('<foo xmlns="urn:example:bar"/>');
         var resolver = Resolver.create(doc);
         var element = doc.documentElement;
         var r = resolver.resolvePrefix('', element);
-        expect(r).to.equal('urn:bar');
+        expect(r).to.equal('urn:example:bar');
       });
 
       it("should return undefined for an undeclared prefix", function () {
