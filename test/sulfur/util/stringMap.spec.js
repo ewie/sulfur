@@ -27,6 +27,22 @@ define([
 
     });
 
+    describe('#keys', function () {
+
+      it("should return an array with all keys", function () {
+        var map = StringMap.create();
+        map.set('x', '1');
+        map.set('y', '2');
+        map.set('z', '3');
+        var keys = map.keys;
+        expect(keys).to.have.lengthOf(3);
+        expect(keys).to.include('x');
+        expect(keys).to.include('y');
+        expect(keys).to.include('z');
+      });
+
+    });
+
     describe('#values', function () {
 
       it("should return an array with all values", function () {

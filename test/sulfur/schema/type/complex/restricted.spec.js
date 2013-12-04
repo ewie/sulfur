@@ -40,12 +40,13 @@ define([
 
       it("should reject missing elements", function () {
         var type = {};
-        var primitive = PrimitiveType.create(
-          { elements: Elements.create(
-              [ Element.create('foo', type),
-                Element.create('bar', type)
-              ])
-          });
+        var valueType = {
+          allowedElements: Elements.create(
+            [ Element.create('foo', type),
+              Element.create('bar', type)
+            ])
+        };
+        var primitive = PrimitiveType.create({ valueType: valueType });
         var elements = Elements.create(
           [ Element.create('foo', type) ]);
         expect(bind(RestrictedType, 'create', primitive, elements))
@@ -54,10 +55,10 @@ define([
 
       it("should reject elements not defined by the primitive", function () {
         var type = { isRestrictionOf: returns(true) };
-        var primitive = PrimitiveType.create(
-          { elements: Elements.create(
-              [ Element.create('foo', type) ])
-          });
+        var valueType = {
+          allowedElements: Elements.create([ Element.create('foo', type) ])
+        };
+        var primitive = PrimitiveType.create({ valueType: valueType });
         var elements = Elements.create(
           [ Element.create('foo', type),
             Element.create('bar', type)
@@ -68,10 +69,10 @@ define([
 
       it("should reject any element with a type less restrictive than the type of the corresponding element of the primitive", function () {
         var type = { isRestrictionOf: returns(false) };
-        var primitive = PrimitiveType.create(
-          { elements: Elements.create(
-              [ Element.create('foo', type) ])
-          });
+        var valueType = {
+          allowedElements: Elements.create([ Element.create('foo', type) ])
+        };
+        var primitive = PrimitiveType.create({ valueType: valueType });
         var elements = Elements.create(
           [ Element.create('foo', type) ]);
         expect(bind(RestrictedType, 'create', primitive, elements))
@@ -81,14 +82,14 @@ define([
 
     });
 
-    describe('#primitive()', function () {
+    describe('#primitive', function () {
 
       it("should return the primitive type", function () {
         var type = { isRestrictionOf: returns(true) };
-        var primitive = PrimitiveType.create(
-          { elements: Elements.create(
-              [ Element.create('foo', type) ])
-          });
+        var valueType = {
+          allowedElements: Elements.create([ Element.create('foo', type) ])
+        };
+        var primitive = PrimitiveType.create({ valueType: valueType });
         var elements = Elements.create(
           [ Element.create('foo', type) ]);
         var restriction = RestrictedType.create(primitive, elements);
@@ -101,12 +102,10 @@ define([
 
       it("should return the primitive's value type", function () {
         var type = { isRestrictionOf: returns(true) };
-        var valueType = {};
-        var primitive = PrimitiveType.create(
-          { valueType: valueType,
-            elements: Elements.create(
-              [ Element.create('foo', type) ])
-          });
+        var valueType = {
+          allowedElements: Elements.create([ Element.create('foo', type) ])
+        };
+        var primitive = PrimitiveType.create({ valueType: valueType });
         var elements = Elements.create(
           [ Element.create('foo', type) ]);
         var restriction = RestrictedType.create(primitive, elements);
@@ -119,13 +118,13 @@ define([
 
       it("should return the elements", function () {
         var type = { isRestrictionOf: returns(true) };
-        var base = PrimitiveType.create(
-          { elements: Elements.create(
-              [ Element.create('foo', type) ])
-          });
+        var valueType = {
+          allowedElements: Elements.create([ Element.create('foo', type) ])
+        };
+        var primitive = PrimitiveType.create({ valueType: valueType });
         var elements = Elements.create(
           [ Element.create('foo', type) ]);
-        var restriction = RestrictedType.create(base, elements);
+        var restriction = RestrictedType.create(primitive, elements);
         expect(restriction.elements).to.equal(elements);
       });
 
@@ -138,12 +137,10 @@ define([
         it("should delegate to this restriction primitive's .isRestrictionOf()", function () {
           var type = { isRestrictionOf: returns(true) };
           var element = Element.create('foo', type);
-          var primitive = PrimitiveType.create({
-            elements: Elements.create([ element ])
-          });
-          var otherPrimitive = PrimitiveType.create({
-            elements: Elements.create([ element ])
-          });
+          var valueType = { allowedElements: Elements.create([ element ]) };
+          var otherValueType = { allowedElements: Elements.create([ element ]) };
+          var primitive = PrimitiveType.create({ valueType: valueType });
+          var otherPrimitive = PrimitiveType.create({ valueType: otherValueType });
           var restriction = RestrictedType.create(primitive,
             Elements.create([ element ]));
           var spy = sinon.spy(primitive, 'isRestrictionOf');
@@ -160,12 +157,10 @@ define([
         it("should delegate to this restriction primitive's .isRestrictionOf()", function () {
           var type = { isRestrictionOf: returns(true) };
           var element = Element.create('foo', type);
-          var primitive = PrimitiveType.create({
-            elements: Elements.create([ element ])
-          });
-          var otherPrimitive = PrimitiveType.create({
-            elements: Elements.create([ element ])
-          });
+          var valueType = { allowedElements: Elements.create([ element ]) };
+          var otherValueType = { allowedElements: Elements.create([ element ]) };
+          var primitive = PrimitiveType.create({ valueType: valueType });
+          var otherPrimitive = PrimitiveType.create({ valueType: otherValueType });
           var restriction = RestrictedType.create(primitive,
             Elements.create([ element ]));
           var otherRestriction = RestrictedType.create(otherPrimitive,
@@ -182,9 +177,8 @@ define([
           var otherType = { isRestrictionOf: returns(true) };
           var element = Element.create('foo', type);
           var otherElement = Element.create('foo', otherType);
-          var primitive = PrimitiveType.create({
-            elements: Elements.create([ element ])
-          });
+          var valueType = { allowedElements: Elements.create([ element ]) };
+          var primitive = PrimitiveType.create({ valueType: valueType });
           var restriction = RestrictedType.create(primitive,
             Elements.create([ element ]));
           var otherRestriction = RestrictedType.create(primitive,
@@ -200,9 +194,8 @@ define([
           var otherType = { isRestrictionOf: returns(true) };
           var element = Element.create('foo', type);
           var otherElement = Element.create('foo', otherType);
-          var primitive = PrimitiveType.create({
-            elements: Elements.create([ element ])
-          });
+          var valueType = { allowedElements: Elements.create([ element ]) };
+          var primitive = PrimitiveType.create({ valueType: valueType });
           var restriction = RestrictedType.create(primitive,
             Elements.create([ element ]));
           var otherRestriction = RestrictedType.create(primitive,
@@ -228,12 +221,11 @@ define([
           isRestrictionOf: returns(true),
           createValidator: returns({})
         };
-        valueType = { prototype: {} };
-        var primitive = PrimitiveType.create(
-          { valueType: valueType,
-            elements: Elements.create(
-              [ Element.create('foo', type) ])
-          });
+        valueType = {
+          prototype: {},
+          allowedElements: Elements.create([ Element.create('foo', type) ])
+        };
+        var primitive = PrimitiveType.create({ valueType: valueType });
         elements = Elements.create(
           [ Element.create('foo', type) ]);
         restriction = RestrictedType.create(primitive, elements);

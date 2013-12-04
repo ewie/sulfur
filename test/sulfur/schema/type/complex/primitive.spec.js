@@ -41,14 +41,15 @@ define([
 
     beforeEach(function () {
       qname = QName.create('foo', 'urn:example:bar');
-      valueType = {};
       elements = Elements.create([
         Element.create('x', { createValidator: returns({}) })
       ]);
+      valueType = {
+        allowedElements: elements
+      };
       type = PrimitiveType.create({
         qname: qname,
-        valueType: valueType,
-        elements: elements
+        valueType: valueType
       });
     });
 

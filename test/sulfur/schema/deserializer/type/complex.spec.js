@@ -82,9 +82,12 @@ define([
       var complexResolver;
 
       beforeEach(function () {
+        var valueType = {
+          allowedElements: Elements.create([ Element.create('foo') ])
+        };
         type = ComplexPrimitiveType.create(
           { qname: QName.create('x', 'urn:example:y'),
-            elements: Elements.create([ Element.create('foo') ])
+            valueType: valueType
           });
         complexResolver = ComplexResolver.create([ type ]);
       });
@@ -128,32 +131,36 @@ define([
           });
         complexType = ComplexPrimitiveType.create(
           { qname: QName.create('complexType', 'urn:example:y'),
-            elements: Elements.create(
+            valueType: { allowedElements: Elements.create(
               [ Element.create('foo', simpleType) ])
+            }
           });
         var complexType2 = ComplexPrimitiveType.create(
           { qname: QName.create('complexType2', 'urn:example:y'),
-            elements: Elements.create(
+            valueType: { allowedElements: Elements.create(
               [ Element.create('foo',
                   SimpleRestrictedType.create(simpleType2,
                     Facets.create(
                       [ MinInclusiveFacet.create(DoubleValue.create(1)) ])))
               ])
+            }
           });
         complexType3 = ComplexPrimitiveType.create(
           { qname: QName.create('complexType3', 'urn:example:y'),
-            elements: Elements.create(
+            valueType: { allowedElements: Elements.create(
               [ Element.create('foo', simpleType),
                 Element.create('bar', simpleType),
                 Element.create('baz', simpleType)
               ])
+            }
           });
         var complexType4 = ComplexPrimitiveType.create(
           { qname: QName.create('complexType4', 'urn:example:y'),
-            elements: Elements.create(
+            valueType: { allowedElements: Elements.create(
               [ Element.create('foo', simpleType),
                 Element.create('bar', simpleType)
               ])
+            }
           });
         complexResolver = ComplexResolver.create(
           [ complexType, complexType2, complexType3, complexType4 ]);

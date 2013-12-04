@@ -21,7 +21,6 @@ define([
       this._qname = options.qname;
       this._namespace = options.namespace;
       this._valueType = options.valueType;
-      this._allowedElements = options.elements;
     },
 
     get qname() {
@@ -33,7 +32,7 @@ define([
     },
 
     get allowedElements() {
-      return this._allowedElements;
+      return this.valueType.allowedElements;
     },
 
     isRestrictionOf: function (other) {

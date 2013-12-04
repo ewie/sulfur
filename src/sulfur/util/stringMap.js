@@ -34,12 +34,14 @@ define(['sulfur/util/factory'], function (Factory) {
       return this._size;
     },
 
+    get keys() {
+      return Object.keys(this._index);
+    },
+
     get values() {
-      var values = [];
-      for (var name in this._index) {
-        values.push(this._index[name]);
-      }
-      return values;
+      return this.keys.map(function (key) {
+        return this._index[key];
+      }.bind(this));
     },
 
     contains: function (key) {
