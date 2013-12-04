@@ -9,6 +9,8 @@
 define([
   'require',
   'sulfur/schema/facet',
+  'sulfur/schema/facet/length',
+  'sulfur/schema/facet/minLength',
   'sulfur/schema/qname',
   'sulfur/schema/validator/maximum',
   'sulfur/schema/validator/property',
@@ -16,6 +18,8 @@ define([
 ], function (
     require,
     Facet,
+    LengthFacet,
+    MinLengthFacet,
     QName,
     MaximumValidator,
     PropertyValidator,

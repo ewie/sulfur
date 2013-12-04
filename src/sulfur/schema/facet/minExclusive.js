@@ -9,10 +9,22 @@
 define([
   'require',
   'sulfur/schema/facet',
+  'sulfur/schema/facet/maxExclusive',
+  'sulfur/schema/facet/maxInclusive',
+  'sulfur/schema/facet/minInclusive',
   'sulfur/schema/qname',
   'sulfur/schema/validator/minimum',
   'sulfur/util'
-], function (require, Facet, QName, MinimumValidator, util) {
+], function (
+    require,
+    Facet,
+    MaxExclusiveFacet,
+    MaxInclusiveFacet,
+    MinInclusiveFacet,
+    QName,
+    MinimumValidator,
+    util
+) {
 
   'use strict';
 
