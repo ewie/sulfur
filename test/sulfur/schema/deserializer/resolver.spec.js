@@ -291,7 +291,7 @@ define([
 
         var e = resolver.resolveElementDeclaration(element);
 
-        expect(e.isOptional()).to.be.true;
+        expect(e.isOptional).to.be.true;
       });
 
       it("should parse the value of attribute @default and use it as default value when specified", function () {
@@ -402,7 +402,7 @@ define([
 
             expect(e.name).to.equal('x');
             expect(e.type).to.equal(type);
-            expect(e.isOptional()).to.be.true;
+            expect(e.isOptional).to.be.true;
 
             expect(resolveSpy).to.be.called;
             expect(resolveSpy.getCall(1).args[0]).to.equal(element.nextSibling);

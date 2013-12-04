@@ -101,7 +101,7 @@ define([
       }
 
       function findCompatibleType(types, elements) {
-        var part = util.bipart(elements, util.method('isOptional'));
+        var part = util.bipart(elements, util.property('isOptional'));
         var optionalElements = part.true;
         var mandatoryElements = part.false;
 

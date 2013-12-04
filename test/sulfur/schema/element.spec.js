@@ -35,17 +35,17 @@ define([
 
       it("should initialize the element as optional when specified", function () {
         var element = Element.create(name, type, { optional: true });
-        expect(element.isOptional()).to.be.true;
+        expect(element.isOptional).to.be.true;
       });
 
       it("should initialize the element as mandatory when specified", function () {
         var element = Element.create(name, type, { optional: false });
-        expect(element.isOptional()).to.be.false;
+        expect(element.isOptional).to.be.false;
       });
 
       it("should initialize the element as mandatory by default", function () {
         var element = Element.create(name, type);
-        expect(element.isOptional()).to.be.false;
+        expect(element.isOptional).to.be.false;
       });
 
     });
@@ -84,16 +84,16 @@ define([
 
     });
 
-    describe('#isOptional()', function () {
+    describe('#isOptional', function () {
 
       it("should return true when optional", function () {
         var element = Element.create('', {}, { optional: true });
-        expect(element.isOptional()).to.be.true;
+        expect(element.isOptional).to.be.true;
       });
 
       it("should return false when mandatory", function () {
         var element = Element.create('', {}, { optional: false });
-        expect(element.isOptional()).to.be.false;
+        expect(element.isOptional).to.be.false;
       });
 
     });

@@ -46,7 +46,7 @@ define(['sulfur/util/factory'], function(Factory) {
       var type = element.type;
       var e = context.createElement(XSD_NS, 'xs:element');
       e.setAttribute('name', element.name);
-      if (element.isOptional()) {
+      if (element.isOptional) {
         e.setAttribute('minOccurs', '0');
       }
       if (element.default) {

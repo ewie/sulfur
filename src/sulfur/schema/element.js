@@ -20,21 +20,13 @@ define(['sulfur/util/factory'], function (Factory) {
       this._default = options.default;
     },
 
-    get name() {
-      return this._name;
-    },
+    get name() { return this._name },
 
-    get type() {
-      return this._type;
-    },
+    get type() { return this._type },
 
-    get default() {
-      return this._default;
-    },
+    get default() { return this._default },
 
-    isOptional: function () {
-      return this._optional;
-    }
+    get isOptional() { return this._optional }
 
   });
 

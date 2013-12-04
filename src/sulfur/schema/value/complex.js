@@ -43,7 +43,7 @@ define([
 
       allowedElements.toArray().forEach(function (element) {
         var name = element.name;
-        if (!index.contains(name) && !element.isOptional()) {
+        if (!index.contains(name) && !element.isOptional) {
           throw new Error('missing value "' + name + '"');
         }
       });
