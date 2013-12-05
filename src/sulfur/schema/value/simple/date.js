@@ -54,7 +54,7 @@ define([
        *   $5 signed timezone hour
        *   $6 timezone minute
        */
-      var pattern = /^[\x09\x0A\x0D\x20]*(-?[0-9]{4})-([0-9]{2})-([0-9]{2})(([+-][0-9]{2}):([0-9]{2})|Z)?[\x09\x0A\x0D\x20]*$/;
+      var pattern = /^[\x09\x0A\x0D\x20]*([0-9]{4})-([0-9]{2})-([0-9]{2})(([+-][0-9]{2}):([0-9]{2})|Z)?[\x09\x0A\x0D\x20]*$/;
 
       function parseDec(s) {
         return parseInt(s, 10);
