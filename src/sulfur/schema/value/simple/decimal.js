@@ -18,28 +18,7 @@ define([
    * and comparison.
    */
 
-  /**
-   * A regular expression matching a decimal literal. Captures the following
-   * groups:
-   *
-   *   $1 optional sign
-   *   $2 integral digits
-   *   $3 optional fraction digits
-   */
-  var LITERAL_PATTERN = /^[\x09\x0A\x0D\x20]*([+-])?([0-9]+)(?:\.([0-9]+))?[\x09\x0A\x0D\x20]*$/;
-
   return NumericValue.clone({
-
-    /**
-     * Check if a string represents a valid decimal value.
-     *
-     * @param {string} s the string representation
-     *
-     * @return {boolean} whether the representation is valid
-     */
-    isValidLiteral: function (s) {
-      return LITERAL_PATTERN.test(s);
-    },
 
     /**
      * Parse a string representing a decimal value.
@@ -50,17 +29,31 @@ define([
      *
      * @throw {Error} if the string represents no valid decimal
      */
-    parse: function (s) {
-      var m = LITERAL_PATTERN.exec(s);
-      if (!m) {
-        throw new Error('"' + s + '" does not represent a valid decimal number');
-      }
-      return this.create({
-        integralDigits: m[2],
-        fractionDigits: m[3],
-        positive: m[1] !== '-'
-      });
-    }
+    parse: (function () {
+
+      /**
+       * A regular expression matching a decimal literal. Captures the
+       * following groups:
+       *
+       *   $1 optional sign
+       *   $2 integral digits
+       *   $3 optional fraction digits
+       */
+      var pattern = /^[\x09\x0A\x0D\x20]*([+-])?([0-9]+)(?:\.([0-9]+))?[\x09\x0A\x0D\x20]*$/;
+
+      return function (s) {
+        var m = pattern.exec(s);
+        if (!m) {
+          throw new Error('"' + s + '" does not represent a valid decimal number');
+        }
+        return this.create({
+          integralDigits: m[2],
+          fractionDigits: m[3],
+          positive: m[1] !== '-'
+        });
+      };
+
+    }())
 
   }).augment({
 

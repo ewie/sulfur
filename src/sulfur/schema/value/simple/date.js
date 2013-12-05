@@ -32,22 +32,6 @@ define([
   return NumericValue.clone({
 
     /**
-     * Check if a string represents a valid date literal.
-     *
-     * @param {string} s the string to check
-     *
-     * @return {boolean} whether `s` represents a valid date literal or not
-     */
-    isValidLiteral: function (s) {
-      try {
-        this.parse(s);
-      } catch (e) {
-        return false;
-      }
-      return true;
-    },
-
-    /**
      * Parse a date literal and initialize a date object.
      *
      * @param {string} s a valid date literal
@@ -59,14 +43,25 @@ define([
      */
     parse: (function () {
 
-      var DATE_PATTERN = /^[\x09\x0A\x0D\x20]*(-?[0-9]{4})-([0-9]{2})-([0-9]{2})(([+-][0-9]{2}):([0-9]{2})|Z)?[\x09\x0A\x0D\x20]*$/;
+      /**
+       * Regular expression to match a datetime literal. Captures the following
+       * groups:
+       *
+       *   $1 year
+       *   $2 month
+       *   $3 day
+       *   $4 optional timezone
+       *   $5 signed timezone hour
+       *   $6 timezone minute
+       */
+      var pattern = /^[\x09\x0A\x0D\x20]*(-?[0-9]{4})-([0-9]{2})-([0-9]{2})(([+-][0-9]{2}):([0-9]{2})|Z)?[\x09\x0A\x0D\x20]*$/;
 
       function parseDec(s) {
         return parseInt(s, 10);
       }
 
       return function (s) {
-        var m = DATE_PATTERN.exec(s);
+        var m = pattern.exec(s);
         if (!m) {
           throw new Error('invalid date literal "' + s + '"');
         }

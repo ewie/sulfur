@@ -18,25 +18,7 @@ define([
    * Provides a simple interface to match a string against the pattern.
    */
 
-  return Factory.clone({
-
-    /**
-     * Check if a string represents a valid XSD pattern.
-     *
-     * @param {string} s the string representation
-     *
-     * @return {boolean} whether the string representation is a valid pattern
-     */
-    isValidLiteral: function (s) {
-      try {
-        Regex.parse(s);
-      } catch (e) {
-        return false;
-      }
-      return true;
-    }
-
-  }).augment({
+  return Factory.derive({
 
     /**
      * Initialize the pattern by compiling the given source.

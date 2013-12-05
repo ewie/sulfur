@@ -43,64 +43,6 @@ define([
 
     });
 
-    describe('.isValidLiteral()', function () {
-
-      function testRanges(result, ranges) {
-        ranges.forEach(function (range) {
-          for (var value = range[0]; value <= range[1]; value += 1) {
-            var s = String.fromCharCode(value);
-            expect(StringValue.isValidLiteral(s)).to.equal(result);
-          }
-        });
-      }
-
-      context("with a valid string", function () {
-
-        it("should accept an empty string literal", function () {
-          expect(StringValue.isValidLiteral('')).to.be.true;
-        });
-
-        it("should accept a string with only valid codeunits", function () {
-          testRanges(true, [
-            [      9,    0xA ],
-            [    0xD,    0xD ],
-            [   0x20, 0xD7FF ],
-            [ 0xE000, 0xFFFD ]
-          ]);
-        });
-
-        it("should accept a string with multiple valid codeunits", function () {
-          expect(StringValue.isValidLiteral('abc')).to.be.true;
-        });
-
-      });
-
-      it("should reject a string with a lead surrogate but no matching trail surrogate", function () {
-        expect(StringValue.isValidLiteral('\uD800')).to.be.false;
-      });
-
-      it("should reject a string with a trail surrogate but no matching lead surrogate", function () {
-        expect(StringValue.isValidLiteral('\uDC00')).to.be.false;
-      });
-
-      it("should reject a string containing a control characters U+0000..U+0008, U+000B, U+000C and U+000E..U+001F", function () {
-        testRanges(false, [
-          [   0,    8 ],
-          [ 0xB,  0xC ],
-          [ 0xE, 0x1F ]
-        ]);
-      });
-
-      it("should reject a string with codeunit U+FFFE", function () {
-        expect(StringValue.isValidLiteral('\uFFFE')).to.be.false;
-      });
-
-      it("should reject a string with codeunit U+FFFF", function () {
-        expect(StringValue.isValidLiteral('\uFFFF')).to.be.false;
-      });
-
-    });
-
     describe('#initialize()', function () {
 
       function testRanges(ranges, fn) {
@@ -186,12 +128,6 @@ define([
       it("should reject a string with codeunit U+FFFF", function () {
         expect(bind(StringValue, 'create', '\uFFFF'))
           .to.throw("invalid string");
-      });
-
-      it("should reject when .isValidLiteral() returns false", function () {
-        sandbox.stub(StringValue, 'isValidLiteral').returns(false);
-        expect(bind(StringValue, 'create', ''))
-          .to.throw("invalid string value");
       });
 
     });

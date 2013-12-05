@@ -19,34 +19,6 @@ define([
 
   describe('sulfur/schema/value/simple/boolean', function () {
 
-    describe('.isValidLiteral()', function () {
-
-      it("should accept 'true'", function () {
-        expect(BooleanValue.isValidLiteral('true')).to.be.true;
-      });
-
-      it("should accept 'false'", function () {
-        expect(BooleanValue.isValidLiteral('false')).to.be.true;
-      });
-
-      it("should accept '1'", function () {
-        expect(BooleanValue.isValidLiteral('1')).to.be.true;
-      });
-
-      it("should accept '0'", function () {
-        expect(BooleanValue.isValidLiteral('0')).to.be.true;
-      });
-
-      it("should ignore leading and trailing white space", function () {
-        expect(BooleanValue.isValidLiteral('\x09\x0A\x0D true \x09\x0A\x0D')).to.be.true;
-      });
-
-      it("should reject an invalid literal", function () {
-        expect(BooleanValue.isValidLiteral('')).to.be.false;
-      });
-
-    });
-
     describe('.parse()', function () {
 
       it("should parse 'true' as true", function () {

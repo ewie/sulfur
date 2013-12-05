@@ -22,23 +22,6 @@ define(['sulfur/schema/value/simple/numeric'], function (NumericValue) {
     },
 
     /**
-     * Check if a string represents a valid float literal.
-     *
-     * @param {string} s the string to check
-     *
-     * @return {boolean} whether the string represents a float in the valid
-     *   range or not
-     */
-    isValidLiteral: function (s) {
-      try {
-        this.parse(s);
-      } catch (_) {
-        return false;
-      }
-      return true;
-    },
-
-    /**
      * Parse a string representing a float literal.
      *
      * @param {string} s the string to parse
@@ -50,10 +33,10 @@ define(['sulfur/schema/value/simple/numeric'], function (NumericValue) {
      */
     parse: (function () {
 
-      var LITERAL_PATTERN = /^[\x09\x0A\x0D\x20]*(?:NaN|-?INF|[+-]?[0-9]+(?:\.[0-9]+)?(?:[Ee][+-]?[0-9]+)?)[\x09\x0A\x0D\x20]*$/;
+      var pattern = /^[\x09\x0A\x0D\x20]*(?:NaN|-?INF|[+-]?[0-9]+(?:\.[0-9]+)?(?:[Ee][+-]?[0-9]+)?)[\x09\x0A\x0D\x20]*$/;
 
       return function (s) {
-        if (!LITERAL_PATTERN.test(s)) {
+        if (!pattern.test(s)) {
           throw new Error('invalid literal "' + s + '"');
         }
         switch (s) {

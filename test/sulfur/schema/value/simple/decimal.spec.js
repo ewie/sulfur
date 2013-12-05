@@ -35,34 +35,6 @@ define([
       expect(NumericValue).to.be.prototypeOf(DecimalValue);
     });
 
-    describe('.isValidLiteral()', function () {
-
-      it("should ignore leading and trailing white space", function () {
-        expect(DecimalValue.isValidLiteral('\x09\x0A\x0D 0 \x09\x0A\x0D')).to.be.true;
-      });
-
-      it("should accept integer literals", function () {
-        expect(DecimalValue.isValidLiteral('0')).to.be.true;
-      });
-
-      it("should accept fraction digits", function () {
-        expect(DecimalValue.isValidLiteral('0.0')).to.be.true;
-      });
-
-      it("should accept negative decimals", function () {
-        expect(DecimalValue.isValidLiteral('-1.2')).to.be.true;
-      });
-
-      it("should accept explicitely positive decimals", function () {
-        expect(DecimalValue.isValidLiteral('+1.2')).to.be.true;
-      });
-
-      it("should reject strings not representing a valid decimal", function () {
-        expect(DecimalValue.isValidLiteral('123abc')).to.be.false;
-      });
-
-    });
-
     describe('.parse()', function () {
 
       it("should reject strings not representing a decimal number", function () {

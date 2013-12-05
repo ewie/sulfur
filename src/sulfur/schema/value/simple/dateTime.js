@@ -42,23 +42,6 @@ define([
   return NumericValue.clone({
 
     /**
-     * Check if a string represents a valid dateTime according to XML Schema 1.0
-     * as used by the DataGridService.
-     *
-     * @param {string} s
-     *
-     * @return {boolean}
-     */
-    isValidLiteral: function (s) {
-      try {
-        this.parse(s);
-      } catch (e) {
-        return false;
-      }
-      return true;
-    },
-
-    /**
      * Parse a dateTime literal according to XML Schema 1.0 as used by the
      * DataGridService.
      *
@@ -84,7 +67,7 @@ define([
        *   $8 signed timezone hour
        *   $9 timezone minute
        */
-      var DATETIME_PATTERN = /^[\x09\x0A\x0D\x20]*([0-9]{4})-([0-9]{2})-([0-9]{2})T([0-9]{2}):([0-9]{2}):([0-9]{2}(?:\.[0-9]+)?)(([+-][0-9]{2}):([0-9]{2})|Z)?[\x09\x0A\x0D\x20]*$/;
+      var pattern = /^[\x09\x0A\x0D\x20]*([0-9]{4})-([0-9]{2})-([0-9]{2})T([0-9]{2}):([0-9]{2}):([0-9]{2}(?:\.[0-9]+)?)(([+-][0-9]{2}):([0-9]{2})|Z)?[\x09\x0A\x0D\x20]*$/;
 
       function parseDec(s) {
         return parseInt(s, 10);
@@ -92,7 +75,7 @@ define([
 
       return function (s) {
 
-        var m = DATETIME_PATTERN.exec(s);
+        var m = pattern.exec(s);
         if (!m) {
           throw new Error('invalid datetime literal "' + s + '"');
         }

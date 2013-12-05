@@ -37,20 +37,6 @@ define([
       expect(NumericValue).to.be.prototypeOf(DateTimeValue);
     });
 
-    describe('.isValidLiteral()', function () {
-
-      it("should return true if .parse() does not throw", function () {
-        sandbox.stub(DateTimeValue, 'parse');
-        expect(DateTimeValue.isValidLiteral()).to.be.true;
-      });
-
-      it("should return false if .parse() throws", function () {
-        sandbox.stub(DateTimeValue, 'parse').throws();
-        expect(DateTimeValue.isValidLiteral()).to.be.false;
-      });
-
-    });
-
     describe('.parse()', function () {
 
       it("should ignore leading and trailing white space", function () {

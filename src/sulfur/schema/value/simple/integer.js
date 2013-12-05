@@ -10,31 +10,11 @@ define(['sulfur/schema/value/simple/decimal'], function (DecimalValue) {
 
   'use strict';
 
-  /**
-   * A regular expression matching an integer literal with optional insignifcant
-   * fraction digits (only zero digits). Captures the following groups:
-   *
-   *   $1 optional sign
-   *   $2 integral digits
-   */
-  var LITERAL_PATTERN = /^[\x09\x0A\x0D\x20]*([+-]?)([0-9]+)[\x09\x0A\x0D\x20]*$/;
-
   return DecimalValue.clone({
 
     /**
-     * Check if a string represents a valid integer value.
-     *
-     * @param {string} s the string representation
-     *
-     * @return {boolean} whether the representation is valid
-     */
-    isValidLiteral: function (s) {
-      return LITERAL_PATTERN.test(s);
-    },
-
-    /**
      * Parse a string representing an integer value (i.e. a decimal with no
-     * significant fraction digits).
+     * fraction digits).
      *
      * @param {string} s the string representation
      *
@@ -42,16 +22,29 @@ define(['sulfur/schema/value/simple/decimal'], function (DecimalValue) {
      *
      * @throw {Error} if the string represent no valid integer
      */
-    parse: function (s) {
-      var m = LITERAL_PATTERN.exec(s);
-      if (!m) {
-        throw new Error('invalid decimal integer "' + s + '"');
-      }
-      return this.create({
-        integralDigits: m[2],
-        positive: m[1] !== '-'
-      });
-    }
+    parse: (function () {
+
+      /**
+       * A regular expression matching an integer literal. Captures the
+       * following groups:
+       *
+       *   $1 optional sign
+       *   $2 integral digits
+       */
+      var pattern = /^[\x09\x0A\x0D\x20]*([+-]?)([0-9]+)[\x09\x0A\x0D\x20]*$/;
+
+      return function (s) {
+        var m = pattern.exec(s);
+        if (!m) {
+          throw new Error('invalid decimal integer "' + s + '"');
+        }
+        return this.create({
+          integralDigits: m[2],
+          positive: m[1] !== '-'
+        });
+      };
+
+    }())
 
   }).augment({
 

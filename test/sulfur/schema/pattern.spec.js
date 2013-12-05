@@ -31,27 +31,6 @@ define([
       sandbox.restore();
     });
 
-    describe('.isValidLiteral()', function () {
-
-      it("should call sulfur/schema/regex.parse() with the given string", function () {
-        var spy = sandbox.spy(Regex, 'parse');
-        var s = '.';
-        Pattern.isValidLiteral(s);
-        expect(spy).to.be.calledWith(s);
-      });
-
-      it("should return true if sulfur/schema/regex.parse() does not throw", function () {
-        sandbox.stub(Regex, 'parse');
-        expect(Pattern.isValidLiteral()).to.be.true;
-      });
-
-      it("should return false if sulfur/schema/regex.parse() throws", function () {
-        sandbox.stub(Regex, 'parse').throws();
-        expect(Pattern.isValidLiteral()).to.be.false;
-      });
-
-    });
-
     describe('#initialize()', function () {
 
       it("should compile the source", function () {

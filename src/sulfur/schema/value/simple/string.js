@@ -13,24 +13,9 @@ define([
 
   'use strict';
 
+  var pattern = /^(?:[\x09\x0A\x0D\x20-\uD7FF]|[\uD800-\uDBFF][\uDC00-\uDFFF]|[\uE000-\uFFFD])*$/;
+
   return Factory.clone({
-
-    /**
-     * Check if a string contains only valid codeunits.
-     *
-     * @param {string} s
-     *
-     * @return {boolean} whether `s` contains only valid codeunits or not
-     */
-    isValidLiteral: (function () {
-
-      var LITERAL_PATTERN = /^(?:[\x09\x0A\x0D\x20-\uD7FF]|[\uD800-\uDBFF][\uDC00-\uDFFF]|[\uE000-\uFFFD])*$/;
-
-      return function (s) {
-        return LITERAL_PATTERN.test(s);
-      };
-
-    }()),
 
     /**
      * Parse a string value.
@@ -51,7 +36,6 @@ define([
      * @param {string} value
      *
      * @throw {Error} if `value` is not a string
-     * @throw {Error} if `value` does not satisfy .isValidLiteral()
      */
     initialize: function (value) {
       util.isUndefined(value) && (value = '');
@@ -60,7 +44,7 @@ define([
         throw new Error("must be initialized with a string value");
       }
 
-      if (!this.factory.isValidLiteral(value)) {
+      if (!pattern.test(value)) {
         throw new Error("invalid string value");
       }
 

@@ -35,27 +35,6 @@ define([
       expect(NumericValue).to.be.prototypeOf(DoubleValue);
     });
 
-    describe('.isValidLiteral()', function () {
-
-      it("should call .parse() with the given literal", function () {
-        var spy = sandbox.spy(DoubleValue, 'parse');
-        var s = '123';
-        DoubleValue.isValidLiteral(s);
-        expect(spy).to.be.calledWith(s);
-      });
-
-      it("should return true when .parse() does not throw", function () {
-        sandbox.stub(DoubleValue, 'parse');
-        expect(DoubleValue.isValidLiteral()).to.be.true;
-      });
-
-      it("should return false when .parse() does throw", function () {
-        sandbox.stub(DoubleValue, 'parse').throws();
-        expect(DoubleValue.isValidLiteral()).to.be.false;
-      });
-
-    });
-
     describe('.parse()', function () {
 
       it("should reject an invalid literal", function () {
