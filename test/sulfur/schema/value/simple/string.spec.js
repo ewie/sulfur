@@ -9,9 +9,8 @@
 
 define([
   'shared',
-  'sulfur/schema/value/simple/string',
-  'unorm'
-], function (shared, StringValue, Unorm) {
+  'sulfur/schema/value/simple/string'
+], function (shared, StringValue) {
 
   'use strict';
 
@@ -20,6 +19,29 @@ define([
   var sinon = shared.sinon;
 
   describe('sulfur/schema/value/simple/string', function () {
+
+    describe('.parse()', function () {
+
+      var sandbox;
+
+      beforeEach(function () {
+        sandbox = sinon.sandbox.create();
+      });
+
+      afterEach(function () {
+        sandbox.restore();
+      });
+
+      it("should call .create()", function () {
+        var spy = sandbox.spy(StringValue, 'create');
+        var s = 'foo';
+        var u = StringValue.parse(s);
+        expect(spy)
+          .to.be.calledWith(s)
+          .to.have.returned(sinon.match.same(u));
+      });
+
+    });
 
     describe('.isValidLiteral()', function () {
 
@@ -81,6 +103,14 @@ define([
 
     describe('#initialize()', function () {
 
+      function testRanges(ranges, fn) {
+        ranges.forEach(function (range) {
+          for (var value = range[0]; value <= range[1]; value += 1) {
+            fn(String.fromCharCode(value));
+          }
+        });
+      }
+
       var sandbox;
 
       beforeEach(function () {
@@ -106,18 +136,62 @@ define([
         expect(s.toString()).to.equal('a');
       });
 
+      context("with a valid string", function () {
+
+        it("should accept a string with only valid codeunits", function () {
+          testRanges([
+            [      9,    0xA ],
+            [    0xD,    0xD ],
+            [   0x20, 0xD7FF ],
+            [ 0xE000, 0xFFFD ]
+          ], function (value) {
+            var s = StringValue.create(value);
+            expect(s.toString()).to.equal(value);
+          });
+        });
+
+        it("should accept a string with multiple valid codeunits", function () {
+          var s = StringValue.create('abc');
+          expect(s.toString()).to.equal('abc');
+        });
+
+      });
+
+      it("should reject a string with a lead surrogate but no matching trail surrogate", function () {
+        expect(bind(StringValue, 'create', '\uD800'))
+          .to.throw("invalid string");
+      });
+
+      it("should reject a string with a trail surrogate but no matching lead surrogate", function () {
+        expect(bind(StringValue, 'create', '\uDC00'))
+          .to.throw("invalid string");
+      });
+
+      it("should reject a string containing a control characters U+0000..U+0008, U+000B, U+000C and U+000E..U+001F", function () {
+        testRanges([
+          [   0,    8 ],
+          [ 0xB,  0xC ],
+          [ 0xE, 0x1F ]
+        ], function (value) {
+          expect(bind(StringValue, 'create', value))
+            .to.throw("invalid string");
+        });
+      });
+
+      it("should reject a string with codeunit U+FFFE", function () {
+        expect(bind(StringValue, 'create', '\uFFFE'))
+          .to.throw("invalid string");
+      });
+
+      it("should reject a string with codeunit U+FFFF", function () {
+        expect(bind(StringValue, 'create', '\uFFFF'))
+          .to.throw("invalid string");
+      });
+
       it("should reject when .isValidLiteral() returns false", function () {
         sandbox.stub(StringValue, 'isValidLiteral').returns(false);
         expect(bind(StringValue, 'create', ''))
           .to.throw("invalid string value");
-      });
-
-      it("should normalize the value to NFC", function () {
-        var nfcSpy = sandbox.spy(Unorm, 'nfc');
-        var s = StringValue.create('\u0065\u0301');
-        expect(nfcSpy)
-          .to.be.calledWith('\u0065\u0301')
-          .to.have.returned(s.toString());
       });
 
     });
@@ -207,8 +281,8 @@ define([
     describe('#eq()', function () {
 
       it("should return true when LHS is equal to RHS", function () {
-        var lhs = StringValue.create('\u0065\u0301');
-        var rhs = StringValue.create('\u00E9');
+        var lhs = StringValue.create('x');
+        var rhs = StringValue.create('x');
         expect(lhs.eq(rhs)).to.be.true;
       });
 

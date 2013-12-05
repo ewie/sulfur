@@ -8,9 +8,8 @@
 
 define([
   'sulfur/util/factory',
-  'sulfur/util',
-  'unorm'
-], function (Factory, util, unorm) {
+  'sulfur/util'
+], function (Factory, util) {
 
   'use strict';
 
@@ -31,7 +30,18 @@ define([
         return LITERAL_PATTERN.test(s);
       };
 
-    }())
+    }()),
+
+    /**
+     * Parse a string value.
+     *
+     * @param {string} s
+     *
+     * @return {sulfur/schema/value/simple/string} the parsed string value
+     */
+    parse: function (s) {
+      return this.create(s);
+    }
 
   }).augment({
 
@@ -54,7 +64,7 @@ define([
         throw new Error("invalid string value");
       }
 
-      this._value = unorm.nfc(value);
+      this._value = value;
     },
 
     /**
