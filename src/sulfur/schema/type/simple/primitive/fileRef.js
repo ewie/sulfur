@@ -12,6 +12,8 @@ define([
   'sulfur/schema/facets',
   'sulfur/schema/qname',
   'sulfur/schema/type/simple/primitive',
+  'sulfur/schema/validator/all',
+  'sulfur/schema/validator/property',
   'sulfur/schema/value/simple/fileRef'
 ], function (
     sulfur,
@@ -19,12 +21,32 @@ define([
     Facets,
     QName,
     PrimitiveType,
+    AllValidator,
+    PropertyValidator,
     FileRefValue
 ) {
 
   'use strict';
 
-  return PrimitiveType.create({
+  var FileRefType = PrimitiveType.derive({
+
+    createRestrictionValidator: function (restriction) {
+      // XXX Does not consider facets other than mediaType (because it's the
+      //   only currently allowed facet), needs an implementation analog to
+      //   sulfur/schema/type/simple/primitive/string when additional facets
+      //   will be allowed.
+      var mediaTypeFacet = MediaTypeFacet.getEffectiveFacet(restriction);
+      var v = mediaTypeFacet.createValidator();
+      return AllValidator.create([
+        this.createValidator(),
+        PropertyValidator.create('file',
+          PropertyValidator.create('mediaType', v))
+      ]);
+    }
+
+  });
+
+  return FileRefType.create({
     qname: QName.create('fileRef', sulfur.namespaceURI),
     valueType: FileRefValue,
     facets: Facets.create([ MediaTypeFacet ])

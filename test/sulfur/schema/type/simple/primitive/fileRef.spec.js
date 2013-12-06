@@ -5,25 +5,35 @@
  */
 
 /* global define */
-/* global describe, it */
+/* global beforeEach, describe, it */
 
 define([
   'shared',
   'sulfur',
   'sulfur/schema/facet/mediaType',
   'sulfur/schema/facets',
+  'sulfur/schema/file',
+  'sulfur/schema/mediaType',
   'sulfur/schema/qname',
   'sulfur/schema/type/simple/primitive',
   'sulfur/schema/type/simple/primitive/fileRef',
+  'sulfur/schema/type/simple/restricted',
+  'sulfur/schema/validator/all',
+  'sulfur/schema/validator/property',
   'sulfur/schema/value/simple/fileRef'
 ], function (
     shared,
     sulfur,
     MediaTypeFacet,
     Facets,
+    File,
+    MediaType,
     QName,
     PrimitiveType,
     FileRefType,
+    RestrictedType,
+    AllValidator,
+    PropertyValidator,
     FileRefValue
 ) {
 
@@ -34,13 +44,68 @@ define([
   describe('sulfur/schema/type/simple/primitive/fileRef', function () {
 
     it("should be a sulfur/schema/type/simple/primitive", function () {
-      expect(FileRefType).to.eql(
-        PrimitiveType.create({
-          qname: QName.create('fileRef', sulfur.namespaceURI),
-          valueType: FileRefValue,
-          facets: Facets.create([ MediaTypeFacet ])
-        })
-      );
+      expect(PrimitiveType.prototype).to.be.prototypeOf(FileRefType);
+    });
+
+    describe('.qname', function () {
+
+      it("should return {" + sulfur.namespaceURI + "}fileRef", function () {
+        expect(FileRefType.qname)
+          .to.eql(QName.create('fileRef', sulfur.namespaceURI));
+      });
+
+
+    });
+
+    describe('.valueType', function () {
+
+      it("should return sulfur/schema/value/simple/fileRef", function () {
+        expect(FileRefType.valueType).to.equal(FileRefValue);
+      });
+
+    });
+
+    describe('.allowedFacets', function () {
+
+      it("should include sulfur/schema/facet/mediaType", function () {
+        expect(FileRefType.allowedFacets.toArray()).to.include(MediaTypeFacet);
+      });
+
+    });
+
+    describe('.createRestrictionValidator()', function () {
+
+      var facet;
+
+      beforeEach(function () {
+        var mediaType = MediaType.create('text', 'plain');
+        facet = MediaTypeFacet.create([ mediaType ]);
+      });
+
+      it("should return a sulfur/schema/validator/all", function () {
+        var restriction = RestrictedType.create(FileRefType,
+          Facets.create([ facet ]));
+        var v = FileRefType.createRestrictionValidator(restriction);
+        expect(AllValidator.prototype).to.be.prototypeOf(v);
+      });
+
+      it("should include this type's validator", function () {
+        var restriction = RestrictedType.create(FileRefType,
+          Facets.create([ facet ]));
+        var v = FileRefType.createRestrictionValidator(restriction);
+        expect(v.validators)
+          .to.include.something.eql(FileRefType.createValidator());
+      });
+
+      it("should include a sulfur/schema/validator/property with property 'file' using a sulfur/schema/validator/property with property 'mediaType' using the media type facet's validator", function () {
+        var restriction = RestrictedType.create(FileRefType,
+          Facets.create([ facet ]));
+        var v = FileRefType.createRestrictionValidator(restriction);
+        expect(v.validators)
+          .to.include.something.eql(PropertyValidator.create('file',
+            PropertyValidator.create('mediaType', facet.createValidator())));
+      });
+
     });
 
   });
