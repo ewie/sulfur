@@ -31,6 +31,10 @@ define([
     });
   });
 
+  function async(fn) {
+    setTimeout(fn, 0);
+  }
+
   function bind() {
     var args = Array.prototype.slice.call(arguments);
     var obj = args.shift();
@@ -48,6 +52,7 @@ define([
   return {
     expect: expect,
     sinon: sinon,
+    async: async,
     bind: bind,
     descriptor: Object.getOwnPropertyDescriptor,
     returns: returns,
