@@ -34,6 +34,19 @@ define([
       expect(StringMap).to.be.prototypeOf(OrderedStringMap);
     });
 
+    describe('#keys', function () {
+
+      it("should return an array of keys in insertion order", function () {
+        var map = OrderedStringMap.create();
+        map.set('a', 1);
+        map.set('b', 2);
+        map.set('c', 3);
+        var keys = map.keys;
+        expect(keys).to.eql([ 'a', 'b', 'c' ]);
+      });
+
+    });
+
     describe('#values', function () {
 
       it("should return an array of values in insertion order", function () {

@@ -21,10 +21,12 @@ define(['sulfur/util/stringMap'], function (StringMap) {
       this._keys = [];
     },
 
+    get keys() {
+      return [].concat(this._keys);
+    },
+
     get values() {
-      return this._keys.map(function (key) {
-        return this.get(key);
-      }.bind(this));
+      return this._keys.map(this.get.bind(this));
     },
 
     set: function (key, value) {
