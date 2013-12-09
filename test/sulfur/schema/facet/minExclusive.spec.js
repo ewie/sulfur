@@ -52,10 +52,10 @@ define([
 
     });
 
-    describe('.isShadowingLowerRestrictions()', function () {
+    describe('.isShadowingLowerRestrictions', function () {
 
       it("should return false", function () {
-        expect(MinExclusiveFacet.isShadowingLowerRestrictions()).to.be.true;
+        expect(MinExclusiveFacet.isShadowingLowerRestrictions).to.be.true;
       });
 
     });

@@ -50,10 +50,10 @@ define([
 
     });
 
-    describe('.isShadowingLowerRestrictions()', function () {
+    describe('.isShadowingLowerRestrictions', function () {
 
       it("should return false", function () {
-        expect(TotalDigitsFacet.isShadowingLowerRestrictions()).to.be.true;
+        expect(TotalDigitsFacet.isShadowingLowerRestrictions).to.be.true;
       });
 
     });

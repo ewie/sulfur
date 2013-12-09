@@ -45,10 +45,10 @@ define([
 
     });
 
-    describe('.isShadowingLowerRestrictions()', function () {
+    describe('.isShadowingLowerRestrictions', function () {
 
       it("should return false", function () {
-        expect(PatternFacet.isShadowingLowerRestrictions()).to.be.false;
+        expect(PatternFacet.isShadowingLowerRestrictions).to.be.false;
       });
 
     });

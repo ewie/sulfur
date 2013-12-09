@@ -40,7 +40,7 @@ define([
       var facet = Facet.clone({
         qname: qname,
         mutualExclusiveFacets: options.mutex || [],
-        isShadowingLowerRestrictions: returns(shadowing)
+        isShadowingLowerRestrictions: shadowing
       });
       facet.augment({
         isRestrictionOf: returns(true),
@@ -201,11 +201,10 @@ define([
 
     });
 
-    describe('#isShadowingLowerRestrictions()', function () {
+    describe('#isShadowingLowerRestrictions', function () {
 
-      it("should return the value of .isShadowingLowerRestrictions()", function () {
-        var spy = sinon.spy(DerivedFacet, 'isShadowingLowerRestrictions');
-        expect(spy).to.have.returned(facet.isShadowingLowerRestrictions());
+      it("should return the value of .isShadowingLowerRestrictions", function () {
+        expect(facet.isShadowingLowerRestrictions).to.equal(DerivedFacet.isShadowingLowerRestrictions);
       });
 
     });

@@ -38,7 +38,7 @@ define([
       var facet = Facet.clone({
         qname: qname,
         mutualExclusiveFacets: [],
-        isShadowingLowerRestrictions: returns(shadowing)
+        isShadowingLowerRestrictions: shadowing
       });
       facet.augment({
         initialize: initialize,

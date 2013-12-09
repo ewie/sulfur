@@ -54,10 +54,10 @@ define([
 
     });
 
-    describe('.isShadowingLowerRestrictions()', function () {
+    describe('.isShadowingLowerRestrictions', function () {
 
       it("should return true", function () {
-        expect(LengthFacet.isShadowingLowerRestrictions()).to.be.true;
+        expect(LengthFacet.isShadowingLowerRestrictions).to.be.true;
       });
 
     });

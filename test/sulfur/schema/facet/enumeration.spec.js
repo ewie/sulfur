@@ -48,10 +48,10 @@ define([
 
     });
 
-    describe('.isShadowingLowerRestrictions()', function () {
+    describe('.isShadowingLowerRestrictions', function () {
 
       it("should return true", function () {
-        expect(EnumerationFacet.isShadowingLowerRestrictions()).to.be.true;
+        expect(EnumerationFacet.isShadowingLowerRestrictions).to.be.true;
       });
 
     });

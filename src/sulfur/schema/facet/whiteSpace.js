@@ -8,9 +8,8 @@
 
 define([
   'sulfur/schema/facet',
-  'sulfur/schema/qname',
-  'sulfur/util'
-], function (Facet, QName, util) {
+  'sulfur/schema/qname'
+], function (Facet, QName) {
 
   'use strict';
 
@@ -18,11 +17,11 @@ define([
 
   return Facet.clone({
 
-    get qname() { return qname; },
+    get qname() { return qname },
 
-    isShadowingLowerRestrictions: util.returns(true),
+    get isShadowingLowerRestrictions() { return true },
 
-    get mutualExclusiveFacets() { return []; }
+    get mutualExclusiveFacets() { return [] }
 
   }).augment({
 

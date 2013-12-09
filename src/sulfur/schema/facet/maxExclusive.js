@@ -13,8 +13,7 @@ define([
   'sulfur/schema/facet/minExclusive',
   'sulfur/schema/facet/minInclusive',
   'sulfur/schema/qname',
-  'sulfur/schema/validator/maximum',
-  'sulfur/util'
+  'sulfur/schema/validator/maximum'
 ], function (
     require,
     Facet,
@@ -22,8 +21,7 @@ define([
     MinExclusiveFacet,
     MinInclusiveFacet,
     QName,
-    MaximumValidator,
-    util
+    MaximumValidator
 ) {
 
   'use strict';
@@ -42,13 +40,11 @@ define([
 
   return Facet.clone({
 
-    get qname() { return qname; },
+    get qname() { return qname },
 
-    isShadowingLowerRestrictions: util.returns(true),
+    get isShadowingLowerRestrictions() { return true },
 
-    get mutualExclusiveFacets() {
-      return [ requireMaxInclusiveFacet() ];
-    }
+    get mutualExclusiveFacets() { return [ requireMaxInclusiveFacet() ] }
 
   }).augment({
 

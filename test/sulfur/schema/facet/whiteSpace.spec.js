@@ -46,10 +46,10 @@ define([
 
     });
 
-    describe('.isShadowingLowerRestrictions()', function () {
+    describe('.isShadowingLowerRestrictions', function () {
 
       it("should return true", function () {
-        expect(WhiteSpaceFacet.isShadowingLowerRestrictions()).to.be.true;
+        expect(WhiteSpaceFacet.isShadowingLowerRestrictions).to.be.true;
       });
 
     });

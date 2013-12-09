@@ -28,11 +28,11 @@ define([
 
   return Facet.clone({
 
-    get qname() { return qname; },
+    get qname() { return qname },
 
-    isShadowingLowerRestrictions: util.returns(false),
+    get isShadowingLowerRestrictions() { return false },
 
-    get mutualExclusiveFacets() { return []; }
+    get mutualExclusiveFacets() { return [] }
 
   }).augment({
 

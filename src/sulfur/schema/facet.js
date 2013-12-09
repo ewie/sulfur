@@ -18,7 +18,7 @@ define([
    * @abstract
    *
    * @implement {sulfur/schema/qname} .qname
-   * @implement {boolean} .isShadowingLowerRestrictions()
+   * @implement {boolean} .isShadowingLowerRestrictions
    * @implement {.validate()} #createValidator()
    * @implement {boolean} #validate({any})
    * @implement {boolean} #isRestrictionOf({sulfur/schema/facets})
@@ -45,7 +45,7 @@ define([
           }
           var facet = facets.getByQName(this.qname);
           facet && effectiveFacets.push(facet);
-          if (this.isShadowingLowerRestrictions()) {
+          if (this.isShadowingLowerRestrictions) {
             break;
           }
           restriction = restriction.base;
@@ -58,7 +58,7 @@ define([
     }()),
 
     getEffectiveFacet: function (restriction) {
-      if (!this.isShadowingLowerRestrictions()) {
+      if (!this.isShadowingLowerRestrictions) {
         throw new Error("a non-shadowing facet could have multiple effective instances");
       }
       var effectiveFacets = this.getEffectiveFacets(restriction);
@@ -66,7 +66,7 @@ define([
     },
 
     createConjunctionValidator: function (facets) {
-      if (this.isShadowingLowerRestrictions() || facets.length === 1) {
+      if (this.isShadowingLowerRestrictions || facets.length === 1) {
         return facets[0].createValidator();
       }
       return AllValidator.create(facets.map(util.method('createValidator')));
@@ -94,8 +94,16 @@ define([
       return this.factory.qname;
     },
 
-    isShadowingLowerRestrictions: function () {
-      return this.factory.isShadowingLowerRestrictions();
+    /**
+     * @api public
+     *
+     * Tell whether the facet shadows instances on lower restriction steps.
+     *
+     * @return {true} when it shadows
+     * @return {false} when it does not shadow
+     */
+    get isShadowingLowerRestrictions() {
+      return this.factory.isShadowingLowerRestrictions;
     },
 
     /**

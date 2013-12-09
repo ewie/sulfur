@@ -51,10 +51,10 @@ define([
 
     });
 
-    describe('.isShadowingLowerRestrictions()', function () {
+    describe('.isShadowingLowerRestrictions', function () {
 
       it("should return true", function () {
-        expect(FractionDigitsFacet.isShadowingLowerRestrictions()).to.be.true;
+        expect(FractionDigitsFacet.isShadowingLowerRestrictions).to.be.true;
       });
 
     });
