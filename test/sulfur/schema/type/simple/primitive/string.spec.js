@@ -16,12 +16,12 @@ define([
   'sulfur/schema/facet/pattern',
   'sulfur/schema/facet/whiteSpace',
   'sulfur/schema/facets',
-  'sulfur/schema/pattern',
   'sulfur/schema/qname',
   'sulfur/schema/type/simple/primitive',
   'sulfur/schema/type/simple/primitive/string',
   'sulfur/schema/type/simple/restricted',
   'sulfur/schema/value/simple/integer',
+  'sulfur/schema/value/simple/pattern',
   'sulfur/schema/value/simple/string',
   'sulfur/schema/value/simple/whiteSpace',
   'sulfur/schema/validator/all',
@@ -35,12 +35,12 @@ define([
     PatternFacet,
     WhiteSpaceFacet,
     Facets,
-    Pattern,
     QName,
     PrimitiveType,
     StringType,
     RestrictedType,
     IntegerValue,
+    PatternValue,
     StringValue,
     WhiteSpaceValue,
     AllValidator,
@@ -251,10 +251,10 @@ define([
           });
 
           it("should include the validator of facet 'pattern' when effective", function () {
-            var baseFacet = PatternFacet.create([ Pattern.create('\\d*') ]);
+            var baseFacet = PatternFacet.create([ PatternValue.create('\\d*') ]);
             var base = RestrictedType.create(StringType,
               Facets.create([ baseFacet ]));
-            var facet = PatternFacet.create([ Pattern.create('\\d+') ]);
+            var facet = PatternFacet.create([ PatternValue.create('\\d+') ]);
             var restriction = RestrictedType.create(base,
               Facets.create([ facet ]));
             var v = StringType.createRestrictionValidator(restriction);

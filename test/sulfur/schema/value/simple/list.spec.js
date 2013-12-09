@@ -10,7 +10,7 @@
 define([
   'shared',
   'sulfur/schema/value/list',
-  'sulfur/schema/value/simpleList'
+  'sulfur/schema/value/simple/list'
 ], function (shared, ListValue, SimpleListValue) {
 
   'use strict';
@@ -19,7 +19,7 @@ define([
   var sinon = shared.sinon;
   var returns = shared.returns;
 
-  describe('sulfur/schema/value/simpleList', function () {
+  describe('sulfur/schema/value/simple/list', function () {
 
     it("should be derived from sulfur/schema/value/list", function () {
       expect(ListValue).to.be.prototypeOf(SimpleListValue);

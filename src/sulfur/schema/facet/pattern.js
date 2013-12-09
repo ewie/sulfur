@@ -8,17 +8,17 @@
 
 define([
   'sulfur/schema/facet',
-  'sulfur/schema/pattern',
   'sulfur/schema/qname',
   'sulfur/schema/validator/pattern',
   'sulfur/schema/validator/some',
+  'sulfur/schema/value/simple/pattern',
   'sulfur/util'
 ], function (
     Facet,
-    Pattern,
     QName,
     PatternValidator,
     SomeValidator,
+    PatternValue,
     util
 ) {
 
@@ -34,16 +34,16 @@ define([
 
     get mutualExclusiveFacets() { return [] },
 
-    getValueType: function () { return Pattern }
+    getValueType: function () { return PatternValue }
 
   }).augment({
 
     initialize: function (values) {
       if (values.length === 0) {
-        throw new Error("expecting at least one sulfur/schema/pattern");
+        throw new Error("expecting at least one sulfur/schema/value/simple/pattern");
       }
-      if (!values.every(util.bind(Pattern.prototype, 'isPrototypeOf'))) {
-        throw new Error("expecting only sulfur/schema/pattern values");
+      if (!values.every(util.bind(PatternValue.prototype, 'isPrototypeOf'))) {
+        throw new Error("expecting only sulfur/schema/value/simple/pattern values");
       }
       Facet.prototype.initialize.call(this, util.uniq(values));
     },

@@ -8,8 +8,8 @@
 
 define([
   'sulfur/util/factory',
-  'sulfur/schema/mediaType'
-], function (Factory, MediaType) {
+  'sulfur/schema/value/simple/mediaType'
+], function (Factory, MediaTypeValue) {
 
   'use strict';
 
@@ -20,12 +20,12 @@ define([
      */
     initialize: function (blob) {
       this._blob = blob;
-      this._mediaType = MediaType.create.apply(MediaType,
+      this._mediaType = MediaTypeValue.create.apply(MediaTypeValue,
         this._blob.type.split('/'));
     },
 
     /**
-     * @param {sulfur/schema/mediaType} the file's media type
+     * @param {sulfur/schema/value/simple/mediaType} the file's media type
      */
     get mediaType() {
       return this._mediaType;

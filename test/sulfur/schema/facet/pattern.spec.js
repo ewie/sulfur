@@ -11,18 +11,18 @@ define([
   'shared',
   'sulfur/schema/facet',
   'sulfur/schema/facet/pattern',
-  'sulfur/schema/pattern',
   'sulfur/schema/qname',
   'sulfur/schema/validator/pattern',
-  'sulfur/schema/validator/some'
+  'sulfur/schema/validator/some',
+  'sulfur/schema/value/simple/pattern'
 ], function (
     shared,
     Facet,
     PatternFacet,
-    Pattern,
     QName,
     PatternValidator,
-    SomeValidator
+    SomeValidator,
+    PatternValue
 ) {
 
   'use strict';
@@ -63,8 +63,8 @@ define([
 
     describe('.getValueType()', function () {
 
-      it("should return sulfur/schema/pattern", function () {
-        expect(PatternFacet.getValueType()).to.equal(Pattern);
+      it("should return sulfur/schema/value/simple/pattern", function () {
+        expect(PatternFacet.getValueType()).to.equal(PatternValue);
       });
 
     });
@@ -73,8 +73,8 @@ define([
 
       it("should ignore duplicate patterns based on each patterns's string representation", function () {
         var patterns = [
-          Pattern.create(''),
-          Pattern.create('')
+          PatternValue.create(''),
+          PatternValue.create('')
         ];
         var facet = PatternFacet.create(patterns);
         expect(facet.value).to.eql(patterns.slice(0, 1));
@@ -82,12 +82,12 @@ define([
 
       it("should reject an empty array", function () {
         expect(bind(PatternFacet, 'create', []))
-          .to.throw("expecting at least one sulfur/schema/pattern");
+          .to.throw("expecting at least one sulfur/schema/value/simple/pattern");
       });
 
-      it("should reject values not of type sulfur/schema/pattern", function () {
+      it("should reject values not of type sulfur/schema/value/simple/pattern", function () {
         expect(bind(PatternFacet, 'create', ['']))
-          .to.throw("expecting only sulfur/schema/pattern values");
+          .to.throw("expecting only sulfur/schema/value/simple/pattern values");
       });
 
     });
@@ -95,7 +95,7 @@ define([
     describe('#isRestrictionOf()', function () {
 
       it("should return undefined", function () {
-        var facet = PatternFacet.create([ Pattern.create('') ]);
+        var facet = PatternFacet.create([ PatternValue.create('') ]);
         expect(facet.isRestrictionOf()).to.be.undefined;
       });
 
@@ -104,7 +104,7 @@ define([
     describe('#validate()', function () {
 
       it("should return true", function () {
-        var facet = PatternFacet.create([ Pattern.create('') ]);
+        var facet = PatternFacet.create([ PatternValue.create('') ]);
         expect(facet.validate()).to.be.true;
       });
 
@@ -113,7 +113,7 @@ define([
     describe('#createValidator()', function () {
 
       it("should return a validator/some with a validator/pattern for each pattern", function () {
-        var patterns = [ Pattern.create('') ];
+        var patterns = [ PatternValue.create('') ];
         var facet = PatternFacet.create(patterns);
         var v = facet.createValidator();
         expect(v).to.eql(

@@ -10,22 +10,22 @@ define([
   'sulfur',
   'sulfur/schema/facet',
   'sulfur/schema/qname',
-  'sulfur/schema/mediaType',
   'sulfur/schema/validator/enumeration',
+  'sulfur/schema/value/simple/mediaType',
   'sulfur/util'
 ], function (
     sulfur,
     Facet,
     QName,
-    MediaType,
     EnumerationValidator,
+    MediaTypeValue,
     util
 ) {
 
   'use strict';
 
   function isMediaType(x) {
-    return MediaType.prototype.isPrototypeOf(x);
+    return MediaTypeValue.prototype.isPrototypeOf(x);
   }
 
   var qname = QName.create('mediaType', sulfur.namespaceURI);
@@ -38,16 +38,16 @@ define([
 
     get mutualExclusiveFacets() { return [] },
 
-    getValueType: function () { return MediaType }
+    getValueType: function () { return MediaTypeValue }
 
   }).augment({
 
     initialize: function (value) {
       if (value.length === 0) {
-        throw new Error("expecting at least one sulfur/schema/mediaType value");
+        throw new Error("expecting at least one sulfur/schema/value/simple/mediaType value");
       }
       if (!value.every(isMediaType)) {
-        throw new Error("expecting only sulfur/schema/mediaType values");
+        throw new Error("expecting only sulfur/schema/value/simple/mediaType values");
       }
       value = util.uniq(value);
       Facet.prototype.initialize.call(this, value);

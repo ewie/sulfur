@@ -10,8 +10,8 @@
 define([
   'shared',
   'sulfur/schema/file',
-  'sulfur/schema/mediaType'
-], function (shared, File, MediaType) {
+  'sulfur/schema/value/simple/mediaType'
+], function (shared, File, MediaTypeValue) {
 
   'use strict';
 
@@ -24,7 +24,7 @@ define([
       it("should accept a Blob", function () {
         var blob = new Blob([], { type: 'image/jpeg' });
         var f = File.create(blob);
-        expect(f.mediaType).to.eql(MediaType.create('image', 'jpeg'));
+        expect(f.mediaType).to.eql(MediaTypeValue.create('image', 'jpeg'));
       });
 
     });
@@ -34,7 +34,7 @@ define([
       it("should return the media type", function () {
         var blob = new Blob([], { type: 'text/plain' });
         var f = File.create(blob);
-        expect(f.mediaType).to.eql(MediaType.create('text', 'plain'));
+        expect(f.mediaType).to.eql(MediaTypeValue.create('text', 'plain'));
       });
 
     });

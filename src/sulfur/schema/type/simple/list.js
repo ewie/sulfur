@@ -14,7 +14,7 @@ define([
   'sulfur/schema/facet/minLength',
   'sulfur/schema/facet/pattern',
   'sulfur/schema/facets',
-  'sulfur/schema/value/simpleList',
+  'sulfur/schema/value/simple/list',
   'sulfur/schema/validator/all',
   'sulfur/schema/validator/each',
   'sulfur/schema/validator/property'

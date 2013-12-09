@@ -12,23 +12,23 @@ define([
   'sulfur',
   'sulfur/schema/facet',
   'sulfur/schema/facet/mediaType',
-  'sulfur/schema/mediaType',
   'sulfur/schema/facets',
   'sulfur/schema/qname',
   'sulfur/schema/type/simple/primitive',
   'sulfur/schema/type/simple/restricted',
-  'sulfur/schema/validator/enumeration'
+  'sulfur/schema/validator/enumeration',
+  'sulfur/schema/value/simple/mediaType'
 ], function (
     shared,
     sulfur,
     Facet,
     MediaTypeFacet,
-    MediaType,
     Facets,
     QName,
     PrimitiveType,
     RestrictedType,
-    EnumerationValidator
+    EnumerationValidator,
+    MediaTypeValue
 ) {
 
   'use strict';
@@ -70,8 +70,8 @@ define([
 
     describe('.getValueType()', function () {
 
-      it("should return sulfur/schema/mediaType", function () {
-        expect(MediaTypeFacet.getValueType()).to.equal(MediaType);
+      it("should return sulfur/schema/value/simple/mediaType", function () {
+        expect(MediaTypeFacet.getValueType()).to.equal(MediaTypeValue);
       });
 
     });
@@ -90,15 +90,15 @@ define([
 
       it("should call sulfur/schema/facet#initialize() with the value", function () {
         var spy = sandbox.spy(Facet.prototype, 'initialize');
-        var value = [ MediaType.create() ];
+        var value = [ MediaTypeValue.create() ];
         var facet = MediaTypeFacet.create(value);
         expect(spy).to.be.calledOn(facet).to.be.calledWith(value);
       });
 
       it("should ignore duplicate media types", function () {
         var value = [
-          MediaType.create('text', 'plain'),
-          MediaType.create('text', 'plain')
+          MediaTypeValue.create('text', 'plain'),
+          MediaTypeValue.create('text', 'plain')
         ];
         var facet = MediaTypeFacet.create(value);
         expect(facet.value).to.eql(value.slice(0, 1));
@@ -106,13 +106,13 @@ define([
 
       it("should reject an empty array", function () {
         expect(bind(MediaTypeFacet, 'create', []))
-          .to.throw("expecting at least one sulfur/schema/mediaType value");
+          .to.throw("expecting at least one sulfur/schema/value/simple/mediaType value");
       });
 
-      it("should reject any value not of type sulfur/schema/mediaType", function () {
+      it("should reject any value not of type sulfur/schema/value/simple/mediaType", function () {
         var value = [ {} ];
         expect(bind(MediaTypeFacet, 'create', value))
-          .to.throw("expecting only sulfur/schema/mediaType values");
+          .to.throw("expecting only sulfur/schema/value/simple/mediaType values");
       });
 
     });
@@ -121,7 +121,7 @@ define([
 
       it("should return true when the type does not define facet 'mediaType'", function () {
         var type = PrimitiveType.create({});
-        var facet = MediaTypeFacet.create([ MediaType.create() ]);
+        var facet = MediaTypeFacet.create([ MediaTypeValue.create() ]);
         expect(facet.isRestrictionOf(type)).to.be.true;
       });
 
@@ -135,18 +135,18 @@ define([
           });
           type = RestrictedType.create(base,
             Facets.create([
-              MediaTypeFacet.create([ MediaType.create('text') ])
+              MediaTypeFacet.create([ MediaTypeValue.create('text') ])
             ])
           );
         });
 
         it("should return true when all media types are matched by any media type of the type's facet", function () {
-          var facet = MediaTypeFacet.create([ MediaType.create('text', 'plain') ]);
+          var facet = MediaTypeFacet.create([ MediaTypeValue.create('text', 'plain') ]);
           expect(facet.isRestrictionOf(type)).to.be.true;
         });
 
         it("should return false when any media type is not matched by any media type of the type's facet", function () {
-          var facet = MediaTypeFacet.create([ MediaType.create('audio') ]);
+          var facet = MediaTypeFacet.create([ MediaTypeValue.create('audio') ]);
           expect(facet.isRestrictionOf(type)).to.be.false;
         });
 
@@ -157,7 +157,7 @@ define([
     describe('#validate()', function () {
 
       it("should return true", function () {
-        var facet = MediaTypeFacet.create([ MediaType.create() ]);
+        var facet = MediaTypeFacet.create([ MediaTypeValue.create() ]);
         expect(facet.validate()).to.be.true;
       });
 
@@ -166,7 +166,7 @@ define([
     describe('#createValidator()', function () {
 
       it("should return a validator/enumeration using test method 'matches'", function () {
-        var value = [ MediaType.create() ];
+        var value = [ MediaTypeValue.create() ];
         var type = MediaTypeFacet.create(value);
         var v = type.createValidator();
         var x = EnumerationValidator.create(value, { testMethod: 'matches' });

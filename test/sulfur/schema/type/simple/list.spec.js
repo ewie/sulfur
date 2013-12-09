@@ -15,11 +15,11 @@ define([
   'sulfur/schema/facet/minLength',
   'sulfur/schema/facet/pattern',
   'sulfur/schema/facets',
-  'sulfur/schema/pattern',
   'sulfur/schema/type/simple/list',
   'sulfur/schema/type/simple/restricted',
   'sulfur/schema/value/simple/integer',
-  'sulfur/schema/value/simpleList',
+  'sulfur/schema/value/simple/list',
+  'sulfur/schema/value/simple/pattern',
   'sulfur/schema/validator/all',
   'sulfur/schema/validator/each',
   'sulfur/schema/validator/property'
@@ -31,11 +31,11 @@ define([
     MinLengthFacet,
     PatternFacet,
     Facets,
-    Pattern,
     ListType,
     RestrictedType,
     IntegerValue,
     SimpleListValue,
+    PatternValue,
     AllValidator,
     EachValidator,
     PropertyValidator
@@ -71,7 +71,7 @@ define([
 
     describe('#valueType', function () {
 
-      it("should return a sulfur/schema/value/simpleList using the item type's value type", function () {
+      it("should return a sulfur/schema/value/simple/list using the item type's value type", function () {
         var itemType = { valueType: {} };
         var listType = ListType.create(itemType);
         var listValue = listType.valueType;
@@ -239,10 +239,10 @@ define([
       });
 
       it("should include the validator of facet 'pattern' when effective", function () {
-        var baseFacet = PatternFacet.create([ Pattern.create('\\d*') ]);
+        var baseFacet = PatternFacet.create([ PatternValue.create('\\d*') ]);
         var base = RestrictedType.create(type,
           Facets.create([ baseFacet ]));
-        var facet = PatternFacet.create([ Pattern.create('\\d+') ]);
+        var facet = PatternFacet.create([ PatternValue.create('\\d+') ]);
         var restriction = RestrictedType.create(base,
           Facets.create([ facet ]));
         var v = type.createRestrictionValidator(restriction);

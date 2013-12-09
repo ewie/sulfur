@@ -13,28 +13,28 @@ define([
   'sulfur/schema/facet/mediaType',
   'sulfur/schema/facets',
   'sulfur/schema/file',
-  'sulfur/schema/mediaType',
   'sulfur/schema/qname',
   'sulfur/schema/type/simple/primitive',
   'sulfur/schema/type/simple/primitive/fileRef',
   'sulfur/schema/type/simple/restricted',
   'sulfur/schema/validator/all',
   'sulfur/schema/validator/property',
-  'sulfur/schema/value/simple/fileRef'
+  'sulfur/schema/value/simple/fileRef',
+  'sulfur/schema/value/simple/mediaType'
 ], function (
     shared,
     sulfur,
     MediaTypeFacet,
     Facets,
     File,
-    MediaType,
     QName,
     PrimitiveType,
     FileRefType,
     RestrictedType,
     AllValidator,
     PropertyValidator,
-    FileRefValue
+    FileRefValue,
+    MediaTypeValue
 ) {
 
   'use strict';
@@ -78,7 +78,7 @@ define([
       var facet;
 
       beforeEach(function () {
-        var mediaType = MediaType.create('text', 'plain');
+        var mediaType = MediaTypeValue.create('text', 'plain');
         facet = MediaTypeFacet.create([ mediaType ]);
       });
 

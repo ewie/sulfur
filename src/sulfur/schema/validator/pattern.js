@@ -14,7 +14,7 @@ define(['sulfur/util/factory'], function (Factory) {
 
     /**
      * Initialize the validator with an object responding to .test(). This
-     * allows the use of a {RegExp} or {sulfur/schema/pattern}.
+     * allows the use of a {RegExp} or {sulfur/schema/value/simple/pattern}.
      *
      * @param {.test()} pattern
      */

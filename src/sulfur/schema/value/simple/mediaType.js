@@ -81,7 +81,7 @@ define([
      * Check if the media type matches another media type. An undefined type or
      * subtype on the LHS matches any respective type or subtype on the RHS.
      *
-     * @param {sulfur/schema/mediaType} other
+     * @param {sulfur/schema/value/simple/mediaType} other
      *
      * @return {boolean} whether LHS matches RHS or not
      */
