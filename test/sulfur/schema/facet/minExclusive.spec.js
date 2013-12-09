@@ -69,6 +69,15 @@ define([
 
     });
 
+    describe('.getValueType()', function () {
+
+      it("should return .valueType of the given object", function () {
+        var type = { valueType: {} };
+        expect(MinExclusiveFacet.getValueType(type)).to.equal(type.valueType);
+      });
+
+    });
+
     describe('#isRestrictionOf()', function () {
 
       var facet;

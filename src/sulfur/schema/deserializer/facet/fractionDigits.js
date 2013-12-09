@@ -7,25 +7,18 @@
 /* global define */
 
 define([
+  'sulfur/schema/deserializer/facet',
   'sulfur/schema/facet/fractionDigits',
+  'sulfur/schema/value/simple/integer',
   'sulfur/util'
-], function (FractionDigitsFacet, util) {
+], function (FacetResolver, FractionDigitsFacet, IntegerValue, util) {
 
   'use strict';
 
-  return {
-
-    get facet() { return FractionDigitsFacet; },
-
-    parseValue: function (s) {
-      return parseInt(s, 10);
-    },
-
-    createFacet: function (values) {
-      values = util.sort(values, function (x, y) { return x - y; });
-      return FractionDigitsFacet.create(values[0]);
-    }
-
-  };
+  return FacetResolver.create(FractionDigitsFacet,
+    function (values) {
+      values = util.sort(values, function (x, y) { return x.cmp(y) });
+      return values[0];
+    });
 
 });

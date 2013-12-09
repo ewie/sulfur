@@ -6,22 +6,14 @@
 
 /* global define */
 
-define(['sulfur/schema/facet/length'], function (LengthFacet) {
+define([
+  'sulfur/schema/deserializer/facet',
+  'sulfur/schema/facet/length'
+], function (FacetResolver, LengthFacet) {
 
   'use strict';
 
-  return {
-
-    get facet() { return LengthFacet; },
-
-    parseValue: function (s) {
-      return parseInt(s, 10);
-    },
-
-    createFacet: function (values) {
-      return LengthFacet.create(values[0]);
-    }
-
-  };
+  return FacetResolver.create(LengthFacet,
+    function (values) { return values[0] });
 
 });

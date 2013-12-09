@@ -31,6 +31,19 @@ define([
       sandbox.restore();
     });
 
+    describe('.parse()', function () {
+
+      it("should delegate to .create()", function () {
+        var spy = sandbox.spy(Pattern, 'create');
+        var s = '[a-z]';
+        var p = Pattern.parse(s);
+        expect(spy)
+          .to.be.calledWith(s)
+          .to.have.returned(sinon.match.same(p));
+      });
+
+    });
+
     describe('#initialize()', function () {
 
       it("should compile the source", function () {

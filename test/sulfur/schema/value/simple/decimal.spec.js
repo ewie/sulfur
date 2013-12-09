@@ -56,12 +56,12 @@ define([
 
         it("should accept an optional positive sign", function () {
           var d = DecimalValue.parse('+1');
-          expect(d.positive).to.be.true;
+          expect(d.isPositive).to.be.true;
         });
 
         it("should accept negative decimals", function () {
           var d = DecimalValue.parse('-1');
-          expect(d.positive).to.be.false;
+          expect(d.isPositive).to.be.false;
         });
 
         it("should accept optional fractional digits", function () {
@@ -128,32 +128,53 @@ define([
 
       describe("option `positive`", function () {
 
-        context("when given", function () {
+        context("when the decimal is non-zero", function () {
 
-          it("should initialize as positive when true", function () {
-            var d = DecimalValue.create({ positive: true });
-            expect(d.positive).to.be.true;
+          it("should initialize as neither positive nor negative when not given", function () {
+            var d = DecimalValue.create({ integralDigits: '1' });
+            expect(d.isPositive).to.be.true;
           });
 
-          context("when false", function () {
+          context("when given", function () {
 
-            it("should initialize as negative", function () {
-              var d = DecimalValue.create({ integralDigits: '1', positive: false });
-              expect(d.positive).to.be.false;
+            it("should initialize as positive when true", function () {
+              var d = DecimalValue.create({ integralDigits: '1', positive: true });
+              expect(d.isPositive).to.be.true;
             });
 
-            it("should initialize as positive when value is zero", function () {
-              var d = DecimalValue.create({ positive: false });
-              expect(d.positive).to.be.true;
+            it("should initialize as negative when false", function () {
+              var d = DecimalValue.create({ integralDigits: '1', positive: false });
+              expect(d.isPositive).to.be.false;
             });
 
           });
 
         });
 
-        it("should initialize as positive when not given", function () {
-          var d = DecimalValue.create();
-          expect(d.positive).to.be.true;
+        context("when the decimal is zero", function () {
+
+          it("should initialize as neither positive nor negative when not given", function () {
+            var d = DecimalValue.create();
+            expect(d.isPositive).to.be.undefined;
+            expect(d.isNegative).to.be.undefined;
+          });
+
+          context("when given", function () {
+
+            it("should initialize as neither positive nor negative when true", function () {
+              var d = DecimalValue.create({ positive: true });
+              expect(d.isPositive).to.be.undefined;
+              expect(d.isNegative).to.be.undefined;
+            });
+
+            it("should initialize as neither positive nor negative when false", function () {
+              var d = DecimalValue.create({ positive: false });
+              expect(d.isPositive).to.be.undefined;
+              expect(d.isNegative).to.be.undefined;
+            });
+
+          });
+
         });
 
       });
@@ -183,7 +204,7 @@ define([
 
       it("should return the number of total digits", function () {
         var d = DecimalValue.create({ integralDigits: '12', fractionDigits: '345' });
-        expect(d.countDigits()).to.equal(5);
+        expect(d.countDigits()).to.eql(DecimalValue.parse('5'));
       });
 
     });
@@ -192,7 +213,7 @@ define([
 
       it("should return the number of integral digits", function () {
         var d = DecimalValue.create({ integralDigits: '123' });
-        expect(d.countIntegralDigits()).to.equal(3);
+        expect(d.countIntegralDigits()).to.eql(DecimalValue.parse('3'));
       });
 
     });
@@ -201,7 +222,57 @@ define([
 
       it("should return the number of fraction digits", function () {
         var d = DecimalValue.create({ fractionDigits: '42' });
-        expect(d.countFractionDigits()).to.equal(2);
+        expect(d.countFractionDigits()).to.eql(DecimalValue.parse('2'));
+      });
+
+    });
+
+    describe('#integralDigits', function () {
+
+      it("should return the integral digits", function () {
+        var d = DecimalValue.create({ integralDigits: '123' });
+        expect(d.integralDigits).to.equal('123');
+      });
+
+    });
+
+    describe('#fractionDigits', function () {
+
+      it("should return the fraction digits", function () {
+        var d = DecimalValue.create({ fractionDigits: '987' });
+        expect(d.fractionDigits).to.equal('987');
+      });
+
+    });
+
+    describe('#isPositive', function () {
+
+      it("should return true when positive", function () {
+        expect(DecimalValue.parse('1').isPositive).to.be.true;
+      });
+
+      it("should return undefined when zero", function () {
+        expect(DecimalValue.create().isPositive).to.be.undefined;
+      });
+
+      it("should return false when negative", function () {
+        expect(DecimalValue.parse('-1').isPositive).to.be.false;
+      });
+
+    });
+
+    describe('#isNegative', function () {
+
+      it("should return true when negative", function () {
+        expect(DecimalValue.parse('-1').isNegative).to.be.true;
+      });
+
+      it("should return undefined when zero", function () {
+        expect(DecimalValue.create().isNegative).to.be.undefined;
+      });
+
+      it("should return false when positive", function () {
+        expect(DecimalValue.parse('1').isNegative).to.be.false;
       });
 
     });

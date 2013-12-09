@@ -375,16 +375,12 @@ define([
               var t = simpleResolver.resolveTypeElement(
                 element, resolver);
 
-              expect(parseSpies[0].getCall(0).args[0])
-                .to.equal('x');
-              expect(parseSpies[0].getCall(0).args[1])
-                .to.equal(valueType);
+              expect(parseSpies[0].getCall(0))
+                .to.be.calledWith('x', sinon.match.same(type));
               expect(parseSpies[1])
-                .to.be.calledWith('y', sinon.match.same(valueType));
-              expect(parseSpies[0].getCall(1).args[0])
-                .to.equal('z');
-              expect(parseSpies[0].getCall(1).args[1])
-                .to.equal(valueType);
+                .to.be.calledWith('y', sinon.match.same(type));
+              expect(parseSpies[0].getCall(1))
+                .to.be.calledWith('z', sinon.match.same(type));
 
               expect(createSpies[0])
                 .to.be.calledWith([
@@ -429,16 +425,12 @@ define([
               var t = simpleResolver.resolveTypeElement(
                 element, resolver);
 
-              expect(parseSpies[2].getCall(0).args[0])
-                .to.equal('1');
-              expect(parseSpies[2].getCall(0).args[1])
-                .to.equal(valueType);
+              expect(parseSpies[2].getCall(0))
+                .to.be.calledWith('1', sinon.match.same(type));
               expect(parseSpies[3])
-                .to.be.calledWith('2', sinon.match.same(valueType));
-              expect(parseSpies[2].getCall(1).args[0])
-                .to.equal('3');
-              expect(parseSpies[2].getCall(1).args[1])
-                .to.equal(valueType);
+                .to.be.calledWith('2', sinon.match.same(type));
+              expect(parseSpies[2].getCall(1))
+                .to.be.calledWith('3', sinon.match.same(type));
 
               expect(createSpies[2])
                 .to.be.calledWith([

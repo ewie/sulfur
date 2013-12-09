@@ -9,15 +9,27 @@
 
 define([
   'shared',
+  'sulfur/schema/deserializer/facet',
   'sulfur/schema/deserializer/facet/fractionDigits',
-  'sulfur/schema/facet/fractionDigits'
-], function (shared, FractionDigitsFacetResolver, FractionDigitsFacet) {
+  'sulfur/schema/facet/fractionDigits',
+  'sulfur/schema/value/simple/integer'
+], function (
+    shared,
+    FacetResolver,
+    FractionDigitsFacetResolver,
+    FractionDigitsFacet,
+    IntegerValue
+) {
 
   'use strict';
 
   var expect = shared.expect;
 
   describe('sulfur/schema/deserializer/facet/fractionDigits', function () {
+
+    it("should be a sulfur/schema/deserializer/facet", function () {
+      expect(FacetResolver.prototype).to.be.prototypeOf(FractionDigitsFacetResolver);
+    });
 
     describe('.facet', function () {
 
@@ -27,19 +39,12 @@ define([
 
     });
 
-    describe('.parseValue()', function () {
+    describe('.reduce', function () {
 
-      it("should parse a decimal integer", function () {
-        expect(FractionDigitsFacetResolver.parseValue('123')).to.equal(123);
-      });
-
-    });
-
-    describe('.createFacet()', function () {
-
-      it("should return a sulfur/schema/facet/fractionDigits using the smallest value", function () {
-        expect(FractionDigitsFacetResolver.createFacet([ 1, 0, 2 ]))
-          .to.eql(FractionDigitsFacet.create(0));
+      it("should return the numerically smallest value", function () {
+        var values = '1 0 2'.split(' ').map(IntegerValue.parse.bind(IntegerValue));
+        var value = FractionDigitsFacetResolver.reduce(values);
+        expect(value).to.equal(values[1]);
       });
 
     });

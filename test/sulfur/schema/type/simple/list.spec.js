@@ -18,6 +18,7 @@ define([
   'sulfur/schema/pattern',
   'sulfur/schema/type/simple/list',
   'sulfur/schema/type/simple/restricted',
+  'sulfur/schema/value/simple/integer',
   'sulfur/schema/value/simpleList',
   'sulfur/schema/validator/all',
   'sulfur/schema/validator/each',
@@ -33,6 +34,7 @@ define([
     Pattern,
     ListType,
     RestrictedType,
+    IntegerValue,
     SimpleListValue,
     AllValidator,
     EachValidator,
@@ -187,14 +189,14 @@ define([
 
       it("should return a sulfur/schema/validator/all", function () {
         var restriction = RestrictedType.create(type,
-          Facets.create([ LengthFacet.create(0) ]));
+          Facets.create([ LengthFacet.create(IntegerValue.create()) ]));
         var v = type.createRestrictionValidator(restriction);
         expect(AllValidator.prototype).to.be.prototypeOf(v);
       });
 
       it("should include this type's validator", function () {
         var restriction = RestrictedType.create(type,
-          Facets.create([ LengthFacet.create(0) ]));
+          Facets.create([ LengthFacet.create(IntegerValue.create()) ]));
         var v = type.createRestrictionValidator(restriction);
         expect(v.validators)
           .to.include.something.eql(type.createValidator());
@@ -210,7 +212,7 @@ define([
       });
 
       it("should include the validator of facet 'length' when effective", function () {
-        var facet = LengthFacet.create(0);
+        var facet = LengthFacet.create(IntegerValue.create());
         var restriction = RestrictedType.create(type,
           Facets.create([ facet ]));
         var v = type.createRestrictionValidator(restriction);
@@ -219,7 +221,7 @@ define([
       });
 
       it("should include the validator of facet 'maxLength' when effective", function () {
-        var facet = MaxLengthFacet.create(0);
+        var facet = MaxLengthFacet.create(IntegerValue.create());
         var restriction = RestrictedType.create(type,
           Facets.create([ facet ]));
         var v = type.createRestrictionValidator(restriction);
@@ -228,7 +230,7 @@ define([
       });
 
       it("should include the validator of facet 'minLength' when effective", function () {
-        var facet = MinLengthFacet.create(0);
+        var facet = MinLengthFacet.create(IntegerValue.create());
         var restriction = RestrictedType.create(type,
           Facets.create([ facet ]));
         var v = type.createRestrictionValidator(restriction);

@@ -28,7 +28,7 @@ define([
     base: DecimalType,
     qname: QName.create('integer', 'http://www.w3.org/2001/XMLSchema'),
     valueType: IntegerValue,
-    facets: Facets.create([ FractionDigitsFacet.create(0) ])
+    facets: Facets.create([ FractionDigitsFacet.create(IntegerValue.create()) ])
   });
 
 });

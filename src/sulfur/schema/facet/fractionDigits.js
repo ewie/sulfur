@@ -11,8 +11,14 @@ define([
   'sulfur/schema/qname',
   'sulfur/schema/validator/maximum',
   'sulfur/schema/validator/property',
-  'sulfur/util'
-], function (Facet, QName, MaximumValidator, PropertyValidator, util) {
+  'sulfur/schema/value/simple/integer'
+], function (
+    Facet,
+    QName,
+    MaximumValidator,
+    PropertyValidator,
+    IntegerValue
+) {
 
   'use strict';
 
@@ -24,13 +30,20 @@ define([
 
     get isShadowingLowerRestrictions() { return true },
 
-    get mutualExclusiveFacets() { return [] }
+    get mutualExclusiveFacets() { return [] },
+
+    getValueType: function () { return IntegerValue }
 
   }).augment({
 
+    /**
+     * @param {sulfur/schema/value/simple/integer} value
+     *
+     * @throw {Error} when the value is not a non-negative integer
+     */
     initialize: function (value) {
-      if (!util.isInteger(value) || value < 0) {
-        throw new Error("expecting a non-negative integer less than 2^53");
+      if (!IntegerValue.prototype.isPrototypeOf(value) || value.isNegative) {
+        throw new Error("expecting a non-negative sulfur/schema/value/simple/integer");
       }
       Facet.prototype.initialize.call(this, value);
     },
@@ -38,7 +51,7 @@ define([
     isRestrictionOf: function (type) {
       var fractionDigitsFacet = this.factory.getEffectiveFacet(type);
       if (fractionDigitsFacet) {
-        return this.value <= fractionDigitsFacet.value;
+        return this.value.lteq(fractionDigitsFacet.value);
       }
       return true;
     },

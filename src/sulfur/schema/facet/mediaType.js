@@ -36,7 +36,9 @@ define([
 
     get isShadowingLowerRestrictions() { return true },
 
-    get mutualExclusiveFacets() { return [] }
+    get mutualExclusiveFacets() { return [] },
+
+    getValueType: function () { return MediaType }
 
   }).augment({
 

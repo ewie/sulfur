@@ -7,24 +7,13 @@
 /* global define */
 
 define([
-  'sulfur/schema/facet/pattern',
-  'sulfur/schema/pattern'
-], function (PatternFacet, Pattern) {
+  'sulfur/schema/deserializer/facet',
+  'sulfur/schema/facet/pattern'
+], function (FacetResolver, PatternFacet) {
 
   'use strict';
 
-  return {
-
-    get facet() { return PatternFacet; },
-
-    parseValue: function (s) {
-      return Pattern.create(s);
-    },
-
-    createFacet: function (values) {
-      return PatternFacet.create(values);
-    }
-
-  };
+  return FacetResolver.create(PatternFacet,
+    function (values) { return values });
 
 });

@@ -21,7 +21,9 @@ define([
   'sulfur/schema/type/simple/primitive',
   'sulfur/schema/type/simple/primitive/string',
   'sulfur/schema/type/simple/restricted',
+  'sulfur/schema/value/simple/integer',
   'sulfur/schema/value/simple/string',
+  'sulfur/schema/value/simple/whiteSpace',
   'sulfur/schema/validator/all',
   'sulfur/schema/validator/property'
 ], function (
@@ -38,7 +40,9 @@ define([
     PrimitiveType,
     StringType,
     RestrictedType,
+    IntegerValue,
     StringValue,
+    WhiteSpaceValue,
     AllValidator,
     PropertyValidator
 ) {
@@ -97,14 +101,14 @@ define([
 
       it("should return a sulfur/schema/validator/all", function () {
         var restriction = RestrictedType.create(StringType,
-          Facets.create([ LengthFacet.create(0) ]));
+          Facets.create([ LengthFacet.create(IntegerValue.create()) ]));
         var v = StringType.createRestrictionValidator(restriction);
         expect(AllValidator.prototype).to.be.prototypeOf(v);
       });
 
       it("should include this type's validator", function () {
         var restriction = RestrictedType.create(StringType,
-          Facets.create([ LengthFacet.create(0) ]));
+          Facets.create([ LengthFacet.create(IntegerValue.create()) ]));
         var v = StringType.createRestrictionValidator(restriction);
         expect(v.validators)
           .to.include.something.eql(StringType.createValidator());
@@ -113,9 +117,9 @@ define([
       context("when the restriction has effective facet 'whiteSpace'", function () {
 
         it("should include the nested sulfur/schema/validator/all that would have been created if facet 'whiteSpace' is not defined when the value is 'preserve'", function () {
-          var facet = LengthFacet.create(0);
+          var facet = LengthFacet.create(IntegerValue.create());
           var restriction = RestrictedType.create(StringType,
-            Facets.create([ facet, WhiteSpaceFacet.create('preserve') ]));
+            Facets.create([ facet, WhiteSpaceFacet.create(WhiteSpaceValue.create('preserve')) ]));
           var restriction2 = RestrictedType.create(StringType,
             Facets.create([ facet ]));
           var v = StringType.createRestrictionValidator(restriction);
@@ -130,9 +134,9 @@ define([
           var restrictionWithoutWhiteSpace;
 
           beforeEach(function () {
-            facet = LengthFacet.create(0);
+            facet = LengthFacet.create(IntegerValue.create());
             restriction = RestrictedType.create(StringType,
-              Facets.create([ facet, WhiteSpaceFacet.create('collapse') ]));
+              Facets.create([ facet, WhiteSpaceFacet.create(WhiteSpaceValue.create('collapse')) ]));
             restrictionWithoutWhiteSpace = RestrictedType.create(StringType,
               Facets.create([ facet ]));
           });
@@ -166,9 +170,9 @@ define([
           var restrictionWithoutWhiteSpace;
 
           beforeEach(function () {
-            facet = LengthFacet.create(0);
+            facet = LengthFacet.create(IntegerValue.create());
             restriction = RestrictedType.create(StringType,
-              Facets.create([ facet, WhiteSpaceFacet.create('replace') ]));
+              Facets.create([ facet, WhiteSpaceFacet.create(WhiteSpaceValue.create('replace')) ]));
             restrictionWithoutWhiteSpace = RestrictedType.create(StringType,
               Facets.create([ facet ]));
           });
@@ -200,7 +204,7 @@ define([
       context("when the restriction does not have effective facet 'whiteSpace'", function () {
 
         it("should include a sulfur/schema/validator/all", function () {
-          var facet = LengthFacet.create(0);
+          var facet = LengthFacet.create(IntegerValue.create());
           var restriction = RestrictedType.create(StringType,
             Facets.create([ facet ]));
           var v = StringType.createRestrictionValidator(restriction);
@@ -220,7 +224,7 @@ define([
           });
 
           it("should include the validator of facet 'length' when effective", function () {
-            var facet = LengthFacet.create(0);
+            var facet = LengthFacet.create(IntegerValue.create());
             var restriction = RestrictedType.create(StringType,
               Facets.create([ facet ]));
             var v = StringType.createRestrictionValidator(restriction);
@@ -229,7 +233,7 @@ define([
           });
 
           it("should include the validator of facet 'maxLength' when effective", function () {
-            var facet = MaxLengthFacet.create(0);
+            var facet = MaxLengthFacet.create(IntegerValue.create());
             var restriction = RestrictedType.create(StringType,
               Facets.create([ facet ]));
             var v = StringType.createRestrictionValidator(restriction);
@@ -238,7 +242,7 @@ define([
           });
 
           it("should include the validator of facet 'minLength' when effective", function () {
-            var facet = MinLengthFacet.create(0);
+            var facet = MinLengthFacet.create(IntegerValue.create());
             var restriction = RestrictedType.create(StringType,
               Facets.create([ facet ]));
             var v = StringType.createRestrictionValidator(restriction);

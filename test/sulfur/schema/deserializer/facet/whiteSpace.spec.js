@@ -9,9 +9,17 @@
 
 define([
   'shared',
+  'sulfur/schema/deserializer/facet',
   'sulfur/schema/deserializer/facet/whiteSpace',
-  'sulfur/schema/facet/whiteSpace'
-], function (shared, WhiteSpaceFacetDeserializer, WhiteSpaceFacet) {
+  'sulfur/schema/facet/whiteSpace',
+  'sulfur/schema/value/simple/whiteSpace'
+], function (
+    shared,
+    FacetResolver,
+    WhiteSpaceFacetResolver,
+    WhiteSpaceFacet,
+    WhiteSpaceValue
+) {
 
   'use strict';
 
@@ -19,27 +27,24 @@ define([
 
   describe('sulfur/schema/deserializer/facet/whiteSpace', function () {
 
+    it("should be a sulfur/schema/deserializer/facet", function () {
+      expect(FacetResolver.prototype).to.be.prototypeOf(WhiteSpaceFacetResolver);
+    });
+
     describe('.facet', function () {
 
       it("should return sulfur/schema/facet/whiteSpace", function () {
-        expect(WhiteSpaceFacetDeserializer.facet).to.equal(WhiteSpaceFacet);
+        expect(WhiteSpaceFacetResolver.facet).to.equal(WhiteSpaceFacet);
       });
 
     });
 
-    describe('.parseValue()', function () {
+    describe('.reduce', function () {
 
-      it("should return the given string", function () {
-        expect(WhiteSpaceFacetDeserializer.parseValue('collapse')).to.equal('collapse');
-      });
-
-    });
-
-    describe('.createFacet()', function () {
-
-      it("should return a sulfur/schema/facet/whiteSpace with the first value", function () {
-        expect(WhiteSpaceFacetDeserializer.createFacet([ 'collapse' ]))
-          .to.eql(WhiteSpaceFacet.create('collapse'));
+      it("should return the first value", function () {
+        var values = [ WhiteSpaceValue.create('collapse') ];
+        var value = WhiteSpaceFacetResolver.reduce(values);
+        expect(value).to.equal(values[0]);
       });
 
     });

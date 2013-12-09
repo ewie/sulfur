@@ -13,7 +13,8 @@ define([
   'sulfur/schema/facet/maxLength',
   'sulfur/schema/qname',
   'sulfur/schema/validator/minimum',
-  'sulfur/schema/validator/property'
+  'sulfur/schema/validator/property',
+  'sulfur/schema/value/simple/integer'
 ], function (
     require,
     Facet,
@@ -21,7 +22,8 @@ define([
     MaxLengthFacet,
     QName,
     MinimumValidator,
-    PropertyValidator
+    PropertyValidator,
+    IntegerValue
 ) {
 
   'use strict';
@@ -43,9 +45,23 @@ define([
 
     get isShadowingLowerRestrictions() { return true },
 
-    get mutualExclusiveFacets() { return [ requireLengthFacet() ] }
+    get mutualExclusiveFacets() { return [ requireLengthFacet() ] },
+
+    getValueType: function () { return IntegerValue }
 
   }).augment({
+
+    /**
+     * @param {sulfur/schema/value/simple/integer} value
+     *
+     * @throw {Error} when the value is not a non-negative integer
+     */
+    initialize: function (value) {
+      if (!IntegerValue.prototype.isPrototypeOf(value) || value.isNegative) {
+        throw new Error("expecting a non-negative sulfur/schema/value/simple/integer");
+      }
+      Facet.prototype.initialize.call(this, value);
+    },
 
     isRestrictionOf: function (type) {
       var lengthFacet = requireLengthFacet().getEffectiveFacet(type);
@@ -54,12 +70,12 @@ define([
       }
 
       var maxLengthFacet = requireMaxLengthFacet().getEffectiveFacet(type);
-      if (maxLengthFacet && this.value > maxLengthFacet.value) {
+      if (maxLengthFacet && this.value.gt(maxLengthFacet.value)) {
         return false;
       }
 
       var minLengthFacet = this.factory.getEffectiveFacet(type);
-      if (minLengthFacet && this.value < minLengthFacet.value) {
+      if (minLengthFacet && this.value.lt(minLengthFacet.value)) {
         return false;
       }
 
@@ -68,7 +84,7 @@ define([
 
     validate: function (type, errors) {
       var maxLengthFacet = type.getByQName(requireMaxLengthFacet().qname);
-      if (maxLengthFacet && this._value > maxLengthFacet.value) {
+      if (maxLengthFacet && this.value.gt(maxLengthFacet.value)) {
         if (errors) {
           errors.push("must not be greater than facet 'maxLength'");
         }

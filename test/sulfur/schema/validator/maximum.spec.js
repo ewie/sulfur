@@ -40,9 +40,9 @@ define([
 
     describe('#validate()', function () {
 
-      context("when the maximum responds to #cmp()", function () {
+      context("when the maximum responds to .cmp()", function () {
 
-        it("should call #cmp() on maximum with the value as argument", function () {
+        it("should call .cmp() on maximum with the value as argument", function () {
           var max = { cmp: sinon.spy() };
           var value = {};
           var validator = MaximumValidator.create(max);
@@ -50,24 +50,24 @@ define([
           expect(max.cmp).to.be.calledOn(max).and.be.calledWith(value);
         });
 
-        it("should return true when maximum#cmp(value) returns positive", function () {
-          var max = { cmp: function () { return 1; } };
+        it("should return true when maximum.cmp(value) returns positive", function () {
+          var max = { cmp: function () { return 1 } };
           var validator = MaximumValidator.create(max);
           expect(validator.validate()).to.be.true;
         });
 
-        it("should return false when maximum#cmp(value) returns negative", function () {
-          var max = { cmp: function () { return -1; } };
+        it("should return false when maximum.cmp(value) returns negative", function () {
+          var max = { cmp: function () { return -1 } };
           var validator = MaximumValidator.create(max);
           expect(validator.validate()).to.be.false;
         });
 
-        context("when maximum#cmp(value) returns zero", function () {
+        context("when maximum.cmp(value) returns zero", function () {
 
           var max;
 
           beforeEach(function () {
-            max = { cmp: function () { return 0; } };
+            max = { cmp: function () { return 0 } };
           });
 
           it("should return true when matching inclusively", function () {
@@ -84,7 +84,7 @@ define([
 
       });
 
-      context("when the maximum does not respond to #cmp()", function () {
+      context("when the maximum does not respond to .cmp()", function () {
 
         it("should return true when value < maximum", function () {
           var validator = MaximumValidator.create(2);

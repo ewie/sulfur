@@ -9,15 +9,20 @@
 
 define([
   'shared',
+  'sulfur/schema/deserializer/facet',
   'sulfur/schema/deserializer/facet/length',
   'sulfur/schema/facet/length'
-], function (shared, LengthFacetResolver, LengthFacet) {
+], function (shared, FacetResolver, LengthFacetResolver, LengthFacet) {
 
   'use strict';
 
   var expect = shared.expect;
 
   describe('sulfur/schema/deserializer/facet/length', function () {
+
+    it("should be a sulfur/schema/deserializer/facet", function () {
+      expect(FacetResolver.prototype).to.be.prototypeOf(LengthFacetResolver);
+    });
 
     describe('.facet', function () {
 
@@ -27,19 +32,11 @@ define([
 
     });
 
-    describe('.parseValue()', function () {
+    describe('.reduce', function () {
 
-      it("should parse a decimal integer", function () {
-        expect(LengthFacetResolver.parseValue('123')).to.equal(123);
-      });
-
-    });
-
-    describe('.createFacet()', function () {
-
-      it("should return a sulfur/schema/facet/length using the first value of the array", function () {
-        expect(LengthFacetResolver.createFacet([ 1 ]))
-          .to.eql(LengthFacet.create(1));
+      it("should return the first value", function () {
+        var values = [ {} ];
+        expect(LengthFacetResolver.reduce(values)).to.equal(values[0]);
       });
 
     });

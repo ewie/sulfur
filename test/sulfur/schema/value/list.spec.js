@@ -9,8 +9,9 @@
 
 define([
   'shared',
-  'sulfur/schema/value/list'
-], function (shared, ListValue) {
+  'sulfur/schema/value/list',
+  'sulfur/schema/value/simple/integer',
+], function (shared, ListValue, IntegerValue) {
 
   'use strict';
 
@@ -50,7 +51,7 @@ define([
     describe('#length', function () {
 
       it("should return the number of items", function () {
-        expect(list.length).to.equal(values.length);
+        expect(list.length).to.eql(IntegerValue.parse(values.length.toString(10)));
       });
 
     });

@@ -44,7 +44,9 @@ define([
 
     get isShadowingLowerRestrictions() { return true },
 
-    get mutualExclusiveFacets() { return [ requireMinExclusiveFacet() ] }
+    get mutualExclusiveFacets() { return [ requireMinExclusiveFacet() ] },
+
+    getValueType: function (type) { return type.valueType }
 
   }).augment({
 

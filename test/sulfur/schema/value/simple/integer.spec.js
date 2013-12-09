@@ -61,12 +61,12 @@ define([
 
         it("should accept an optional positive sign", function () {
           var d = IntegerValue.parse('+1');
-          expect(d.positive).to.be.true;
+          expect(d.isPositive).to.be.true;
         });
 
         it("should accept negative integers", function () {
           var d = IntegerValue.parse('-1');
-          expect(d.positive).to.be.false;
+          expect(d.isNegative).to.be.true;
         });
 
       });

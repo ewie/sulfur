@@ -7,25 +7,17 @@
 /* global define */
 
 define([
+  'sulfur/schema/deserializer/facet',
   'sulfur/schema/facet/maxInclusive',
   'sulfur/util'
-], function (MaxInclusiveFacet, util) {
+], function (FacetResolver, MaxInclusiveFacet, util) {
 
   'use strict';
 
-  return {
-
-    get facet() { return MaxInclusiveFacet; },
-
-    parseValue: function (s, p) {
-      return p.parse(s);
-    },
-
-    createFacet: function (values) {
-      values = util.sort(values, function (x, y) { return x.cmp(y); });
-      return MaxInclusiveFacet.create(values[0]);
-    }
-
-  };
+  return FacetResolver.create(MaxInclusiveFacet,
+    function (values) {
+      values = util.sort(values, function (x, y) { return x.cmp(y) });
+      return values[0];
+    });
 
 });

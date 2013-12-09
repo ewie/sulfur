@@ -68,6 +68,14 @@ define([
 
     });
 
+    describe('.getValueType()', function () {
+
+      it("should return sulfur/schema/mediaType", function () {
+        expect(MediaTypeFacet.getValueType()).to.equal(MediaType);
+      });
+
+    });
+
     describe('#initialize()', function () {
 
       var sandbox;

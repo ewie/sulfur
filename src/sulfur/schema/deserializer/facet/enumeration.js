@@ -6,22 +6,14 @@
 
 /* global define */
 
-define(['sulfur/schema/facet/enumeration'], function (EnumerationFacet) {
+define([
+  'sulfur/schema/deserializer/facet',
+  'sulfur/schema/facet/enumeration'
+], function (FacetResolver, EnumerationFacet) {
 
   'use strict';
 
-  return {
-
-    get facet() { return EnumerationFacet; },
-
-    parseValue: function (s, p) {
-      return p.parse(s);
-    },
-
-    createFacet: function (values) {
-      return EnumerationFacet.create(values);
-    }
-
-  };
+  return FacetResolver.create(EnumerationFacet,
+    function (values) { return values });
 
 });

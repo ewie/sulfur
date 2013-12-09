@@ -8,8 +8,9 @@
 
 define([
   'sulfur/schema/facet',
-  'sulfur/schema/qname'
-], function (Facet, QName) {
+  'sulfur/schema/qname',
+  'sulfur/schema/value/simple/whiteSpace'
+], function (Facet, QName, WhiteSpaceValue) {
 
   'use strict';
 
@@ -21,13 +22,15 @@ define([
 
     get isShadowingLowerRestrictions() { return true },
 
-    get mutualExclusiveFacets() { return [] }
+    get mutualExclusiveFacets() { return [] },
+
+    getValueType: function () { return WhiteSpaceValue }
 
   }).augment({
 
     initialize: function (value) {
-      if (value !== 'collapse' && value !== 'preserve' && value !== 'replace') {
-        throw new Error('expecting either "collapse", "preserve" or "replace"');
+      if (!WhiteSpaceValue.prototype.isPrototypeOf(value)) {
+        throw new Error("expecting a sulfur/schema/value/simple/whiteSpace");
       }
       Facet.prototype.initialize.call(this, value);
     },
@@ -37,15 +40,7 @@ define([
       if (!whiteSpaceFacet) {
         return true;
       }
-      var thisValue = this.value;
-      var otherValue = whiteSpaceFacet.value;
-      if (otherValue === 'collapse') {
-        return thisValue === 'collapse';
-      }
-      if (otherValue === 'replace') {
-        return thisValue !== 'preserve';
-      }
-      return true;
+      return this.value.isEqualOrStricter(whiteSpaceFacet.value);
     },
 
     validate: function () {

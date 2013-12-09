@@ -9,16 +9,27 @@
 
 define([
   'shared',
+  'sulfur/schema/deserializer/facet',
   'sulfur/schema/deserializer/facet/minExclusive',
-  'sulfur/schema/facet/minExclusive'
-], function (shared, MinExclusiveFacetResolver, MinExclusiveFacet) {
+  'sulfur/schema/facet/minExclusive',
+  'sulfur/schema/value/simple/integer'
+], function (
+    shared,
+    FacetResolver,
+    MinExclusiveFacetResolver,
+    MinExclusiveFacet,
+    IntegerValue
+) {
 
   'use strict';
 
   var expect = shared.expect;
-  var sinon = shared.sinon;
 
   describe('sulfur/schema/deserializer/facet/minExclusive', function () {
+
+    it("should be a sulfur/schema/deserializer/facet", function () {
+      expect(FacetResolver.prototype).to.be.prototypeOf(MinExclusiveFacetResolver);
+    });
 
     describe('.facet', function () {
 
@@ -28,34 +39,12 @@ define([
 
     });
 
-    describe('.parseValue()', function () {
+    describe('.reduce', function () {
 
-      it("should pass the given string to .parse() on the given object", function () {
-        var obj = { parse: sinon.stub().returns({}) };
-        var s = '...';
-        var value = MinExclusiveFacetResolver.parseValue(s, obj);
-        expect(obj.parse)
-          .to.be.calledWith(s)
-          .to.have.returned(sinon.match.same(value));
-      });
-
-    });
-
-    describe('.createFacet()', function () {
-
-      function value(n) {
-        return {
-          n: n,
-          cmp: function (other) {
-            return this.n - other.n;
-          }
-        };
-      }
-
-      it("should return a sulfur/schema/facet/minExclusive using the largest value", function () {
-        var values = [ value(2), value(3), value(1) ];
-        expect(MinExclusiveFacetResolver.createFacet(values))
-          .to.eql(MinExclusiveFacet.create(values[1]));
+      it("should return the numerically largest value", function () {
+        var values = '2 3 1'.split(' ').map(IntegerValue.parse.bind(IntegerValue));
+        var value = MinExclusiveFacetResolver.reduce(values);
+        expect(value).to.equal(values[1]);
       });
 
     });

@@ -14,7 +14,7 @@ define([
   'sulfur/schema/qname',
   'sulfur/schema/validator/equal',
   'sulfur/schema/validator/property',
-  'sulfur/util'
+  'sulfur/schema/value/simple/integer'
 ], function (
     require,
     Facet,
@@ -23,7 +23,7 @@ define([
     QName,
     EqualValidator,
     PropertyValidator,
-    util
+    IntegerValue
 ) {
 
   'use strict';
@@ -50,35 +50,37 @@ define([
         requireMaxLengthFacet(),
         requireMinLengthFacet()
       ];
-    }
+    },
+
+    getValueType: function () { return IntegerValue }
 
   }).augment({
 
     /**
-     * @param {number} value
+     * @param {sulfur/schema/value/simple/integer} value
      *
-     * @throw {Error} if `value` is not an integer within [0, 2^53)
+     * @throw {Error} when the value is not a non-negative integer
      */
     initialize: function (value) {
-      if (!util.isInteger(value) || value < 0) {
-        throw new Error("expecting a non-negative integer less than 2^53");
+      if (!IntegerValue.prototype.isPrototypeOf(value) || value.isNegative) {
+        throw new Error("expecting a non-negative sulfur/schema/value/simple/integer");
       }
       Facet.prototype.initialize.call(this, value);
     },
 
     isRestrictionOf: function (type) {
       var lengthFacet = this.factory.getEffectiveFacet(type);
-      if (lengthFacet && this.value !== lengthFacet.value) {
+      if (lengthFacet && !this.value.eq(lengthFacet.value)) {
         return false;
       }
 
       var maxLengthFacet = requireMaxLengthFacet().getEffectiveFacet(type);
-      if (maxLengthFacet && this.value > maxLengthFacet.value) {
+      if (maxLengthFacet && this.value.gt(maxLengthFacet.value)) {
         return false;
       }
 
       var minLengthFacet = requireMinLengthFacet().getEffectiveFacet(type);
-      if (minLengthFacet && this.value < minLengthFacet.value) {
+      if (minLengthFacet && this.value.lt(minLengthFacet.value)) {
         return false;
       }
 

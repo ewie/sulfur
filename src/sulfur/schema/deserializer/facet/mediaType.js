@@ -7,24 +7,13 @@
 /* global define */
 
 define([
-  'sulfur/schema/facet/mediaType',
-  'sulfur/schema/mediaType'
-], function (MediaTypeFacet, MediaType) {
+  'sulfur/schema/deserializer/facet',
+  'sulfur/schema/facet/mediaType'
+], function (FacetResolver, MediaTypeFacet) {
 
   'use strict';
 
-  return {
-
-    get facet() { return MediaTypeFacet; },
-
-    parseValue: function (s) {
-      return MediaType.parse(s);
-    },
-
-    createFacet: function (values) {
-      return MediaTypeFacet.create(values);
-    }
-
-  };
+  return FacetResolver.create(MediaTypeFacet,
+    function (values) { return values });
 
 });

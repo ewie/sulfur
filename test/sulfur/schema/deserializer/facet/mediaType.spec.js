@@ -5,21 +5,29 @@
  */
 
 /* global define */
-/* global afterEach, beforeEach, describe, it */
+/* global describe, it */
 
 define([
   'shared',
+  'sulfur/schema/deserializer/facet',
   'sulfur/schema/deserializer/facet/mediaType',
-  'sulfur/schema/facet/mediaType',
-  'sulfur/schema/mediaType'
-], function (shared, MediaTypeFacetResolver, MediaTypeFacet, MediaType) {
+  'sulfur/schema/facet/mediaType'
+], function (
+    shared,
+    FacetResolver,
+    MediaTypeFacetResolver,
+    MediaTypeFacet
+) {
 
   'use strict';
 
   var expect = shared.expect;
-  var sinon = shared.sinon;
 
   describe('sulfur/schema/deserializer/facet/mediaType', function () {
+
+    it("should be a sulfur/schema/deserializer/facet", function () {
+      expect(FacetResolver.prototype).to.be.prototypeOf(MediaTypeFacetResolver);
+    });
 
     describe('.facet', function () {
 
@@ -29,35 +37,11 @@ define([
 
     });
 
-    describe('.parseValue()', function () {
+    describe('.reduce', function () {
 
-      var sandbox;
-
-      beforeEach(function () {
-        sandbox = sinon.sandbox.create();
-      });
-
-      afterEach(function () {
-        sandbox.restore();
-      });
-
-      it("should pass the given string to sulfur/schema/mediaType.parse()", function () {
-        var spy = sandbox.stub(MediaType, 'parse').returns({});
-        var s = 'foo';
-        var value = MediaTypeFacetResolver.parseValue(s);
-        expect(spy)
-          .to.be.calledWith(s)
-          .to.have.returned(sinon.match.same(value));
-      });
-
-    });
-
-    describe('.createFacet()', function () {
-
-      it("should return a sulfur/schema/facet/mediaType with the given values", function () {
-        var values = [ MediaType.create('text', 'plain') ];
-        expect(MediaTypeFacetResolver.createFacet(values))
-          .to.eql(MediaTypeFacet.create(values));
+      it("should return all values", function () {
+        var values = [];
+        expect(MediaTypeFacetResolver.reduce(values)).to.equal(values);
       });
 
     });

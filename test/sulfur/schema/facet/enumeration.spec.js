@@ -64,6 +64,15 @@ define([
 
     });
 
+    describe('.getValueType()', function () {
+
+      it("should return .valueType of the given object", function () {
+        var type = { valueType: {} };
+        expect(EnumerationFacet.getValueType(type)).to.equal(type.valueType);
+      });
+
+    });
+
     describe('#initialize()', function () {
 
       var sandbox;

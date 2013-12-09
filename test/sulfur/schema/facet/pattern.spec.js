@@ -61,6 +61,14 @@ define([
 
     });
 
+    describe('.getValueType()', function () {
+
+      it("should return sulfur/schema/pattern", function () {
+        expect(PatternFacet.getValueType()).to.equal(Pattern);
+      });
+
+    });
+
     describe('#initialize()', function () {
 
       it("should ignore duplicate patterns based on each patterns's string representation", function () {

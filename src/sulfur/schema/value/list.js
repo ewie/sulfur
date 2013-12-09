@@ -6,7 +6,10 @@
 
 /* global define */
 
-define(['sulfur/util/factory'], function (Factory) {
+define([
+  'sulfur/schema/value/simple/integer',
+  'sulfur/util/factory'
+], function (IntegerValue, Factory) {
 
   'use strict';
 
@@ -21,7 +24,8 @@ define(['sulfur/util/factory'], function (Factory) {
     },
 
     get length() {
-      return this._values.length;
+      var s = this._values.length.toString(10);
+      return IntegerValue.create({ integralDigits: s });
     },
 
     toArray: function () {
@@ -29,7 +33,7 @@ define(['sulfur/util/factory'], function (Factory) {
     },
 
     eq: function (other) {
-      if (this.length !== other.length) {
+      if (this._values.length !== other._values.length) {
         return false;
       }
       return this._values.every(function (value, i) {

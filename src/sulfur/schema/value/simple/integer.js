@@ -60,7 +60,7 @@ define(['sulfur/schema/value/simple/decimal'], function (DecimalValue) {
      */
     initialize: function (options) {
       DecimalValue.prototype.initialize.call(this, options);
-      if (this.countFractionDigits() !== 0) {
+      if (this.fractionDigits) {
         throw new Error("fractionDigits must be zero");
       }
     },

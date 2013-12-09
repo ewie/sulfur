@@ -5,21 +5,24 @@
  */
 
 /* global define */
-/* global afterEach, beforeEach, describe, it */
+/* global describe, it */
 
 define([
   'shared',
+  'sulfur/schema/deserializer/facet',
   'sulfur/schema/deserializer/facet/pattern',
-  'sulfur/schema/facet/pattern',
-  'sulfur/schema/pattern'
-], function (shared, PatternFacetResolver, PatternFacet, Pattern) {
+  'sulfur/schema/facet/pattern'
+], function (shared, FacetResolver, PatternFacetResolver, PatternFacet) {
 
   'use strict';
 
   var expect = shared.expect;
-  var sinon = shared.sinon;
 
   describe('sulfur/schema/deserializer/facet/pattern', function () {
+
+    it("should be a sulfur/schema/deserializer/facet", function () {
+      expect(FacetResolver.prototype).to.be.prototypeOf(PatternFacetResolver);
+    });
 
     describe('.facet', function () {
 
@@ -29,35 +32,11 @@ define([
 
     });
 
-    describe('.parseValue()', function () {
+    describe('.reduce', function () {
 
-      var sandbox;
-
-      beforeEach(function () {
-        sandbox = sinon.sandbox.create();
-      });
-
-      afterEach(function () {
-        sandbox.restore();
-      });
-
-      it("should pass the given string to sulfur/schema/pattern.create()", function () {
-        var spy = sandbox.stub(Pattern, 'create').returns({});
-        var s = 'foo';
-        var value = PatternFacetResolver.parseValue(s);
-        expect(spy)
-          .to.be.calledWith(s)
-          .to.have.returned(sinon.match.same(value));
-      });
-
-    });
-
-    describe('.createFacet()', function () {
-
-      it("should return a sulfur/schema/facet/pattern with the given values", function () {
-        var values = [ Pattern.create('') ];
-        expect(PatternFacetResolver.createFacet(values))
-          .to.eql(PatternFacet.create(values));
+      it("should return the values", function () {
+        var values = [];
+        expect(PatternFacetResolver.reduce(values)).to.equal(values);
       });
 
     });

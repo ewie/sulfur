@@ -22,6 +22,7 @@ define([
    * @implement {.validate()} #createValidator()
    * @implement {boolean} #validate({any})
    * @implement {boolean} #isRestrictionOf({sulfur/schema/facets})
+   * @implement {sulfur/schema/value/*} .getValueType({sulfur/schema/type/simple/*})
    *
    * @api private
    */

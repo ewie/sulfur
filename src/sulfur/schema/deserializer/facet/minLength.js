@@ -7,25 +7,17 @@
 /* global define */
 
 define([
+  'sulfur/schema/deserializer/facet',
   'sulfur/schema/facet/minLength',
   'sulfur/util'
-], function (MinLengthFacet, util) {
+], function (FacetResolver, MinLengthFacet, util) {
 
   'use strict';
 
-  return {
-
-    get facet() { return MinLengthFacet; },
-
-    parseValue: function (s) {
-      return parseInt(s, 10);
-    },
-
-    createFacet: function (values) {
-      values = util.sort(values, function (x, y) { return y - x; });
-      return MinLengthFacet.create(values[0]);
-    }
-
-  };
+  return FacetResolver.create(MinLengthFacet,
+    function (values) {
+      values = util.sort(values, function (x, y) { return y.cmp(x) });
+      return values[0];
+    });
 
 });

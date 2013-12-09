@@ -18,7 +18,11 @@ define([
    * Provides a simple interface to match a string against the pattern.
    */
 
-  return Factory.derive({
+  return Factory.clone({
+
+    parse: function (s) { return this.create(s) }
+
+  }).augment({
 
     /**
      * Initialize the pattern by compiling the given source.

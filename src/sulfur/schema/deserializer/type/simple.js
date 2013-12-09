@@ -105,7 +105,7 @@ define([
         return resolver.resolveTypeElement(type, xpath);
       }
 
-      function resolveAnyFacets(facetResolvers, allowedFacets, valueType,
+      function resolveAnyFacets(facetResolvers, allowedFacets, type,
           parentElement, xpath)
       {
         return allowedFacets.reduce(function (facets, allowedFacet) {
@@ -118,7 +118,7 @@ define([
             var facetResolver = facetResolvers.get(qname);
             var values = facetElements.map(function (facetElement) {
               var value = facetElement.getAttribute('value');
-              return facetResolver.parseValue(value, valueType);
+              return facetResolver.parseValue(value, type);
             });
             facets.push(facetResolver.createFacet(values));
           }
@@ -127,27 +127,27 @@ define([
       }
 
       function resolveNonStandardFacets(facetResolvers, allowedFacets,
-          valueType, restriction, xpath)
+          type, restriction, xpath)
       {
         var appinfo = xpath.first('xs:annotation/xs:appinfo', restriction, NS);
         if (appinfo) {
-          return resolveAnyFacets(facetResolvers, allowedFacets, valueType,
+          return resolveAnyFacets(facetResolvers, allowedFacets, type,
             appinfo, xpath);
         }
         return [];
       }
 
-      function resolveFacets(facetResolvers, allowedFacets, valueType,
+      function resolveFacets(facetResolvers, allowedFacets, type,
           restriction, xpath)
       {
         var part = util.bipart(allowedFacets.toArray(), function (facet) {
           return facet.qname.namespaceURI === XSD_NAMESPACE;
         });
 
-        var stdFacets = resolveAnyFacets(facetResolvers, part.true, valueType,
+        var stdFacets = resolveAnyFacets(facetResolvers, part.true, type,
           restriction, xpath);
         var nonStdFacets = resolveNonStandardFacets(facetResolvers, part.false,
-          valueType, restriction, xpath);
+          type, restriction, xpath);
 
         var facets = stdFacets.concat(nonStdFacets);
 
@@ -165,7 +165,7 @@ define([
         }
 
         var facets = resolveFacets(facetResolvers, baseType.allowedFacets,
-          baseType.valueType, restriction, xpath);
+          baseType, restriction, xpath);
 
         if (facets) {
           return RestrictedType.create(baseType, facets);

@@ -7,25 +7,17 @@
 /* global define */
 
 define([
+  'sulfur/schema/deserializer/facet',
   'sulfur/schema/facet/totalDigits',
   'sulfur/util'
-], function (TotalDigitsFacet, util) {
+], function (FacetResolver, TotalDigitsFacet, util) {
 
   'use strict';
 
-  return {
-
-    get facet() { return TotalDigitsFacet; },
-
-    parseValue: function (s) {
-      return parseInt(s, 10);
-    },
-
-    createFacet: function (values) {
-      values = util.sort(values, function (x, y) { return x - y; });
-      return TotalDigitsFacet.create(values[0]);
-    }
-
-  };
+  return FacetResolver.create(TotalDigitsFacet,
+    function (values) {
+      values = util.sort(values, function (x, y) { return x.cmp(y) });
+      return values[0];
+    });
 
 });

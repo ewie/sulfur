@@ -5,7 +5,7 @@
  */
 
 /* global define */
-/* global beforeEach, context, describe, it */
+/* global afterEach, beforeEach, context, describe, it */
 
 define([
   'shared',
@@ -18,7 +18,8 @@ define([
   'sulfur/schema/type/simple/primitive',
   'sulfur/schema/type/simple/restricted',
   'sulfur/schema/validator/minimum',
-  'sulfur/schema/validator/property'
+  'sulfur/schema/validator/property',
+  'sulfur/schema/value/simple/integer'
 ], function (
     shared,
     Facet,
@@ -30,12 +31,15 @@ define([
     PrimitiveType,
     RestrictedType,
     MinimumValidator,
-    PropertyValidator
+    PropertyValidator,
+    IntegerValue
 ) {
 
   'use strict';
 
   var expect = shared.expect;
+  var sinon = shared.sinon;
+  var bind = shared.bind;
 
   describe('sulfur/schema/facet/minLength', function () {
 
@@ -69,11 +73,52 @@ define([
 
     });
 
+    describe('.getValueType()', function () {
+
+      it("should return sulfur/schema/value/simple/integer", function () {
+        expect(MinLengthFacet.getValueType()).to.equal(IntegerValue);
+      });
+
+    });
+
+    describe('#initialize', function () {
+
+      var sandbox;
+
+      beforeEach(function () {
+        sandbox = sinon.sandbox.create();
+      });
+
+      afterEach(function () {
+        sandbox.restore();
+      });
+
+      it("should call sulfur/schema/facet#initialize()", function () {
+        var spy = sandbox.spy(Facet.prototype, 'initialize');
+        var value = IntegerValue.create();
+        var facet = MinLengthFacet.create(value);
+        expect(spy)
+          .to.be.calledOn(facet)
+          .to.be.calledWith(sinon.match.same(value));
+      });
+
+      it("should reject a non-integer value", function () {
+        expect(bind(MinLengthFacet, 'create', {}))
+          .to.throw("expecting a non-negative sulfur/schema/value/simple/integer");
+      });
+
+      it("should reject a negative value", function () {
+        expect(bind(MinLengthFacet, 'create', IntegerValue.parse('-1')))
+          .to.throw("expecting a non-negative sulfur/schema/value/simple/integer");
+      });
+
+    });
+
     describe('#isRestrictionOf()', function () {
 
       it("should return true when the type does not define no facet 'length', 'maxLength' or 'minLength'", function () {
         var type = PrimitiveType.create({});
-        var facet = MinLengthFacet.create(0);
+        var facet = MinLengthFacet.create(IntegerValue.create());
         expect(facet.isRestrictionOf(type)).to.be.true;
       });
 
@@ -86,11 +131,11 @@ define([
             facets: Facets.create([ LengthFacet ])
           });
           type = RestrictedType.create(base,
-            Facets.create([ LengthFacet.create(0) ]));
+            Facets.create([ LengthFacet.create(IntegerValue.create()) ]));
         });
 
         it("should return false", function () {
-          var facet = MinLengthFacet.create(0);
+          var facet = MinLengthFacet.create(IntegerValue.create());
           expect(facet.isRestrictionOf(type)).to.be.false;
         });
 
@@ -105,21 +150,21 @@ define([
             facets: Facets.create([ MaxLengthFacet ])
           });
           type = RestrictedType.create(base,
-            Facets.create([ MaxLengthFacet.create(1) ]));
+            Facets.create([ MaxLengthFacet.create(IntegerValue.parse('1')) ]));
         });
 
         it("should return true when the value is less than the type facet's value", function () {
-          var facet = MinLengthFacet.create(0);
+          var facet = MinLengthFacet.create(IntegerValue.create());
           expect(facet.isRestrictionOf(type)).to.be.true;
         });
 
         it("should return true when the value is equal to the type facet's value", function () {
-          var facet = MinLengthFacet.create(1);
+          var facet = MinLengthFacet.create(IntegerValue.parse('1'));
           expect(facet.isRestrictionOf(type)).to.be.true;
         });
 
         it("should return false when the value is greater than the type facet's value", function () {
-          var facet = MinLengthFacet.create(2);
+          var facet = MinLengthFacet.create(IntegerValue.parse('2'));
           expect(facet.isRestrictionOf(type)).to.be.false;
         });
 
@@ -134,21 +179,21 @@ define([
             facets: Facets.create([ MinLengthFacet ])
           });
           type = RestrictedType.create(base,
-            Facets.create([ MinLengthFacet.create(1) ]));
+            Facets.create([ MinLengthFacet.create(IntegerValue.parse('1')) ]));
         });
 
         it("should return false when the value is less than the type facet's value", function () {
-          var facet = MinLengthFacet.create(0);
+          var facet = MinLengthFacet.create(IntegerValue.create());
           expect(facet.isRestrictionOf(type)).to.be.false;
         });
 
         it("should return true when the value is equal to the type facet's value", function () {
-          var facet = MinLengthFacet.create(1);
+          var facet = MinLengthFacet.create(IntegerValue.parse('1'));
           expect(facet.isRestrictionOf(type)).to.be.true;
         });
 
         it("should return true when the value is greater than the type facet's value", function () {
-          var facet = MinLengthFacet.create(2);
+          var facet = MinLengthFacet.create(IntegerValue.parse('2'));
           expect(facet.isRestrictionOf(type)).to.be.true;
         });
 
@@ -163,7 +208,7 @@ define([
 
       beforeEach(function () {
         var dummyFacet = { qname: QName.create('x', 'urn:example:y') };
-        facet = MinLengthFacet.create(1);
+        facet = MinLengthFacet.create(IntegerValue.parse('1'));
         type = Facets.create([ dummyFacet ]);
       });
 
@@ -174,7 +219,7 @@ define([
       context("with a value greater than sulfur/schema/facet/maxLength", function () {
 
         beforeEach(function () {
-          type = Facets.create([ MaxLengthFacet.create(0) ]);
+          type = Facets.create([ MaxLengthFacet.create(IntegerValue.create()) ]);
         });
 
         it("should reject", function () {
@@ -194,7 +239,7 @@ define([
     describe('#createValidator()', function () {
 
       it("should return a validator/property with 'length' and a validator/minimum", function () {
-        var facet = MinLengthFacet.create(0);
+        var facet = MinLengthFacet.create(IntegerValue.create());
         var v = facet.createValidator();
         expect(v).to.eql(
           PropertyValidator.create(

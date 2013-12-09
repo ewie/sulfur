@@ -32,7 +32,9 @@ define([
 
     get isShadowingLowerRestrictions() { return false },
 
-    get mutualExclusiveFacets() { return [] }
+    get mutualExclusiveFacets() { return [] },
+
+    getValueType: function () { return Pattern }
 
   }).augment({
 

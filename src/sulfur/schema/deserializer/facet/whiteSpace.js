@@ -6,22 +6,14 @@
 
 /* global define */
 
-define(['sulfur/schema/facet/whiteSpace'], function (WhiteSpaceFacet) {
+define([
+  'sulfur/schema/deserializer/facet',
+  'sulfur/schema/facet/whiteSpace'
+], function (FacetResolver, WhiteSpaceFacet) {
 
   'use strict';
 
-  return {
-
-    get facet() { return WhiteSpaceFacet; },
-
-    parseValue: function (s) {
-      return s;
-    },
-
-    createFacet: function (values) {
-      return WhiteSpaceFacet.create(values[0]);
-    }
-
-  };
+  return FacetResolver.create(WhiteSpaceFacet,
+    function (values) { return values[0] });
 
 });

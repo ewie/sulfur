@@ -13,12 +13,16 @@ define([
 
   'use strict';
 
+  function number2integer(n) {
+    return DecimalValue.create({ integralDigits: n.toString(10) });
+  }
+
   /**
    * Implemenation of XSD's decimal using regular strings for representation
    * and comparison.
    */
 
-  return NumericValue.clone({
+  var DecimalValue = NumericValue.clone({
 
     /**
      * Parse a string representing a decimal value.
@@ -71,23 +75,21 @@ define([
       options || (options = {});
 
       if (options.integralDigits) {
-        this.integralDigits = options.integralDigits.replace(/^0+/, '') || '0';
+        this._integralDigits = options.integralDigits.replace(/^0+/, '') || '0';
       } else {
-        this.integralDigits = '0';
+        this._integralDigits = '0';
       }
       if (options.fractionDigits) {
-        this.fractionDigits = options.fractionDigits.replace(/0+$/, '');
+        this._fractionDigits = options.fractionDigits.replace(/0+$/, '');
       } else {
-        this.fractionDigits = '';
+        this._fractionDigits = '';
       }
-      if (util.isDefined(options.positive)) {
-        if (this.integralDigits === '0' && !this.fractionDigits) {
-          this.positive = true;
-        } else {
-          this.positive = options.positive;
-        }
+      if (this._integralDigits === '0' && !this._fractionDigits) {
+        this._positive = undefined;
+      } else if (util.isDefined(options.positive)) {
+        this._positive = !!options.positive;
       } else {
-        this.positive = true;
+        this._positive = true;
       }
     },
 
@@ -97,36 +99,60 @@ define([
      * @return {string} the string representation
      */
     toString: function () {
-      return (this.positive ? '' : '-') +
+      return (this.isNegative ? '-' : '') +
              this.integralDigits +
              '.' + (this.fractionDigits || '0');
     },
 
     /**
+     * @return {true} when positive
+     * @return {false} when zero
+     * @return {false} when negative
+     */
+    get isPositive() { return this._positive },
+
+    /**
+     * @return {true} when negative
+     * @return {false} when zero
+     * @return {false} when positive
+     */
+    get isNegative() {
+      return typeof this.isPositive === 'undefined' ? undefined : !this.isPositive;
+    },
+
+    /** @return {string} the integral digits */
+    get integralDigits() { return this._integralDigits },
+
+    /** @return {string} the fraction digits */
+    get fractionDigits() { return this._fractionDigits },
+
+    /**
      * Get the number of total digits.
      *
-     * @return {number}
+     * @return {sulfur/schema/value/simple/decimal}
      */
     countDigits: function () {
-      return this.countIntegralDigits() + this.countFractionDigits();
+      return number2integer(this.integralDigits.length + this.fractionDigits.length);
     },
 
     /**
      * Get the number of digits to the left of the period.
      *
-     * @return {number}
+     * @return {sulfur/schema/value/simple/decimal}
      */
     countIntegralDigits: function () {
-      return this.integralDigits.length;
+      return number2integer(this.integralDigits.length);
     },
 
     /**
      * Get the number of digits to the right of the period.
      *
-     * @return {number}
+     * @return {sulfur/schema/value/simple/decimal}
      */
     countFractionDigits: function () {
-      return this.fractionDigits ? this.fractionDigits.length : 0;
+      return this.fractionDigits ?
+        number2integer(this.fractionDigits.length) :
+        DecimalValue.create();
     },
 
     /**
@@ -139,33 +165,41 @@ define([
      * @return {1} if greater than `other`
      */
     cmp: function (other) {
-      if (!this.positive && other.positive) {
+      if (this.isNegative && !other.isNegative) {
         return -1;
       }
-      if (this.positive && !other.positive) {
+      if (this.isPositive && !other.isPositive) {
         return 1;
       }
+      if (!this.isNegative && other.isNegative) {
+        return 1;
+      }
+      if (!this.isPositive && other.isPositive) {
+        return -1;
+      }
       if (this.integralDigits.length < other.integralDigits.length) {
-        return this.positive ? -1 : 1;
+        return this.isNegative ? 1 : -1;
       }
       if (this.integralDigits.length > other.integralDigits.length) {
-        return this.positive ? 1 : -1;
+        return this.isNegative ? -1 : 1;
       }
       if (this.integralDigits < other.integralDigits) {
-        return this.positive ? -1 : 1;
+        return this.isNegative ? 1 : -1;
       }
       if (this.integralDigits > other.integralDigits) {
-        return this.positive ? 1 : -1;
+        return this.isNegative ? -1 : 1;
       }
       if (this.fractionDigits < other.fractionDigits) {
-        return this.positive ? -1 : 1;
+        return this.isNegative ? 1 : -1;
       }
       if (this.fractionDigits > other.fractionDigits) {
-        return this.positive ? 1 : -1;
+        return this.isNegative ? -1 : 1;
       }
       return 0;
     }
 
   });
+
+  return DecimalValue;
 
 });
