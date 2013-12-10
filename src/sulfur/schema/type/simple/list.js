@@ -46,7 +46,7 @@ define([
 
     initialize: function (itemType) {
       this._itemType = itemType;
-      this._valueType = SimpleListValue.typed(itemType.valueType);
+      this._valueType = SimpleListValue.withItemValueType(itemType.valueType);
     },
 
     get itemType() {

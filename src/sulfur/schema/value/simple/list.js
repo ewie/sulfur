@@ -24,7 +24,7 @@ define([
    */
   return ListValue.clone({
 
-    typed: function (itemValueType) {
+    withItemValueType: function (itemValueType) {
       return this.clone({
         get itemValueType() { return itemValueType; }
       });

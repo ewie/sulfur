@@ -25,11 +25,11 @@ define([
       expect(ListValue).to.be.prototypeOf(SimpleListValue);
     });
 
-    describe('.typed()', function () {
+    describe('.withItemValueType()', function () {
 
       it("should clone and use the given value type as item value type", function () {
         var valueType = {};
-        var simpleList = SimpleListValue.typed(valueType);
+        var simpleList = SimpleListValue.withItemValueType(valueType);
         expect(SimpleListValue).to.be.prototypeOf(simpleList);
         expect(simpleList.itemValueType).to.equal(valueType);
       });
@@ -47,7 +47,7 @@ define([
             return { s: s };
           }
         };
-        simpleList = SimpleListValue.typed(valueType);
+        simpleList = SimpleListValue.withItemValueType(valueType);
       });
 
       it("should parse a space separated sequence of literals", function () {
