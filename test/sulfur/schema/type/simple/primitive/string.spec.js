@@ -20,12 +20,12 @@ define([
   'sulfur/schema/type/simple/primitive',
   'sulfur/schema/type/simple/primitive/string',
   'sulfur/schema/type/simple/restricted',
+  'sulfur/schema/validator/all',
+  'sulfur/schema/validator/property',
   'sulfur/schema/value/simple/integer',
   'sulfur/schema/value/simple/pattern',
   'sulfur/schema/value/simple/string',
-  'sulfur/schema/value/simple/whiteSpace',
-  'sulfur/schema/validator/all',
-  'sulfur/schema/validator/property'
+  'sulfur/schema/value/simple/whiteSpace'
 ], function (
     shared,
     EnumerationFacet,
@@ -39,12 +39,12 @@ define([
     PrimitiveType,
     StringType,
     RestrictedType,
+    AllValidator,
+    PropertyValidator,
     IntegerValue,
     PatternValue,
     StringValue,
-    WhiteSpaceValue,
-    AllValidator,
-    PropertyValidator
+    WhiteSpaceValue
 ) {
 
   'use strict';
