@@ -60,10 +60,10 @@ define([
 
     });
 
-    describe('.mutualExclusiveFacets', function () {
+    describe('.mutexFacets', function () {
 
       it("should return sulfur/schema/facet/maxExclusive", function () {
-        expect(MaxInclusiveFacet.mutualExclusiveFacets)
+        expect(MaxInclusiveFacet.mutexFacets)
           .to.eql([ MaxExclusiveFacet ]);
       });
 

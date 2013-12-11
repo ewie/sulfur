@@ -53,10 +53,10 @@ define([
 
     });
 
-    describe('.mutualExclusiveFacets', function () {
+    describe('.mutexFacets', function () {
 
       it("should return an empty array", function () {
-        expect(PatternFacet.mutualExclusiveFacets).to.eql([]);
+        expect(PatternFacet.mutexFacets).to.eql([]);
       });
 
     });

@@ -122,7 +122,7 @@ define([
       function createFacet(qname) {
         return Facet.clone({
           qname: qname,
-          mutualExclusiveFacets: []
+          mutexFacets: []
         }).augment({
           isRestrictionOf: returns(true)
         });

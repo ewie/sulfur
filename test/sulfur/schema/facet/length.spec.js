@@ -64,10 +64,10 @@ define([
 
     });
 
-    describe('.mutualExclusiveFacets', function () {
+    describe('.mutexFacets', function () {
 
       it("should return sulfur/schema/facet/maxLength and sulfur/schema/facet/minLength", function () {
-        expect(LengthFacet.mutualExclusiveFacets)
+        expect(LengthFacet.mutexFacets)
           .to.eql([ MaxLengthFacet, MinLengthFacet ]);
       });
 

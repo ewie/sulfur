@@ -48,7 +48,7 @@ define([
     function mockFacet(qname) {
       var facet = Facet.clone({
         qname: qname,
-        mutualExclusiveFacets: [],
+        mutexFacets: [],
         isShadowingLowerRestrictions: returns(true)
       });
       facet.augment({

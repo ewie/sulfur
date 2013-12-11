@@ -18,6 +18,7 @@ define([
    * @abstract
    *
    * @implement {sulfur/schema/qname} .qname
+   * @implement {array} .mutexFacets
    * @implement {boolean} .isShadowingLowerRestrictions
    * @implement {.validate()} #createValidator()
    * @implement {boolean} #validate({any})
@@ -37,7 +38,7 @@ define([
       }
 
       return function (restriction) {
-        var mutexFacets = this.mutualExclusiveFacets;
+        var mutexFacets = this.mutexFacets;
         var effectiveFacets = [];
         while (restriction.facets) {
           var facets = restriction.facets;

@@ -39,7 +39,7 @@ define([
       var shadowing = typeof options.shadowing === 'undefined' ? true : options.shadowing;
       var facet = Facet.clone({
         qname: qname,
-        mutualExclusiveFacets: options.mutex || [],
+        mutexFacets: options.mutex || [],
         isShadowingLowerRestrictions: shadowing
       });
       facet.augment({

@@ -44,7 +44,7 @@ define([
 
     get isShadowingLowerRestrictions() { return true },
 
-    get mutualExclusiveFacets() { return [ requireMaxInclusiveFacet() ] },
+    get mutexFacets() { return [ requireMaxInclusiveFacet() ] },
 
     getValueType: function (type) { return type.valueType }
 

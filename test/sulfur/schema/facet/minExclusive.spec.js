@@ -60,10 +60,10 @@ define([
 
     });
 
-    describe('.mutualExclusiveFacets', function () {
+    describe('.mutexFacets', function () {
 
       it("should return sulfur/schema/facet/minInclusive", function () {
-        expect(MinExclusiveFacet.mutualExclusiveFacets)
+        expect(MinExclusiveFacet.mutexFacets)
           .to.eql([ MinInclusiveFacet ]);
       });
 

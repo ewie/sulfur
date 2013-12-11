@@ -32,7 +32,7 @@ define([
 
     get isShadowingLowerRestrictions() { return false },
 
-    get mutualExclusiveFacets() { return [] },
+    get mutexFacets() { return [] },
 
     getValueType: function () { return PatternValue }
 

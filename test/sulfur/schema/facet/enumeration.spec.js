@@ -56,10 +56,10 @@ define([
 
     });
 
-    describe('.mutualExclusiveFacets', function () {
+    describe('.mutexFacets', function () {
 
       it("should return an empty array", function () {
-        expect(EnumerationFacet.mutualExclusiveFacets).to.eql([]);
+        expect(EnumerationFacet.mutexFacets).to.eql([]);
       });
 
     });

@@ -13,12 +13,11 @@ define(['sulfur/util/factory'], function (Factory) {
   return Factory.derive({
 
     initialize: function (base, facets) {
-
       var allowedFacets = base.allowedFacets;
 
       allowedFacets.toArray().forEach(function (allowedFacet) {
         if (facets.hasByQName(allowedFacet.qname)) {
-          allowedFacet.mutualExclusiveFacets.forEach(function (mutexFacet) {
+          allowedFacet.mutexFacets.forEach(function (mutexFacet) {
             if (facets.hasByQName(mutexFacet.qname)) {
               throw new Error("facets " + allowedFacet.qname + " and " +
                 mutexFacet.qname + " are mutual exclusive");
@@ -99,7 +98,7 @@ define(['sulfur/util/factory'], function (Factory) {
 
         // Check if any mutual exclusive facet is in effect and, if so, a
         // restriction of the other type.
-        var mutexFacets = allowedFacet.mutualExclusiveFacets;
+        var mutexFacets = allowedFacet.mutexFacets;
         return mutexFacets.some(function (mutexFacet) {
           var effectiveFacets = mutexFacet.getEffectiveFacets(this);
           return effectiveFacets && effectiveFacets[0].isRestrictionOf(other);

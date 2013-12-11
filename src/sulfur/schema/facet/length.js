@@ -45,7 +45,7 @@ define([
 
     get isShadowingLowerRestrictions() { return true },
 
-    get mutualExclusiveFacets() {
+    get mutexFacets() {
       return [
         requireMaxLengthFacet(),
         requireMinLengthFacet()

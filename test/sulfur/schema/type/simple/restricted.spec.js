@@ -38,7 +38,7 @@ define([
       var restriction = options.hasOwnProperty('restriction') ? options.restriction : true;
       var facet = Facet.clone({
         qname: qname,
-        mutualExclusiveFacets: options.mutex || [],
+        mutexFacets: options.mutex || [],
         isShadowingLowerRestrictions: returns(shadowing)
       });
       facet.augment({
@@ -69,9 +69,9 @@ define([
         var facet1 = { qname: QName.create('x', 'urn:example:z') };
         var facet2 = {
           qname: QName.create('y', 'urn:example:z'),
-          mutualExclusiveFacets: [ facet1 ]
+          mutexFacets: [ facet1 ]
         };
-        facet1.mutualExclusiveFacets = [ facet2 ];
+        facet1.mutexFacets = [ facet2 ];
         var base = PrimitiveType.create({
           facets: Facets.create([ facet1, facet2 ])
         });
@@ -245,7 +245,7 @@ define([
             var allowedFacet = mockFacet(QName.create('x', 'urn:example:z'));
             var mutexFacet = mockFacet(QName.create('y', 'urn:example:z'),
               { mutex: [ allowedFacet ] });
-            allowedFacet.mutualExclusiveFacets = [ mutexFacet ];
+            allowedFacet.mutexFacets = [ mutexFacet ];
             var primitive = PrimitiveType.create({
               facets: Facets.create([ allowedFacet, mutexFacet ])
             });
@@ -330,7 +330,7 @@ define([
             var allowedFacet = mockFacet(QName.create('x', 'urn:example:z'));
             var mutexFacet = mockFacet(QName.create('y', 'urn:example:z'),
               { mutex: [ allowedFacet ] });
-            allowedFacet.mutualExclusiveFacets = [ mutexFacet ];
+            allowedFacet.mutexFacets = [ mutexFacet ];
 
             var dummyFacet = mockFacet(QName.create('dummy', 'urn:example:void'));
 
@@ -359,7 +359,7 @@ define([
                   return true;
                 }
               });
-              allowedFacet.mutualExclusiveFacets = [ mutexFacet ];
+              allowedFacet.mutexFacets = [ mutexFacet ];
 
               var primitive = PrimitiveType.create({
                 facets: Facets.create([ allowedFacet, mutexFacet ])
@@ -377,7 +377,7 @@ define([
                 { mutex: [ allowedFacet ],
                   restriction: undefined
                 });
-              allowedFacet.mutualExclusiveFacets = [ mutexFacet ];
+              allowedFacet.mutexFacets = [ mutexFacet ];
 
               var primitive = PrimitiveType.create({
                 facets: Facets.create([ allowedFacet, mutexFacet ])

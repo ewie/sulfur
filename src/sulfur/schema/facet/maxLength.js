@@ -45,7 +45,7 @@ define([
 
     get isShadowingLowerRestrictions() { return true },
 
-    get mutualExclusiveFacets() { return [ requireLengthFacet() ] },
+    get mutexFacets() { return [ requireLengthFacet() ] },
 
     getValueType: function () { return IntegerValue }
 
