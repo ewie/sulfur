@@ -39,7 +39,7 @@ define([
 
   var expect = shared.expect;
 
-  describe('sulfur/schema/regex/translater', function () {
+  describe('sulfur/schema/regex/translator', function () {
 
     describe('#translate()', function () {
 
@@ -87,7 +87,7 @@ define([
         context("when outside the BMP", function () {
 
           it("should translate them to a surrogate pair", function () {
-            var r = translator.translate(parse('&#x10000;'));
+            var r = translator.translate(parse('\uD800\uDC00'));
             var x = Pattern.create(
               [Branch.create(
                 [Piece.create(Codeunit.create(0xD800)),
@@ -102,7 +102,7 @@ define([
         context("when inside the BMP", function () {
 
           it("should translate them to its codepoint value", function () {
-            var r = translator.translate(parse('&#x20;'));
+            var r = translator.translate(parse('\x20'));
             var x = Pattern.create(
               [Branch.create(
                 [Piece.create(Codeunit.create(0x20))
@@ -535,7 +535,7 @@ define([
         context("with non-BMP characters", function () {
 
           it("should translate them to a surrogate pair", function () {
-            var r = translator.translate(parse('[&#x10000;]'));
+            var r = translator.translate(parse('[\uD800\uDC00]'));
             var x = Pattern.create(
               [Branch.create(
                 [Piece.create(
@@ -551,7 +551,7 @@ define([
           context("with a range containing only non-BMP codepoints", function () {
 
             it("should translate to a group containing the lead surrogate of the start codepoint and the trail surrogate of the end codepoint", function () {
-              var r = translator.translate(parse('[&#x10000;-&#x100FF;]'));
+              var r = translator.translate(parse('[\uD800\uDC00-\uD800\uDCFF]'));
               var x = Pattern.create(
                 [Branch.create(
                   [Piece.create(
@@ -571,7 +571,7 @@ define([
             context("when the BMP codepoint is greater than the ends lead surrogate", function () {
 
               it("should translate to a group containing only the trail surrogate of the largest non-BMP codepoint", function () {
-                var r = translator.translate(parse('[&#xFFFD;-&#x10000;]'));
+                var r = translator.translate(parse('[\uFFFD-\uD800\uDC00]'));
                 var x = Pattern.create(
                   [Branch.create(
                     [Piece.create(
@@ -588,7 +588,7 @@ define([
             context("when the BMP codepoint is less than the end's lead surrogate", function () {
 
               it("should translate to a group containing the trail surrogate of the largest non-BMP codepoint and a range starting at the smalles BMP codepoint and ending at the lead surrogate of the largest non-BMP codepoint", function () {
-                var r = translator.translate(parse('[&#x20;-&#x10000;]'));
+                var r = translator.translate(parse('[\x20-\uD800\uDC00]'));
                 var x = Pattern.create(
                   [Branch.create(
                     [Piece.create(
@@ -612,7 +612,7 @@ define([
         context("when negative", function () {
 
           it("should keep the negative group", function () {
-            var r = translator.translate(parse('[^&#x20;]'));
+            var r = translator.translate(parse('[^\x20]'));
             var x = Pattern.create(
               [Branch.create(
                 [Piece.create(
@@ -715,7 +715,7 @@ define([
         context("with subtraction", function () {
 
           it("should translate to a group matching all codepoints except the subtracted codepoints", function () {
-            var r = translator.translate(parse('[&#x100;-&#x200;-[&#x150;]]'));
+            var r = translator.translate(parse('[\u0100-\u0200-[\u0150]]'));
             var x = Pattern.create(
               [Branch.create(
                 [Piece.create(

@@ -44,62 +44,9 @@ define([
    * DataGridService).
    */
 
-  /**
-   * Test if a codepoint value is a valid XML character.
-   *
-   * @param {number} value the codepoint value
-   *
-   * @return {boolean} true if valid
-   */
-  function isValidXmlCharacterCodepoint(value) {
-    return value === 0x9 || value === 0xA || value === 0xD ||
-           value >= 0x20 && value <= 0xd7FF ||
-           value >= 0xE000 && value <= 0xFFFD ||
-           value >= 0x10000 && value <= 0x10FFFF;
-  }
-
-  var resolveCharacterReferences = (function () {
-    var NAMED_REFERENCES = {
-      'amp': '&',
-      'apos': "'",
-      'gt': '>',
-      'lt': '<',
-      'quot': '"'
-    };
-
-    return function resolveCharacterReferences(s) {
-      s = s.replace(/&#(\d+);/g, function (m, dec) {
-        var val = parseInt(dec, 10);
-        if (!isValidXmlCharacterCodepoint(val)) {
-          throw new Error("illegal XML character " + m);
-        }
-        return unicode.encodeCharacterAsUtf16(val);
-      });
-
-      s = s.replace(/&#x([\dA-Fa-f]+);/g, function (m, hex) {
-        var val = parseInt(hex, 16);
-        if (!isValidXmlCharacterCodepoint(val)) {
-          throw new Error("illegal XML character " + m);
-        }
-        return unicode.encodeCharacterAsUtf16(val);
-      });
-
-      s = s.replace(/&([^;]+);/g, function (m, name) {
-        if (NAMED_REFERENCES.hasOwnProperty(name)) {
-          return NAMED_REFERENCES[name];
-        } else {
-          throw new Error("unknown named character reference " + m);
-        }
-      });
-
-      return s;
-    };
-  }());
-
   var Scanner = Factory.derive({
     initialize: function (source) {
-      // By resolving character references the scanner is much simpler.
-      this.source = resolveCharacterReferences(source);
+      this.source = source;
     },
 
     advance: function (count) {

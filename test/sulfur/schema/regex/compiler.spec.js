@@ -121,7 +121,7 @@ define([
                 [0x7F, 0xFF]
               ], function (value) {
                 var hex = value.toString(16).toUpperCase();
-                var r = compiler.compile(parse('&#x' + hex + ';'));
+                var r = compiler.compile(parse(String.fromCharCode(value)));
                 var x = new RegExp('^\\x' + hex + '$');
                 expect(r).to.eql(x);
               });
@@ -153,7 +153,7 @@ define([
         context("when greater than U+00FF", function () {
 
           it("should compile to \\uHHHH", function () {
-            var r = compiler.compile(parse('&#x1234;'));
+            var r = compiler.compile(parse('\u1234'));
             var x = /^\u1234$/;
             expect(r).to.eql(x);
           });
