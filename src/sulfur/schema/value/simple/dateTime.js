@@ -461,19 +461,31 @@ define([
         return s;
       }
 
-      return function () {
+      function secondToString(value) {
+        var s = value.toString();
 
-        var sec = this._second.toString();
-        if (sec.length < 2 || sec.indexOf('.') === 1) {
-          sec = '0' + sec;
+        // Remove the insignificant fractional part required by the canonical
+        // representation of decimal values.
+        s = s.replace(/\.0$/, '');
+
+        // Pad the value to 2 integral digits, handle two cases (w/ an w/o
+        // fraction digits).
+        if (s.length < 2 || s.indexOf('.') === 1) {
+          s = '0' + s;
         }
 
+        return s;
+      }
+
+      return function () {
+
         var s =
-          toString(this._year, 4) + '-' +
-          toString(this._month, 2) + '-' +
-          toString(this._day, 2) + 'T' +
-          toString(this._hour, 2) + ':' +
-          toString(this._minute, 2) + ':' + sec;
+          toString(this.year, 4) + '-' +
+          toString(this.month, 2) + '-' +
+          toString(this.day, 2) + 'T' +
+          toString(this.hour, 2) + ':' +
+          toString(this.minute, 2) + ':' +
+          secondToString(this.second);
 
         if (this.hasTimezone()) {
           s += 'Z';
