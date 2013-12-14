@@ -80,8 +80,7 @@ define([
           hour: 0,
           minute: 0,
           second: DecimalValue.create(),
-          tzhour: 0,
-          tzminute: 0
+          offset: 0
         });
       });
 
@@ -95,8 +94,7 @@ define([
           hour: 0,
           minute: 0,
           second: DecimalValue.create(),
-          tzhour: 1,
-          tzminute: 0
+          offset: 60
         });
       });
 
@@ -110,8 +108,7 @@ define([
           hour: 0,
           minute: 0,
           second: DecimalValue.create(),
-          tzhour: -1,
-          tzminute: 0
+          offset: -60
         });
       });
 
@@ -346,88 +343,48 @@ define([
 
       context("with a timezone", function () {
 
-        it("should use zero for timezone hour when not given", function () {
-          var dt = DateTimeValue.create({ tzminute: 0 });
-          expect(dt).to.eql(DateTimeValue.create({ tzhour: 0, tzminute: 0 }));
-        });
-
-        it("should use zero for timezone minute when not given", function () {
-          var dt = DateTimeValue.create({ tzhour: 0 });
-          expect(dt).to.eql(DateTimeValue.create({ tzhour: 0, tzminute: 0 }));
-        });
-
-        it("should reject a non-integer timezone hour", function () {
-          expect(bind(DateTimeValue, 'create', { tzhour: 1.2 }))
-            .to.throw("timezone hour must be an integer");
-        });
-
-        it("should reject timezone hour greater than 99", function () {
-          expect(bind(DateTimeValue, 'create', { tzhour: 100 }))
-            .to.throw("timezone hour must not be greater than 99");
-        });
-
-        it("should reject timezone hour less than -99", function () {
-          expect(bind(DateTimeValue, 'create', { tzhour: -100 }))
-            .to.throw("timezone hour must not be less than -99");
-        });
-
-        it("should reject a non-integer timezone minute", function () {
-          expect(bind(DateTimeValue, 'create', { tzminute: 1.2 }))
-            .to.throw("timezone minute must be an integer");
-        });
-
-        it("should reject timezone minute greater than 99", function () {
-          expect(bind(DateTimeValue, 'create', { tzminute: 100 }))
-            .to.throw("timezone minute must not be greater than 99");
-        });
-
-        it("should reject timezone minute less than -99", function () {
-          expect(bind(DateTimeValue, 'create', { tzminute: -100 }))
-            .to.throw("timezone minute must not be less than -99");
-        });
-
-        it("should reject non-zero hour and non-zero minute with different signs", function () {
-          expect(bind(DateTimeValue, 'create', { tzhour: 1, tzminute: -30 }))
-            .to.throw("timezone hour and minute must be of the same sign for a non-zero hour");
+        it("should reject a non-integer timezone offset", function () {
+          expect(bind(DateTimeValue, 'create', { offset: 1.2 }))
+            .to.throw("timezone offset must be an integer");
         });
 
         it("should adjust the minute to UTC", function () {
-          var dt = DateTimeValue.create({ minute: 35, tzminute: 30 });
-          var x = DateTimeValue.create({ minute: 5, tzhour: 0 });
+          var dt = DateTimeValue.create({ minute: 35, offset: 30 });
+          var x = DateTimeValue.create({ minute: 5, offset: 0 });
           expect(dt).to.eql(x);
         });
 
         it("should adjust the hour to UTC", function () {
-          var dt = DateTimeValue.create({ hour: 7, tzhour: 3 });
-          var x = DateTimeValue.create({ hour: 4, tzhour: 0 });
+          var dt = DateTimeValue.create({ hour: 7, offset: 3 * 60 });
+          var x = DateTimeValue.create({ hour: 4, offset: 0 });
           expect(dt).to.eql(x);
         });
 
         it("should adjust the day to UTC", function () {
-          var dt = DateTimeValue.create({ day: 3, hour: 4, tzhour: 5 });
-          var x = DateTimeValue.create({ day: 2, hour: 23, tzhour: 0 });
+          var dt = DateTimeValue.create({ day: 3, hour: 4, offset: 5 * 60 });
+          var x = DateTimeValue.create({ day: 2, hour: 23, offset: 0 });
           expect(dt).to.eql(x);
         });
 
         it("should adjust the month to UTC", function () {
-          var dt = DateTimeValue.create({ month: 1, day: 31, hour: 23, tzhour: -2 });
-          var x = DateTimeValue.create({ month: 2, day: 1, hour: 1, tzhour: 0 });
+          var dt = DateTimeValue.create({ month: 1, day: 31, hour: 23, offset: -2 * 60 });
+          var x = DateTimeValue.create({ month: 2, day: 1, hour: 1, offset: 0 });
           expect(dt).to.eql(x);
         });
 
         it("should adjust the year to UTC", function () {
-          var dt = DateTimeValue.create({ year: 2, hour: 1, tzhour: 2 });
-          var x = DateTimeValue.create({ year: 1, month: 12, day: 31, hour: 23, tzhour: 0 });
+          var dt = DateTimeValue.create({ year: 2, hour: 1, offset: 2 * 60 });
+          var x = DateTimeValue.create({ year: 1, month: 12, day: 31, hour: 23, offset: 0 });
           expect(dt).to.eql(x);
         });
 
         it("should throw if year will be less than 1", function () {
-          expect(bind(DateTimeValue, 'create', { tzhour: 1 }))
+          expect(bind(DateTimeValue, 'create', { offset: 60 }))
             .to.throw("cannot normalize if year will be less than 1");
         });
 
         it("should throw if year will be greater than 9999", function () {
-          expect(bind(DateTimeValue, 'create', { year: 9999, month: 12, day: 31, hour: 23, tzhour: -1 }))
+          expect(bind(DateTimeValue, 'create', { year: 9999, month: 12, day: 31, hour: 23, offset: -60 }))
             .to.throw("cannot normalize if year will be greater than 9999");
         });
 
@@ -539,7 +496,7 @@ define([
       });
 
       it("should use 'Z' to denote a timezoned datetime", function () {
-        var dt = DateTimeValue.create({ tzhour: 0 });
+        var dt = DateTimeValue.create({ offset: 0 });
         expect(dt.toString()).to.equal('0001-01-01T00:00:00Z');
       });
 
@@ -555,7 +512,7 @@ define([
     describe('#hasTimezone()', function () {
 
       it("should return true if it has a timezone", function () {
-        var dt = DateTimeValue.create({ tzhour: 0 });
+        var dt = DateTimeValue.create({ offset: 0 });
         expect(dt.hasTimezone()).to.be.true;
       });
 

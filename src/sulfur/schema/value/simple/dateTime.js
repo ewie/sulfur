@@ -88,10 +88,9 @@ define([
           second: DecimalValue.parse(m[6])
         };
         if (m[7] === 'Z') {
-          options.tzhour = options.tzminute = 0;
+          options.offset = 0;
         } else if (m[7]) {
-          options.tzhour = parseDec(m[8]);
-          options.tzminute = parseDec(m[9]);
+          options.offset = parseDec(m[8]) * 60 + parseDec(m[9]);
         }
         try {
           return this.create(options);
@@ -117,23 +116,12 @@ define([
      * @option options {number} hour (default 0)
      * @option options {number} minute (default 0)
      * @option options {sulfur/schema/value/simple/decimal} second (default 0)
-     * @option options {number} tzhour (default 0 if `tzminute` is given)
-     * @option options {number} tzminute (default 0 if `tzhour` is given)
+     * @option options {number} offset (optional)
      *
      * @throw {Error} on values outside their valid range and on invalid date,
      *   time or timezone
      */
     initialize: (function () {
-
-      function sgn(x) {
-        if (x < 0) {
-          return -1;
-        }
-        if (x > 0) {
-          return 1;
-        }
-        return 0;
-      }
 
       function assertYear(year) {
         if (!util.isInteger(year)) {
@@ -234,30 +222,6 @@ define([
         }
       }
 
-      function assertTimezoneHour(hour) {
-        if (!util.isInteger(hour)) {
-          throw new Error("timezone hour must be an integer");
-        }
-        if (hour > 99) {
-          throw new Error("timezone hour must not be greater than 99");
-        }
-        if (hour < -99) {
-          throw new Error("timezone hour must not be less than -99");
-        }
-      }
-
-      function assertTimezoneMinute(minute) {
-        if (!util.isInteger(minute)) {
-          throw new Error("timezone minute must be an integer");
-        }
-        if (minute > 99) {
-          throw new Error("timezone minute must not be greater than 99");
-        }
-        if (minute < -99) {
-          throw new Error("timezone minute must not be less than -99");
-        }
-      }
-
       function assertDate(year, month, day) {
         assertYear(year);
         assertMonth(month);
@@ -270,12 +234,9 @@ define([
         assertSecond(second);
       }
 
-      function assertTimezone(hour, minute) {
-        assertTimezoneHour(hour);
-        assertTimezoneMinute(minute);
-
-        if (hour !== 0 && minute !== 0 && sgn(hour) !== sgn(minute)) {
-          throw new Error("timezone hour and minute must be of the same sign for a non-zero hour");
+      function assertTimezone(offset) {
+        if (!util.isInteger(offset)) {
+          throw new Error("timezone offset must be an integer");
         }
       }
 
@@ -313,7 +274,18 @@ define([
           return quotient(a - min, max - min);
         }
 
-        return function (year, month, day, hour, minute, second, tzhour, tzminute) {
+        return function (year, month, day, hour, minute, second, offset) {
+
+          var negativeOffset = offset < 0;
+          negativeOffset && (offset = -offset);
+
+          var tzhour = quotient(offset, 60);
+          var tzminute = offset % 60;
+
+          if (negativeOffset) {
+            tzhour = -tzhour;
+            tzminute = -tzminute;
+          }
 
           var tmp = minute - tzminute;
           minute = modulo(tmp, 60);
@@ -378,11 +350,10 @@ define([
 
         assertTime(hour, minute, second);
 
-        if (util.isDefined(options.tzhour) || util.isDefined(options.tzminute)) {
-          var tzhour = optionOrDefault(options, 'tzhour', 0);
-          var tzminute = optionOrDefault(options, 'tzminute', 0);
-          assertTimezone(tzhour, tzminute);
-          var n = normalizeToZulu(year, month, day, hour, minute, second, tzhour, tzminute);
+        if (util.isDefined(options.offset)) {
+          var offset = options.offset;
+          assertTimezone(offset);
+          var n = normalizeToZulu(year, month, day, hour, minute, second, offset);
           this._year = n.year;
           this._month = n.month;
           this._day = n.day;

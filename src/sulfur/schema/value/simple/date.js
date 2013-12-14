@@ -71,10 +71,9 @@ define([
           day: parseDec(m[3])
         };
         if (m[4] === 'Z') {
-          options.tzhour = options.tzminute = 0;
+          options.offset = 0;
         } else if (m[4]) {
-          options.tzhour = parseDec(m[5]);
-          options.tzminute = parseDec(m[6]);
+          options.offset = parseDec(m[5]) * 60 + parseDec(m[6]);
         }
         try {
           return this.create(options);
@@ -96,8 +95,7 @@ define([
      * @option options {number} year (default 1)
      * @option options {number} month (default 1)
      * @option options {number} day (default 1)
-     * @option options {number} tzhour (default 0 when `tzminute` given)
-     * @option options {number} tzminute (default 0 when `tzhour` given)
+     * @option options {number} offset (optional)
      *
      * @throw {Error} if the date or timezone is not valid
      */
@@ -110,8 +108,7 @@ define([
         month: options.month,
         day: options.day,
         hour: 12,
-        tzhour: options.tzhour,
-        tzminute: options.tzminute
+        offset: options.offset
       });
     },
 

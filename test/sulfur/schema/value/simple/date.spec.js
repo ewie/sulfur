@@ -60,8 +60,7 @@ define([
           year: 1,
           month: 1,
           day: 1,
-          tzhour: 0,
-          tzminute: 0
+          offset: 0
         });
       });
 
@@ -72,8 +71,7 @@ define([
           year: 1,
           month: 1,
           day: 1,
-          tzhour: 1,
-          tzminute: 0
+          offset: 60
         });
       });
 
@@ -84,8 +82,7 @@ define([
           year: 1,
           month: 1,
           day: 1,
-          tzhour: -1,
-          tzminute: 0
+          offset: -60
         });
       });
 
@@ -231,76 +228,36 @@ define([
 
       context("with a timezone", function () {
 
-        it("should use zero for timezone hour when not given", function () {
-          var dt = DateValue.create({ tzminute: 0 });
-          expect(dt).to.eql(DateValue.create({ tzhour: 0, tzminute: 0 }));
-        });
-
-        it("should use zero for timezone minute when not given", function () {
-          var dt = DateValue.create({ tzhour: 0 });
-          expect(dt).to.eql(DateValue.create({ tzhour: 0, tzminute: 0 }));
-        });
-
-        it("should reject a non-integer timezone hour", function () {
-          expect(bind(DateValue, 'create', { tzhour: 1.2 }))
-            .to.throw("timezone hour must be an integer");
-        });
-
-        it("should reject timezone hour greater than 99", function () {
-          expect(bind(DateValue, 'create', { tzhour: 100 }))
-            .to.throw("timezone hour must not be greater than 99");
-        });
-
-        it("should reject timezone hour less than -99", function () {
-          expect(bind(DateValue, 'create', { tzhour: -100 }))
-            .to.throw("timezone hour must not be less than -99");
-        });
-
-        it("should reject a non-integer timezone minute", function () {
-          expect(bind(DateValue, 'create', { tzminute: 1.2 }))
-            .to.throw("timezone minute must be an integer");
-        });
-
-        it("should reject timezone minute greater than 99", function () {
-          expect(bind(DateValue, 'create', { tzminute: 100 }))
-            .to.throw("timezone minute must not be greater than 99");
-        });
-
-        it("should reject timezone minute less than -99", function () {
-          expect(bind(DateValue, 'create', { tzminute: -100 }))
-            .to.throw("timezone minute must not be less than -99");
-        });
-
-        it("should reject non-zero hour and non-zero minute with different signs", function () {
-          expect(bind(DateValue, 'create', { tzhour: 1, tzminute: -30 }))
-            .to.throw("timezone hour and minute must be of the same sign for a non-zero hour");
+        it("should reject a non-integer timezone offset", function () {
+          expect(bind(DateValue, 'create', { offset: 1.2 }))
+            .to.throw("timezone offset must be an integer");
         });
 
         it("should adjust the day to UTC", function () {
-          var dt = DateValue.create({ day: 3, tzhour: 24 });
-          var x = DateValue.create({ day: 2, tzhour: 0 });
+          var dt = DateValue.create({ day: 3, offset: 24 * 60 });
+          var x = DateValue.create({ day: 2, offset: 0 });
           expect(dt).to.eql(x);
         });
 
         it("should adjust the month to UTC", function () {
-          var dt = DateValue.create({ month: 1, day: 31, tzhour: -24 });
-          var x = DateValue.create({ month: 2, day: 1, tzhour: 0 });
+          var dt = DateValue.create({ month: 1, day: 31, offset: -24 * 60 });
+          var x = DateValue.create({ month: 2, day: 1, offset: 0 });
           expect(dt).to.eql(x);
         });
 
         it("should adjust the year to UTC", function () {
-          var dt = DateValue.create({ year: 2, tzhour: 24 });
-          var x = DateValue.create({ year: 1, month: 12, day: 31, tzhour: 0 });
+          var dt = DateValue.create({ year: 2, offset: 24 * 60 });
+          var x = DateValue.create({ year: 1, month: 12, day: 31, offset: 0 });
           expect(dt).to.eql(x);
         });
 
         it("should throw if year will be less than 1", function () {
-          expect(bind(DateValue, 'create', { tzhour: 13 }))
+          expect(bind(DateValue, 'create', { offset: 13 * 60 }))
             .to.throw("cannot normalize if year will be less than 1");
         });
 
         it("should throw if year will be greater than 9999", function () {
-          expect(bind(DateValue, 'create', { year: 9999, month: 12, day: 31, tzhour: -13 }))
+          expect(bind(DateValue, 'create', { year: 9999, month: 12, day: 31, offset: -13 * 60 }))
             .to.throw("cannot normalize if year will be greater than 9999");
         });
 
@@ -361,22 +318,22 @@ define([
       context("with a timezone", function () {
 
         it("should use 'Z' when UTC", function () {
-          var dt = DateValue.create({ tzhour: 0 });
+          var dt = DateValue.create({ offset: 0 });
           expect(dt.toString()).to.equal('0001-01-01Z');
         });
 
         it("should use the recoverable timezone", function () {
-          var dt = DateValue.create({ day: 2, tzhour: 14, tzminute: 17  });
+          var dt = DateValue.create({ day: 2, offset: 14 * 60 + 17  });
           expect(dt.toString()).to.equal('0001-01-01-09:43');
         });
 
         it("should use '+' for a positive recoverable timezone", function () {
-          var dt = DateValue.create({ day: 2, tzhour: -14, tzminute: -17  });
+          var dt = DateValue.create({ day: 2, offset: -(14 * 60 + 17) });
           expect(dt.toString()).to.equal('0001-01-03+09:43');
         });
 
         it("should use '-' for a negative recoverable timezone", function () {
-          var dt = DateValue.create({ day: 2, tzhour: 14, tzminute: 17  });
+          var dt = DateValue.create({ day: 2, offset: 14 * 60 + 17  });
           expect(dt.toString()).to.equal('0001-01-01-09:43');
         });
 
@@ -387,7 +344,7 @@ define([
     describe('#hasTimezone()', function () {
 
       it("should return true if it has a timezone", function () {
-        var dt = DateValue.create({ tzhour: 0 });
+        var dt = DateValue.create({ offset: 0 });
         expect(dt.hasTimezone()).to.be.true;
       });
 
@@ -408,7 +365,7 @@ define([
       context("with a timezone", function () {
 
         it("should return 0/0 if already in UTC", function () {
-          var dt = DateValue.create({ tzhour: 0 });
+          var dt = DateValue.create({ offset: 0 });
           expect(dt.getRecoverableTimezone()).to.eql({
             hour: 0,
             minute: 0
@@ -416,7 +373,7 @@ define([
         });
 
         it("should return -11/-59 when timezone is -11:59", function () {
-          var dt = DateValue.create({ tzhour: -11, tzminute: -59 });
+          var dt = DateValue.create({ offset: -(11 * 60 + 59) });
           expect(dt.getRecoverableTimezone()).to.eql({
             hour: -11,
             minute: -59
@@ -424,7 +381,7 @@ define([
         });
 
         it("should return 12/00 when timezone is +12:00", function () {
-          var dt = DateValue.create({ tzhour: 12 });
+          var dt = DateValue.create({ offset: 12 * 60 });
           expect(dt.getRecoverableTimezone()).to.eql({
             hour: 12,
             minute: 0
@@ -432,7 +389,7 @@ define([
         });
 
         it("should return (24:00-timezone) when timezone is greater than +12:00", function () {
-          var dt = DateValue.create({ day: 2, tzhour: 12, tzminute: 42 });
+          var dt = DateValue.create({ day: 2, offset: 12 * 60 + 42 });
           expect(dt.getRecoverableTimezone()).to.eql({
             hour: -11,
             minute: -18
@@ -440,7 +397,7 @@ define([
         });
 
         it("should return (timezone+24:00) when timezone is less than -11:59", function () {
-          var dt = DateValue.create({ tzhour: -12, tzminute: -42 });
+          var dt = DateValue.create({ offset: -(12 * 60 + 42) });
           expect(dt.getRecoverableTimezone()).to.eql({
             hour: 11,
             minute: 18
@@ -456,8 +413,8 @@ define([
       it("should call sulfur/schema/dateTime#cmp() with datetimes based on both LHS' and RHS' midpoints", function () {
         var cmp = sandbox.spy(DateTimeValue.prototype, 'cmp');
 
-        var lhs = DateValue.create({ year: 2000, month: 3, day: 17, tzhour: 5, tzminute: 13 });
-        var rhs = DateValue.create({ year: 1999, month: 12, day: 6, tzhour: -12, tzminute: -3 });
+        var lhs = DateValue.create({ year: 2000, month: 3, day: 17, offset: 5 * 60 + 13 });
+        var rhs = DateValue.create({ year: 1999, month: 12, day: 6, offset: -(12 * 60 + 3) });
 
         var r = lhs.cmp(rhs);
 
@@ -466,8 +423,7 @@ define([
           month: 12,
           day: 6,
           hour: 12,
-          tzhour: -12,
-          tzminute: -3
+          offset: -(12 * 60 + 3)
         }));
 
         expect(cmp.getCall(0).thisValue).to.eql(DateTimeValue.create({
@@ -475,8 +431,7 @@ define([
           month: 3,
           day: 17,
           hour: 12,
-          tzhour: 5,
-          tzminute: 13
+          offset: 5 * 60 + 13
         }));
 
         expect(cmp).to.have.returned(r);
