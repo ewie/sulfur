@@ -10,30 +10,39 @@ define(['sulfur/util/factory'], function (Factory) {
 
   'use strict';
 
-  return Factory.derive({
+  return Factory.clone({
+
+    parse: function (s) {
+      return this.create(s);
+    }
+
+  }).augment({
 
     /**
-     * @param {sulfur/schema/value/simple/string} id
-     * @param {sulfur/schema/file} file (optional)
+     * @param {string} value
      */
-    initialize: function (id, file) {
-      this._id = id;
-      this._file = file;
+    initialize: function (value) {
+      this._value = value;
     },
 
     /**
-     * @return {sulfur/schema/value/simple/string} the reference's identifier
+     * @return {string} the reference's identifier
      */
-    get identifier() {
-      return this._id;
+    get value() { return this._value },
+
+    /**
+     * @return {true} when equal
+     * @return {false} when not equal
+     */
+    eq: function (other) {
+      return this.value === other.value;
     },
 
     /**
-     * @return {sulfur/schema/file} the file when defined
-     * @return {undefined} when no file is defined
+     * @return {string} the reference's identifier
      */
-    get file() {
-      return this._file;
+    toString: function () {
+      return this.value;
     }
 
   });
