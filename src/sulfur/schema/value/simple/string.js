@@ -7,15 +7,15 @@
 /* global define */
 
 define([
-  'sulfur/util/factory',
+  'sulfur/schema/value/simple',
   'sulfur/util'
-], function (Factory, util) {
+], function (SimpleValue, util) {
 
   'use strict';
 
   var pattern = /^(?:[\x09\x0A\x0D\x20-\uD7FF]|[\uD800-\uDBFF][\uDC00-\uDFFF]|[\uE000-\uFFFD])*$/;
 
-  return Factory.clone({
+  return SimpleValue.clone({
 
     /**
      * Parse a string value.

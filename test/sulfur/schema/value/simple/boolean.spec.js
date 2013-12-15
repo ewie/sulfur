@@ -9,8 +9,9 @@
 
 define([
   'shared',
+  'sulfur/schema/value/simple',
   'sulfur/schema/value/simple/boolean'
-], function (shared, BooleanValue) {
+], function (shared, SimpleValue, BooleanValue) {
 
   'use strict';
 
@@ -18,6 +19,10 @@ define([
   var bind = shared.bind;
 
   describe('sulfur/schema/value/simple/boolean', function () {
+
+    it("should be derived from sulfur/schema/value/simple", function () {
+      expect(SimpleValue).to.be.prototypeOf(BooleanValue);
+    });
 
     describe('.parse()', function () {
 

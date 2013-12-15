@@ -9,8 +9,9 @@
 
 define([
   'shared',
+  'sulfur/schema/value/simple',
   'sulfur/schema/value/simple/mediaType'
-], function (shared, MediaTypeValue) {
+], function (shared, SimpleValue, MediaTypeValue) {
 
   'use strict';
 
@@ -19,6 +20,10 @@ define([
   var sinon = shared.sinon;
 
   describe('sulfur/schema/value/simple/mediaType', function () {
+
+    it("should be derived from sulfur/schema/value/simple", function () {
+      expect(SimpleValue).to.be.prototypeOf(MediaTypeValue);
+    });
 
     describe('.parse()', function () {
 
@@ -130,6 +135,28 @@ define([
       it("should return undefined when no subtype is defined", function () {
         var mt = MediaTypeValue.create();
         expect(mt.subtype).to.be.undefined;
+      });
+
+    });
+
+    describe('#eq()', function () {
+
+      it("should return false when #type is different", function () {
+        var mt = MediaTypeValue.create('text');
+        var other = MediaTypeValue.create('image');
+        expect(mt.eq(other)).to.be.false;
+      });
+
+      it("should return false when #subtype is different", function () {
+        var mt = MediaTypeValue.create('text', 'plain');
+        var other = MediaTypeValue.create('text', 'html');
+        expect(mt.eq(other)).to.be.false;
+      });
+
+      it("should return true when #type and #subtype are respectively identical", function () {
+        var mt = MediaTypeValue.create('text', 'plain');
+        var other = MediaTypeValue.create('text', 'plain');
+        expect(mt.eq(other)).to.be.true;
       });
 
     });

@@ -6,7 +6,7 @@
 
 /* global define */
 
-define(['sulfur/util/factory'], function (Factory) {
+define(['sulfur/schema/value/simple'], function (SimpleValue) {
 
   'use strict';
 
@@ -80,7 +80,7 @@ define(['sulfur/util/factory'], function (Factory) {
 
   }());
 
-  return Factory.clone({
+  return SimpleValue.clone({
 
     parse: function (s) {
       return this.create(s);
@@ -95,8 +95,12 @@ define(['sulfur/util/factory'], function (Factory) {
       this._value = value;
     },
 
-    get length() {
-      return this._value.length;
+    get value() { return this._value },
+
+    get length() { return this.value.length },
+
+    eq: function (other) {
+      return this.value === other.value;
     },
 
     toString: function () {

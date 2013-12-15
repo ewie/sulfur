@@ -8,8 +8,9 @@
 
 define([
   'sulfur/schema/value/list',
+  'sulfur/schema/value/simple',
   'sulfur/util'
-], function (ListValue, util) {
+], function (ListValue, SimpleValue, util) {
 
   'use strict';
 
@@ -29,6 +30,10 @@ define([
         get itemValueType() { return itemValueType; }
       });
     },
+
+    // XXX we cannot derive from sulfur/schema/value/simple so just copy the
+    //   desired method
+    isValidLiteral: SimpleValue.isValidLiteral,
 
     parse: function (s) {
       var itemValueType = this.itemValueType;

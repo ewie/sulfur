@@ -6,11 +6,11 @@
 
 /* global define */
 
-define(['sulfur/util/factory'], function (Factory) {
+define(['sulfur/schema/value/simple'], function (SimpleValue) {
 
   'use strict';
 
-  return Factory.clone({
+  return SimpleValue.clone({
 
     /**
      * Parse a string representing a boolean literal.

@@ -7,9 +7,9 @@
 /* global define */
 
 define([
-  'sulfur/util/factory',
-  'sulfur/schema/regex'
-], function (Factory, Regex) {
+  'sulfur/schema/regex',
+  'sulfur/schema/value/simple'
+], function (Regex, SimpleValue) {
 
   'use strict';
 
@@ -18,7 +18,7 @@ define([
    * Provides a simple interface to match a string against the pattern.
    */
 
-  return Factory.clone({
+  return SimpleValue.clone({
 
     parse: function (s) { return this.create(s) }
 
@@ -40,6 +40,19 @@ define([
       }
       this._source = source;
       this._compiledPattern = compiledPattern;
+    },
+
+    /**
+     * @return {string} the source
+     */
+    get source() { return this._source },
+
+    /**
+     * @return {true} when equal
+     * @return {false} when not equal
+     */
+    eq: function (other) {
+      return this.source === other.source;
     },
 
     /**

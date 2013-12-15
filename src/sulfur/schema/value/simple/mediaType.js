@@ -7,16 +7,16 @@
 /* global define */
 
 define([
-  'sulfur/util/factory',
+  'sulfur/schema/value/simple',
   'sulfur/util'
-], function (Factory, util) {
+], function (SimpleValue, util) {
 
   'use strict';
 
   var TYPE_PATTERN = /^(?:application|audio|image|text|video)$/;
   var SUBTYPE_PATTERN = /^[^\x00-\x20\x7F()<>@,;:\\"/\[\]?.=]+$/;
 
-  return Factory.clone({
+  return SimpleValue.clone({
 
     parse: function (s) {
       var p = s.indexOf('/');
@@ -68,6 +68,14 @@ define([
      */
     get subtype() {
       return this._subtype;
+    },
+
+    /**
+     * @return {true} when equal
+     * @return {false} when not equal
+     */
+    eq: function (other) {
+      return this.type === other.type && this.subtype === other.subtype;
     },
 
     /**

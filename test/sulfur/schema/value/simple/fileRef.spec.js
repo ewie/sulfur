@@ -9,8 +9,9 @@
 
 define([
   'shared',
+  'sulfur/schema/value/simple',
   'sulfur/schema/value/simple/fileRef'
-], function (shared, FileRefValue) {
+], function (shared, SimpleValue, FileRefValue) {
 
   'use strict';
 
@@ -18,6 +19,10 @@ define([
   var sinon = shared.sinon;
 
   describe('sulfur/schema/value/simple/fileRef', function () {
+
+    it("should be derived from sulfur/schema/value/simple", function () {
+      expect(SimpleValue).to.be.prototypeOf(FileRefValue);
+    });
 
     describe('.parse()', function () {
 

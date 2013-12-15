@@ -9,8 +9,9 @@
 
 define([
   'shared',
+  'sulfur/schema/value/simple',
   'sulfur/schema/value/simple/whiteSpace'
-], function (shared, WhiteSpaceValue) {
+], function (shared, SimpleValue, WhiteSpaceValue) {
 
   'use strict';
 
@@ -19,6 +20,10 @@ define([
   var bind = shared.bind;
 
   describe('sulfur/schema/value/simple/whiteSpace', function () {
+
+    it("should be derived from sulfur/schema/value/simple", function () {
+      expect(SimpleValue).to.be.prototypeOf(WhiteSpaceValue);
+    });
 
     describe('.parse()', function () {
 
@@ -56,6 +61,35 @@ define([
           expect(bind(WhiteSpaceValue, 'create', value)).to.not.throw();
         });
 
+      });
+
+    });
+
+    describe('#value', function () {
+
+      'collapse preserve replace'.split(' ').forEach(function (value) {
+
+        it("should return '" + value + "' when value is '" + value + "'", function () {
+          var ws = WhiteSpaceValue.create(value);
+          expect(ws.value).to.equal(value);
+        });
+
+      });
+
+    });
+
+    describe('#eq()', function () {
+
+      it("should return true when #value is identical", function () {
+        var ws = WhiteSpaceValue.create('collapse');
+        var other = WhiteSpaceValue.create('collapse');
+        expect(ws.eq(other)).to.be.true;
+      });
+
+      it("should return false when #value is different", function () {
+        var ws = WhiteSpaceValue.create('collapse');
+        var other = WhiteSpaceValue.create('replace');
+        expect(ws.eq(other)).to.be.false;
       });
 
     });

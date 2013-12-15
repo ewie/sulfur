@@ -6,11 +6,11 @@
 
 /* global define */
 
-define(['sulfur/util/factory'], function (Factory) {
+define(['sulfur/schema/value/simple'], function (SimpleValue) {
 
   'use strict';
 
-  return Factory.clone({
+  return SimpleValue.clone({
 
     parse: function (s) { return this.create(s) }
 
@@ -21,6 +21,12 @@ define(['sulfur/util/factory'], function (Factory) {
         throw new Error('expecting either "collapse", "preserve" or "replace"');
       }
       this._value = value;
+    },
+
+    get value() { return this._value },
+
+    eq: function (other) {
+      return this.value === other.value;
     },
 
     toString: function () { return this._value },

@@ -10,8 +10,9 @@
 define([
   'shared',
   'sulfur/schema/regex',
+  'sulfur/schema/value/simple',
   'sulfur/schema/value/simple/pattern'
-], function (shared, Regex, PatternValue) {
+], function (shared, Regex, SimpleValue, PatternValue) {
 
   'use strict';
 
@@ -29,6 +30,10 @@ define([
 
     afterEach(function () {
       sandbox.restore();
+    });
+
+    it("should be derived from sulfur/schema/value/simple", function () {
+      expect(SimpleValue).to.be.prototypeOf(PatternValue);
     });
 
     describe('.parse()', function () {
@@ -56,6 +61,31 @@ define([
         sandbox.stub(Regex, 'compile').throws(new Error("invalid for testing purposes"));
         expect(bind(PatternValue, 'create', '.'))
           .to.throw('invalid pattern "." (error: invalid for testing purposes)');
+      });
+
+    });
+
+    describe('#source', function () {
+
+      it("should return the source", function () {
+        var p = PatternValue.create('[0-9]');
+        expect(p.source).to.equal('[0-9]');
+      });
+
+    });
+
+    describe('#eq()', function () {
+
+      it("should return true when #source is identical", function () {
+        var p = PatternValue.create('[a-z]');
+        var other = PatternValue.create('[a-z]');
+        expect(p.eq(other)).to.be.true;
+      });
+
+      it("should return false when #source is different", function () {
+        var p = PatternValue.create('[a-z]');
+        var other = PatternValue.create('[A-Z]');
+        expect(p.eq(other)).to.be.false;
       });
 
     });

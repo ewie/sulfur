@@ -9,8 +9,9 @@
 
 define([
   'shared',
+  'sulfur/schema/value/simple',
   'sulfur/schema/value/simple/uri'
-], function (shared, UriValue) {
+], function (shared, SimpleValue, UriValue) {
 
   'use strict';
 
@@ -19,6 +20,10 @@ define([
   var bind = shared.bind;
 
   describe('sulfur/schema/value/simple/uri', function () {
+
+    it("should be derived from sulfur/schema/value/simple", function () {
+      expect(SimpleValue).to.be.prototypeOf(UriValue);
+    });
 
     describe('.parse()', function () {
 
@@ -58,12 +63,38 @@ define([
 
     });
 
+    describe('#value', function () {
+
+      it("should return the URI", function () {
+        var s = 'urn:example:foo';
+        var u = UriValue.create(s);
+        expect(u.value).to.equal(s);
+      });
+
+    });
+
     describe('#length', function () {
 
       it("should return the length of the URI", function () {
         var s = 'foo';
         var u = UriValue.create(s);
         expect(u.length).to.equal(s.length);
+      });
+
+    });
+
+    describe('#eq()', function () {
+
+      it("should return true when #value is identical", function () {
+        var u = UriValue.create('x');
+        var other = UriValue.create('x');
+        expect(u.eq(other)).to.be.true;
+      });
+
+      it("should return false when #value is different", function () {
+        var u = UriValue.create('x');
+        var other = UriValue.create('y');
+        expect(u.eq(other)).to.be.false;
       });
 
     });

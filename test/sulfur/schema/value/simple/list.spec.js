@@ -10,8 +10,9 @@
 define([
   'shared',
   'sulfur/schema/value/list',
+  'sulfur/schema/value/simple',
   'sulfur/schema/value/simple/list'
-], function (shared, ListValue, SimpleListValue) {
+], function (shared, ListValue, SimpleValue, SimpleListValue) {
 
   'use strict';
 
@@ -23,6 +24,10 @@ define([
 
     it("should be derived from sulfur/schema/value/list", function () {
       expect(ListValue).to.be.prototypeOf(SimpleListValue);
+    });
+
+    it("should mixin from sulfur/schema/value/simple", function () {
+      expect(SimpleListValue.isValidLiteral).to.equal(SimpleValue.isValidLiteral);
     });
 
     describe('.withItemValueType()', function () {

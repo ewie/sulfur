@@ -6,18 +6,18 @@
 
 /* global define */
 
-define(['sulfur/util/factory'], function (Factory) {
+define(['sulfur/schema/value/simple'], function (SimpleValue) {
 
   'use strict';
 
-  /*!
+  /**
    * @abstract
    *
    * @implement {boolean} #cmp({sulfur/schema/value/simple/numeric})
    */
-  return Factory.derive({
+  return SimpleValue.derive({
 
-    /*!
+    /**
      * Check if this value is equal to the other value.
      *
      * @return {true} when equal
@@ -25,7 +25,7 @@ define(['sulfur/util/factory'], function (Factory) {
      */
     eq: function (other) { return this.cmp(other) === 0 },
 
-    /*!
+    /**
      * Check if this value is less than the other value.
      *
      * @return {true} when less
@@ -33,7 +33,7 @@ define(['sulfur/util/factory'], function (Factory) {
      */
     lt: function (other) { return this.cmp(other) < 0 },
 
-    /*!
+    /**
      * Check if this value is greater than the other value.
      *
      * @return {true} when greater
@@ -41,7 +41,7 @@ define(['sulfur/util/factory'], function (Factory) {
      */
     gt: function (other) { return this.cmp(other) > 0 },
 
-    /*!
+    /**
      * Check if this value is less than or equal to the other value.
      *
      * @return {true} when less or equal
@@ -49,7 +49,7 @@ define(['sulfur/util/factory'], function (Factory) {
      */
     lteq: function (other) { return !this.gt(other) },
 
-    /*!
+    /**
      * Check if this value is greater than or equal to the other value.
      *
      * @return {true} when greater or equal

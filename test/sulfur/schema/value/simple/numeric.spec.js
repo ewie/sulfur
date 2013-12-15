@@ -9,8 +9,9 @@
 
 define([
   'shared',
+  'sulfur/schema/value/simple',
   'sulfur/schema/value/simple/numeric'
-], function (shared, NumericValue) {
+], function (shared, SimpleValue, NumericValue) {
 
   'use strict';
 
@@ -25,6 +26,10 @@ define([
       DerivedNumericValue = NumericValue.derive({
         cmp: function () {}
       });
+    });
+
+    it("should be derived from sulfur/schema/value/simple", function () {
+      expect(SimpleValue).to.be.prototypeOf(NumericValue);
     });
 
     describe('#eq()', function () {
