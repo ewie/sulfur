@@ -194,15 +194,17 @@ define([
 
       var isEnumerable = Object.prototype.propertyIsEnumerable;
 
-      function valueOf(x) {
-        return typeof x === 'function' ? x() : x;
+      function valueOf(x, factory) {
+        return typeof x === 'function' ? x(factory) : x;
       }
 
-      function combine(attrs, xattrs, dattrs) {
+      function combine(attrs, object, factory) {
+        var xattrs = object ? factory._extract(object) : {};
+        var dattrs = factory.attributes;
         return Object.keys(dattrs).reduce(function (_attrs, name) {
           _attrs[name] = isEnumerable.call(attrs, name) ?
             attrs[name] : isEnumerable.call(xattrs, name) ?
-              xattrs[name] : valueOf(dattrs[name].default);
+              xattrs[name] : valueOf(dattrs[name].default, factory);
           return _attrs;
         }, {});
       }
@@ -215,9 +217,7 @@ define([
         this._attrs = Object.create(null);
         this._errors = Errors.create();
 
-        attrs = combine(attrs,
-          (object ? this.factory._extract(object) : {}),
-          this.factory.attributes);
+        attrs = combine(attrs, object, this.factory);
 
         this.update(attrs);
       };

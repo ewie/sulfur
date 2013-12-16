@@ -142,9 +142,19 @@ define([
         expect(model.get('foo')).to.equal(0);
       });
 
-      it("should use the result a default attribute when callable", function () {
-        var model = DerivedModel.create({});
-        expect(model.get('bar')).to.equal(42);
+      context("when the default attribute value is callable", function () {
+
+        it("should call the function with the model factory", function () {
+          var spy = sinon.spy(DerivedModel.attributes.bar, 'default');
+          DerivedModel.create({});
+          expect(spy).to.be.calledWith(sinon.match.same(DerivedModel));
+        });
+
+        it("should use the result as default value", function () {
+          var model = DerivedModel.create({});
+          expect(model.get('bar')).to.equal(42);
+        });
+
       });
 
       it("should ignore inherited properties within the direct attributes", function () {
