@@ -49,6 +49,8 @@ define([
       this.source = source;
     },
 
+    get isEmpty() { return this.source.length === 0 },
+
     advance: function (count) {
       this.source = this.source.substr(count);
     },
@@ -402,8 +404,12 @@ define([
      * @return {pattern} a pattern as the root of the syntax tree
      */
     parse: function (source) {
-      var scan = Scanner.create(source);
-      return parsePattern(scan);
+      var scanner = Scanner.create(source);
+      var pattern = parsePattern(scanner);
+      if (!scanner.isEmpty) {
+        throw new Error("invalid pattern");
+      }
+      return pattern;
     }
   });
 

@@ -93,6 +93,11 @@ define([
         expect(bind(parser, 'parse', '\\x')).to.throw("unknown escape \\x");
       });
 
+      it("should reject a not fully consumed pattern", function () {
+        expect(bind(parser, 'parse', '?'))
+          .to.throw("invalid pattern");
+      });
+
       describe("alternations", function () {
 
         it("should parse alternations", function () {
