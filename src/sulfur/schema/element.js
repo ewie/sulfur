@@ -6,13 +6,29 @@
 
 /* global define */
 
-define(['sulfur/util/factory'], function (Factory) {
+define([
+  'sulfur/schema/regex',
+  'sulfur/util/factory'
+], function (Regex, Factory) {
 
   'use strict';
 
-  return Factory.derive({
+  return Factory.clone({
+
+    isValidName: (function () {
+
+      var namePattern = Regex.compile('[\\i-[:]][\\c-[:]]*');
+
+      return function (s) { return namePattern.test(s) };
+
+    }())
+
+  }).augment({
 
     initialize: function (name, type, options) {
+      if (!this.factory.isValidName(name)) {
+        throw new Error("expecting name to be an NCName");
+      }
       options || (options = {});
       this._name = name;
       this._type = type;
