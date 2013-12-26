@@ -17,6 +17,7 @@ define([
   'sulfur/schema/serializer/type/complex',
   'sulfur/schema/type/complex/list',
   'sulfur/schema/type/complex/restricted',
+  'sulfur/schema/value/simple/integer',
   'sulfur/util/document'
 ], function (
     shared,
@@ -28,6 +29,7 @@ define([
     ComplexTypeSerializer,
     ListType,
     RestrictedType,
+    IntegerValue,
     Document
 ) {
 
@@ -132,7 +134,7 @@ define([
         });
 
         it("should add attribute @maxOccurs with the maximum length as value when defined", function () {
-          var type = ListType.create(element, { maxLength: 3 });
+          var type = ListType.create(element, { maxLength: IntegerValue.parse('3') });
           var e = complexTypeSerializer.serializeType(type, typeSerializer, ctx);
           expect(e.firstChild.getAttribute('maxOccurs')).to.equal('3');
         });
@@ -144,7 +146,7 @@ define([
         });
 
         it("should add attribute @minOccurs with the minimum length as value when defined", function () {
-          var type = ListType.create(element, { minLength: 1 });
+          var type = ListType.create(element, { minLength: IntegerValue.parse('1') });
           var e = complexTypeSerializer.serializeType(type, typeSerializer, ctx);
           expect(e.firstChild.getAttribute('minOccurs')).to.equal('1');
         });

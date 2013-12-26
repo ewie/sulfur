@@ -12,6 +12,7 @@ define([
   'sulfur/schema/type/complex/list',
   'sulfur/schema/type/complex/primitive',
   'sulfur/schema/type/complex/restricted',
+  'sulfur/schema/value/simple/integer',
   'sulfur/util',
   'sulfur/util/stringMap',
   'sulfur/util/xpath'
@@ -21,6 +22,7 @@ define([
     ListType,
     PrimitiveType,
     RestrictedType,
+    IntegerValue,
     util,
     StringMap,
     XPath
@@ -194,9 +196,9 @@ define([
           if (value === 'unbounded') {
             return;
           }
-          return parseInt(value, 10);
+          return IntegerValue.parse(value);
         }
-        return 1;
+        return IntegerValue.parse('1');
       }
 
       function resolveSequence(element, resolver, xpath) {

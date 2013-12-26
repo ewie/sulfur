@@ -12,16 +12,14 @@ define([
   'sulfur/schema/validator/each',
   'sulfur/schema/validator/maximum',
   'sulfur/schema/validator/minimum',
-  'sulfur/schema/validator/property',
-  'sulfur/util'
+  'sulfur/schema/validator/property'
 ], function (
     Factory,
     AllValidator,
     EachValidator,
     MaximumValidator,
     MinimumValidator,
-    PropertyValidator,
-    util
+    PropertyValidator
 ) {
 
   'use strict';
@@ -29,35 +27,40 @@ define([
   return Factory.derive({
 
     initialize: function (element, options) {
-      this._element = element;
       if (options) {
-        this._maxLength = options.maxLength;
-        this._minLength = options.minLength;
+        var maxLength = options.maxLength;
+        var minLength = options.minLength;
+        if (maxLength && maxLength.isNegative) {
+          throw new Error("expecting maxLength to be non-negative");
+        }
+        if (minLength && minLength.isNegative) {
+          throw new Error("expecting minLength to be non-negative");
+        }
+        if (maxLength && minLength && maxLength.lt(minLength)) {
+          throw new Error("expecting minLength and maxLength to be a non-empty range");
+        }
+        this._maxLength = maxLength;
+        this._minLength = minLength;
       }
+      this._element = element;
     },
 
-    get element() {
-      return this._element;
-    },
+    get element() { return this._element },
 
-    get maxLength() {
-      return this._maxLength;
-    },
+    get maxLength() { return this._maxLength },
 
-    get minLength() {
-      return this._minLength;
-    },
+    get minLength() { return this._minLength },
 
     createValidator: function () {
       var validators = [
         PropertyValidator.create('toArray',
           EachValidator.create(this.element.type.createValidator()))
       ];
-      if (util.isDefined(this.maxLength)) {
+      if (this.maxLength) {
         validators.push(PropertyValidator.create('length',
           MaximumValidator.create(this.maxLength)));
       }
-      if (util.isDefined(this.minLength)) {
+      if (this.minLength) {
         validators.push(PropertyValidator.create('length',
           MinimumValidator.create(this.minLength)));
       }

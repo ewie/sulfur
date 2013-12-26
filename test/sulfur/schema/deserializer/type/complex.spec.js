@@ -22,7 +22,8 @@ define([
   'sulfur/schema/type/complex/restricted',
   'sulfur/schema/type/simple/primitive',
   'sulfur/schema/type/simple/restricted',
-  'sulfur/schema/value/simple/double'
+  'sulfur/schema/value/simple/double',
+  'sulfur/schema/value/simple/integer'
 ], function (
     shared,
     Element,
@@ -38,7 +39,8 @@ define([
     ComplexRestrictedType,
     SimplePrimitiveType,
     SimpleRestrictedType,
-    DoubleValue
+    DoubleValue,
+    IntegerValue
 ) {
 
   'use strict';
@@ -499,7 +501,9 @@ define([
             expect(type).to.eql(
               ComplexListType.create(
                 Element.create('bar', simpleType),
-                { maxLength: 1, minLength: 0 }));
+                { maxLength: IntegerValue.parse('1'),
+                  minLength: IntegerValue.create()
+                }));
           });
 
           it("should use value 1 as required minimum number of entries when attribute @minOccurs is not defined", function () {
@@ -517,7 +521,9 @@ define([
             expect(type).to.eql(
               ComplexListType.create(
                 Element.create('bar', simpleType),
-                { maxLength: 1, minLength: 1 }));
+                { maxLength: IntegerValue.parse('1'),
+                  minLength: IntegerValue.parse('1')
+                }));
           });
 
           it("should use value 1 as allowed maximum number of entries when attribute @maxOccurs is not defined", function () {
@@ -535,7 +541,9 @@ define([
             expect(type).to.eql(
               ComplexListType.create(
                 Element.create('bar', simpleType),
-                { maxLength: 1, minLength: 1 }));
+                { maxLength: IntegerValue.parse('1'),
+                  minLength: IntegerValue.parse('1')
+                }));
           });
 
           context("with attribute @maxOccurs", function () {
@@ -555,7 +563,9 @@ define([
               expect(type).to.eql(
                 ComplexListType.create(
                   Element.create('bar', simpleType),
-                  { maxLength: 3, minLength: 1 }));
+                  { maxLength: IntegerValue.parse('3'),
+                    minLength: IntegerValue.parse('1')
+                  }));
             });
 
             it("should use no allowed maximum number of items when 'unbounded'", function () {
@@ -573,7 +583,7 @@ define([
               expect(type).to.eql(
                 ComplexListType.create(
                   Element.create('bar', simpleType),
-                  { minLength: 1 }));
+                  { minLength: IntegerValue.parse('1') }));
             });
 
           });
@@ -595,7 +605,9 @@ define([
               expect(type).to.eql(
                 ComplexListType.create(
                   Element.create('bar', simpleType),
-                  { maxLength: 1, minLength: 1 }));
+                  { maxLength: IntegerValue.parse('1'),
+                    minLength: IntegerValue.parse('1')
+                  }));
             });
 
             it("should return undefined when there are multiple mandatory elements", function () {
@@ -630,7 +642,9 @@ define([
               expect(type).to.eql(
                 ComplexListType.create(
                   Element.create('bar', simpleType),
-                  { maxLength: 1, minLength: 1 }));
+                  { maxLength: IntegerValue.parse('1'),
+                    minLength: IntegerValue.parse('1')
+                  }));
             });
 
           });
@@ -669,7 +683,9 @@ define([
               expect(type).to.eql(
                 ComplexListType.create(
                   Element.create('foo', simpleType, { optional: true }),
-                  { maxLength: 1, minLength: 1 }));
+                  { maxLength: IntegerValue.parse('1'),
+                    minLength: IntegerValue.parse('1')
+                  }));
             });
 
           });

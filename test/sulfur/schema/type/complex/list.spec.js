@@ -14,7 +14,8 @@ define([
   'sulfur/schema/validator/each',
   'sulfur/schema/validator/maximum',
   'sulfur/schema/validator/minimum',
-  'sulfur/schema/validator/property'
+  'sulfur/schema/validator/property',
+  'sulfur/schema/value/simple/integer'
 ], function (
     shared,
     ListType,
@@ -22,15 +23,40 @@ define([
     EachValidator,
     MaximumValidator,
     MinimumValidator,
-    PropertyValidator
+    PropertyValidator,
+    IntegerValue
 ) {
 
   'use strict';
 
   var expect = shared.expect;
   var returns = shared.returns;
+  var bind = shared.bind;
 
   describe('sulfur/schema/type/complex/list', function () {
+
+    describe('#initialize()', function () {
+
+      it("should reject 'maxLength' with a negative value", function () {
+        expect(bind(ListType, 'create', {}, {
+          maxLength: IntegerValue.parse('-1')
+        })).to.throw("expecting maxLength to be non-negative");
+      });
+
+      it("should reject 'minLength' with a negative value", function () {
+        expect(bind(ListType, 'create', {}, {
+          minLength: IntegerValue.parse('-1')
+        })).to.throw("expecting minLength to be non-negative");
+      });
+
+      it("should reject when 'minLength' is greater than 'maxLength'", function () {
+        expect(bind(ListType, 'create', {}, {
+          maxLength: IntegerValue.create(),
+          minLength: IntegerValue.parse('1')
+        })).to.throw("expecting minLength and maxLength to be a non-empty range");
+      });
+
+    });
 
     describe('#element', function () {
 
@@ -45,8 +71,8 @@ define([
     describe('#maxLength', function () {
 
       it("should return the allowed maximum number of entries when defined", function () {
-        var type = ListType.create(undefined, { maxLength: 1 });
-        expect(type.maxLength).to.equal(1);
+        var type = ListType.create(undefined, { maxLength: IntegerValue.parse('1') });
+        expect(type.maxLength).to.eql(IntegerValue.parse('1'));
       });
 
       it("should return undefined when no bound is defined", function () {
@@ -59,8 +85,8 @@ define([
     describe('#minLength', function () {
 
       it("should return the required minimum number of entries when defined", function () {
-        var type = ListType.create(undefined, { minLength: 1 });
-        expect(type.minLength).to.equal(1);
+        var type = ListType.create(undefined, { minLength: IntegerValue.parse('1') });
+        expect(type.minLength).to.eql(IntegerValue.parse('1'));
       });
 
       it("should return undefined when no bound is defined", function () {
@@ -88,19 +114,19 @@ define([
       });
 
       it("should include a sulfur/schema/validator/property with property 'length' and a sulfur/schema/validator/maximum when a maximum length is defined", function () {
-        var type = ListType.create(element, { maxLength: 3 });
+        var type = ListType.create(element, { maxLength: IntegerValue.parse('3') });
         var v = type.createValidator();
         expect(v.validators).to.include.something.eql(
           PropertyValidator.create('length',
-            MaximumValidator.create(3)));
+            MaximumValidator.create(IntegerValue.parse('3'))));
       });
 
       it("should include a sulfur/schema/validator/property with property 'length' and a sulfur/schema/validator/minimum when a minimum length is defined", function () {
-        var type = ListType.create(element, { minLength: 2 });
+        var type = ListType.create(element, { minLength: IntegerValue.parse('2') });
         var v = type.createValidator();
         expect(v.validators).to.include.something.eql(
           PropertyValidator.create('length',
-            MinimumValidator.create(2)));
+            MinimumValidator.create(IntegerValue.parse('2'))));
       });
 
       it("should include a sulfur/schema/validator/property with method 'toArray' and a sulfur/schema/validator/each using the element type's validator", function () {
@@ -111,20 +137,16 @@ define([
             EachValidator.create(type.element.type.createValidator())));
       });
 
-      it("should include no sulfur/schema/validator/property with property 'length' and a sulfur/schema/validator/maximum when a maximum length is not defined", function () {
+      it("should include no sulfur/schema/validator/property with property 'length' and a sulfur/schema/validator/maximum when no maximum length is defined", function () {
         var type = ListType.create(element);
         var v = type.createValidator();
-        expect(v.validators).to.not.include.something.eql(
-          PropertyValidator.create('length',
-            MaximumValidator.create(3)));
+        expect(v.validators).to.have.lengthOf(1);
       });
 
-      it("should include no sulfur/schema/validator/property with property 'length' and a sulfur/schema/validator/minimum when a minimum length is not defined", function () {
+      it("should include no sulfur/schema/validator/property with property 'length' and a sulfur/schema/validator/minimum when no minimum length is defined", function () {
         var type = ListType.create(element);
         var v = type.createValidator();
-        expect(v.validators).to.not.include.something.eql(
-          PropertyValidator.create('length',
-            MinimumValidator.create(2)));
+        expect(v.validators).to.have.lengthOf(1);
       });
 
     });
