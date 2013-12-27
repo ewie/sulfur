@@ -33,7 +33,9 @@ define([
     },
 
     set value(value) {
-      this._element.value = value;
+      // Don't set the value when equal, to avoid overwriting the current
+      // cursor position.
+      value === this.value || (this._element.value = value);
     }
 
   });

@@ -17,6 +17,7 @@ define([
 
   var expect = shared.expect;
   var sinon = shared.sinon;
+  var returns = shared.returns;
 
   describe('sulfur/ui/access/value', function () {
 
@@ -81,12 +82,26 @@ define([
     describe('#value=', function () {
 
       it("should set the element's value", function () {
-        var element = { };
+        var element = {};
         sandbox.stub(ErrorAccess, 'create').returns({});
         var access = ValueAccess.create(element);
         var v = {};
         access.value = v;
-        expect(access.value).to.equal(v);
+        expect(element.value).to.equal(v);
+      });
+
+      it("should not set the element's value when identical", function () {
+        var element = {};
+        sandbox.stub(ErrorAccess, 'create').returns({});
+        var access = ValueAccess.create(element);
+        access.value = 'foo';
+        var spy = sinon.spy();
+        Object.defineProperty(element, 'value', {
+          set: spy,
+          get: returns('foo')
+        });
+        access.value = 'foo';
+        expect(spy).to.not.be.called;
       });
 
     });
