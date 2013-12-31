@@ -9,7 +9,9 @@
   "description": "Library and web application to create W3C widgets perfoming CRUD operations on a DataGridService.",
   "private": true,
   "dependencies": {
+    "jszip": "git://github.com/Stuk/jszip.git#v2.0.0",
     "requirejs": "2.1",
+    "text": "requirejs/text",
     "unorm": "1.2"
   },
   "devDependencies": {
