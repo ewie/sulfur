@@ -21,6 +21,6 @@
     "jshint": "2.1",
     "sinon": "1.7",
     "sinon-chai": "2.4",
-    "testem": "0.5.6"
+    "testem": "0.6"
   }
 }
