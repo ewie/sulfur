@@ -120,13 +120,6 @@ define([
         name = element.getAttribute('name');
         if (element.hasAttribute('type')) {
           var typeName = element.getAttribute('type');
-          //var globalType = this.resolveGlobalType(typeName);
-          //if (globalType) {
-          //  type = globalType;
-          //} else {
-          //  var qname = this.resolveQualifiedName(typeName, element);
-          //  type = this.resolveNamedType(qname);
-          //}
           var qname = this.resolveQualifiedName(typeName, element);
           type = this.resolveNamedType(qname);
         } else {
