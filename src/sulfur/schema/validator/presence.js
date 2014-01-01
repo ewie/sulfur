@@ -14,34 +14,24 @@ define(['sulfur/util/factory'], function (Factory) {
   return Factory.derive({
 
     /**
-     * Initialize the validator with a property name and subvalidator.
+     * Initialize the validator with a subvalidator.
      *
-     * @param {string} name
-     * @param {.validate()} validator a validator for the named property
+     * @param {.validate()} validator a validator for any given value
      */
-    initialize: function (name, validator) {
-      this._name = name;
+    initialize: function (validator) {
       this._validator = validator;
     },
 
     /**
-     * Validate an object's property against the subvalidator if that property
-     * is not undefined.
+     * Validate a value using the subvalidator if that value is defined.
      *
-     * @param {object} obj
+     * @param {any} value
      *
-     * @return {true} if the property is undefined or satisfies the subvalidator
-     * @return {false} if the property does not satisfy the subvalidator
+     * @return {true} when the value is undefined or satisfies the subvalidator
+     * @return {false} when the value does not satisfy the subvalidator
      */
     validate: function (value) {
-      value = value[this._name];
-      if (typeof value === 'undefined') {
-        return true;
-      }
-      if (typeof value === 'function') {
-        value = value();
-      }
-      return this._validator.validate(value);
+      return typeof value === 'undefined' || this._validator.validate(value);
     }
 
   });
