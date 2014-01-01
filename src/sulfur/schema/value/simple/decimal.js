@@ -8,14 +8,20 @@
 /* global define */
 
 define([
+  'require',
+  'sulfur/schema/value/simple/integer',
   'sulfur/schema/value/simple/numeric',
   'sulfur/util'
-], function (NumericValue, util) {
+], function (require, IntegerValue, NumericValue, util) {
 
   'use strict';
 
+  function requireIntegerValue() {
+    return require('sulfur/schema/value/simple/integer');
+  }
+
   function number2integer(n) {
-    return DecimalValue.create({ integralDigits: n.toString(10) });
+    return requireIntegerValue().createFromNumber(n);
   }
 
   /**

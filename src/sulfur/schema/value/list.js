@@ -25,8 +25,7 @@ define([
     },
 
     get length() {
-      var s = this._values.length.toString(10);
-      return IntegerValue.create({ integralDigits: s });
+      return IntegerValue.createFromNumber(this._values.length);
     },
 
     toArray: function () {

@@ -11,8 +11,9 @@
 define([
   'shared',
   'sulfur/schema/value/simple/decimal',
-  'sulfur/schema/value/simple/integer'
-], function (shared, DecimalValue, IntegerValue) {
+  'sulfur/schema/value/simple/integer',
+  'sulfur/util'
+], function (shared, DecimalValue, IntegerValue, util) {
 
   'use strict';
 
@@ -70,6 +71,24 @@ define([
           expect(d.isNegative).to.be.true;
         });
 
+      });
+
+    });
+
+    describe('.createFromNumber()', function () {
+
+      it("should create a sulfur/schema/value/simple/integer with the given integer value", function () {
+        var spy = sandbox.spy(IntegerValue, 'parse');
+        IntegerValue.createFromNumber(123);
+        expect(spy).to.be.calledWith('123');
+      });
+
+      it("should reject when sulfur/util.isInteger() returns false for the given value", function () {
+        var spy = sandbox.stub(util, 'isInteger').returns(false);
+        var value = {};
+        expect(bind(IntegerValue, 'createFromNumber', value))
+          .to.throw("expecting a 53-bit integer");
+        expect(spy).to.be.calledWith(sinon.match.same(value));
       });
 
     });

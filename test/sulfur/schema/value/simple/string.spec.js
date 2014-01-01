@@ -11,8 +11,9 @@
 define([
   'shared',
   'sulfur/schema/value/simple',
+  'sulfur/schema/value/simple/integer',
   'sulfur/schema/value/simple/string'
-], function (shared, SimpleValue, StringValue) {
+], function (shared, SimpleValue, IntegerValue, StringValue) {
 
   'use strict';
 
@@ -71,7 +72,7 @@ define([
 
       it("should use the empty string as default value", function () {
         var s = StringValue.create();
-        expect(s.length).to.equal(0);
+        expect(s.length).to.eql(IntegerValue.create());
       });
 
       it("should reject a non-string value", function () {
@@ -151,7 +152,7 @@ define([
 
       it("should return the number of UTF-16 codeunits", function () {
         var s = StringValue.create('\uD800\uDC00');
-        expect(s.length).to.equal(2);
+        expect(s.length).to.eql(IntegerValue.parse('2'));
       });
 
     });

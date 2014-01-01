@@ -7,7 +7,10 @@
 
 /* global define */
 
-define(['sulfur/schema/value/simple/decimal'], function (DecimalValue) {
+define([
+  'sulfur/schema/value/simple/decimal',
+  'sulfur/util'
+], function (DecimalValue, util) {
 
   'use strict';
 
@@ -45,7 +48,14 @@ define(['sulfur/schema/value/simple/decimal'], function (DecimalValue) {
         });
       };
 
-    }())
+    }()),
+
+    createFromNumber: function (value) {
+      if (util.isInteger(value)) {
+        return this.parse(value.toString(10));
+      }
+      throw new Error("expecting a 53-bit integer");
+    }
 
   }).augment({
 

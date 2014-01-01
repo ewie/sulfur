@@ -9,8 +9,9 @@
 
 define([
   'sulfur/schema/value/simple',
+  'sulfur/schema/value/simple/integer',
   'sulfur/util'
-], function (SimpleValue, util) {
+], function (SimpleValue, IntegerValue, util) {
 
   'use strict';
 
@@ -67,7 +68,7 @@ define([
      * @return {number}
      */
     get length() {
-      return this._value.length;
+      return IntegerValue.createFromNumber(this._value.length);
     },
 
     /**

@@ -11,8 +11,9 @@
 define([
   'shared',
   'sulfur/schema/value/simple/decimal',
+  'sulfur/schema/value/simple/integer',
   'sulfur/schema/value/simple/numeric'
-], function (shared, DecimalValue, NumericValue) {
+], function (shared, DecimalValue, IntegerValue, NumericValue) {
 
   'use strict';
 
@@ -205,7 +206,7 @@ define([
 
       it("should return the number of total digits", function () {
         var d = DecimalValue.create({ integralDigits: '12', fractionDigits: '345' });
-        expect(d.countDigits()).to.eql(DecimalValue.parse('5'));
+        expect(d.countDigits()).to.eql(IntegerValue.parse('5'));
       });
 
     });
@@ -214,7 +215,7 @@ define([
 
       it("should return the number of integral digits", function () {
         var d = DecimalValue.create({ integralDigits: '123' });
-        expect(d.countIntegralDigits()).to.eql(DecimalValue.parse('3'));
+        expect(d.countIntegralDigits()).to.eql(IntegerValue.parse('3'));
       });
 
     });
@@ -223,7 +224,7 @@ define([
 
       it("should return the number of fraction digits", function () {
         var d = DecimalValue.create({ fractionDigits: '42' });
-        expect(d.countFractionDigits()).to.eql(DecimalValue.parse('2'));
+        expect(d.countFractionDigits()).to.eql(IntegerValue.parse('2'));
       });
 
     });
