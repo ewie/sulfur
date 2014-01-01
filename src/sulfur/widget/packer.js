@@ -40,8 +40,13 @@ define([
       r.appendChild(e);
 
       e = d.createElementNS(ns, 'preference');
-      e.setAttribute('name', 'url');
-      e.setAttribute('value', dgs.recordCollectionUrl(widget.resource));
+      e.setAttribute('name', 'endpoint');
+      e.setAttribute('value', dgs.endpoint);
+      r.appendChild(e);
+
+      e = d.createElementNS(ns, 'preference');
+      e.setAttribute('name', 'name');
+      e.setAttribute('value', widget.resource.name);
       r.appendChild(e);
 
       e = d.createElementNS(ns, 'icon');

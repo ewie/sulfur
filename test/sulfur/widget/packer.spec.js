@@ -68,20 +68,14 @@ define([
     describe('#createConfigurationDocument()', function () {
 
       var widget;
-      var resource;
       var dgs;
       var d;
 
       beforeEach(function () {
-        dgs = {
-          recordCollectionUrl: function (resource) {
-            return 'http://example.org/' + resource.name;
-          }
-        };
-        resource = { url: 'http://example.org' };
+        dgs = { endpoint: 'http://example.org/' };
         widget = {
           name: 'foo',
-          resource: resource,
+          resource: { name: 'bar' },
           description: 'bar',
           authorName: 'abc',
           authorEmail: 'x@y.z'
@@ -114,11 +108,18 @@ define([
         expect(e.attributes.src.value).to.equal('icon.svg');
       });
 
-      it('should include element <preference name="url" value=""/>', function () {
-        var e = d.documentElement.querySelector('preference');
+      it('should include element <preference/> defining the endpoint url', function () {
+        var e = d.documentElement.querySelectorAll('preference').item(0);
         expect(e.namespaceURI).to.equal(packer.namespaceURI);
-        expect(e.attributes.name.value).to.equal('url');
-        expect(e.attributes.value.value).to.equal(dgs.recordCollectionUrl(widget.resource));
+        expect(e.attributes.name.value).to.equal('endpoint');
+        expect(e.attributes.value.value).to.equal(dgs.endpoint);
+      });
+
+      it('should include element <preference/> defining the resource name', function () {
+        var e = d.documentElement.querySelectorAll('preference').item(1);
+        expect(e.namespaceURI).to.equal(packer.namespaceURI);
+        expect(e.attributes.name.value).to.equal('name');
+        expect(e.attributes.value.value).to.equal(widget.resource.name);
       });
 
       it("should include element <description> when a description is defined", function () {
@@ -153,11 +154,7 @@ define([
           name: 'foo',
           resource: { name: 'bar' }
         };
-        dgs = {
-          recordCollectionUrl: function (resource) {
-            return 'http://example.org/' + resource.name;
-          }
-        };
+        dgs = { endpoint: 'http://example.org/' };
       });
 
       afterEach(function () {
