@@ -19,7 +19,6 @@ define([
 
     initialize: function (options) {
       this._qname = options.qname;
-      this._namespace = options.namespace;
       this._valueType = options.valueType;
     },
 
