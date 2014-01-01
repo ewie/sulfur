@@ -27,17 +27,11 @@ define(['sulfur/util/factory'], function (Factory) {
       this._args = args;
     },
 
-    get propertyName() {
-      return this._name;
-    },
+    get propertyName() { return this._name },
 
-    get args() {
-      return this._args;
-    },
+    get args() { return this._args },
 
-    get validator() {
-      return this._validator;
-    },
+    get validator() { return this._validator },
 
     /**
      * Validate an object's property against the subvalidator.

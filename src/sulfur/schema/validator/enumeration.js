@@ -56,9 +56,7 @@ define([
      * @return {string} the name of the test method when defined
      * @return {undefined} when no test method is defined
      */
-    get testMethodName() {
-      return this._testMethodName;
-    },
+    get testMethodName() { return this._testMethodName },
 
     /**
      * Validate a value against all allowed values by calling the test method

@@ -25,9 +25,7 @@ define(['sulfur/util/factory'], function (Factory) {
     /**
      * @return {array} the validators
      */
-    get validators() {
-      return this._validators;
-    },
+    get validators() { return this._validators },
 
     /**
      * Validate a value against all validators.
