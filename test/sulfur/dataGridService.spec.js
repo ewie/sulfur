@@ -48,12 +48,24 @@ define([
 
     });
 
-    describe('#schemaUrl()', function () {
+    describe('#recordCollectionMetaUrl()', function () {
 
       it("should return the record collection's schema URL", function () {
         var dgs = DataGridService.create('http://example.org');
         var resource = { name: 'foo' };
-        expect(dgs.schemaUrl(resource)).to.equal(dgs.recordCollectionUrl(resource) + '/meta/schema');
+        expect(dgs.recordCollectionMetaUrl(resource))
+          .to.equal(dgs.recordCollectionUrl(resource) + '/meta');
+      });
+
+    });
+
+    describe('#recordCollectionSchemaUrl()', function () {
+
+      it("should return the record collection's schema URL", function () {
+        var dgs = DataGridService.create('http://example.org');
+        var resource = { name: 'foo' };
+        expect(dgs.recordCollectionSchemaUrl(resource))
+          .to.equal(dgs.recordCollectionMetaUrl(resource) + '/schema');
       });
 
     });
@@ -107,6 +119,20 @@ define([
 
     });
 
+    describe('#recordCollectionValidationScopeDefinition()', function () {
+
+      it("should return a N3 document with the record collection validation scope definition", function () {
+        var dgs = DataGridService.create('http://example.org');
+        var resource = { name: 'foo' };
+        var d = dgs.recordCollectionValidationScopeDefinition(resource);
+        expect(d).to.equal(
+          '<' + dgs.recordCollectionUrl(resource) + '>' +
+          ' <http://www.webcomposition.net/2008/02/dgs/meta/ValidationScope>' +
+          ' "Element".');
+      });
+
+    });
+
     describe('#fileCollectionDefinition()', function () {
 
       it("should return a string representing an XML document with the file collection definition", function () {
@@ -126,7 +152,7 @@ define([
 
     describe('#recordFileRelationDefinition()', function () {
 
-      it("should return a XML document with the resource definition", function () {
+      it("should return a N3 document with the record-file-relationship definition", function () {
         var dgs = DataGridService.create('http://example.org');
         var resource = { name: 'foo' };
         var d = dgs.recordFileRelationDefinition(resource);
@@ -137,7 +163,7 @@ define([
           '<> dm:predicate <urn:example:hasFile>.\n' +
           '<> dm:inverse-predicate <urn:example:belongsToResource>.\n' +
           '<> dm:target-alias "files".\n' +
-          '<> dm:source-alias "resource".\n');
+          '<> dm:source-alias "resource".');
       });
 
     });

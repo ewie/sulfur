@@ -14,6 +14,7 @@ define(['sulfur/util/factory'], function (Factory) {
   var NS_DGS = 'http://www.webcomposition.net/2008/02/dgs/';
   var DGS_XML_DATA_SPACE_ENGINE = NS_DGS + 'DataSpaceEngines/XmlDataSpaceEngine';
   var DGS_BINARY_DATA_SPACE_ENGINE = NS_DGS + 'DataSpaceEngines/BinaryDataSpaceEngine';
+  var DGS_VALIDATION_SCOPE = NS_DGS + 'meta/ValidationScope';
 
   function createCollectionDefinition(title, dataSpaceEngine) {
     // XXX
@@ -57,12 +58,22 @@ define(['sulfur/util/factory'], function (Factory) {
       return concatPath(this.endpoint, resource.name + '-files');
     },
 
-    schemaUrl: function (resource) {
-      return concatPath(this.recordCollectionUrl(resource), 'meta/schema');
+    recordCollectionMetaUrl: function (resource) {
+      return concatPath(this.recordCollectionUrl(resource), 'meta');
+    },
+
+    recordCollectionSchemaUrl: function (resource) {
+      return concatPath(this.recordCollectionMetaUrl(resource), 'schema');
     },
 
     recordCollectionDefinition: function (resource) {
       return createCollectionDefinition(resource.name, DGS_XML_DATA_SPACE_ENGINE);
+    },
+
+    recordCollectionValidationScopeDefinition: function (resource) {
+      return '<' + this.recordCollectionUrl(resource) + '>' +
+        ' <' + DGS_VALIDATION_SCOPE + '>' +
+        ' "Element".';
     },
 
     fileCollectionDefinition: function (resource) {
@@ -76,7 +87,7 @@ define(['sulfur/util/factory'], function (Factory) {
         '<> dm:predicate <urn:example:hasFile>.\n' +
         '<> dm:inverse-predicate <urn:example:belongsToResource>.\n' +
         '<> dm:target-alias "files".\n' +
-        '<> dm:source-alias "resource".\n';
+        '<> dm:source-alias "resource".';
     }
 
   });
