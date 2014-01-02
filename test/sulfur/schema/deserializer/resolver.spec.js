@@ -313,7 +313,7 @@ define([
         var e = resolver.resolveElementDeclaration(element);
 
         expect(spy).to.be.calledWith('xyz');
-        expect(e.default).to.equal(value);
+        expect(e.defaultValue).to.equal(value);
       });
 
       context("with attribute @type", function () {

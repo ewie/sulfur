@@ -50,8 +50,8 @@ define(['sulfur/util/factory'], function(Factory) {
       if (element.isOptional) {
         e.setAttribute('minOccurs', '0');
       }
-      if (element.default) {
-        e.setAttribute('default', element.default);
+      if (element.defaultValue) {
+        e.setAttribute('default', element.defaultValue);
       }
       if (type.qname) {
         var qname = type.qname;

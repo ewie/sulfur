@@ -110,17 +110,17 @@ define([
 
     });
 
-    describe('#default', function () {
+    describe('#defaultValue', function () {
 
       it("should return the default value when defined", function () {
         var value = {};
         var element = Element.create('x', {}, { default: value });
-        expect(element.default).to.equal(value);
+        expect(element.defaultValue).to.equal(value);
       });
 
       it("should return undefined when no default value is defined", function () {
         var element = Element.create('y', {});
-        expect(element.default).to.be.undefined;
+        expect(element.defaultValue).to.be.undefined;
       });
 
     });

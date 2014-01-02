@@ -41,7 +41,7 @@ define([
 
     get type() { return this._type },
 
-    get default() { return this._default },
+    get defaultValue() { return this._default },
 
     get isOptional() { return this._optional }
 

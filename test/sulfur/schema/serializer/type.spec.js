@@ -161,7 +161,7 @@ define([
         var element = {
           name: 'foo',
           type: type,
-          default: value,
+          defaultValue: value,
           isOptional: returns(false)
         };
         var spy = sinon.spy(value, 'toString');
