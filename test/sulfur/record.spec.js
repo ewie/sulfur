@@ -33,6 +33,34 @@ define([
 
     });
 
+    describe('#id', function () {
+
+      it("should return the ID when defined", function () {
+        var record = Record.create([], '42');
+        expect(record.id).to.equal('42');
+      });
+
+      it("should return undefined when no ID is defined", function () {
+        var record = Record.create([]);
+        expect(record.id).to.be.undefined;
+      });
+
+    });
+
+    describe('#isNew', function () {
+
+      it("should return false when an ID is defined", function () {
+        var record = Record.create([], '123');
+        expect(record.isNew).to.be.false;
+      });
+
+      it("should return true when no ID is defined", function () {
+        var record = Record.create([]);
+        expect(record.isNew).to.be.true;
+      });
+
+    });
+
     describe('#names', function () {
 
       it("should return an array with the names of all defined values", function () {
