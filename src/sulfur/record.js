@@ -34,6 +34,11 @@ define([
     },
 
     /**
+     * @return {array} an array including each value's name
+     */
+    get names() { return this._index.keys },
+
+    /**
      * @param {string} name
      *
      * @return {any} the value associated with the given name

@@ -33,6 +33,21 @@ define([
 
     });
 
+    describe('#names', function () {
+
+      it("should return an array with the names of all defined values", function () {
+        var record = Record.create([
+          [ 'foo' ],
+          [ 'bar' ]
+        ]);
+        var names = record.names;
+        expect(names).to.have.lengthOf(2);
+        expect(names).to.include('foo');
+        expect(names).to.include('bar');
+      });
+
+    });
+
     describe('#value()', function () {
 
       var value;
