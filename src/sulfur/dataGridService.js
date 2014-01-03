@@ -37,7 +37,11 @@ define(['sulfur/util/factory'], function (Factory) {
     return x;
   }
 
-  return Factory.derive({
+  return Factory.clone({
+
+    get namespaceURI() { return NS_DGS }
+
+  }).augment({
 
     initialize: function (endpoint) {
       if (!endpoint) {

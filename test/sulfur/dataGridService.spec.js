@@ -20,6 +20,14 @@ define([
 
   describe('sulfur/dataGridService', function () {
 
+    describe('.namespaceURI', function () {
+
+      it("should return 'http://www.webcomposition.net/2008/02/dgs/'", function () {
+        expect(DataGridService.namespaceURI).to.equal('http://www.webcomposition.net/2008/02/dgs/');
+      });
+
+    });
+
     describe('#initialize()', function () {
 
       it("should reject an empty DataGridService URL", function () {
