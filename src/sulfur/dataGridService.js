@@ -54,16 +54,16 @@ define(['sulfur/util/factory'], function (Factory) {
       return concatPath(this.endpoint, resource.name);
     },
 
-    fileCollectionUrl: function (resource) {
-      return concatPath(this.endpoint, resource.name + '-files');
-    },
-
     recordCollectionMetaUrl: function (resource) {
       return concatPath(this.recordCollectionUrl(resource), 'meta');
     },
 
     recordCollectionSchemaUrl: function (resource) {
       return concatPath(this.recordCollectionMetaUrl(resource), 'schema');
+    },
+
+    recordUrl: function (resource, id) {
+      return concatPath(this.recordCollectionUrl(resource), id);
     },
 
     recordCollectionDefinition: function (resource) {
@@ -74,6 +74,14 @@ define(['sulfur/util/factory'], function (Factory) {
       return '<' + this.recordCollectionUrl(resource) + '>' +
         ' <' + DGS_VALIDATION_SCOPE + '>' +
         ' "Element".';
+    },
+
+    fileCollectionUrl: function (resource) {
+      return concatPath(this.endpoint, resource.name + '-files');
+    },
+
+    fileUrl: function (resource, id) {
+      return concatPath(this.fileCollectionUrl(resource), id);
     },
 
     fileCollectionDefinition: function (resource) {

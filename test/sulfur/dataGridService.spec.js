@@ -72,7 +72,7 @@ define([
 
     describe('#recordCollectionUrl()', function () {
 
-      it("should return the URL", function () {
+      it("should return the record collection URL", function () {
         var dgs = DataGridService.create('http://example.org');
         var resource = { name: 'xyz' };
         expect(dgs.recordCollectionUrl(resource)).to.equal(dgs.endpoint + '/' + resource.name);
@@ -86,9 +86,19 @@ define([
 
     });
 
+    describe('#recordUrl()', function () {
+
+      it("should return the record URL", function () {
+        var dgs = DataGridService.create('http://example.org');
+        var resource = { name: 'xyz' };
+        expect(dgs.recordUrl(resource, 'foo-123')).to.equal(dgs.recordCollectionUrl(resource) + '/foo-123');
+      });
+
+    });
+
     describe('#fileCollectionUrl()', function () {
 
-      it("should return the URL", function () {
+      it("should return the file collection URL", function () {
         var dgs = DataGridService.create('http://example.org');
         var resource = { name: 'xyz' };
         expect(dgs.fileCollectionUrl(resource)).to.equal(dgs.endpoint + '/' + resource.name + '-files');
@@ -98,6 +108,16 @@ define([
         var dgs = DataGridService.create('http://example.org/');
         var resource = { name: 'abc' };
         expect(dgs.fileCollectionUrl(resource)).to.equal(dgs.endpoint + resource.name + '-files');
+      });
+
+    });
+
+    describe('#fileUrl()', function () {
+
+      it("should return the file URL", function () {
+        var dgs = DataGridService.create('http://example.org');
+        var resource = { name: 'foo' };
+        expect(dgs.fileUrl(resource, 'xyz-987')).to.equal(dgs.fileCollectionUrl(resource) + '/xyz-987');
       });
 
     });
