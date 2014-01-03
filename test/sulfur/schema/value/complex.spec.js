@@ -12,9 +12,8 @@ define([
   'shared',
   'sulfur/schema/element',
   'sulfur/schema/elements',
-  'sulfur/schema/value/complex',
-  'sulfur/schema/value/simple/string'
-], function (shared, Element, Elements, ComplexValue, StringValue) {
+  'sulfur/schema/value/complex'
+], function (shared, Element, Elements, ComplexValue) {
 
   'use strict';
 
@@ -44,7 +43,7 @@ define([
 
       it("should initialize with an array of name/value pairs", function () {
         var values = [
-          [ 'foo', StringValue.create() ]
+          [ 'foo', {} ]
         ];
         var type = DerivedComplexValue.create(values);
         expect(type.value('foo')).to.equal(values[0][1]);
@@ -75,11 +74,34 @@ define([
 
       it("should reject duplicate values", function () {
         var values = [
-          [ 'foo', StringValue.create() ],
-          [ 'foo', StringValue.create() ]
+          [ 'foo' ],
+          [ 'foo' ]
         ];
         expect(bind(DerivedComplexValue, 'create', values))
           .to.throw('duplicate value "foo"');
+      });
+
+    });
+
+    describe('#names', function () {
+
+      it("should return an array with the names of all defined values", function () {
+        var validator = { validate: returns(true) };
+        var type = { createValidator: returns(validator) };
+        var DerivedComplexValue = ComplexValue.clone({
+          allowedElements: Elements.create(
+            [ Element.create('foo', type),
+              Element.create('bar', type)
+            ])
+        });
+        var value = DerivedComplexValue.create([
+          [ 'foo' ],
+          [ 'bar' ]
+        ]);
+        var names = value.names;
+        expect(names).to.have.lengthOf(2);
+        expect(names).to.include('foo');
+        expect(names).to.include('bar');
       });
 
     });
@@ -106,7 +128,7 @@ define([
       var values;
 
       beforeEach(function () {
-        values = [ [ 'foo', StringValue.create() ] ];
+        values = [ [ 'foo', {} ] ];
         type = DerivedComplexValue.create(values);
       });
 

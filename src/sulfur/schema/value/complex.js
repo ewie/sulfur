@@ -14,7 +14,7 @@ define([
 
   'use strict';
 
-  /*!
+  /**
    * @abstract
    *
    * @implement {sulfur/schema/elements} .allowedElements
@@ -51,6 +51,8 @@ define([
 
       this._index = index;
     },
+
+    get names() { return this._index.keys },
 
     value: function (name) {
       var item = this._index.get(name);
