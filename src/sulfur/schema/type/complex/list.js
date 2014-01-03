@@ -13,14 +13,16 @@ define([
   'sulfur/schema/validator/each',
   'sulfur/schema/validator/maximum',
   'sulfur/schema/validator/minimum',
-  'sulfur/schema/validator/property'
+  'sulfur/schema/validator/property',
+  'sulfur/schema/value/list'
 ], function (
     Factory,
     AllValidator,
     EachValidator,
     MaximumValidator,
     MinimumValidator,
-    PropertyValidator
+    PropertyValidator,
+    ListValue
 ) {
 
   'use strict';
@@ -45,6 +47,8 @@ define([
       }
       this._element = element;
     },
+
+    get valueType() { return ListValue },
 
     get element() { return this._element },
 

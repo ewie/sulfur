@@ -16,6 +16,7 @@ define([
   'sulfur/schema/validator/maximum',
   'sulfur/schema/validator/minimum',
   'sulfur/schema/validator/property',
+  'sulfur/schema/value/list',
   'sulfur/schema/value/simple/integer'
 ], function (
     shared,
@@ -25,6 +26,7 @@ define([
     MaximumValidator,
     MinimumValidator,
     PropertyValidator,
+    ListValue,
     IntegerValue
 ) {
 
@@ -93,6 +95,15 @@ define([
       it("should return undefined when no bound is defined", function () {
         var type = ListType.create();
         expect(type.minLength).to.be.undefined;
+      });
+
+    });
+
+    describe('#valueType', function () {
+
+      it("should return sulfur/schema/value/list", function () {
+        var type = ListType.create();
+        expect(type.valueType).to.equal(ListValue);
       });
 
     });
