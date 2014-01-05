@@ -33,14 +33,17 @@ define(['sulfur/util/factory'], function (Factory) {
       }
       if (this._view) {
         this._element.replaceChild(view.element, this._view.element);
+        this._view.removed();
       } else {
         this._element.appendChild(view.element);
       }
       this._view = view;
+      this._view.inserted();
     },
 
     remove: function () {
       this._element.removeChild(this._view.element);
+      this._view.removed();
       this._view = undefined;
     }
 

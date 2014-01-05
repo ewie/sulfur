@@ -44,6 +44,7 @@ define([
       if (this.contains(view)) {
         this._index.remove(view);
         this._element.removeChild(view.element);
+        view.removed();
       }
     },
 
@@ -51,6 +52,7 @@ define([
       while (this._element.firstElementChild) {
         this._element.removeChild(this._element.firstElementChild);
       }
+      this._index.keys.forEach(function (view) { view.removed() });
       this._index.clear();
     },
 
@@ -58,12 +60,14 @@ define([
       assertView(this, view);
       this._index.set(view);
       this._element.insertBefore(view.element, this._element.firstElementChild);
+      view.inserted();
     },
 
     append: function (view) {
       assertView(this, view);
       this._index.set(view);
       this._element.appendChild(view.element);
+      view.inserted();
     },
 
     after: function (view, ref) {
@@ -71,6 +75,7 @@ define([
       assertRef(this, ref);
       this._index.set(view);
       ref.element.insertBefore(view.element, ref.element.nextSibling);
+      view.inserted();
     },
 
     before: function (view, ref) {
@@ -78,6 +83,7 @@ define([
       assertRef(this, ref);
       this._index.set(view);
       ref.element.insertBefore(view.element, ref.element);
+      view.inserted();
     }
 
   });

@@ -25,6 +25,8 @@ define([
     function mockView(element, hasParent) {
       return {
         element: element || {},
+        inserted: function () {},
+        removed: function () {},
         hasParent: returns(hasParent || false)
       };
     }
@@ -86,6 +88,16 @@ define([
         });
       });
 
+      it("should invoke .removed() on all views", function () {
+        var spies = views.map(function (v) {
+          return sinon.spy(v, 'removed');
+        });
+        access.clear();
+        spies.forEach(function (spy) {
+          expect(spy).to.be.called;
+        });
+      });
+
     });
 
     describe('#remove()', function () {
@@ -115,26 +127,43 @@ define([
         expect(spy).to.be.calledWith(sinon.match.same(view.element));
       });
 
+      it("should invoke .removed() on the view", function () {
+        var spy = sinon.spy(view, 'removed');
+        access.remove(view);
+        expect(spy).to.be.called;
+      });
+
     });
 
     describe('#prepend()', function () {
 
+      var element;
+
+      beforeEach(function () {
+        element = { insertBefore: function () {} };
+      });
+
       it("should insert the view element before the very first view element already present", function () {
-        var element = {
-          insertBefore: sinon.spy(),
-          firstElementChild: {}
-        };
+        element.firstElementChild = {};
+        var spy = sinon.spy(element, 'insertBefore');
         var access = ViewsAccess.create(element);
-        var view = mockView({});
+        var view = mockView();
         access.prepend(view);
-        expect(element.insertBefore)
+        expect(spy)
           .to.be.calledWith(
             sinon.match.same(view.element),
             sinon.match.same(element.firstElementChild));
       });
 
+      it("should invoke .inserted() on the view", function () {
+        var access = ViewsAccess.create(element);
+        var view = mockView();
+        var spy = sinon.spy(view, 'inserted');
+        access.prepend(view);
+        expect(spy).to.be.called;
+      });
+
       it("should reject when it contains the given view", function () {
-        var element = { insertBefore: function () {} };
         var access = ViewsAccess.create(element);
         var view = mockView();
         access.prepend(view);
@@ -153,12 +182,26 @@ define([
 
     describe('#append()', function () {
 
+      var element;
+
+      beforeEach(function () {
+        element = { appendChild: function () {} };
+      });
+
       it("should insert the view element after the very last view element already present", function () {
-        var element = { appendChild: sinon.spy() };
+        var spy = sinon.spy(element, 'appendChild');
         var access = ViewsAccess.create(element);
-        var view = mockView({});
+        var view = mockView();
         access.append(view);
-        expect(element.appendChild).to.be.calledWith(sinon.match.same(view.element));
+        expect(spy).to.be.calledWith(sinon.match.same(view.element));
+      });
+
+      it("should invoke .inserted() on the view", function () {
+        var access = ViewsAccess.create(element);
+        var view = mockView();
+        var spy = sinon.spy(view, 'inserted');
+        access.append(view);
+        expect(spy).to.be.called;
       });
 
       it("should reject when it contains the given view", function () {
@@ -181,10 +224,15 @@ define([
 
     describe('#before()', function () {
 
+      var element;
+
+      beforeEach(function () {
+        element = { appendChild: function () {} };
+      });
+
       it("should insert the view element before the reference view element", function () {
-        var element = { appendChild: sinon.spy() };
         var access = ViewsAccess.create(element);
-        var view = mockView({});
+        var view = mockView();
         var ref = mockView({ insertBefore: sinon.spy() });
         access.append(ref);
         access.before(view, ref);
@@ -194,8 +242,17 @@ define([
             sinon.match.same(ref.element));
       });
 
+      it("should invoke .inserted() on the view", function () {
+        var access = ViewsAccess.create(element);
+        var view = mockView();
+        var ref = mockView({ insertBefore: function () {} });
+        access.append(ref);
+        var spy = sinon.spy(view, 'inserted');
+        access.before(view, ref);
+        expect(spy).to.be.called;
+      });
+
       it("should reject when it does not contain the reference view", function () {
-        var element = { appendChild: sinon.spy() };
         var access = ViewsAccess.create(element);
         var view = mockView();
         var ref = mockView();
@@ -223,10 +280,15 @@ define([
 
     describe('#after()', function () {
 
+      var element;
+
+      beforeEach(function () {
+        element = { appendChild: function () {} };
+      });
+
       it("should insert the view element after the reference view element", function () {
-        var element = { appendChild: sinon.spy() };
         var access = ViewsAccess.create(element);
-        var view = mockView({});
+        var view = mockView();
         var ref = mockView({
           insertBefore: sinon.spy(),
           nextSibling: {}
@@ -239,8 +301,17 @@ define([
             sinon.match.same(ref.element.nextSibling));
       });
 
+      it("should invoke .inserted() on the view", function () {
+        var access = ViewsAccess.create(element);
+        var view = mockView();
+        var ref = mockView({ insertBefore: function () {} });
+        access.append(ref);
+        var spy = sinon.spy(view, 'inserted');
+        access.after(view, ref);
+        expect(spy).to.be.called;
+      });
+
       it("should reject when it does not contain the reference view", function () {
-        var element = { appendChild: sinon.spy() };
         var access = ViewsAccess.create(element);
         var view = mockView();
         var ref = mockView();
@@ -249,7 +320,6 @@ define([
       });
 
       it("should reject when it contains the given view", function () {
-        var element = { appendChild: function () {} };
         var access = ViewsAccess.create(element);
         var view = mockView();
         access.append(view);

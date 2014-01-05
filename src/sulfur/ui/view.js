@@ -47,6 +47,14 @@ define([
       });
     },
 
+    inserted: function () {
+      // empty
+    },
+
+    removed: function () {
+      // empty
+    },
+
     get publisher() {
       return this._publisher;
     },

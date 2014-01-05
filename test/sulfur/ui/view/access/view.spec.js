@@ -6,7 +6,7 @@
  */
 
 /* global define */
-/* global beforeEach, describe, it */
+/* global beforeEach, context, describe, it */
 
 define([
   'shared',
@@ -24,7 +24,9 @@ define([
 
     function mockView(element, hasParent) {
       return {
-        element: element,
+        element: element || {},
+        inserted: function () {},
+        removed: function () {},
         hasParent: returns(hasParent || false)
       };
     }
@@ -57,7 +59,7 @@ define([
           appendChild: function () {},
           replaceChild: function () {}
         };
-        view = mockView({});
+        view = mockView();
         access = ViewAccess.create(element);
       });
 
@@ -73,15 +75,10 @@ define([
         expect(spy).to.be.calledWith(sinon.match.same(view.element));
       });
 
-      it("should replace the current view element with the new view element", function () {
-        var oldView = mockView({});
-        access.view = oldView;
-        var spy = sinon.spy(element, 'replaceChild');
+      it("should invoke .inserted() on the new view", function () {
+        var spy = sinon.spy(view, 'inserted');
         access.view = view;
-        expect(spy)
-          .to.be.calledWith(
-            sinon.match.same(view.element),
-            sinon.match.same(oldView.element));
+        expect(spy).to.be.called;
       });
 
       it("should set the view", function () {
@@ -94,6 +91,29 @@ define([
         var setter = descriptor(ViewAccess.prototype, 'view').set;
         expect(setter.bind(access, view))
           .to.throw("expecting a view without parent");
+      });
+
+      context("when there's already a view", function () {
+
+        it("should replace the current view element with the new view element", function () {
+          var oldView = mockView();
+          access.view = oldView;
+          var spy = sinon.spy(element, 'replaceChild');
+          access.view = view;
+          expect(spy)
+            .to.be.calledWith(
+              sinon.match.same(view.element),
+              sinon.match.same(oldView.element));
+        });
+
+        it("should invoke .removed() on the old view", function () {
+          var oldView = mockView();
+          access.view = oldView;
+          var spy = sinon.spy(oldView, 'removed');
+          access.view = view;
+          expect(spy).to.be.called;
+        });
+
       });
 
     });
@@ -109,7 +129,7 @@ define([
           appendChild: function () {},
           removeChild: function () {}
         };
-        view = mockView({});
+        view = mockView();
         access = ViewAccess.create(element);
         access.view = view;
       });
@@ -119,6 +139,12 @@ define([
         access.remove();
         expect(spy)
           .to.be.calledWith(sinon.match.same(view.element));
+      });
+
+      it("should invoke .removed() on the view", function () {
+        var spy = sinon.spy(view, 'removed');
+        access.remove();
+        expect(spy).to.be.called;
       });
 
       it("should set the view to undefined", function () {

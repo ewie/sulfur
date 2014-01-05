@@ -125,6 +125,24 @@ define([
 
     });
 
+    describe('#inserted()', function () {
+
+      it("should be callable", function () {
+        var view = DerivedView.create();
+        expect(view.inserted).to.be.a('function');
+      });
+
+    });
+
+    describe('#removed()', function () {
+
+      it("should be callable", function () {
+        var view = DerivedView.create();
+        expect(view.removed).to.be.a('function');
+      });
+
+    });
+
     describe('#access()', function () {
 
       var view;
