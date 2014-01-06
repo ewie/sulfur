@@ -30,6 +30,17 @@ define([
       list = ListValue.create(values);
     });
 
+    describe('.withItemValueType()', function () {
+
+      it("should clone and use the given value type as item value type", function () {
+        var valueType = {};
+        var listType = ListValue.withItemValueType(valueType);
+        expect(ListValue).to.be.prototypeOf(listType);
+        expect(listType.itemValueType).to.equal(valueType);
+      });
+
+    });
+
     describe('#initialize()', function () {
 
       it("should use an empty array as default values", function () {

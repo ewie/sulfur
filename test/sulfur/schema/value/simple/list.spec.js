@@ -31,17 +31,6 @@ define([
       expect(SimpleListValue.isValidLiteral).to.equal(SimpleValue.isValidLiteral);
     });
 
-    describe('.withItemValueType()', function () {
-
-      it("should clone and use the given value type as item value type", function () {
-        var valueType = {};
-        var simpleList = SimpleListValue.withItemValueType(valueType);
-        expect(SimpleListValue).to.be.prototypeOf(simpleList);
-        expect(simpleList.itemValueType).to.equal(valueType);
-      });
-
-    });
-
     describe('.parse()', function () {
 
       var simpleList;

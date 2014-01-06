@@ -26,12 +26,6 @@ define([
    */
   return ListValue.clone({
 
-    withItemValueType: function (itemValueType) {
-      return this.clone({
-        get itemValueType() { return itemValueType; }
-      });
-    },
-
     // XXX we cannot derive from sulfur/schema/value/simple so just copy the
     //   desired method
     isValidLiteral: SimpleValue.isValidLiteral,

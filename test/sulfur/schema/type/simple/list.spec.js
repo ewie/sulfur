@@ -75,9 +75,9 @@ define([
       it("should return a sulfur/schema/value/simple/list using the item type's value type", function () {
         var itemType = { valueType: {} };
         var listType = ListType.create(itemType);
-        var listValue = listType.valueType;
-        expect(SimpleListValue).to.be.prototypeOf(listValue);
-        expect(listValue.itemValueType).to.equal(itemType.valueType);
+        var listValueType = listType.valueType;
+        expect(SimpleListValue).to.be.prototypeOf(listValueType);
+        expect(listValueType.itemValueType).to.equal(itemType.valueType);
       });
 
       it("should return the same object on future calls", function () {

@@ -499,12 +499,11 @@ define([
             var element = doc.documentElement;
             var resolver = Resolver.create(doc, resolvers);
             var type = complexResolver.resolveTypeElement(element, resolver);
-            expect(type).to.eql(
-              ComplexListType.create(
-                Element.create('bar', simpleType),
-                { maxLength: IntegerValue.parse('1'),
-                  minLength: IntegerValue.create()
-                }));
+
+            expect(ComplexListType.prototype).to.be.prototypeOf(type);
+            expect(type.element).to.eql(Element.create('bar', simpleType));
+            expect(type.maxLength).to.eql(IntegerValue.parse('1'));
+            expect(type.minLength).to.eql(IntegerValue.create());
           });
 
           it("should use value 1 as required minimum number of entries when attribute @minOccurs is not defined", function () {
@@ -519,12 +518,11 @@ define([
             var element = doc.documentElement;
             var resolver = Resolver.create(doc, resolvers);
             var type = complexResolver.resolveTypeElement(element, resolver);
-            expect(type).to.eql(
-              ComplexListType.create(
-                Element.create('bar', simpleType),
-                { maxLength: IntegerValue.parse('1'),
-                  minLength: IntegerValue.parse('1')
-                }));
+
+            expect(ComplexListType.prototype).to.be.prototypeOf(type);
+            expect(type.element).to.eql(Element.create('bar', simpleType));
+            expect(type.maxLength).to.eql(IntegerValue.parse('1'));
+            expect(type.minLength).to.eql(IntegerValue.parse('1'));
           });
 
           it("should use value 1 as allowed maximum number of entries when attribute @maxOccurs is not defined", function () {
@@ -539,12 +537,11 @@ define([
             var element = doc.documentElement;
             var resolver = Resolver.create(doc, resolvers);
             var type = complexResolver.resolveTypeElement(element, resolver);
-            expect(type).to.eql(
-              ComplexListType.create(
-                Element.create('bar', simpleType),
-                { maxLength: IntegerValue.parse('1'),
-                  minLength: IntegerValue.parse('1')
-                }));
+
+            expect(ComplexListType.prototype).to.be.prototypeOf(type);
+            expect(type.element).to.eql(Element.create('bar', simpleType));
+            expect(type.maxLength).to.eql(IntegerValue.parse('1'));
+            expect(type.minLength).to.eql(IntegerValue.parse('1'));
           });
 
           context("with attribute @maxOccurs", function () {
@@ -561,12 +558,11 @@ define([
               var element = doc.documentElement;
               var resolver = Resolver.create(doc, resolvers);
               var type = complexResolver.resolveTypeElement(element, resolver);
-              expect(type).to.eql(
-                ComplexListType.create(
-                  Element.create('bar', simpleType),
-                  { maxLength: IntegerValue.parse('3'),
-                    minLength: IntegerValue.parse('1')
-                  }));
+
+              expect(ComplexListType.prototype).to.be.prototypeOf(type);
+              expect(type.element).to.eql(Element.create('bar', simpleType));
+              expect(type.maxLength).to.eql(IntegerValue.parse('3'));
+              expect(type.minLength).to.eql(IntegerValue.parse('1'));
             });
 
             it("should use no allowed maximum number of items when 'unbounded'", function () {
@@ -581,10 +577,11 @@ define([
               var element = doc.documentElement;
               var resolver = Resolver.create(doc, resolvers);
               var type = complexResolver.resolveTypeElement(element, resolver);
-              expect(type).to.eql(
-                ComplexListType.create(
-                  Element.create('bar', simpleType),
-                  { minLength: IntegerValue.parse('1') }));
+
+              expect(ComplexListType.prototype).to.be.prototypeOf(type);
+              expect(type.element).to.eql(Element.create('bar', simpleType));
+              expect(type.maxLength).to.be.undefined;
+              expect(type.minLength).to.eql(IntegerValue.parse('1'));
             });
 
           });
@@ -603,12 +600,11 @@ define([
               var element = doc.documentElement;
               var resolver = Resolver.create(doc, resolvers);
               var type = complexResolver.resolveTypeElement(element, resolver);
-              expect(type).to.eql(
-                ComplexListType.create(
-                  Element.create('bar', simpleType),
-                  { maxLength: IntegerValue.parse('1'),
-                    minLength: IntegerValue.parse('1')
-                  }));
+
+              expect(ComplexListType.prototype).to.be.prototypeOf(type);
+              expect(type.element).to.eql(Element.create('bar', simpleType));
+              expect(type.maxLength).to.eql(IntegerValue.parse('1'));
+              expect(type.minLength).to.eql(IntegerValue.parse('1'));
             });
 
             it("should return undefined when there are multiple mandatory elements", function () {
@@ -640,12 +636,11 @@ define([
               var element = doc.documentElement;
               var resolver = Resolver.create(doc, resolvers);
               var type = complexResolver.resolveTypeElement(element, resolver);
-              expect(type).to.eql(
-                ComplexListType.create(
-                  Element.create('bar', simpleType),
-                  { maxLength: IntegerValue.parse('1'),
-                    minLength: IntegerValue.parse('1')
-                  }));
+
+              expect(ComplexListType.prototype).to.be.prototypeOf(type);
+              expect(type.element).to.eql(Element.create('bar', simpleType));
+              expect(type.maxLength).to.eql(IntegerValue.parse('1'));
+              expect(type.minLength).to.eql(IntegerValue.parse('1'));
             });
 
           });
@@ -681,12 +676,11 @@ define([
               var element = doc.documentElement;
               var resolver = Resolver.create(doc, resolvers);
               var type = complexResolver.resolveTypeElement(element, resolver);
-              expect(type).to.eql(
-                ComplexListType.create(
-                  Element.create('foo', simpleType, { optional: true }),
-                  { maxLength: IntegerValue.parse('1'),
-                    minLength: IntegerValue.parse('1')
-                  }));
+
+              expect(ComplexListType.prototype).to.be.prototypeOf(type);
+              expect(type.element).to.eql(Element.create('foo', simpleType, { optional: true }));
+              expect(type.maxLength).to.eql(IntegerValue.parse('1'));
+              expect(type.minLength).to.eql(IntegerValue.parse('1'));
             });
 
           });

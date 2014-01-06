@@ -46,9 +46,10 @@ define([
         this._minLength = minLength;
       }
       this._element = element;
+      this._valueType = ListValue.withItemValueType(element.type.valueType);
     },
 
-    get valueType() { return ListValue },
+    get valueType() { return this._valueType },
 
     get element() { return this._element },
 

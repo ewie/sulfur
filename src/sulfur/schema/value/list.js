@@ -14,7 +14,20 @@ define([
 
   'use strict';
 
-  return Factory.derive({
+  /**
+   * @abstract
+   *
+   * @implement .itemValueType
+   */
+  return Factory.clone({
+
+    withItemValueType: function (itemValueType) {
+      return this.clone({
+        get itemValueType() { return itemValueType }
+      });
+    }
+
+  }).augment({
 
     initialize: function (values) {
       this._values = values || [];

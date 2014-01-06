@@ -64,7 +64,7 @@ define([
     describe('#element', function () {
 
       it("should return the element", function () {
-        var element = {};
+        var element = { type: { valueType: {} } };
         var type = ListType.create(element);
         expect(type.element).to.equal(element);
       });
@@ -73,13 +73,19 @@ define([
 
     describe('#maxLength', function () {
 
+      var element;
+
+      beforeEach(function () {
+        element = { type: { valueType: {} } };
+      });
+
       it("should return the allowed maximum number of entries when defined", function () {
-        var type = ListType.create(undefined, { maxLength: IntegerValue.parse('1') });
+        var type = ListType.create(element, { maxLength: IntegerValue.parse('1') });
         expect(type.maxLength).to.eql(IntegerValue.parse('1'));
       });
 
       it("should return undefined when no bound is defined", function () {
-        var type = ListType.create();
+        var type = ListType.create(element);
         expect(type.maxLength).to.be.undefined;
       });
 
@@ -87,13 +93,19 @@ define([
 
     describe('#minLength', function () {
 
+      var element;
+
+      beforeEach(function () {
+        element = { type: { valueType: {} } };
+      });
+
       it("should return the required minimum number of entries when defined", function () {
-        var type = ListType.create(undefined, { minLength: IntegerValue.parse('1') });
+        var type = ListType.create(element, { minLength: IntegerValue.parse('1') });
         expect(type.minLength).to.eql(IntegerValue.parse('1'));
       });
 
       it("should return undefined when no bound is defined", function () {
-        var type = ListType.create();
+        var type = ListType.create(element);
         expect(type.minLength).to.be.undefined;
       });
 
@@ -101,9 +113,18 @@ define([
 
     describe('#valueType', function () {
 
-      it("should return sulfur/schema/value/list", function () {
-        var type = ListType.create();
-        expect(type.valueType).to.equal(ListValue);
+      it("should return sulfur/schema/value/list using the item type's value type", function () {
+        var element = { type: { valueType: {} } };
+        var listType = ListType.create(element);
+        var listValueType = listType.valueType;
+        expect(ListValue).to.be.prototypeOf(listValueType);
+        expect(listValueType.itemValueType).to.equal(element.type.valueType);
+      });
+
+      it("should return the same object on future calls", function () {
+        var element = { type: { valueType: {} } };
+        var listType = ListType.create(element);
+        expect(listType.valueType).to.equal(listType.valueType);
       });
 
     });
