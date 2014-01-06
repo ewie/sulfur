@@ -226,6 +226,14 @@ define([
             sinon.match.same(item));
         });
 
+        it("should publish on channel 'change'", function () {
+          var spy = sinon.spy(collection.publisher, 'publish');
+          collection.add(item);
+          expect(spy).to.be.calledWith(
+            'change',
+            sinon.match.same(collection));
+        });
+
         context("when the item has a publisher", function () {
 
           beforeEach(function () {

@@ -141,6 +141,7 @@ define([
         }.bind(this));
       }
       this._publish('add', item);
+      this._publish('change');
       return true;
     },
 
