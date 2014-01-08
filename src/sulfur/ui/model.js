@@ -239,7 +239,7 @@ define([
      * @return {null} when no object can be constructed
      */
     get object() {
-      return this._object;
+      return this._construct();
     },
 
     /**
@@ -325,7 +325,7 @@ define([
 
         var batch = BatchPublisher.create();
 
-        this._updateObject(batch);
+        this._change(batch);
 
         batch.publish('update', old);
         for (var name in old) {
@@ -369,7 +369,7 @@ define([
         return function () {
           var b = BatchPublisher.create();
           b.publish('change:' + name);
-          model._updateObject(b);
+          model._change(b);
           b.commit(model);
         };
       }
@@ -397,7 +397,7 @@ define([
     /**
      * @api private
      */
-    _updateObject: function (batch) {
+    _change: function (batch) {
       var errors = Object.create(null);
       this._validate(errors);
 
@@ -407,7 +407,6 @@ define([
       }, errors);
 
       this._updateInternalErrors(errors, batch);
-      this._object = this._errors.hasAnyInternal() ? null: this._construct();
       batch.publish('change');
     },
 

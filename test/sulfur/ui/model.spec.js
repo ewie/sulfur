@@ -219,15 +219,10 @@ define([
         model = DerivedModel.create();
       });
 
-      it("should return the object constructed from a valid model", function () {
-        model.update({ foo: 1 });
-        expect(model.object).to.exist;
-      });
-
-      it("should return undefined when the model is internally invalid", function () {
-        model._validate = fail({ foo: 'error' });
-        model.update({ foo: 1 });
-        expect(model.object).to.be.null;
+      it("should delegate to ._construct()", function () {
+        var spy = sinon.spy(model, '_construct');
+        var obj = model.object;
+        expect(spy).to.have.returned(sinon.match.same(obj));
       });
 
     });
@@ -441,19 +436,6 @@ define([
 
           });
 
-          it("should construct a new #object when the model is valid", function () {
-            var spy = sinon.spy(model, '_construct');
-            model.update({ foo: 1 });
-            expect(spy).to.have.returned(sinon.match.same(model.object));
-          });
-
-          it("should construct a new #object when the model is externally invalid", function () {
-            var spy = sinon.spy(model, '_construct');
-            model.updateExternalErrors({ bar: 'error' });
-            model.update({ foo: 1 });
-            expect(spy).to.have.returned(sinon.match.same(model.object));
-          });
-
           it("should publish on channel 'valid' when the model becomes valid", function () {
             model._validate = fail({ foo: 'error' });
             model.update({ foo: 1 });
@@ -493,12 +475,6 @@ define([
         });
 
         context("when validation fails", function () {
-
-          it("should set #object to undefined", function () {
-            model._validate = fail({ foo: 'error' });
-            model.update({ foo: 1 });
-            expect(model.object).to.be.null;
-          });
 
           it("should publish on channel 'invalid' when the model becomes invalid", function () {
             model._validate = fail({ foo: 'error' });
@@ -593,13 +569,9 @@ define([
           });
 
           it("should unsubscribe from the publisher's 'change' channel", function (done) {
-            model.update({ foo: sub });
-            model.update({ foo: null });
-            var obj = model.object;
             var spy = sinon.spy(model.publisher, 'publish');
             publisher.publish('change');
             async(function () {
-              expect(model.object).to.equal(obj);
               expect(spy).to.not.be.calledWith('change', sinon.match.same(model));
               done();
             });
@@ -695,35 +667,6 @@ define([
               });
             });
 
-            it("should construct a new #object when the model is valid", function (done) {
-              var spy = sinon.spy(model, '_construct');
-              publisher.publish('change');
-              async(function () {
-                expect(spy).to.have.returned(sinon.match.same(model.object));
-                done();
-              });
-            });
-
-            it("should construct a new #object when the model is only externally invalid", function (done) {
-              var spy = sinon.spy(model, '_construct');
-              model.updateExternalErrors({ bar: 'error' });
-              publisher.publish('change');
-              async(function () {
-                expect(spy).to.have.returned(sinon.match.same(model.object));
-                done();
-              });
-            });
-
-            it("should not construct a new #object when the model is internally invalid", function (done) {
-              publisher.publish('change');
-              model._validate = fail({ bar: 'error' });
-              model.update({ bar: 1 });
-              async(function () {
-                expect(model.object).to.be.null;
-                done();
-              });
-            });
-
             it("should validate the updated model", function (done) {
               var spy = sinon.stub(model, '_validate', function (errors) {
                 expect(Object.getPrototypeOf(errors)).to.be.null;
@@ -759,25 +702,6 @@ define([
                   });
                 });
 
-              });
-
-              it("should construct a new #object when the model is valid", function (done) {
-                var spy = sinon.spy(model, '_construct');
-                publisher.publish('change');
-                async(function () {
-                  expect(spy).to.have.returned(sinon.match.same(model.object));
-                  done();
-                });
-              });
-
-              it("should construct a new #object when the model is externally invalid", function (done) {
-                var spy = sinon.spy(model, '_construct');
-                model.updateExternalErrors({ bar: 'error' });
-                publisher.publish('change');
-                async(function () {
-                  expect(spy).to.have.returned(sinon.match.same(model.object));
-                  done();
-                });
               });
 
               it("should publish on channel 'valid' when the model becomes valid", function (done) {
@@ -834,15 +758,6 @@ define([
 
               beforeEach(function () {
                 sub.isValid = returns(false);
-              });
-
-              it("should set #object to undefined", function (done) {
-                model._validate = fail({ foo: 'error' });
-                publisher.publish('change');
-                async(function () {
-                  expect(model.object).to.be.null;
-                  done();
-                });
               });
 
               it("should publish on channel 'invalid' when the model becomes invalid", function (done) {
