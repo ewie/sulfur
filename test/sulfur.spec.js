@@ -24,6 +24,14 @@ define(['shared', 'sulfur'], function (shared, sulfur) {
 
     });
 
+    describe('.schemaLocationURL', function () {
+
+      it("should return 'https://www-user.tu-chemnitz.de/~ewie/sulfur.xsd'", function () {
+        expect(sulfur.schemaLocationURL).to.equal('http://www-user.tu-chemnitz.de/~ewie/sulfur.xsd');
+      });
+
+    });
+
   });
 
 });

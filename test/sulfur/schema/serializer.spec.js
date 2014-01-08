@@ -74,6 +74,23 @@ define([
         expect(e.getAttribute('attributeFormDefault')).to.equal('unqualified');
       });
 
+      it("should include a import element for each defined namespace", function () {
+        var qname = { namespaceURI: 'urn:example:bar' };
+        var schema = Schema.create(qname, { toArray: returns([]) });
+        var namespaces = [
+          [ 'urn:example:foo', 'http://example.org/foo.xsd' ],
+          [ 'urn:example:bar', 'http://example.org/bar.xsd' ]
+        ];
+        var serializer = Serializer.create(null, namespaces);
+        var doc = serializer.serialize(schema);
+        var ee = doc.documentElement.querySelectorAll('import');
+        expect(ee).to.have.lengthOf(2);
+        Array.prototype.forEach.call(ee, function (e, i) {
+          expect(e.getAttribute('namespace')).to.equal(namespaces[i][0]);
+          expect(e.getAttribute('schemaLocation')).to.equal(namespaces[i][1]);
+        });
+      });
+
       it("should include a root element declaration using the schema's local name", function () {
         var qname = { localName: 'foo' };
         var schema = Schema.create(qname, { toArray: returns([]) });

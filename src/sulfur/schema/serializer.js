@@ -21,9 +21,12 @@ define([
 
     /**
      * @param {sulfur/schema/serializer/type} typeSerializer
+     * @param {array} namespace (optional) an array of namespace/URL pairs
+     *   each defining a namespace and its XML Schema location
      */
-    initialize: function (typeSerializer) {
+    initialize: function (typeSerializer, namespaces) {
       this._typeSerializer = typeSerializer;
+      this._namespaces = namespaces || [];
     },
 
     /**
@@ -36,6 +39,14 @@ define([
       doc.root.setAttribute('targetNamespace', schema.qname.namespaceURI);
       doc.root.setAttribute('elementFormDefault', 'qualified');
       doc.root.setAttribute('attributeFormDefault', 'unqualified');
+
+      // add the imports regardless if the namespaces are actually used or not
+      this._namespaces.forEach(function (ns) {
+        var e = doc.createElement(XSD_NS, 'xs:import');
+        e.setAttribute('namespace', ns[0]);
+        e.setAttribute('schemaLocation', ns[1]);
+        doc.root.appendChild(e);
+      });
 
       var root = doc.createElement(XSD_NS, 'xs:element');
       root.setAttribute('name', schema.qname.localName);
