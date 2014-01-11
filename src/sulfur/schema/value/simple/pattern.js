@@ -21,6 +21,11 @@ define([
 
   return SimpleValue.clone({
 
+    /**
+     * Parse a pattern.
+     *
+     * @see .create()
+     */
     parse: function (s) { return this.create(s) }
 
   }).augment({
@@ -33,14 +38,16 @@ define([
      * @throw {Error} if sulfur/schema/regex.compile throws
      */
     initialize: function (source) {
-      var compiledPattern;
+      var parsed;
       try {
-        compiledPattern = Regex.compile(source);
+        parsed = Regex.parse(source);
       } catch (e) {
         throw new Error('invalid pattern "' + source + '" (error: ' + e.message + ')');
       }
       this._source = source;
-      this._compiledPattern = compiledPattern;
+      this._parsed = parsed;
+      var translated = this._tranlated = parsed.translate();
+      this._compiled = translated.compile();
     },
 
     /**
@@ -49,21 +56,22 @@ define([
     get source() { return this._source },
 
     /**
+     * @return {RegExp} the compiled pattern
+     */
+    get re() { return this._compiled },
+
+    /**
      * @return {true} when equal
      * @return {false} when not equal
      */
-    eq: function (other) {
-      return this.source === other.source;
-    },
+    eq: function (other) { return this.source === other.source },
 
     /**
      * Get the source from which the patterns was compiled.
      *
      * @return {string} the pattern's source
      */
-    toString: function () {
-      return this._source;
-    },
+    toString: function () { return this.source },
 
     /**
      * Check if a string matches the pattern.
@@ -72,8 +80,20 @@ define([
      *
      * @return {boolean} whether `s` matches the pattern
      */
-    test: function (s) {
-      return this._compiledPattern.test(s);
+    test: function (s) { return this.re.test(s) },
+
+    /**
+     * @see sulfur/schema/regex#containsGroupWithSurrogateCodepoints()
+     */
+    containsGroupWithSurrogateCodepoints: function () {
+      return this._tranlated.containsGroupWithSurrogateCodepoints();
+    },
+
+    /**
+     * @see sulfur/schema/regex#containsEmptyGroup()
+     */
+    containsEmptyGroup: function () {
+      return this._tranlated.containsEmptyGroup();
     }
 
   });

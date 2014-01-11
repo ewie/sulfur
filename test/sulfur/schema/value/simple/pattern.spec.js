@@ -52,14 +52,18 @@ define([
 
     describe('#initialize()', function () {
 
-      it("should compile the source", function () {
-        var spy = sandbox.spy(Regex, 'compile');
+      it("should parse, translate and compile the source", function () {
+        var parseSpy = sandbox.spy(Regex, 'parse');
+        var translateSpy = sandbox.spy(Regex.prototype, 'translate');
+        var compileSpy = sandbox.spy(Regex.prototype, 'compile');
         PatternValue.create('.');
-        expect(spy).to.be.calledWith('.');
+        expect(parseSpy).to.be.calledWith('.');
+        expect(translateSpy).to.be.calledOn(parseSpy.getCall(0).returnValue);
+        expect(compileSpy).to.be.calledOn(translateSpy.getCall(0).returnValue);
       });
 
-      it("should throw when sulfur/schema/regex.compile throws", function () {
-        sandbox.stub(Regex, 'compile').throws(new Error("invalid for testing purposes"));
+      it("should throw when sulfur/schema/regex.parse throws", function () {
+        sandbox.stub(Regex, 'parse').throws(new Error("invalid for testing purposes"));
         expect(bind(PatternValue, 'create', '.'))
           .to.throw('invalid pattern "." (error: invalid for testing purposes)');
       });
@@ -71,6 +75,16 @@ define([
       it("should return the source", function () {
         var p = PatternValue.create('[0-9]');
         expect(p.source).to.equal('[0-9]');
+      });
+
+    });
+
+    describe('#re', function () {
+
+      it("should return the compiled pattern", function () {
+        var compileSpy = sandbox.spy(Regex.prototype, 'compile');
+        var p = PatternValue.create('.');
+        expect(compileSpy).to.have.returned(sinon.match.same(p.re));
       });
 
     });
@@ -114,10 +128,9 @@ define([
 
       it("should call RegExp.prototype.test on the compiled pattern", function () {
         var testSpy = sandbox.spy(RegExp.prototype, 'test');
-        var compileSpy = sandbox.spy(Regex, 'compile');
         var p = PatternValue.create('.');
         p.test();
-        expect(testSpy).to.be.calledOn(compileSpy.getCall(0).returnValue);
+        expect(testSpy).to.be.calledOn(sinon.match.same(p.re));
       });
 
       it("should pass the string to RegExp.prototype.test", function () {
@@ -125,6 +138,32 @@ define([
         var p = PatternValue.create('.');
         p.test('x');
         expect(testSpy).to.be.calledWith('x');
+      });
+
+    });
+
+    describe('#containsGroupWithSurrogateCodepoints()', function () {
+
+      it("should delegate to .containsGroupWithSurrogateCodepoints() on the translated pattern", function () {
+        var translateSpy = sandbox.spy(Regex.prototype, 'translate');
+        var p = PatternValue.create('.');
+        var tre = translateSpy.getCall(0).returnValue;
+        var spy = sinon.spy(tre, 'containsGroupWithSurrogateCodepoints');
+        var r = p.containsGroupWithSurrogateCodepoints();
+        expect(spy).to.have.returned(r);
+      });
+
+    });
+
+    describe('#containsEmptyGroup()', function () {
+
+      it("should delegate to .containsGroupWithSurrogateCodepoints() on the translated pattern", function () {
+        var translateSpy = sandbox.spy(Regex.prototype, 'translate');
+        var p = PatternValue.create('.');
+        var tre = translateSpy.getCall(0).returnValue;
+        var spy = sinon.spy(tre, 'containsEmptyGroup');
+        var r = p.containsEmptyGroup();
+        expect(spy).to.have.returned(r);
       });
 
     });
