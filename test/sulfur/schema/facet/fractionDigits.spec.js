@@ -150,11 +150,11 @@ define([
 
     });
 
-    describe('#validate()', function () {
+    describe('#validateAmongFacets()', function () {
 
       it("should return true", function () {
         var facet = FractionDigitsFacet.create(IntegerValue.create());
-        expect(facet.validate()).to.be.true;
+        expect(facet.validateAmongFacets()).to.be.true;
       });
 
     });

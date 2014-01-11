@@ -22,7 +22,7 @@ define([
    * @implement {array} .mutexFacets
    * @implement {boolean} .isShadowingLowerRestrictions
    * @implement {.validate()} #createValidator()
-   * @implement {boolean} #validate({any})
+   * @implement {boolean} #validateAmongFacets({sulfur/schema/facets})
    * @implement {boolean} #isRestrictionOf({sulfur/schema/facets})
    * @implement {sulfur/schema/value/*} .getValueType({sulfur/schema/type/simple/*})
    *

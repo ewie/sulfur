@@ -127,11 +127,11 @@ define([
 
     });
 
-    describe('#validate()', function () {
+    describe('#validateAmongFacets()', function () {
 
       it("should return true", function () {
         var facet = WhiteSpaceFacet.create(WhiteSpaceValue.create('collapse'));
-        expect(facet.validate()).to.be.true;
+        expect(facet.validateAmongFacets()).to.be.true;
       });
 
     });

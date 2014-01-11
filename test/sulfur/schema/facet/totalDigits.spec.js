@@ -154,11 +154,11 @@ define([
 
     });
 
-    describe('#validate()', function () {
+    describe('#validateAmongFacets()', function () {
 
       it("should return true", function () {
         var facet = TotalDigitsFacet.create(IntegerValue.parse('1'));
-        expect(facet.validate()).to.be.true;
+        expect(facet.validateAmongFacets()).to.be.true;
       });
 
     });

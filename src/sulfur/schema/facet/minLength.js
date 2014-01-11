@@ -83,8 +83,8 @@ define([
       return true;
     },
 
-    validate: function (type, errors) {
-      var maxLengthFacet = type.getByQName(requireMaxLengthFacet().qname);
+    validateAmongFacets: function (facets, errors) {
+      var maxLengthFacet = facets.getByQName(requireMaxLengthFacet().qname);
       if (maxLengthFacet && this.value.gt(maxLengthFacet.value)) {
         if (errors) {
           errors.push("must not be greater than facet 'maxLength'");

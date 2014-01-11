@@ -202,34 +202,34 @@ define([
 
     });
 
-    describe('#validate()', function () {
+    describe('#validateAmongFacets()', function () {
 
       var facet;
-      var type;
+      var facets;
 
       beforeEach(function () {
         var dummyFacet = { qname: QName.create('x', 'urn:example:y') };
         facet = MinLengthFacet.create(IntegerValue.parse('1'));
-        type = Facets.create([ dummyFacet ]);
+        facets = Facets.create([ dummyFacet ]);
       });
 
       it("should return true when valid", function () {
-        expect(facet.validate(type)).to.be.true;
+        expect(facet.validateAmongFacets(facets)).to.be.true;
       });
 
       context("with a value greater than sulfur/schema/facet/maxLength", function () {
 
         beforeEach(function () {
-          type = Facets.create([ MaxLengthFacet.create(IntegerValue.create()) ]);
+          facets = Facets.create([ MaxLengthFacet.create(IntegerValue.create()) ]);
         });
 
         it("should reject", function () {
-          expect(facet.validate(type)).to.be.false;
+          expect(facet.validateAmongFacets(facets)).to.be.false;
         });
 
         it("should add an error message", function () {
           var errors = [];
-          facet.validate(type, errors);
+          facet.validateAmongFacets(facets, errors);
           expect(errors).to.include("must not be greater than facet 'maxLength'");
         });
 

@@ -111,10 +111,10 @@ define([
 
     });
 
-    describe('#validate()', function () {
+    describe('#validateAmongFacets()', function () {
 
       var facet;
-      var type;
+      var facets;
 
       beforeEach(function () {
         facet = MaxInclusiveFacet.create(IntegerValue.create());
@@ -122,32 +122,23 @@ define([
 
       it("should return true when valid", function () {
         var dummyFacet = { qname: QName.create('x', 'urn:example:y') };
-        type = Facets.create([ dummyFacet ]);
-        type.valueType = IntegerValue;
-        expect(facet.validate(type)).to.be.true;
-      });
-
-      it("should return false when the value is not of the given type", function () {
-        var dummyFacet = { qname: QName.create('x', 'urn:example:y') };
-        type = Facets.create([ dummyFacet ]);
-        type.valueType = { prototype: {} };
-        expect(facet.validate(type)).to.be.false;
+        facets = Facets.create([ dummyFacet ]);
+        expect(facet.validateAmongFacets(facets)).to.be.true;
       });
 
       context("with a sulfur/schema/facet/maxExclusive", function () {
 
         beforeEach(function () {
-          type = Facets.create([ MaxExclusiveFacet.create() ]);
-          type.valueType = IntegerValue;
+          facets = Facets.create([ MaxExclusiveFacet.create() ]);
         });
 
         it("should reject", function () {
-          expect(facet.validate(type)).to.be.false;
+          expect(facet.validateAmongFacets(facets)).to.be.false;
         });
 
         it("should add an error message", function () {
           var errors = [];
-          facet.validate(type, errors);
+          facet.validateAmongFacets(facets, errors);
           expect(errors).to.include("cannot be used along with facet 'maxExclusive'");
         });
 
@@ -156,19 +147,18 @@ define([
       context("with a value less than sulfur/schema/facet/minExclusive when given", function () {
 
         beforeEach(function () {
-          type = Facets.create([
+          facets = Facets.create([
             MinExclusiveFacet.create(IntegerValue.parse('2'))
           ]);
-          type.valueType = IntegerValue;
         });
 
         it("should reject", function () {
-          expect(facet.validate(type)).to.be.false;
+          expect(facet.validateAmongFacets(facets)).to.be.false;
         });
 
         it("should add an error message", function () {
           var errors = [];
-          facet.validate(type, errors);
+          facet.validateAmongFacets(facets, errors);
           expect(errors).to.include("must be greater than facet 'minExclusive'");
         });
 
@@ -177,19 +167,18 @@ define([
       context("with a value equal to sulfur/schema/facet/minExclusive when given", function () {
 
         beforeEach(function () {
-          type = Facets.create([
+          facets = Facets.create([
             MinExclusiveFacet.create(IntegerValue.create())
           ]);
-          type.valueType = IntegerValue;
         });
 
         it("should reject", function () {
-          expect(facet.validate(type)).to.be.false;
+          expect(facet.validateAmongFacets(facets)).to.be.false;
         });
 
         it("should add an error message", function () {
           var errors = [];
-          facet.validate(type, errors);
+          facet.validateAmongFacets(facets, errors);
           expect(errors).to.include("must be greater than facet 'minExclusive'");
         });
 
@@ -198,19 +187,18 @@ define([
       context("with a value less than sulfur/schema/facet/minInclusive when given", function () {
 
         beforeEach(function () {
-          type = Facets.create([
+          facets = Facets.create([
             MinInclusiveFacet.create(IntegerValue.parse('2'))
           ]);
-          type.valueType = IntegerValue;
         });
 
         it("should reject", function () {
-          expect(facet.validate(type)).to.be.false;
+          expect(facet.validateAmongFacets(facets)).to.be.false;
         });
 
         it("should add an error message", function () {
           var errors = [];
-          facet.validate(type, errors);
+          facet.validateAmongFacets(facets, errors);
           expect(errors).to.include("must be greater than or equal to facet 'minInclusive'");
         });
 

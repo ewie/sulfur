@@ -55,19 +55,15 @@ define([
       return type.createValidator().validate(this.value);
     },
 
-    validate: function (type, errors) {
-      if (!type.valueType.prototype.isPrototypeOf(this.value)) {
-        return false;
-      }
-
-      if (type.hasByQName(requireMaxInclusiveFacet().qname)) {
+    validateAmongFacets: function (facets, errors) {
+      if (facets.hasByQName(requireMaxInclusiveFacet().qname)) {
         if (errors) {
           errors.push("cannot be used along with facet 'maxInclusive'");
         }
         return false;
       }
 
-      var minExclusiveFacet = type.getByQName(requireMinExclusiveFacet().qname);
+      var minExclusiveFacet = facets.getByQName(requireMinExclusiveFacet().qname);
       if (minExclusiveFacet && this.value.lt(minExclusiveFacet.value)) {
         if (errors) {
           errors.push("must be greater than or equal to facet 'minExclusive'");
@@ -75,7 +71,7 @@ define([
         return false;
       }
 
-      var minInclusiveFacet = type.getByQName(requireMinInclusiveFacet().qname);
+      var minInclusiveFacet = facets.getByQName(requireMinInclusiveFacet().qname);
       if (minInclusiveFacet && this.value.lteq(minInclusiveFacet.value)) {
         if (errors) {
           errors.push("must be greater than facet 'minInclusive'");

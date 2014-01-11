@@ -88,14 +88,14 @@ define([
       return true;
     },
 
-    validate: function (type, errors) {
-      if (type.hasByQName(requireMaxLengthFacet().qname)) {
+    validateAmongFacets: function (facets, errors) {
+      if (facets.hasByQName(requireMaxLengthFacet().qname)) {
         if (errors) {
           errors.push("cannot be used along with facet 'maxLength'");
         }
         return false;
       }
-      if (type.hasByQName(requireMinLengthFacet().qname)) {
+      if (facets.hasByQName(requireMinLengthFacet().qname)) {
         if (errors) {
           errors.push("cannot be used along with facet 'minLength'");
         }

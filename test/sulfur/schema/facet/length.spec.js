@@ -207,7 +207,7 @@ define([
 
     });
 
-    describe('#validate()', function () {
+    describe('#validateAmongFacets()', function () {
 
       var facet;
       var facets;
@@ -219,7 +219,7 @@ define([
       });
 
       it("should return true when valid", function () {
-        expect(facet.validate(facets)).to.be.true;
+        expect(facet.validateAmongFacets(facets)).to.be.true;
       });
 
       context("with a sulfur/schema/facet/maxLength", function () {
@@ -229,12 +229,12 @@ define([
         });
 
         it("should reject", function () {
-          expect(facet.validate(facets)).to.be.false;
+          expect(facet.validateAmongFacets(facets)).to.be.false;
         });
 
         it("should add an error message", function () {
           var errors = [];
-          facet.validate(facets, errors);
+          facet.validateAmongFacets(facets, errors);
           expect(errors).to.include("cannot be used along with facet 'maxLength'");
         });
 
@@ -247,12 +247,12 @@ define([
         });
 
         it("should reject", function () {
-          expect(facet.validate(facets)).to.be.false;
+          expect(facet.validateAmongFacets(facets)).to.be.false;
         });
 
         it("should add an error message", function () {
           var errors = [];
-          facet.validate(facets, errors);
+          facet.validateAmongFacets(facets, errors);
           expect(errors).to.include("cannot be used along with facet 'minLength'");
         });
 

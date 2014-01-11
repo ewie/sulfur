@@ -67,9 +67,7 @@ define([
       });
     },
 
-    validate: function () {
-      return true;
-    },
+    validateAmongFacets: function () { return true },
 
     createValidator: function () {
       return EnumerationValidator.create(

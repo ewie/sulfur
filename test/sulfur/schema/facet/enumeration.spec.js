@@ -144,22 +144,11 @@ define([
 
     });
 
-    describe('#validate()', function () {
+    describe('#validateAmongFacets()', function () {
 
-      var facet;
-
-      beforeEach(function () {
-        facet = EnumerationFacet.create([ StringValue.create('') ]);
-      });
-
-      it("should return true when all values are of the given type", function () {
-        var type = { valueType: StringValue };
-        expect(facet.validate(type)).to.be.true;
-      });
-
-      it("should return false when any value is not of the given type", function () {
-        var type = { valueType: IntegerValue };
-        expect(facet.validate(type)).to.be.false;
+      it("should return true", function () {
+        var facet = EnumerationFacet.create([ StringValue.create('') ]);
+        expect(facet.validateAmongFacets()).to.be.true;
       });
 
     });

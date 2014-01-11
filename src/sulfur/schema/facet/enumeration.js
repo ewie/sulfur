@@ -44,11 +44,7 @@ define([
       });
     },
 
-    validate: function (type) {
-      return this.value.every(function (value) {
-        return type.valueType.prototype.isPrototypeOf(value);
-      });
-    },
+    validateAmongFacets: util.returns(true),
 
     createValidator: function () {
       return EnumerationValidator.create(this.value, { testMethod: 'eq' });

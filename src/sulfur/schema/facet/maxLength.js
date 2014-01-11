@@ -83,8 +83,8 @@ define([
       return true;
     },
 
-    validate: function (type, errors) {
-      var minLengthFacet = type.getByQName(requireMinLengthFacet().qname);
+    validateAmongFacets: function (facets, errors) {
+      var minLengthFacet = facets.getByQName(requireMinLengthFacet().qname);
       if (minLengthFacet && this.value.lt(minLengthFacet.value)) {
         if (errors) {
           errors.push("must not be less than facet 'minLength'");

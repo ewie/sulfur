@@ -51,7 +51,7 @@ define([
 
     isRestrictionOf: util.returns(undefined),
 
-    validate: util.returns(true),
+    validateAmongFacets: util.returns(true),
 
     createValidator: function () {
       return SomeValidator.create(this.value.map(function (pattern) {

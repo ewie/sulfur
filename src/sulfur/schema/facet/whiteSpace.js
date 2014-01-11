@@ -44,9 +44,7 @@ define([
       return this.value.isEqualOrStricter(whiteSpaceFacet.value);
     },
 
-    validate: function () {
-      return true;
-    },
+    validateAmongFacets: function () { return true },
 
     createValidator: function () {
       throw new Error("validator creation is not allowed");

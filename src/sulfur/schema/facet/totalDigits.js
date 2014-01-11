@@ -46,9 +46,7 @@ define([
       return true;
     },
 
-    validate: function () {
-      return true;
-    },
+    validateAmongFacets: function () { return true },
 
     createValidator: function () {
       return PropertyValidator.create(
