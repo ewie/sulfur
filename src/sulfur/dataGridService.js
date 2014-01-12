@@ -55,7 +55,7 @@ define(['sulfur/util/factory'], function (Factory) {
     get relationshipsEndpoint() { return concatPath(this.endpoint, 'meta/relationships') },
 
     recordCollectionUrl: function (resource) {
-      return concatPath(this.endpoint, resource.name);
+      return concatPath(this.endpoint, resource.recordCollectionName);
     },
 
     recordCollectionMetaUrl: function (resource) {
@@ -71,7 +71,7 @@ define(['sulfur/util/factory'], function (Factory) {
     },
 
     recordCollectionDefinition: function (resource) {
-      return createCollectionDefinition(resource.name, DGS_XML_DATA_SPACE_ENGINE);
+      return createCollectionDefinition(resource.recordCollectionName, DGS_XML_DATA_SPACE_ENGINE);
     },
 
     recordCollectionValidationScopeDefinition: function (resource) {
@@ -81,7 +81,7 @@ define(['sulfur/util/factory'], function (Factory) {
     },
 
     fileCollectionUrl: function (resource) {
-      return concatPath(this.endpoint, resource.name + '-files');
+      return concatPath(this.endpoint, resource.fileCollectionName);
     },
 
     fileUrl: function (resource, id) {
@@ -89,7 +89,7 @@ define(['sulfur/util/factory'], function (Factory) {
     },
 
     fileCollectionDefinition: function (resource) {
-      return createCollectionDefinition(resource.name + '-files', DGS_BINARY_DATA_SPACE_ENGINE);
+      return createCollectionDefinition(resource.fileCollectionName, DGS_BINARY_DATA_SPACE_ENGINE);
     },
 
     recordFileRelationDefinition: function (resource) {

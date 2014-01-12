@@ -19,17 +19,26 @@ define(['sulfur/util/factory'], function (Factory) {
 
   }).augment({
 
-    initialize: function (name, schema) {
-      if (!this.factory.isValidName(name)) {
-        throw new Error("expecting a valid name");
+    initialize: function (schema, recordCollectionName, fileCollectionName) {
+      if (!this.factory.isValidName(recordCollectionName)) {
+        throw new Error("expecting a valid record collection name");
       }
-      this._name = name;
+      if (!this.factory.isValidName(fileCollectionName)) {
+        throw new Error("expecting a valid file collection name");
+      }
+      if (recordCollectionName === fileCollectionName) {
+        throw new Error("expecting different record and file collection names");
+      }
       this._schema = schema;
+      this._recordCollectionName = recordCollectionName;
+      this._fileCollectionName = fileCollectionName;
     },
 
-    get name() { return this._name },
+    get schema() { return this._schema },
 
-    get schema() { return this._schema }
+    get recordCollectionName() { return this._recordCollectionName },
+
+    get fileCollectionName() { return this._fileCollectionName }
 
   });
 

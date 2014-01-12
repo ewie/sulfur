@@ -46,8 +46,13 @@ define([
       r.appendChild(e);
 
       e = d.createElementNS(ns, 'preference');
-      e.setAttribute('name', 'name');
-      e.setAttribute('value', widget.resource.name);
+      e.setAttribute('name', 'recordCollectionName');
+      e.setAttribute('value', widget.resource.recordCollectionName);
+      r.appendChild(e);
+
+      e = d.createElementNS(ns, 'preference');
+      e.setAttribute('name', 'fileCollectionName');
+      e.setAttribute('value', widget.resource.fileCollectionName);
       r.appendChild(e);
 
       e = d.createElementNS(ns, 'icon');

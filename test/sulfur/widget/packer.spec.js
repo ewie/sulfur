@@ -76,7 +76,10 @@ define([
         dgs = { endpoint: 'http://example.org/' };
         widget = {
           name: 'foo',
-          resource: { name: 'bar' },
+          resource: {
+            recordCollectionName: 'bar',
+            fileCollectionName: 'bar-files'
+          },
           description: 'bar',
           authorName: 'abc',
           authorEmail: 'x@y.z'
@@ -90,7 +93,7 @@ define([
         expect(e.namespaceURI).to.equal(packer.namespaceURI);
       });
 
-      it('should include element <name> with the widget name', function () {
+      it("should include element <name> with the widget name", function () {
         var e = d.documentElement.querySelector('name');
         expect(e.namespaceURI).to.equal(packer.namespaceURI);
         expect(e.textContent).to.equal(widget.name);
@@ -109,18 +112,25 @@ define([
         expect(e.attributes.src.value).to.equal('icon.svg');
       });
 
-      it('should include element <preference/> defining the endpoint url', function () {
+      it("should include element <preference/> defining the endpoint url", function () {
         var e = d.documentElement.querySelectorAll('preference').item(0);
         expect(e.namespaceURI).to.equal(packer.namespaceURI);
         expect(e.attributes.name.value).to.equal('endpoint');
         expect(e.attributes.value.value).to.equal(dgs.endpoint);
       });
 
-      it('should include element <preference/> defining the resource name', function () {
+      it("should include element <preference/> defining the resource's record collection name", function () {
         var e = d.documentElement.querySelectorAll('preference').item(1);
         expect(e.namespaceURI).to.equal(packer.namespaceURI);
-        expect(e.attributes.name.value).to.equal('name');
-        expect(e.attributes.value.value).to.equal(widget.resource.name);
+        expect(e.attributes.name.value).to.equal('recordCollectionName');
+        expect(e.attributes.value.value).to.equal(widget.resource.recordCollectionName);
+      });
+
+      it("should include element <preference/> defining the resource's file collection name", function () {
+        var e = d.documentElement.querySelectorAll('preference').item(2);
+        expect(e.namespaceURI).to.equal(packer.namespaceURI);
+        expect(e.attributes.name.value).to.equal('fileCollectionName');
+        expect(e.attributes.value.value).to.equal(widget.resource.fileCollectionName);
       });
 
       it("should include element <description> when a description is defined", function () {

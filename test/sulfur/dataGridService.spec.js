@@ -60,7 +60,7 @@ define([
 
       it("should return the record collection's schema URL", function () {
         var dgs = DataGridService.create('http://example.org');
-        var resource = { name: 'foo' };
+        var resource = { recordCollectionName: 'foo' };
         expect(dgs.recordCollectionMetaUrl(resource))
           .to.equal(dgs.recordCollectionUrl(resource) + '/meta');
       });
@@ -71,7 +71,7 @@ define([
 
       it("should return the record collection's schema URL", function () {
         var dgs = DataGridService.create('http://example.org');
-        var resource = { name: 'foo' };
+        var resource = { recordCollectionName: 'foo' };
         expect(dgs.recordCollectionSchemaUrl(resource))
           .to.equal(dgs.recordCollectionMetaUrl(resource) + '/schema');
       });
@@ -82,14 +82,14 @@ define([
 
       it("should return the record collection URL", function () {
         var dgs = DataGridService.create('http://example.org');
-        var resource = { name: 'xyz' };
-        expect(dgs.recordCollectionUrl(resource)).to.equal(dgs.endpoint + '/' + resource.name);
+        var resource = { recordCollectionName: 'xyz' };
+        expect(dgs.recordCollectionUrl(resource)).to.equal(dgs.endpoint + '/' + resource.recordCollectionName);
       });
 
       it("should handle an endpoint URL with trailing slash", function () {
         var dgs = DataGridService.create('http://example.org/');
-        var resource = { name: 'abc' };
-        expect(dgs.recordCollectionUrl(resource)).to.equal(dgs.endpoint + resource.name);
+        var resource = { recordCollectionName: 'abc' };
+        expect(dgs.recordCollectionUrl(resource)).to.equal(dgs.endpoint + resource.recordCollectionName);
       });
 
     });
@@ -98,7 +98,7 @@ define([
 
       it("should return the record URL", function () {
         var dgs = DataGridService.create('http://example.org');
-        var resource = { name: 'xyz' };
+        var resource = { recordCollectionName: 'xyz' };
         expect(dgs.recordUrl(resource, 'foo-123')).to.equal(dgs.recordCollectionUrl(resource) + '/foo-123');
       });
 
@@ -108,14 +108,14 @@ define([
 
       it("should return the file collection URL", function () {
         var dgs = DataGridService.create('http://example.org');
-        var resource = { name: 'xyz' };
-        expect(dgs.fileCollectionUrl(resource)).to.equal(dgs.endpoint + '/' + resource.name + '-files');
+        var resource = { fileCollectionName: 'xyz' };
+        expect(dgs.fileCollectionUrl(resource)).to.equal(dgs.endpoint + '/' + resource.fileCollectionName);
       });
 
       it("should handle an endpoint URL with trailing slash", function () {
         var dgs = DataGridService.create('http://example.org/');
-        var resource = { name: 'abc' };
-        expect(dgs.fileCollectionUrl(resource)).to.equal(dgs.endpoint + resource.name + '-files');
+        var resource = { fileCollectionName: 'abc' };
+        expect(dgs.fileCollectionUrl(resource)).to.equal(dgs.endpoint + resource.fileCollectionName);
       });
 
     });
@@ -124,7 +124,7 @@ define([
 
       it("should return the file URL", function () {
         var dgs = DataGridService.create('http://example.org');
-        var resource = { name: 'foo' };
+        var resource = { fileCollectionName: 'foo' };
         expect(dgs.fileUrl(resource, 'xyz-987')).to.equal(dgs.fileCollectionUrl(resource) + '/xyz-987');
       });
 
@@ -134,11 +134,11 @@ define([
 
       it("should return a string representing an XML document with the record collection definition", function () {
         var dgs = DataGridService.create('http://example.org');
-        var resource = { name: 'foo' };
+        var resource = { recordCollectionName: 'foo' };
         var s = dgs.recordCollectionDefinition(resource);
         expect(s).to.equal(
           '<collection xmlns="http://www.w3.org/2007/app">' +
-           '<atom:title xmlns:atom="http://www.w3.org/2005/Atom">' + resource.name + '</atom:title>' +
+           '<atom:title xmlns:atom="http://www.w3.org/2005/Atom">' + resource.recordCollectionName + '</atom:title>' +
            '<dgs:dataspaceengines xmlns:dgs="http://www.webcomposition.net/2008/02/dgs/">' +
             '<dgs:dataspaceengine dgs:type="http://www.webcomposition.net/2008/02/dgs/DataSpaceEngines/XmlDataSpaceEngine"/>' +
            '</dgs:dataspaceengines>' +
@@ -151,7 +151,7 @@ define([
 
       it("should return a N3 document with the record collection validation scope definition", function () {
         var dgs = DataGridService.create('http://example.org');
-        var resource = { name: 'foo' };
+        var resource = { recordCollectionName: 'foo' };
         var d = dgs.recordCollectionValidationScopeDefinition(resource);
         expect(d).to.equal(
           '<' + dgs.recordCollectionUrl(resource) + '>' +
@@ -165,11 +165,11 @@ define([
 
       it("should return a string representing an XML document with the file collection definition", function () {
         var dgs = DataGridService.create('http://example.org');
-        var resource = { name: 'foo' };
+        var resource = { fileCollectionName: 'foo' };
         var s = dgs.fileCollectionDefinition(resource);
         expect(s).to.equal(
           '<collection xmlns="http://www.w3.org/2007/app">' +
-           '<atom:title xmlns:atom="http://www.w3.org/2005/Atom">' + resource.name + '-files</atom:title>' +
+           '<atom:title xmlns:atom="http://www.w3.org/2005/Atom">' + resource.fileCollectionName + '</atom:title>' +
            '<dgs:dataspaceengines xmlns:dgs="http://www.webcomposition.net/2008/02/dgs/">' +
             '<dgs:dataspaceengine dgs:type="http://www.webcomposition.net/2008/02/dgs/DataSpaceEngines/BinaryDataSpaceEngine"/>' +
            '</dgs:dataspaceengines>' +
@@ -182,7 +182,10 @@ define([
 
       it("should return a N3 document with the record-file-relationship definition", function () {
         var dgs = DataGridService.create('http://example.org');
-        var resource = { name: 'foo' };
+        var resource = {
+          recordCollectionName: 'foo',
+          fileCollectionName: 'bar'
+        };
         var d = dgs.recordFileRelationDefinition(resource);
         expect(d).to.equal(
           '@prefix dm:<http://www.webcomposition.net/2008/02/dgs/meta/>.\n' +

@@ -53,22 +53,25 @@ define([
         sandbox.restore();
       });
 
-      it("should reject when .isValidName() returns false for the given name", function () {
-        var spy = sandbox.stub(Resource, 'isValidName').returns(false);
+      it("should reject when .isValidName() returns false for the given record collection name", function () {
         var name = {};
-        expect(bind(Resource, 'create', name))
-          .to.throw("expecting a valid name");
-        expect(spy).to.be.calledWith(name);
+        var spy = sandbox.stub(Resource, 'isValidName', function (x) { return x !== name });
+        expect(bind(Resource, 'create', null, name, 'foo'))
+          .to.throw("expecting a valid record collection name");
+        expect(spy).to.be.calledWith(sinon.match.same(name));
       });
 
-    });
+      it("should reject when .isValidName() returns false for the given file collection name", function () {
+        var name = {};
+        var spy = sandbox.stub(Resource, 'isValidName', function (x) { return x !== name });
+        expect(bind(Resource, 'create', null, 'foo', name))
+          .to.throw("expecting a valid file collection name");
+        expect(spy).to.be.calledWith(sinon.match.same(name));
+      });
 
-    describe('#name', function () {
-
-      it("should return the name", function () {
-        var name = 'foo';
-        var r = Resource.create(name);
-        expect(r.name).to.equal(name);
+      it("should reject when record and file collection names are equal", function () {
+        expect(bind(Resource, 'create', null, 'foo', 'foo'))
+          .to.throw("expecting different record and file collection names");
       });
 
     });
@@ -77,8 +80,28 @@ define([
 
       it("should return the schema", function () {
         var schema = {};
-        var r = Resource.create('foo', schema);
+        var r = Resource.create(schema, 'foo', 'bar');
         expect(r.schema).to.equal(schema);
+      });
+
+    });
+
+    describe('#recordCollectionName', function () {
+
+      it("should return the name", function () {
+        var name = 'foo';
+        var r = Resource.create(null, name, 'bar');
+        expect(r.recordCollectionName).to.equal(name);
+      });
+
+    });
+
+    describe('#fileCollectionName', function () {
+
+      it("should return the name", function () {
+        var name = 'bar';
+        var r = Resource.create(null, 'foo', name);
+        expect(r.fileCollectionName).to.equal(name);
       });
 
     });
