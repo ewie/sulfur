@@ -45,28 +45,15 @@ define(['sulfur/util/factory'], function (Factory) {
       this._facets = facets;
     },
 
-    get primitive() {
-      if (this.base.primitive) {
-        return this.base.primitive;
-      }
-      return this.base;
-    },
+    get primitive() { return this.base.primitive || this.base },
 
-    get base() {
-      return this._base;
-    },
+    get base() { return this._base },
 
-    get facets() {
-      return this._facets;
-    },
+    get facets() { return this._facets },
 
-    get valueType() {
-      return this.base.valueType;
-    },
+    get valueType() { return this.base.valueType },
 
-    get allowedFacets() {
-      return this.base.allowedFacets;
-    },
+    get allowedFacets() { return this.base.allowedFacets },
 
     isRestrictionOf: function (other) {
       var primitive = this.primitive;
@@ -102,7 +89,11 @@ define(['sulfur/util/factory'], function (Factory) {
         var mutexFacets = allowedFacet.mutexFacets;
         return mutexFacets.some(function (mutexFacet) {
           var effectiveFacets = mutexFacet.getEffectiveFacets(this);
-          return effectiveFacets && effectiveFacets[0].isRestrictionOf(other);
+          if (effectiveFacets) {
+            return effectiveFacets[0].isRestrictionOf(other);
+          } else {
+            return true;
+          }
         }.bind(this));
       }.bind(this));
     },

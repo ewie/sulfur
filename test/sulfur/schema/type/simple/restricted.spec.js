@@ -257,6 +257,23 @@ define([
             expect(restriction.isRestrictionOf(other)).to.be.true;
           });
 
+          it("should allow this type to not define the mutual exclusive facet of a facet of the other type", function () {
+
+            var allowedFacet = mockFacet(QName.create('x', 'urn:example:z'));
+            var mutexFacet = mockFacet(QName.create('y', 'urn:example:z'),
+              { mutex: [ allowedFacet ] });
+            var dummyFacet = mockFacet(QName.create('z', 'urn:example:z'));
+            allowedFacet.mutexFacets = [ mutexFacet ];
+            var primitive = PrimitiveType.create({
+              facets: Facets.create([ allowedFacet, mutexFacet, dummyFacet ])
+            });
+            var restriction = RestrictedType.create(primitive,
+              Facets.create([ dummyFacet.create() ]));
+            var other = RestrictedType.create(primitive,
+              Facets.create([ allowedFacet.create() ]));
+            expect(restriction.isRestrictionOf(other)).to.be.true;
+          });
+
         });
 
       });
