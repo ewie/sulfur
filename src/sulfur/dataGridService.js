@@ -37,6 +37,15 @@ define(['sulfur/util/factory'], function (Factory) {
     return x;
   }
 
+  function extractIdFromUrl(url, collectionUrl) {
+    collectionUrl = concatPath(collectionUrl, '');
+    if (url.indexOf(collectionUrl) === 0) {
+      var s = url.substr(collectionUrl.length);
+      var p = s.indexOf('/');
+      return p > -1 ? s.substr(0, p) : s;
+    }
+  }
+
   return Factory.clone({
 
     get namespaceURI() { return NS_DGS }
@@ -70,6 +79,14 @@ define(['sulfur/util/factory'], function (Factory) {
       return concatPath(this.recordCollectionUrl(resource), id);
     },
 
+    recordIdFromUrl: function (resource, url) {
+      var id = extractIdFromUrl(url, this.recordCollectionUrl(resource));
+      if (!id) {
+        throw new Error("expecting a record URL of the given resource");
+      }
+      return id;
+    },
+
     recordCollectionDefinition: function (resource) {
       return createCollectionDefinition(resource.recordCollectionName, DGS_XML_DATA_SPACE_ENGINE);
     },
@@ -86,6 +103,14 @@ define(['sulfur/util/factory'], function (Factory) {
 
     fileUrl: function (resource, id) {
       return concatPath(this.fileCollectionUrl(resource), id);
+    },
+
+    fileIdFromUrl: function (resource, url) {
+      var id = extractIdFromUrl(url, this.fileCollectionUrl(resource));
+      if (!id) {
+        throw new Error("expecting a file URL of the given resource");
+      }
+      return id;
     },
 
     fileCollectionDefinition: function (resource) {

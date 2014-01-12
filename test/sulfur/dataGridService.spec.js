@@ -6,7 +6,7 @@
  */
 
 /* global define */
-/* global describe, it */
+/* global beforeEach, context, describe, it */
 
 define([
   'shared',
@@ -104,6 +104,38 @@ define([
 
     });
 
+    describe('#recordIdFromUrl()', function () {
+
+      var dgs;
+      var resource;
+
+      beforeEach(function () {
+        dgs = DataGridService.create('http://example.org');
+        resource = { recordCollectionName: 'foo-bar' };
+      });
+
+      it("should reject the URL when not equal to #recordCollectionUrl() for the given resource", function () {
+        var url = 'http://example.org/xxx/123-456';
+        expect(bind(dgs, 'recordIdFromUrl', resource, url))
+          .to.throw("expecting a record URL of the given resource");
+      });
+
+      context("when the URL begins with the resource's record collection URL", function () {
+
+        it("should return the record ID encoding in the given URL", function () {
+          var url = 'http://example.org/foo-bar/123-456';
+          expect(dgs.recordIdFromUrl(resource, url)).to.equal('123-456');
+        });
+
+        it("should return the substring up to the first slash", function () {
+          var url = 'http://example.org/foo-bar/123/456';
+          expect(dgs.recordIdFromUrl(resource, url)).to.equal('123');
+        });
+
+      });
+
+    });
+
     describe('#fileCollectionUrl()', function () {
 
       it("should return the file collection URL", function () {
@@ -126,6 +158,38 @@ define([
         var dgs = DataGridService.create('http://example.org');
         var resource = { fileCollectionName: 'foo' };
         expect(dgs.fileUrl(resource, 'xyz-987')).to.equal(dgs.fileCollectionUrl(resource) + '/xyz-987');
+      });
+
+    });
+
+    describe('#fileIdFromUrl()', function () {
+
+      var dgs;
+      var resource;
+
+      beforeEach(function () {
+        dgs = DataGridService.create('http://example.org');
+        resource = { fileCollectionName: 'foo-bar' };
+      });
+
+      it("should reject the URL when not equal to #fileCollectionUrl() for the given resource", function () {
+        var url = 'http://example.org/xxx/123-456';
+        expect(bind(dgs, 'fileIdFromUrl', resource, url))
+          .to.throw("expecting a file URL of the given resource");
+      });
+
+      context("when the URL begins with the resource's file collection URL", function () {
+
+        it("should return the record ID encoding in the given URL", function () {
+          var url = 'http://example.org/foo-bar/123-456';
+          expect(dgs.fileIdFromUrl(resource, url)).to.equal('123-456');
+        });
+
+        it("should return the substring up to the first slash", function () {
+          var url = 'http://example.org/foo-bar/123/456';
+          expect(dgs.fileIdFromUrl(resource, url)).to.equal('123');
+        });
+
       });
 
     });
