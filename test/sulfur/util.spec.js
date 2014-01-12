@@ -17,6 +17,7 @@ define([
 
   var expect = shared.expect;
   var sinon = shared.sinon;
+  var bind = shared.bind;
   var returns = shared.returns;
 
   describe('sulfur/util', function () {
@@ -72,18 +73,37 @@ define([
         });
       });
 
-      it("should put all items for which a predicate evaluates truthy in an array under property 'true'", function () {
-        var predicate = function (n) { return n % 2; };
-        var ary = [1, 2, 3];
-        var part = util.bipart(ary, predicate);
-        expect(part.true).to.eql([ 1, 3 ]);
+      it("should reject equal property names", function () {
+        expect(bind(util, 'bipart', [], null, 'foo', 'foo'))
+          .to.throw("expecting different property names");
       });
 
-      it("should put all items for which a predicate evaluates falsy in an array under property 'false'", function () {
-        var predicate = function (n) { return n % 2; };
-        var ary = [1, 2, 3];
+      it("should use default to property 'true'", function () {
+        var predicate = function (n) { return n };
+        var ary = [true];
         var part = util.bipart(ary, predicate);
-        expect(part.false).to.eql([ 2 ]);
+        expect(part.true).to.have.lengthOf(1);
+      });
+
+      it("should use default to property 'false'", function () {
+        var predicate = function (n) { return n };
+        var ary = [false];
+        var part = util.bipart(ary, predicate);
+        expect(part.false).to.have.lengthOf(1);
+      });
+
+      it("should put all items for which a predicate evaluates truthy in an array under the given property", function () {
+        var predicate = function (n) { return n % 2 };
+        var ary = [1, 2, 3];
+        var part = util.bipart(ary, predicate, 't');
+        expect(part.t).to.eql([ 1, 3 ]);
+      });
+
+      it("should put all items for which a predicate evaluates falsy in an array under the given property", function () {
+        var predicate = function (n) { return n % 2 };
+        var ary = [1, 2, 3];
+        var part = util.bipart(ary, predicate, null, 'f');
+        expect(part.f).to.eql([ 2 ]);
       });
 
     });

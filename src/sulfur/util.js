@@ -31,14 +31,48 @@ define(['sulfur/util/orderedStringMap'], function (OrderedStringMap) {
       return fn.bind.apply(fn, [obj].concat(args));
     },
 
-    bipart: function (ary, fn) {
+    /**
+     * Partition an array into two arrays. One containing all items for which
+     * the predicate is true and one containing all items for which the
+     * predicate is false.
+     *
+     * @param {array} ary the array to partition
+     * @param {function} fn the predicate function
+     * @param {string} t (default "true") the property name for all items
+     *   satisfying the predicate
+     * @param {string} f (default "false") the property name for all items not
+     *   satisfying the predicate
+     *
+     * @return {object} an object containing the two arrays under property `t`
+     *   and `f` respectively
+     *
+     * @throw {Error} when `t` and `f` are equal
+     */
+    bipart: function (ary, fn, t, f) {
+      t || (t = 'true');
+      f || (f = 'false');
+      if (t === f) {
+        throw new Error("expecting different property names");
+      }
+      var p = {};
+      p[t] = [];
+      p[f] = [];
       return ary.reduce(function (part, item, i) {
-        var p = part[fn(item, i) ? 'true' : 'false'];
+        var p = part[fn(item, i) ? t : f];
         p.push(item);
         return part;
-      }, { true: [], false: [] });
+      }, p);
     },
 
+    /**
+     * Get the first array item satisfying the predicate.
+     *
+     * @param {array} ary
+     * @param {function} fn the predicate function
+     *
+     * @return {any} the first matching item
+     * @return {undefined} when no item matches
+     */
     first: function (ary, fn) {
       for (var i = 0; i < ary.length; i += 1) {
         var x = ary[i];

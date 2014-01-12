@@ -588,6 +588,20 @@ define([
 
           context("with a mandatory element", function () {
 
+            it("should return undefined when the element type is incompatible", function () {
+              var doc = parse(
+                '<complexType' +
+                  ' xmlns="http://www.w3.org/2001/XMLSchema"' +
+                  ' xmlns:y="urn:example:y">' +
+                 '<sequence>' +
+                  '<element name="xxx" type="y:incompatibleType"/>' +
+                 '</sequence>' +
+                '</complexType>');
+              var element = doc.documentElement;
+              var resolver = Resolver.create(doc, resolvers);
+              expect(complexResolver.resolveTypeElement(element, resolver)).to.be.undefined;
+            });
+
             it("should use that element as item", function () {
               var doc = parse(
                 '<complexType' +
@@ -647,8 +661,6 @@ define([
 
           context("with only optional elements", function () {
 
-            it("should use the first element with compatible type");
-
             it("should return undefined when there are multiple optional elements", function () {
               var doc = parse(
                 '<complexType' +
@@ -664,12 +676,13 @@ define([
               expect(complexResolver.resolveTypeElement(element, resolver)).to.be.undefined;
             });
 
-            it("should accept a single optional element as item", function () {
+            it("should use the first element with compatible type", function () {
               var doc = parse(
                 '<complexType' +
                   ' xmlns="http://www.w3.org/2001/XMLSchema"' +
                   ' xmlns:y="urn:example:y">' +
                  '<sequence>' +
+                  '<element name="xxx" type="y:incompatibleType" minOccurs="0"/>' +
                   '<element name="foo" type="y:simpleType" minOccurs="0"/>' +
                  '</sequence>' +
                 '</complexType>');

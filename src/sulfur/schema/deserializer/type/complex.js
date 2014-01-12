@@ -154,8 +154,8 @@ define([
         });
       }
 
-      function resolveElements(element, resolver, xpath) {
-        var elements = xpath.all('xs:all/xs:element', element, NS);
+      function resolveElementGroup(group, resolver, xpath) {
+        var elements = xpath.all('xs:element', group, NS);
 
         var es = [];
         for (var i = 0; i < elements.length; i += 1) {
@@ -177,7 +177,8 @@ define([
           return;
         }
 
-        var elements = resolveElements(element, resolver, xpath);
+        var all = xpath.first('xs:all', element, NS);
+        var elements = resolveElementGroup(all, resolver, xpath);
         if (!elements) {
           return;
         }
@@ -204,29 +205,31 @@ define([
 
       function resolveSequence(element, resolver, xpath) {
         var sequence = xpath.first('xs:sequence', element, NS);
+        var elements = resolveElementGroup(sequence, resolver, xpath);
 
-        var mandatoryElementsExpr = 'xs:element[not(@minOccurs) or @minOccurs != "0"]';
-        var optionalElementsExpr = 'xs:element[@minOccurs = "0"]';
+        if (elements) {
+          var part = util.bipart(elements, function (e) { return e.isOptional }, 'optional', 'mandatory');
 
-        var mandatoryElementCount = xpath.count(mandatoryElementsExpr, sequence, NS);
-        if (mandatoryElementCount > 1) {
-          return;
-        } else if (mandatoryElementCount === 0) {
-          var optionalElementCount = xpath.count(optionalElementsExpr, sequence, NS);
-          if (optionalElementCount > 1) {
-            return;
+          var itemElement;
+
+          switch (part.mandatory.length) {
+          case 0:
+            // use the very first element
+            (part.optional.length === 1) && (itemElement = part.optional[0]);
+            break;
+          case 1:
+            // select the first mandatory element
+            itemElement = part.mandatory[0];
+            break;
+          }
+
+          if (itemElement) {
+            return ListType.create(itemElement, {
+              maxLength: getOccurs(sequence, 'max'),
+              minLength: getOccurs(sequence, 'min')
+            });
           }
         }
-
-        var itemElement = xpath.first(mandatoryElementsExpr, sequence, NS) ||
-          xpath.first(optionalElementsExpr, sequence, NS);
-
-        itemElement = resolveElement(itemElement, resolver, xpath);
-
-        return ListType.create(itemElement, {
-          maxLength: getOccurs(sequence, 'max'),
-          minLength: getOccurs(sequence, 'min')
-        });
       }
 
       return function (element, resolver) {
