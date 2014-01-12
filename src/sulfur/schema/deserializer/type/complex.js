@@ -203,9 +203,9 @@ define([
         return IntegerValue.parse('1');
       }
 
-      function resolveSequence(element, resolver, xpath) {
-        var sequence = xpath.first('xs:sequence', element, NS);
-        var elements = resolveElementGroup(sequence, resolver, xpath);
+      function resolveSequenceOrChoice(element, resolver, xpath) {
+        var group = xpath.first('xs:sequence|xs:choice', element, NS);
+        var elements = resolveElementGroup(group, resolver, xpath);
 
         if (elements) {
           var part = util.bipart(elements, function (e) { return e.isOptional }, 'optional', 'mandatory');
@@ -225,8 +225,8 @@ define([
 
           if (itemElement) {
             return ListType.create(itemElement, {
-              maxLength: getOccurs(sequence, 'max'),
-              minLength: getOccurs(sequence, 'min')
+              maxLength: getOccurs(group, 'max'),
+              minLength: getOccurs(group, 'min')
             });
           }
         }
@@ -245,8 +245,8 @@ define([
           return resolveAll(element, resolver, xpath, this._typeIndex.values);
         }
 
-        if (xpath.contains('xs:sequence', element, NS)) {
-          return resolveSequence(element, resolver, xpath);
+        if (xpath.contains('xs:sequence|xs:choice', element, NS)) {
+          return resolveSequenceOrChoice(element, resolver, xpath);
         }
 
       };

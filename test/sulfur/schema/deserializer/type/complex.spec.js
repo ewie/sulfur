@@ -700,6 +700,221 @@ define([
 
         });
 
+        context("with child xs:choice", function () {
+
+          it("should use the value of attribute @minOccurs as required minimum number of entries when defined", function () {
+            var doc = parse(
+              '<complexType' +
+                ' xmlns="http://www.w3.org/2001/XMLSchema"' +
+                ' xmlns:y="urn:example:y">' +
+               '<choice minOccurs="0">' +
+                '<element name="bar" type="y:simpleType"/>' +
+               '</choice>' +
+              '</complexType>');
+            var element = doc.documentElement;
+            var resolver = Resolver.create(doc, resolvers);
+            var type = complexResolver.resolveTypeElement(element, resolver);
+
+            expect(ComplexListType.prototype).to.be.prototypeOf(type);
+            expect(type.element).to.eql(Element.create('bar', simpleType));
+            expect(type.maxLength).to.eql(IntegerValue.parse('1'));
+            expect(type.minLength).to.eql(IntegerValue.create());
+          });
+
+          it("should use value 1 as required minimum number of entries when attribute @minOccurs is not defined", function () {
+            var doc = parse(
+              '<complexType' +
+                ' xmlns="http://www.w3.org/2001/XMLSchema"' +
+                ' xmlns:y="urn:example:y">' +
+               '<choice>' +
+                '<element name="bar" type="y:simpleType"/>' +
+               '</choice>' +
+              '</complexType>');
+            var element = doc.documentElement;
+            var resolver = Resolver.create(doc, resolvers);
+            var type = complexResolver.resolveTypeElement(element, resolver);
+
+            expect(ComplexListType.prototype).to.be.prototypeOf(type);
+            expect(type.element).to.eql(Element.create('bar', simpleType));
+            expect(type.maxLength).to.eql(IntegerValue.parse('1'));
+            expect(type.minLength).to.eql(IntegerValue.parse('1'));
+          });
+
+          it("should use value 1 as allowed maximum number of entries when attribute @maxOccurs is not defined", function () {
+            var doc = parse(
+              '<complexType' +
+                ' xmlns="http://www.w3.org/2001/XMLSchema"' +
+                ' xmlns:y="urn:example:y">' +
+               '<choice>' +
+                '<element name="bar" type="y:simpleType"/>' +
+               '</choice>' +
+              '</complexType>');
+            var element = doc.documentElement;
+            var resolver = Resolver.create(doc, resolvers);
+            var type = complexResolver.resolveTypeElement(element, resolver);
+
+            expect(ComplexListType.prototype).to.be.prototypeOf(type);
+            expect(type.element).to.eql(Element.create('bar', simpleType));
+            expect(type.maxLength).to.eql(IntegerValue.parse('1'));
+            expect(type.minLength).to.eql(IntegerValue.parse('1'));
+          });
+
+          context("with attribute @maxOccurs", function () {
+
+            it("should use the value as allowed maximum number of items when its a number", function () {
+              var doc = parse(
+                '<complexType' +
+                  ' xmlns="http://www.w3.org/2001/XMLSchema"' +
+                  ' xmlns:y="urn:example:y">' +
+                 '<choice maxOccurs="3">' +
+                  '<element name="bar" type="y:simpleType"/>' +
+                 '</choice>' +
+                '</complexType>');
+              var element = doc.documentElement;
+              var resolver = Resolver.create(doc, resolvers);
+              var type = complexResolver.resolveTypeElement(element, resolver);
+
+              expect(ComplexListType.prototype).to.be.prototypeOf(type);
+              expect(type.element).to.eql(Element.create('bar', simpleType));
+              expect(type.maxLength).to.eql(IntegerValue.parse('3'));
+              expect(type.minLength).to.eql(IntegerValue.parse('1'));
+            });
+
+            it("should use no allowed maximum number of items when 'unbounded'", function () {
+              var doc = parse(
+                '<complexType' +
+                  ' xmlns="http://www.w3.org/2001/XMLSchema"' +
+                  ' xmlns:y="urn:example:y">' +
+                 '<choice maxOccurs="unbounded">' +
+                  '<element name="bar" type="y:simpleType"/>' +
+                 '</choice>' +
+                '</complexType>');
+              var element = doc.documentElement;
+              var resolver = Resolver.create(doc, resolvers);
+              var type = complexResolver.resolveTypeElement(element, resolver);
+
+              expect(ComplexListType.prototype).to.be.prototypeOf(type);
+              expect(type.element).to.eql(Element.create('bar', simpleType));
+              expect(type.maxLength).to.be.undefined;
+              expect(type.minLength).to.eql(IntegerValue.parse('1'));
+            });
+
+          });
+
+          context("with a mandatory element", function () {
+
+            it("should return undefined when the element type is incompatible", function () {
+              var doc = parse(
+                '<complexType' +
+                  ' xmlns="http://www.w3.org/2001/XMLSchema"' +
+                  ' xmlns:y="urn:example:y">' +
+                 '<choice>' +
+                  '<element name="xxx" type="y:incompatibleType"/>' +
+                 '</choice>' +
+                '</complexType>');
+              var element = doc.documentElement;
+              var resolver = Resolver.create(doc, resolvers);
+              expect(complexResolver.resolveTypeElement(element, resolver)).to.be.undefined;
+            });
+
+            it("should use that element as item", function () {
+              var doc = parse(
+                '<complexType' +
+                  ' xmlns="http://www.w3.org/2001/XMLSchema"' +
+                  ' xmlns:y="urn:example:y">' +
+                 '<choice>' +
+                  '<element name="bar" type="y:simpleType"/>' +
+                 '</choice>' +
+                '</complexType>');
+              var element = doc.documentElement;
+              var resolver = Resolver.create(doc, resolvers);
+              var type = complexResolver.resolveTypeElement(element, resolver);
+
+              expect(ComplexListType.prototype).to.be.prototypeOf(type);
+              expect(type.element).to.eql(Element.create('bar', simpleType));
+              expect(type.maxLength).to.eql(IntegerValue.parse('1'));
+              expect(type.minLength).to.eql(IntegerValue.parse('1'));
+            });
+
+            it("should return undefined when there are multiple mandatory elements", function () {
+              var doc = parse(
+                '<complexType' +
+                  ' xmlns="http://www.w3.org/2001/XMLSchema"' +
+                  ' xmlns:y="urn:example:y">' +
+                 '<choice>' +
+                  '<element name="bar" type="y:simpleType"/>' +
+                  '<element name="foo" type="y:simpleType"/>' +
+                 '</choice>' +
+                '</complexType>');
+              var element = doc.documentElement;
+              var resolver = Resolver.create(doc, resolvers);
+              expect(complexResolver.resolveTypeElement(element, resolver)).to.be.undefined;
+            });
+
+            it("should ignore optional elements", function () {
+              var doc = parse(
+                '<complexType' +
+                  ' xmlns="http://www.w3.org/2001/XMLSchema"' +
+                  ' xmlns:y="urn:example:y">' +
+                 '<choice>' +
+                  '<element name="foo" type="y:simpleType" minOccurs="0"/>' +
+                  '<element name="baz" type="y:simpleType" minOccurs="0"/>' +
+                  '<element name="bar" type="y:simpleType"/>' +
+                 '</choice>' +
+                '</complexType>');
+              var element = doc.documentElement;
+              var resolver = Resolver.create(doc, resolvers);
+              var type = complexResolver.resolveTypeElement(element, resolver);
+
+              expect(ComplexListType.prototype).to.be.prototypeOf(type);
+              expect(type.element).to.eql(Element.create('bar', simpleType));
+              expect(type.maxLength).to.eql(IntegerValue.parse('1'));
+              expect(type.minLength).to.eql(IntegerValue.parse('1'));
+            });
+
+          });
+
+          context("with only optional elements", function () {
+
+            it("should return undefined when there are multiple optional elements", function () {
+              var doc = parse(
+                '<complexType' +
+                  ' xmlns="http://www.w3.org/2001/XMLSchema"' +
+                  ' xmlns:y="urn:example:y">' +
+                 '<choice>' +
+                  '<element name="bar" type="y:simpleType" minOccurs="0"/>' +
+                  '<element name="foo" type="y:simpleType" minOccurs="0"/>' +
+                 '</choice>' +
+                '</complexType>');
+              var element = doc.documentElement;
+              var resolver = Resolver.create(doc, resolvers);
+              expect(complexResolver.resolveTypeElement(element, resolver)).to.be.undefined;
+            });
+
+            it("should use the first element with compatible type", function () {
+              var doc = parse(
+                '<complexType' +
+                  ' xmlns="http://www.w3.org/2001/XMLSchema"' +
+                  ' xmlns:y="urn:example:y">' +
+                 '<choice>' +
+                  '<element name="xxx" type="y:incompatibleType" minOccurs="0"/>' +
+                  '<element name="foo" type="y:simpleType" minOccurs="0"/>' +
+                 '</choice>' +
+                '</complexType>');
+              var element = doc.documentElement;
+              var resolver = Resolver.create(doc, resolvers);
+              var type = complexResolver.resolveTypeElement(element, resolver);
+
+              expect(ComplexListType.prototype).to.be.prototypeOf(type);
+              expect(type.element).to.eql(Element.create('foo', simpleType, { optional: true }));
+              expect(type.maxLength).to.eql(IntegerValue.parse('1'));
+              expect(type.minLength).to.eql(IntegerValue.parse('1'));
+            });
+
+          });
+
+        });
+
       });
 
     });
