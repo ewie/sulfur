@@ -47,9 +47,11 @@ define([
             break;
           }
           var facet = facets.getByQName(this.qname);
-          facet && effectiveFacets.push(facet);
-          if (this.isShadowingLowerRestrictions) {
-            break;
+          if (facet) {
+            effectiveFacets.push(facet);
+            if (this.isShadowingLowerRestrictions) {
+              break;
+            }
           }
           restriction = restriction.base;
         }

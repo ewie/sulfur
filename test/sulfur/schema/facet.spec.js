@@ -84,15 +84,6 @@ define([
 
       context("when no mutual exclusive facet is defined in a higher restriction step", function () {
 
-        it("should return an array containing only the most restrictive facet when shadowing", function () {
-          var base = PrimitiveType.create({
-            facets: Facets.create([ DerivedFacet ])
-          });
-          var restriction = RestrictedType.create(base,
-            Facets.create([ facet ]));
-          expect(DerivedFacet.getEffectiveFacets(restriction)).to.eql([ facet ]);
-        });
-
         it("should return the facets of all restriction steps when not shadowing", function () {
           var nonShadowingFacet = mockFacet(QName.create('x', 'urn:example:y'), { shadowing: false });
           var primitive = PrimitiveType.create({
@@ -106,6 +97,31 @@ define([
             Facets.create([ facet ]));
           expect(nonShadowingFacet.getEffectiveFacets(restriction))
             .to.eql([ facet, baseFacet ]);
+        });
+
+        context("when the facet shadows lower restrictions", function () {
+
+          it("should return an array containing only the most restrictive facet", function () {
+            var base = PrimitiveType.create({
+              facets: Facets.create([ DerivedFacet ])
+            });
+            var restriction = RestrictedType.create(base,
+              Facets.create([ facet ]));
+            expect(DerivedFacet.getEffectiveFacets(restriction)).to.eql([ facet ]);
+          });
+
+          it("should get the effective facet when defined on a lower restriction", function () {
+            var DummyFacet = mockFacet(QName.create('bar', 'urn:example:void'));
+            var primitive = PrimitiveType.create({
+              facets: Facets.create([ DerivedFacet, DummyFacet ])
+            });
+            var base = RestrictedType.create(primitive,
+              Facets.create([ facet ]));
+            var restriction = RestrictedType.create(base,
+              Facets.create([ DummyFacet.create() ]));
+            expect(DerivedFacet.getEffectiveFacets(restriction)).to.eql([ facet ]);
+          });
+
         });
 
       });
