@@ -70,7 +70,6 @@ define([
 
       var widget;
       var dgs;
-      var d;
 
       beforeEach(function () {
         dgs = { endpoint: 'http://example.org/' };
@@ -78,28 +77,31 @@ define([
           name: 'foo',
           resource: {
             recordCollectionName: 'bar',
-            fileCollectionName: 'bar-files'
+            fileCollectionName: 'bar-files',
+            hasFiles: true
           },
           description: 'bar',
           authorName: 'abc',
           authorEmail: 'x@y.z'
         };
-        d = packer.createConfigurationDocument(widget, dgs);
       });
 
       it("should create a W3C Widget XML configuration document", function () {
+        var d = packer.createConfigurationDocument(widget, dgs);
         var e = d.documentElement;
         expect(e.tagName).to.equal('widget');
         expect(e.namespaceURI).to.equal(packer.namespaceURI);
       });
 
       it("should include element <name> with the widget name", function () {
+        var d = packer.createConfigurationDocument(widget, dgs);
         var e = d.documentElement.querySelector('name');
         expect(e.namespaceURI).to.equal(packer.namespaceURI);
         expect(e.textContent).to.equal(widget.name);
       });
 
       it('should include element <content src="index.html" type="text/html"/>', function () {
+        var d = packer.createConfigurationDocument(widget, dgs);
         var e = d.documentElement.querySelector('content');
         expect(e.namespaceURI).to.equal(packer.namespaceURI);
         expect(e.attributes.src.value).to.equal('index.html');
@@ -107,12 +109,14 @@ define([
       });
 
       it('should include element <icon src="icon.svg"/>', function () {
+        var d = packer.createConfigurationDocument(widget, dgs);
         var e = d.documentElement.querySelector('icon');
         expect(e.namespaceURI).to.equal(packer.namespaceURI);
         expect(e.attributes.src.value).to.equal('icon.svg');
       });
 
       it("should include element <preference/> defining the endpoint url", function () {
+        var d = packer.createConfigurationDocument(widget, dgs);
         var e = d.documentElement.querySelectorAll('preference').item(0);
         expect(e.namespaceURI).to.equal(packer.namespaceURI);
         expect(e.attributes.name.value).to.equal('endpoint');
@@ -120,32 +124,44 @@ define([
       });
 
       it("should include element <preference/> defining the resource's record collection name", function () {
+        var d = packer.createConfigurationDocument(widget, dgs);
         var e = d.documentElement.querySelectorAll('preference').item(1);
         expect(e.namespaceURI).to.equal(packer.namespaceURI);
         expect(e.attributes.name.value).to.equal('recordCollectionName');
         expect(e.attributes.value.value).to.equal(widget.resource.recordCollectionName);
       });
 
-      it("should include element <preference/> defining the resource's file collection name", function () {
+      it("should include element <preference/> defining the resource's file collection name when the resource has files", function () {
+        var d = packer.createConfigurationDocument(widget, dgs);
         var e = d.documentElement.querySelectorAll('preference').item(2);
         expect(e.namespaceURI).to.equal(packer.namespaceURI);
         expect(e.attributes.name.value).to.equal('fileCollectionName');
         expect(e.attributes.value.value).to.equal(widget.resource.fileCollectionName);
       });
 
+      it("should not include element <preference/> defining the resource's file collection name when the resource has no files", function () {
+        widget.resource.hasFiles = false;
+        var d = packer.createConfigurationDocument(widget, dgs);
+        var ee = d.documentElement.querySelectorAll('preference');
+        expect(ee).to.have.lengthOf(2);
+      });
+
       it("should include element <description> when a description is defined", function () {
+        var d = packer.createConfigurationDocument(widget, dgs);
         var e = d.documentElement.querySelector('description');
         expect(e.namespaceURI).to.equal(packer.namespaceURI);
         expect(e.textContent).to.equal(widget.description);
       });
 
       it("should include element <author> when an author name is defined", function () {
+        var d = packer.createConfigurationDocument(widget, dgs);
         var e = d.documentElement.querySelector('author');
         expect(e.namespaceURI).to.equal(packer.namespaceURI);
         expect(e.textContent).to.equal(widget.authorName);
       });
 
       it("should include element <author> with attribute @email when an author email address is defined", function () {
+        var d = packer.createConfigurationDocument(widget, dgs);
         var e = d.documentElement.querySelector('author');
         expect(e.namespaceURI).to.equal(packer.namespaceURI);
         expect(e.attributes.email.value).to.equal(widget.authorEmail);

@@ -50,10 +50,12 @@ define([
       e.setAttribute('value', widget.resource.recordCollectionName);
       r.appendChild(e);
 
-      e = d.createElementNS(ns, 'preference');
-      e.setAttribute('name', 'fileCollectionName');
-      e.setAttribute('value', widget.resource.fileCollectionName);
-      r.appendChild(e);
+      if (widget.resource.hasFiles) {
+        e = d.createElementNS(ns, 'preference');
+        e.setAttribute('name', 'fileCollectionName');
+        e.setAttribute('value', widget.resource.fileCollectionName);
+        r.appendChild(e);
+      }
 
       e = d.createElementNS(ns, 'icon');
       e.setAttribute('src', 'icon.svg');

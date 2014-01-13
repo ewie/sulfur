@@ -13,6 +13,8 @@ define([
   'sulfur/schema',
   'sulfur/schema/element',
   'sulfur/schema/elements',
+  'sulfur/schema/type/simple/list',
+  'sulfur/schema/type/simple/primitive/fileRef',
   'sulfur/schema/validator/all',
   'sulfur/schema/validator/existence',
   'sulfur/schema/validator/property'
@@ -21,6 +23,8 @@ define([
     Schema,
     Element,
     Elements,
+    SimpleListType,
+    FileRefType,
     AllValidator,
     ExistenceValidator,
     PropertyValidator
@@ -55,6 +59,28 @@ define([
 
       it("should return the element collection", function () {
         expect(schema.elements).to.equal(elements);
+      });
+
+    });
+
+    describe('#hasFiles', function () {
+
+      it("should return true when any element has base type sulfur/schema/simple/primitive/fileRef", function () {
+        var s = Schema.create(null, Elements.create(
+          [ Element.create('x', FileRefType) ]));
+        expect(s.hasFiles).to.be.true;
+      });
+
+      it("should return true when any element has list type with sulfur/schema/simple/primitive/fileRef", function () {
+        var s = Schema.create(null, Elements.create(
+          [ Element.create('x', SimpleListType.create(FileRefType)) ]));
+        expect(s.hasFiles).to.be.true;
+      });
+
+      it("should return false when no element has base type sulfur/schema/simple/primitive/fileRef", function () {
+        var s = Schema.create(null, Elements.create(
+          [ Element.create('x', { valueType: {} }) ]));
+        expect(s.hasFiles).to.be.false;
       });
 
     });

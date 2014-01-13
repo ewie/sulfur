@@ -11,8 +11,15 @@ define([
   'sulfur/util/factory',
   'sulfur/schema/validator/all',
   'sulfur/schema/validator/existence',
-  'sulfur/schema/validator/property'
-], function (Factory, AllValidator, ExistenceValidator, PropertyValidator) {
+  'sulfur/schema/validator/property',
+  'sulfur/schema/value/simple/fileRef'
+], function (
+    Factory,
+    AllValidator,
+    ExistenceValidator,
+    PropertyValidator,
+    FileRefValue
+) {
 
   'use strict';
 
@@ -26,6 +33,16 @@ define([
     get qname() { return this._qname },
 
     get elements() { return this._elements },
+
+    get hasFiles () {
+      if (typeof this._hasFiles === 'undefined') {
+        this._hasFiles = this.elements.toArray().some(function (element) {
+          var valueType = element.type.valueType;
+          return valueType === FileRefValue || valueType.itemValueType === FileRefValue;
+        });
+      }
+      return this._hasFiles;
+    },
 
     createValidator: function () {
       var elementValidators = this.elements.toArray().map(function (e) {

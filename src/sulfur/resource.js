@@ -7,7 +7,10 @@
 
 /* global define */
 
-define(['sulfur/util/factory'], function (Factory) {
+define([
+  'sulfur/schema/value/simple/fileRef',
+  'sulfur/util/factory'
+], function (FileRefValue, Factory) {
 
   'use strict';
 
@@ -23,11 +26,13 @@ define(['sulfur/util/factory'], function (Factory) {
       if (!this.factory.isValidName(recordCollectionName)) {
         throw new Error("expecting a valid record collection name");
       }
-      if (!this.factory.isValidName(fileCollectionName)) {
-        throw new Error("expecting a valid file collection name");
-      }
-      if (recordCollectionName === fileCollectionName) {
-        throw new Error("expecting different record and file collection names");
+      if (schema.hasFiles) {
+        if (!this.factory.isValidName(fileCollectionName)) {
+          throw new Error("expecting a valid file collection name");
+        }
+        if (recordCollectionName === fileCollectionName) {
+          throw new Error("expecting different record and file collection names");
+        }
       }
       this._schema = schema;
       this._recordCollectionName = recordCollectionName;
@@ -38,7 +43,9 @@ define(['sulfur/util/factory'], function (Factory) {
 
     get recordCollectionName() { return this._recordCollectionName },
 
-    get fileCollectionName() { return this._fileCollectionName }
+    get fileCollectionName() { return this._fileCollectionName },
+
+    get hasFiles () { return this.schema.hasFiles }
 
   });
 

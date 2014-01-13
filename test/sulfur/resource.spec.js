@@ -6,7 +6,7 @@
  */
 
 /* global define */
-/* global afterEach, beforeEach, describe, it */
+/* global afterEach, beforeEach, context, describe, it */
 
 define([
   'shared',
@@ -56,22 +56,37 @@ define([
       it("should reject when .isValidName() returns false for the given record collection name", function () {
         var name = {};
         var spy = sandbox.stub(Resource, 'isValidName', function (x) { return x !== name });
-        expect(bind(Resource, 'create', null, name, 'foo'))
+        expect(bind(Resource, 'create', { hasFiles: false }, name))
           .to.throw("expecting a valid record collection name");
         expect(spy).to.be.calledWith(sinon.match.same(name));
       });
 
-      it("should reject when .isValidName() returns false for the given file collection name", function () {
-        var name = {};
-        var spy = sandbox.stub(Resource, 'isValidName', function (x) { return x !== name });
-        expect(bind(Resource, 'create', null, 'foo', name))
-          .to.throw("expecting a valid file collection name");
-        expect(spy).to.be.calledWith(sinon.match.same(name));
+      it("should not require a file collection name when the schema has no files", function () {
+        var r = Resource.create({ hasFiles: false }, 'foo');
+        expect(r.fileCollectionName).to.be.undefined;
       });
 
-      it("should reject when record and file collection names are equal", function () {
-        expect(bind(Resource, 'create', null, 'foo', 'foo'))
-          .to.throw("expecting different record and file collection names");
+      context("when the schema has files", function () {
+
+        var schema;
+
+        beforeEach(function () {
+          schema = { hasFiles: true };
+        });
+
+        it("should reject when .isValidName() returns false for the given file collection name", function () {
+          var name = {};
+          var spy = sandbox.stub(Resource, 'isValidName', function (x) { return x !== name });
+          expect(bind(Resource, 'create', schema, 'foo', name))
+            .to.throw("expecting a valid file collection name");
+          expect(spy).to.be.calledWith(sinon.match.same(name));
+        });
+
+        it("should reject when record and file collection names are equal", function () {
+          expect(bind(Resource, 'create', schema, 'foo', 'foo'))
+            .to.throw("expecting different record and file collection names");
+        });
+
       });
 
     });
@@ -79,8 +94,8 @@ define([
     describe('#schema', function () {
 
       it("should return the schema", function () {
-        var schema = {};
-        var r = Resource.create(schema, 'foo', 'bar');
+        var schema = { hasFiles: false };
+        var r = Resource.create(schema, 'foo');
         expect(r.schema).to.equal(schema);
       });
 
@@ -90,7 +105,7 @@ define([
 
       it("should return the name", function () {
         var name = 'foo';
-        var r = Resource.create(null, name, 'bar');
+        var r = Resource.create({ hasFiles: false }, name);
         expect(r.recordCollectionName).to.equal(name);
       });
 
@@ -98,10 +113,29 @@ define([
 
     describe('#fileCollectionName', function () {
 
-      it("should return the name", function () {
+      it("should return the name when defined", function () {
         var name = 'bar';
-        var r = Resource.create(null, 'foo', name);
+        var r = Resource.create({ hasFiles: true }, 'foo', name);
         expect(r.fileCollectionName).to.equal(name);
+      });
+
+      it("should return undefined when not defined", function () {
+        var r = Resource.create({ hasFiles: false }, 'foo');
+        expect(r.fileCollectionName).to.be.undefined;
+      });
+
+    });
+
+    describe('#hasFiles', function () {
+
+      it("should return true when the schema has files", function () {
+        var r = Resource.create({ hasFiles: true }, 'foo', 'bar');
+        expect(r.hasFiles).to.be.true;
+      });
+
+      it("should return false when the schema has no files", function () {
+        var r = Resource.create({ hasFiles: false }, 'foo', 'bar');
+        expect(r.hasFiles).to.be.false;
       });
 
     });
