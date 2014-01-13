@@ -32,9 +32,16 @@ define([
 
     parse: function (s) {
       var itemValueType = this.itemValueType;
-      var values = normalize(s).split(' ').map(function (s) {
-        return itemValueType.parse(s);
-      });
+      var ns = normalize(s);
+      var values;
+      if (ns.length) {
+        values = ns.split(' ').map(itemValueType.parse.bind(itemValueType));
+      } else {
+        // Handle an empty string separately because String.prototype.split()
+        // returns an array containing a single empty string when the original
+        // string is empty.
+        values = [];
+      }
       return this.create(values);
     }
 

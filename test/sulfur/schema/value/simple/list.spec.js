@@ -38,9 +38,7 @@ define([
 
       beforeEach(function () {
         valueType = {
-          parse: function (s) {
-            return { s: s };
-          }
+          parse: function (s) { return { s: s } }
         };
         simpleList = SimpleListValue.withItemValueType(valueType);
       });
@@ -57,6 +55,11 @@ define([
               spy.getCall(1).returnValue,
               spy.getCall(2).returnValue
             ]));
+      });
+
+      it("should parse an empty list", function () {
+        var list = simpleList.parse('\x09\x0A\x0D \x09\x0A\x0D');
+        expect(list).to.eql(simpleList.create([]));
       });
 
       it("should ignore leading and trailing whitespace", function () {
