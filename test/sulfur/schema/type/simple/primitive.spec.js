@@ -93,6 +93,14 @@ define([
 
     });
 
+    describe('#namedBaseOrSelf', function () {
+
+      it("should return this", function () {
+        expect(type.namedBaseOrSelf).to.equal(type);
+      });
+
+    });
+
     describe('#allowedFacets', function () {
 
       it("should return the allowed facets", function () {

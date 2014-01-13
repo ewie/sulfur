@@ -47,6 +47,8 @@ define(['sulfur/util/factory'], function (Factory) {
 
     get primitive() { return this.base.primitive || this.base },
 
+    get namedBaseOrSelf() { return this.base.namedBaseOrSelf },
+
     get base() { return this._base },
 
     get facets() { return this._facets },

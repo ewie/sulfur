@@ -133,6 +133,19 @@ define([
 
     });
 
+    describe('#namedBaseOrSelf', function () {
+
+      it("should return the base's .namedBaseOrSelf", function () {
+        var allowedFacet = mockFacet(QName.create('x', 'urn:example:y'));
+        var allowedFacets = Facets.create([ allowedFacet ]);
+        var primitive = PrimitiveType.create({ facets: allowedFacets, qname: {} });
+        var facets = Facets.create([ allowedFacet.create() ]);
+        var restriction = RestrictedType.create(primitive, facets);
+        expect(restriction.namedBaseOrSelf).to.equal(primitive.namedBaseOrSelf);
+      });
+
+    });
+
     describe('#base', function () {
 
       it("should return the base", function () {

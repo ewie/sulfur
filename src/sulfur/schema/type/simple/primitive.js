@@ -31,6 +31,8 @@ define([
       return this._valueType;
     },
 
+    get namedBaseOrSelf() { return this },
+
     get allowedFacets() {
       return this._allowedFacets;
     },

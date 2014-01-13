@@ -25,7 +25,9 @@ define(['sulfur/schema/type/simple/restricted'], function (RestrictedType) {
 
     get valueType() {
       return this._valueType;
-    }
+    },
+
+    get namedBaseOrSelf() { return this }
 
   });
 

@@ -91,6 +91,14 @@ define([
 
     });
 
+    describe('#namedBaseOrSelf', function () {
+
+      it("should return this", function () {
+        expect(type.namedBaseOrSelf).to.equal(type);
+      });
+
+    });
+
   });
 
 });
