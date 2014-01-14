@@ -19,6 +19,7 @@ define([
   'sulfur/schema/type/simple/primitive/fileRef',
   'sulfur/schema/type/simple/restricted',
   'sulfur/schema/validator/all',
+  'sulfur/schema/validator/presence',
   'sulfur/schema/validator/property',
   'sulfur/schema/value/simple/fileRef',
   'sulfur/schema/value/simple/mediaType'
@@ -33,6 +34,7 @@ define([
     FileRefType,
     RestrictedType,
     AllValidator,
+    PresenceValidator,
     PropertyValidator,
     FileRefValue,
     MediaTypeValue
@@ -98,13 +100,14 @@ define([
           .to.include.something.eql(FileRefType.createValidator());
       });
 
-      it("should include a sulfur/schema/validator/property with property 'file' using a sulfur/schema/validator/property with property 'mediaType' using the media type facet's validator", function () {
+      it("should include a sulfur/schema/validator/property with property 'file' using a sulfur/schema/validator/presence using a sulfur/schema/validator/property with property 'mediaType' using the media type facet's validator", function () {
         var restriction = RestrictedType.create(FileRefType,
           Facets.create([ facet ]));
         var v = FileRefType.createRestrictionValidator(restriction);
         expect(v.validators)
           .to.include.something.eql(PropertyValidator.create('file',
-            PropertyValidator.create('mediaType', facet.createValidator())));
+            PresenceValidator.create(
+              PropertyValidator.create('mediaType', facet.createValidator()))));
       });
 
     });

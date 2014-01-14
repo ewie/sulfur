@@ -13,17 +13,17 @@ define(['sulfur/schema/value/simple'], function (SimpleValue) {
 
   return SimpleValue.clone({
 
-    parse: function (s) {
-      return this.create(s);
-    }
+    parse: function (s) { return this.create(s) }
 
   }).augment({
 
     /**
      * @param {string} value
+     * @param {sulfur/schema/file} file (optional) the file
      */
-    initialize: function (value) {
+    initialize: function (value, file) {
       this._value = value;
+      this._file = file;
     },
 
     /**
@@ -32,19 +32,21 @@ define(['sulfur/schema/value/simple'], function (SimpleValue) {
     get value() { return this._value },
 
     /**
+     * @return {sulfur/schema/file} the file when associated
+     * @return {undefined} when no file is associated
+     */
+    get file() { return this._file },
+
+    /**
      * @return {true} when equal
      * @return {false} when not equal
      */
-    eq: function (other) {
-      return this.value === other.value;
-    },
+    eq: function (other) { return this.value === other.value },
 
     /**
      * @return {string} the reference's identifier
      */
-    toString: function () {
-      return this.value;
-    }
+    toString: function () { return this.value }
 
   });
 

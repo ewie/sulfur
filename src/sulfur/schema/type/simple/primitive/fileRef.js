@@ -14,6 +14,7 @@ define([
   'sulfur/schema/qname',
   'sulfur/schema/type/simple/primitive',
   'sulfur/schema/validator/all',
+  'sulfur/schema/validator/presence',
   'sulfur/schema/validator/property',
   'sulfur/schema/value/simple/fileRef'
 ], function (
@@ -23,6 +24,7 @@ define([
     QName,
     PrimitiveType,
     AllValidator,
+    PresenceValidator,
     PropertyValidator,
     FileRefValue
 ) {
@@ -41,7 +43,7 @@ define([
       return AllValidator.create([
         this.createValidator(),
         PropertyValidator.create('file',
-          PropertyValidator.create('mediaType', v))
+          PresenceValidator.create(PropertyValidator.create('mediaType', v)))
       ]);
     }
 

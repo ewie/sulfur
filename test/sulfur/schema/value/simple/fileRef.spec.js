@@ -58,6 +58,21 @@ define([
 
     });
 
+    describe('#file', function () {
+
+      it("should return the file when defined", function () {
+        var file = {};
+        var fr = FileRefValue.create('123', file);
+        expect(fr.file).to.equal(file);
+      });
+
+      it("should return undefined when no file is defined", function () {
+        var fr = FileRefValue.create('abc');
+        expect(fr.file).to.be.undefined;
+      });
+
+    });
+
     describe('#eq()', function () {
 
       it("should return true when #value is identical", function () {
