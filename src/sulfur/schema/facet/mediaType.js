@@ -72,7 +72,9 @@ define([
     createValidator: function () {
       return EnumerationValidator.create(
         this.value,
-        { testMethod: 'matches' });
+        { testMethod: 'matches',
+          errorPrefix: "must have media type"
+        });
     }
 
   });

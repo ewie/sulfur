@@ -170,7 +170,10 @@ define([
         var value = [ MediaTypeValue.create() ];
         var type = MediaTypeFacet.create(value);
         var v = type.createValidator();
-        var x = EnumerationValidator.create(value, { testMethod: 'matches' });
+        var x = EnumerationValidator.create(value,
+          { testMethod: 'matches',
+            errorPrefix: "must have media type"
+          });
         expect(v).to.eql(x);
       });
 
