@@ -47,15 +47,6 @@ define([
 
     });
 
-    describe('#relationshipsEndpoint', function () {
-
-      it("should return the DataGridService relationships endpoint URL", function () {
-        var dgs = DataGridService.create('http://example.org');
-        expect(dgs.relationshipsEndpoint).to.equal(dgs.endpoint + '/meta/relationships');
-      });
-
-    });
-
     describe('#recordCollectionMetaUrl()', function () {
 
       it("should return the record collection's schema URL", function () {
@@ -238,27 +229,6 @@ define([
             '<dgs:dataspaceengine dgs:type="http://www.webcomposition.net/2008/02/dgs/DataSpaceEngines/BinaryDataSpaceEngine"/>' +
            '</dgs:dataspaceengines>' +
           '</collection>');
-      });
-
-    });
-
-    describe('#recordFileRelationDefinition()', function () {
-
-      it("should return a N3 document with the record-file-relationship definition", function () {
-        var dgs = DataGridService.create('http://example.org');
-        var resource = {
-          recordCollectionName: 'foo',
-          fileCollectionName: 'bar'
-        };
-        var d = dgs.recordFileRelationDefinition(resource);
-        expect(d).to.equal(
-          '@prefix dm:<http://www.webcomposition.net/2008/02/dgs/meta/>.\n' +
-          '<> dm:source <' + dgs.recordCollectionUrl(resource) + '>.\n' +
-          '<> dm:target <' + dgs.fileCollectionUrl(resource) + '>.\n' +
-          '<> dm:predicate <urn:example:hasFile>.\n' +
-          '<> dm:inverse-predicate <urn:example:belongsToResource>.\n' +
-          '<> dm:target-alias "files".\n' +
-          '<> dm:source-alias "resource".');
       });
 
     });

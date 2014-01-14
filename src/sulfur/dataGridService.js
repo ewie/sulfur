@@ -61,8 +61,6 @@ define(['sulfur/util/factory'], function (Factory) {
 
     get endpoint() { return this._endpoint },
 
-    get relationshipsEndpoint() { return concatPath(this.endpoint, 'meta/relationships') },
-
     recordCollectionUrl: function (resource) {
       return concatPath(this.endpoint, resource.recordCollectionName);
     },
@@ -115,16 +113,6 @@ define(['sulfur/util/factory'], function (Factory) {
 
     fileCollectionDefinition: function (resource) {
       return createCollectionDefinition(resource.fileCollectionName, DGS_BINARY_DATA_SPACE_ENGINE);
-    },
-
-    recordFileRelationDefinition: function (resource) {
-      return '@prefix dm:<' + NS_DGS + 'meta/>.\n' +
-        '<> dm:source <' + this.recordCollectionUrl(resource) + '>.\n' +
-        '<> dm:target <' + this.fileCollectionUrl(resource) + '>.\n' +
-        '<> dm:predicate <urn:example:hasFile>.\n' +
-        '<> dm:inverse-predicate <urn:example:belongsToResource>.\n' +
-        '<> dm:target-alias "files".\n' +
-        '<> dm:source-alias "resource".';
     }
 
   });
