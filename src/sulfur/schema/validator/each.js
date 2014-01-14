@@ -26,12 +26,13 @@ define(['sulfur/util/factory'], function (Factory) {
      * Validate an array of items with item validator.
      *
      * @param {array} items an array of items to validate
+     * @param {array} errors (optional)
      *
      * @return {boolean} wether all items satisfy the item validator
      */
-    validate: function (items) {
+    validate: function (items, errors) {
       return items.every(function (item) {
-        return this._itemValidator.validate(item);
+        return this._itemValidator.validate(item, errors);
       }.bind(this));
     }
 

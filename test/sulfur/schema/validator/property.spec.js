@@ -71,12 +71,23 @@ define([
           value = { foo: {} };
         });
 
-        it("should call #validate() on the subvalidator with the property value", function () {
+        it("should invoke .validate() on the subvalidator with the property value", function () {
           var spy = sinon.spy(subvalidator, 'validate');
           validator.validate(value);
           expect(spy)
             .to.be.calledOn(subvalidator)
             .to.be.calledWith(sinon.match.same(value.foo));
+        });
+
+        it("should invoke .validate() on the subvalidator with the errors array when given", function () {
+          var spy = sinon.spy(subvalidator, 'validate');
+          var errors = [];
+          validator.validate(value, errors);
+          expect(spy)
+            .to.be.calledOn(subvalidator)
+            .to.be.calledWith(
+              sinon.match.same(value.foo),
+              sinon.match.same(errors));
         });
 
         it("should return true when the subvalidator returns true", function () {

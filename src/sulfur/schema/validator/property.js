@@ -37,15 +37,16 @@ define(['sulfur/util/factory'], function (Factory) {
      * Validate an object's property against the subvalidator.
      *
      * @param {object} obj
+     * @param {array} errors (optional)
      *
      * @return {boolean} whether the property of `obj` satisfies the subvalidator
      */
-    validate: function (obj) {
+    validate: function (obj, errors) {
       var property = obj[this._name];
       if (typeof property === 'function') {
         property = property.apply(obj, this._args);
       }
-      return this._validator.validate(property);
+      return this._validator.validate(property, errors);
     }
 
   });

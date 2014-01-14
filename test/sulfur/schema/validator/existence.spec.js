@@ -19,6 +19,33 @@ define([
 
   describe('sulfur/schema/validator/existence', function () {
 
+    describe('#initialize()', function () {
+
+      describe("option `errorPrefix`", function () {
+
+        it("should use the value when given", function () {
+          var validator = ExistenceValidator.create({ errorPrefix: "foo bar" });
+          expect(validator.errorPrefix).to.equal("foo bar");
+        });
+
+        it("should use 'must be defined' when not given", function () {
+          var validator = ExistenceValidator.create();
+          expect(validator.errorPrefix).to.equal("must be defined");
+        });
+
+      });
+
+    });
+
+    describe('#errorPrefix', function () {
+
+      it("should return the error message prefixy", function () {
+        var v = ExistenceValidator.create({ errorPrefix: 'foo' });
+        expect(v.errorPrefix).to.equal('foo');
+      });
+
+    });
+
     describe('#validate()', function () {
 
       var validator;
@@ -33,6 +60,14 @@ define([
 
       it("should return false when the value is undefined", function () {
         expect(validator.validate(undefined)).to.be.false;
+      });
+
+      it("should generate an error message from the minimum value when an errors array is given", function () {
+        var validator = ExistenceValidator.create({ errorPrefix: "must exist" });
+        var errors = [];
+        validator.validate(undefined, errors);
+        expect(errors).to.have.lengthOf(1);
+        expect(errors[0]).to.equal(validator.errorPrefix);
       });
 
     });

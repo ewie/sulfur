@@ -32,13 +32,29 @@ define([
         validator = EachValidator.create(itemValidator);
       });
 
-      it("should call the item validator's #validate() for each item", function () {
-        var list = [{}];
+      it("should invoke the item validator's .validate() for each item", function () {
+        var list = [{}, {}];
         var itemValidatorSpy = sinon.spy(itemValidator, 'validate');
         validator.validate(list);
-        expect(itemValidatorSpy)
-          .to.be.calledOn(itemValidator)
-          .and.to.be.calledWith(sinon.match.same(list[0]));
+        list.forEach(function (item, i) {
+          expect(itemValidatorSpy.getCall(i))
+            .to.be.calledOn(itemValidator)
+            .and.to.be.calledWith(sinon.match.same(item));
+        });
+      });
+
+      it("should invoke the item validator's .validate() with the errors array when given", function () {
+        var list = [{}, {}];
+        var errors = [];
+        var itemValidatorSpy = sinon.spy(itemValidator, 'validate');
+        validator.validate(list, errors);
+        list.forEach(function (item, i) {
+          expect(itemValidatorSpy.getCall(i))
+            .to.be.calledOn(itemValidator)
+            .and.to.be.calledWith(
+              sinon.match.same(item),
+              sinon.match.same(errors));
+        });
       });
 
       it("should return true when all items are valid", function () {

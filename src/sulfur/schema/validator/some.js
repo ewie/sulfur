@@ -31,12 +31,13 @@ define(['sulfur/util/factory'], function (Factory) {
      * Check if a value satisfies any of the validators.
      *
      * @param {any} value
+     * @param {array} errors (optional)
      *
      * @return {boolean} whether `value` satisfies any validator
      */
-    validate: function (value) {
+    validate: function (value, errors) {
       return this._validators.some(function (validator) {
-        return validator.validate(value);
+        return validator.validate(value, errors);
       });
     }
 

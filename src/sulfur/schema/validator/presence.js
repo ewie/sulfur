@@ -26,12 +26,13 @@ define(['sulfur/util/factory'], function (Factory) {
      * Validate a value using the subvalidator if that value is defined.
      *
      * @param {any} value
+     * @param {array} errors (optional)
      *
      * @return {true} when the value is undefined or satisfies the subvalidator
      * @return {false} when the value does not satisfy the subvalidator
      */
-    validate: function (value) {
-      return typeof value === 'undefined' || this._validator.validate(value);
+    validate: function (value, errors) {
+      return typeof value === 'undefined' || this._validator.validate(value, errors);
     }
 
   });

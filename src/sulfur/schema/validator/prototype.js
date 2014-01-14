@@ -35,6 +35,8 @@ define(['sulfur/util/factory'], function (Factory) {
      * @return {boolean} whether `obj` derives from the required prototype or not
      */
     validate: function (obj) {
+      // Generate no error message, because we cannot generate a meaningful
+      // message from the prototype to be matched.
       return this._prototype.isPrototypeOf(obj);
     }
 

@@ -31,12 +31,13 @@ define(['sulfur/util/factory'], function (Factory) {
      * Validate a value against all validators.
      *
      * @param {any} value
+     * @param {array} errors (optional)
      *
      * @return {boolean} whether `value` passes all validators or not
      */
-    validate: function (value) {
+    validate: function (value, errors) {
       return this.validators.every(function (validator) {
-        return validator.validate(value);
+        return validator.validate(value, errors);
       });
     }
 

@@ -18,6 +18,7 @@ define([
   var expect = shared.expect;
   var sinon = shared.sinon;
   var bind = shared.bind;
+  var returns = shared.returns;
 
   describe('sulfur/schema/validator/enumeration', function () {
 
@@ -44,6 +45,16 @@ define([
 
       });
 
+      it("should use the value of option `errorPrefix` as error message prefix", function () {
+        var v = EnumerationValidator.create([{}], { errorPrefix: 'some prefix' });
+        expect(v.errorPrefix).to.equal('some prefix');
+      });
+
+      it("should use 'must be' as default errorPrefix", function () {
+        var v = EnumerationValidator.create([{}]);
+        expect(v.errorPrefix).to.equal('must be');
+      });
+
     });
 
     describe('#testMethodName', function () {
@@ -62,10 +73,43 @@ define([
 
     });
 
+    describe('#errorPrefix', function () {
+
+      it("should return the error message prefix", function () {
+        var v = EnumerationValidator.create([{}], { errorPrefix: "foo" });
+        expect(v.errorPrefix).to.equal('foo');
+      });
+
+    });
+
     describe('#validate()', function () {
 
       var validator;
       var values;
+
+      context("with an errors array", function () {
+
+        function mockValue(s) {
+          return {
+            match: sinon.stub().returnsArg(0),
+            toString: returns(s)
+          };
+        }
+
+        beforeEach(function () {
+          values = [ mockValue('x'), mockValue('y'), mockValue('z') ];
+          validator = EnumerationValidator.create(values,
+            { testMethod: 'match', errorPrefix: "should be" });
+        });
+
+        it("should generate an error message from the allowed values", function () {
+          var errors = [];
+          validator.validate(false, errors);
+          expect(errors).to.have.lengthOf(1);
+          expect(errors[0]).to.equal(validator.errorPrefix + " \u201Cx\u201D, \u201Cy\u201D or \u201Cz\u201D");
+        });
+
+      });
 
       context("when the test method name is defined", function () {
 

@@ -17,29 +17,91 @@ define([
 
   var expect = shared.expect;
   var sinon = shared.sinon;
+  var returns = shared.returns;
 
   describe('sulfur/schema/validator/minimum', function () {
 
     describe('#initialize()', function () {
 
-      it("should match exclusivelly when option `exclusive` is true", function () {
-        var validator = MinimumValidator.create(3, { exclusive: true });
-        expect(validator.validate(3)).to.be.false;
+      describe("option `exclusive`", function () {
+
+        it("should match exclusively when true", function () {
+          var validator = MinimumValidator.create(null, { exclusive: true });
+          expect(validator.exclusive).to.be.true;
+        });
+
+        it("should match inclusively when false", function () {
+          var validator = MinimumValidator.create(null, { exclusive: false });
+          expect(validator.exclusive).to.be.false;
+        });
+
+        it("should match inclusively by default", function () {
+          var validator = MinimumValidator.create(null);
+          expect(validator.exclusive).to.be.false;
+        });
+
       });
 
-      it("should match inclusivelly when option `exclusive` is false", function () {
-        var validator = MinimumValidator.create(3, { exclusive: false });
-        expect(validator.validate(3)).to.be.true;
+      describe("option `errorPrefix`", function () {
+
+        it("should use the value when given", function () {
+          var validator = MinimumValidator.create(null, { errorPrefix: "foo bar" });
+          expect(validator.errorPrefix).to.equal("foo bar");
+        });
+
+        context("when not given", function () {
+
+          it("should use 'must be greater than' when matching exclusively", function () {
+            var validator = MinimumValidator.create(null, { exclusive: true });
+            expect(validator.errorPrefix).to.equal("must be greater than");
+          });
+
+          it("should use 'must be greater than or equal to' when matching inclusively", function () {
+            var validator = MinimumValidator.create();
+            expect(validator.errorPrefix).to.equal("must be greater than or equal to");
+          });
+
+        });
+
       });
 
-      it("should match inclusivelly by default", function () {
-        var validator = MinimumValidator.create(3);
-        expect(validator.validate(3)).to.be.true;
+    });
+
+    describe('#exclusive', function () {
+
+      it("should return true when matching exclusively", function () {
+        var validator = MinimumValidator.create(null, { exclusive: true });
+        expect(validator.exclusive).to.be.true;
+      });
+
+      it("should return false when matching inclusively", function () {
+        var validator = MinimumValidator.create(null, { exclusive: false });
+        expect(validator.exclusive).to.be.false;
+      });
+
+    });
+
+    describe('#errorPrefix', function () {
+
+      it("should return the error message prefixy", function () {
+        var v = MinimumValidator.create(null, { errorPrefix: 'foo' });
+        expect(v.errorPrefix).to.equal('foo');
       });
 
     });
 
     describe('#validate()', function () {
+
+      it("should generate an error message from the minimum value when an errors array is given", function () {
+        var validator = MinimumValidator.create({
+          toString: returns('bar'),
+          cmp: returns(1)
+        }, { errorPrefix: "should be more than" });
+        var errors = [];
+        validator.validate(false, errors);
+        expect(errors).to.have.lengthOf(1);
+        expect(errors[0]).to.equal(validator.errorPrefix + " \u201Cbar\u201D");
+      });
 
       context("when the minimum responds to #cmp()", function () {
 

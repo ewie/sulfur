@@ -43,14 +43,34 @@ define([
         validator = SomeValidator.create(validators);
       });
 
-      it("should pass the value to each validator's #validate() in initialization order", function () {
-        var spy1 = sinon.spy(validators[0], 'validate');
-        var spy2 = sinon.spy(validators[1], 'validate');
-        var value = false;
-        validator.validate(value);
+      it("should invoke each validators .validate() in initialization order", function () {
+        var spy1 = sinon.stub(validators[0], 'validate').returns(false);
+        var spy2 = sinon.stub(validators[1], 'validate').returns(false);
+        validator.validate();
         expect(spy2).to.be.calledAfter(spy1);
-        expect(spy1).to.be.calledWith(value);
-        expect(spy2).to.be.calledWith(value);
+      });
+
+      it("should pass the value to each validators .validate()", function () {
+        var spy1 = sinon.stub(validators[0], 'validate').returns(false);
+        var spy2 = sinon.stub(validators[1], 'validate').returns(false);
+        var value = {};
+        validator.validate(value);
+        expect(spy1).to.be.calledWith(sinon.match.same(value));
+        expect(spy2).to.be.calledWith(sinon.match.same(value));
+      });
+
+      it("should pass the errors array to each validators .validate()", function () {
+        var spy1 = sinon.stub(validators[0], 'validate').returns(false);
+        var spy2 = sinon.stub(validators[1], 'validate').returns(false);
+        var value = {};
+        var errors = [];
+        validator.validate(value, errors);
+        expect(spy1).to.be.calledWith(
+          sinon.match.same(value),
+          sinon.match.same(errors));
+        expect(spy2).to.be.calledWith(
+          sinon.match.same(value),
+          sinon.match.same(errors));
       });
 
       it("should return false when all validators fail", function () {

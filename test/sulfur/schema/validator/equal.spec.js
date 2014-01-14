@@ -16,10 +16,48 @@ define([
   'use strict';
 
   var expect = shared.expect;
+  var returns = shared.returns;
 
   describe('sulfur/schema/validator/equal', function () {
 
+    describe('#initialize()', function () {
+
+      describe("option `errorPrefix`", function () {
+
+        it("should use the value when given", function () {
+          var validator = EqualValidator.create(null, { errorPrefix: "foo bar" });
+          expect(validator.errorPrefix).to.equal("foo bar");
+        });
+
+        it("should use 'must be equal to' when not given", function () {
+          var validator = EqualValidator.create();
+          expect(validator.errorPrefix).to.equal("must be equal to");
+        });
+
+      });
+
+    });
+
+    describe('#errorPrefix', function () {
+
+      it("should return the error message prefixy", function () {
+        var v = EqualValidator.create(null, { errorPrefix: 'foo' });
+        expect(v.errorPrefix).to.equal('foo');
+      });
+
+    });
+
     describe('#validate()', function () {
+
+      it("should generate an error message from the minimum value when an errors array is given", function () {
+        var validator = EqualValidator.create(
+          { toString: returns('xxx') },
+          { errorPrefix: "should be" });
+        var errors = [];
+        validator.validate(null, errors);
+        expect(errors).to.have.lengthOf(1);
+        expect(errors[0]).to.equal(validator.errorPrefix + " \u201Cxxx\u201D");
+      });
 
       it("should return true when the value is equal to the expected value", function () {
         var validator = EqualValidator.create(true);
