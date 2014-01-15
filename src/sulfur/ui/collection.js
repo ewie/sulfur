@@ -162,7 +162,7 @@ define([
       }
       this._items.splice(i, 1);
       item.publisher && this._detach(item.publisher);
-      this._publish('remove', item);
+      this._publish('remove', item, i);
       this._publish('change');
       return true;
     },

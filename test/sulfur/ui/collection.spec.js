@@ -326,11 +326,13 @@ define([
 
         it("should publish on chanel 'remove'", function () {
           var spy = sinon.spy(collection.publisher, 'publish');
+          var index = collection.indexOf(item);
           collection.remove(item);
           expect(spy).to.be.calledWith(
             'remove',
             sinon.match.same(collection),
-            sinon.match.same(item));
+            sinon.match.same(item),
+            index);
         });
 
         it("should publish on chanel 'change'", function () {
