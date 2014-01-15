@@ -168,6 +168,16 @@ define([
     },
 
     /**
+     * Remove all items and publish on channel "destroy".
+     *
+     * @api public
+     */
+    destroy: function () {
+      this.items.forEach(this.remove.bind(this));
+      this._publish('destroy');
+    },
+
+    /**
      * @api protected
      */
     _subscribe: function (p, c, f) {

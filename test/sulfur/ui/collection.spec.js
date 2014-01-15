@@ -345,6 +345,29 @@ define([
 
     });
 
+    describe('#destroy()', function () {
+
+      it("should publish on channel 'destroy'", function () {
+        var collection = Collection.create();
+        var spy = sinon.spy(collection.publisher, 'publish');
+        collection.destroy();
+        expect(spy).to.be.calledWith(
+          'destroy',
+          sinon.match.same(collection));
+      });
+
+      it("should remove each item", function () {
+        var items = [ {}, {} ];
+        var collection = Collection.create(items);
+        var spy = sinon.spy(collection, 'remove');
+        collection.destroy();
+        items.forEach(function (item, i) {
+          expect(spy.getCall(i)).to.be.calledWith(sinon.match.same(item));
+        });
+      });
+
+    });
+
   });
 
 });
