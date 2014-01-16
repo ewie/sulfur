@@ -22,7 +22,7 @@ define([
 
     describe('#initialize()', function () {
 
-      it("should wrap the given element in a div", function () {
+      it("should wrap the given element in a div.errorable when the element has no such ancestor", function () {
         var parentElement = document.createElement('div');
         var element = document.createElement('div');
         parentElement.appendChild(element);
@@ -31,6 +31,16 @@ define([
         expect(p.parentElement).to.equal(parentElement);
         expect(p.tagName).to.equal('DIV');
         expect(p.className).to.equal('errorable');
+      });
+
+      it("should use the first ancestor element with class 'errorable' when existent", function () {
+        var parentElement = document.createElement('div');
+        var element = document.createElement('div');
+        parentElement.appendChild(element);
+        parentElement.className = 'errorable';
+        var access = ErrorAccess.create(element);
+        access.error = "foo";
+        expect(parentElement.attributes['data-error-message'].value).to.equal("foo");
       });
 
     });
