@@ -17,7 +17,7 @@ var BLOCKS_URL = 'http://www.unicode.org/Public/3.0-Update/Blocks-3.txt';
 var UCD_URL = 'http://www.unicode.org/Public/3.0-Update/UnicodeData-3.0.0.txt';
 
 var outputFileName = process.argv[2];
-var templateFilename = process.argv[3] || 'scripts/unicode.js.template';
+var templateFilename = process.argv[3] || 'scripts/unicode/template.js';
 
 var template = fs.readFileSync(templateFilename);
 
