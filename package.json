@@ -10,6 +10,7 @@
   "private": true,
   "dependencies": {
     "jszip": "git://github.com/Stuk/jszip.git#v2.0.0",
+    "leaflet": "0.7",
     "requirejs": "2.1",
     "text": "requirejs/text",
     "unorm": "1.2"

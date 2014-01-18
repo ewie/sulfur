@@ -10,9 +10,8 @@
 define([
   'sulfur/schema/deserializer/facet',
   'sulfur/schema/facet/fractionDigits',
-  'sulfur/schema/value/simple/integer',
   'sulfur/util'
-], function (FacetResolver, FractionDigitsFacet, IntegerValue, util) {
+], function (FacetResolver, FractionDigitsFacet, util) {
 
   'use strict';
 

@@ -6,7 +6,7 @@
  */
 
 /* global define */
-/* global context, describe, it */
+/* global afterEach, beforeEach, context, describe, it */
 
 define([
   'shared',
@@ -233,10 +233,8 @@ define([
       it("should return the result of the given function on future calls", function () {
         var f = sinon.stub().returns({});
         var g = util.once(f);
-        // XXX invoke with .call() otherwise mocha detects global leak in
-        //   variable "top" under Firefox (probably caused by third party code)
-        var r = g.call({});
-        var q = g.call({});
+        var r = g({});
+        var q = g({});
         expect(f).to.be.calledOnce;
         expect(r).to.equal(q);
       });
@@ -257,6 +255,103 @@ define([
           expect(fn(obj)).to.equal(obj.foo);
         });
 
+      });
+
+    });
+
+    describe('.request()', function () {
+
+      var sandbox;
+      var server;
+
+      beforeEach(function () {
+        sandbox = sinon.sandbox.create();
+        server = sinon.fakeServer.create();
+      });
+
+      afterEach(function () {
+        server.restore();
+        sandbox.restore();
+      });
+
+      it("should invoke callback 'success' when request completes with 2xx", function () {
+        var xhrSpy = sandbox.spy(XMLHttpRequest.prototype, 'send');
+        server.respondWith('GET', 'http://example.org', [ 200, {}, '' ]);
+        var spy = sinon.spy();
+        util.request({
+          url: 'http://example.org',
+          method: 'GET',
+          success: spy
+        });
+        var xhr = xhrSpy.getCall(0).thisValue;
+        server.respond();
+        expect(spy).to.be.calledWith(sinon.match.same(xhr));
+      });
+
+      it("should invoke callback 'fail' when request completes with 4xx", function () {
+        var xhrSpy = sandbox.spy(XMLHttpRequest.prototype, 'send');
+        server.respondWith('GET', 'http://example.org', [ 400, {}, '' ]);
+        var spy = sinon.spy();
+        util.request({
+          url: 'http://example.org',
+          method: 'GET',
+          fail: spy
+        });
+        var xhr = xhrSpy.getCall(0).thisValue;
+        server.respond();
+        expect(spy).to.be.calledWith(sinon.match.same(xhr));
+      });
+
+      it("should invoke callback 'fail' when request completes with 5xx", function () {
+        var xhrSpy = sandbox.spy(XMLHttpRequest.prototype, 'send');
+        server.respondWith('GET', 'http://example.org', [ 500, {}, '' ]);
+        var spy = sinon.spy();
+        util.request({
+          url: 'http://example.org',
+          method: 'GET',
+          fail: spy
+        });
+        var xhr = xhrSpy.getCall(0).thisValue;
+        server.respond();
+        expect(spy).to.be.calledWith(sinon.match.same(xhr));
+      });
+
+      it("should send set the given headers", function () {
+        var spy = sandbox.spy(XMLHttpRequest.prototype, 'setRequestHeader');
+        util.request({
+          url: 'http://example.org',
+          method: 'POST',
+          headers: {
+            'content-type': 'text/plain',
+            'accept': 'text/xml'
+          }
+        });
+        expect(spy).to.be.calledTwice;
+        expect(spy.getCall(0)).to.be.calledWith('content-type', 'text/plain');
+        expect(spy.getCall(1)).to.be.calledWith('accept', 'text/xml');
+      });
+
+      it("should send the given data", function () {
+        var spy = sandbox.spy(XMLHttpRequest.prototype, 'send');
+        var blob = new Blob([''], { type: 'text/plain' });
+        util.request({
+          url: 'http://example.org',
+          method: 'POST',
+          data: blob
+        });
+        expect(spy).to.be.calledWith(sinon.match.same(blob));
+      });
+
+      it("should an object with property 'abort' to cancel the request when invoked", function () {
+        var spy = sandbox.spy(XMLHttpRequest.prototype, 'abort');
+        var blob = new Blob([''], { type: 'text/plain' });
+        var request = util.request({
+          url: 'http://example.org',
+          method: 'POST',
+          data: blob
+        });
+        request.abort();
+        expect(spy).to.be.calledWith();
       });
 
     });

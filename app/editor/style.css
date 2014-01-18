@@ -1,0 +1,264 @@
+.settings {
+  background-color: #D6E6ED;
+  padding: 0.5em;
+}
+
+.complex-type-element > div:last-child {
+  display: none;
+}
+
+.complex-type-element > button {
+  font-family: 'FontAwesome';
+  background-color: transparent;
+  color: #888;
+  width: 1em;
+  text-align: center;
+}
+
+.complex-type-element > button:hover {
+  background-color: transparent;
+}
+
+.complex-type-element > button::before {
+  content: '\F105';
+}
+
+.complex-type-element.expanded > button::before {
+  content: '\F107';
+}
+
+.complex-type-element.expanded > div:last-child {
+  display: block;
+}
+
+.complex-type-element > .type-name {
+  color: #888;
+  margin-left: 0.2em;
+}
+
+.widget-form,
+.xml-schema {
+  display: table-cell;
+  vertical-align: top;
+}
+
+.xml-schema {
+  padding-left: 1em;
+}
+
+.xml-schema > h2 {
+  white-space: nowrap;
+}
+
+.xml-schema > pre:empty::before {
+  content: "unable to create an XML Schema due to errors";
+  font-style: italic;
+  color: #888;
+}
+
+.properties {
+  display: table;
+}
+
+.properties > h2 {
+  display: table-caption;
+  white-space: nowrap;
+}
+
+.property {
+  display: table-row;
+}
+
+.property > label {
+  display: table-cell;
+  vertical-align: top;
+  padding-bottom: 0.3em;
+  padding-right: 0.6em;
+}
+
+.property > div {
+  display: table-cell;
+  padding-bottom: 0.3em;
+}
+
+.property:last-child > label,
+.property:last-child > div {
+  padding-bottom: 0;
+}
+
+.add-element {
+  margin-bottom: 0.3em;
+  padding: 0 0.3em;
+}
+
+.elements {
+  display: table;
+}
+
+.tabs {
+  vertical-align: top;
+  display: table-cell;
+  min-width: 6em;
+}
+
+.xml-schema > pre {
+  margin: 0 1em;
+  font-size: 70%;
+}
+
+.tabs {
+  margin-left: 0em;
+  font-size: 80%;
+}
+
+.tab {
+  text-align: left;
+  cursor: pointer;
+  margin-bottom: 2px;
+  white-space: nowrap;
+}
+
+.tab-name {
+  background-color: #888;
+  min-width: 2em;
+  color: #fff;
+  padding: 0 0.2em;
+  margin-right: 2em;
+  display: inline-block;
+     -moz-transition: padding 0.2s, margin 0.2s, background-color 0.2s;
+      -ms-transition: padding 0.2s, margin 0.2s, background-color 0.2s;
+       -o-transition: padding 0.2s, margin 0.2s, background-color 0.2s;
+  -webkit-transition: padding 0.2s, margin 0.2s, background-color 0.2s;
+          transition: padding 0.2s, margin 0.2s, background-color 0.2s;
+}
+
+.tab-name:empty::before {
+  font-style: italic;
+  padding-right: 0.2em;
+  content: attr(data-empty);
+}
+
+.tab:hover > .tab-name,
+.tab.current > .tab-name {
+  margin-right: 0;
+
+  /* To compensate margin-right dropping to zero, padding-right must be a
+   * little larger than margin-right to prevent jumps due to reflow.
+   */
+  padding-right: 2.2em;
+
+     -moz-transition: margin 0.2s, padding 0.2s;
+      -ms-transition: margin 0.2s, padding 0.2s;
+       -o-transition: margin 0.2s, padding 0.2s;
+  -webkit-transition: margin 0.2s, padding 0.2s;
+          transition: margin 0.2s, padding 0.2s;
+}
+
+.tab.current > .tab-name {
+  background-color: #0080a6;
+     -moz-transition: background-color 0.2s;
+      -ms-transition: background-color 0.2s;
+       -o-transition: background-color 0.2s;
+  -webkit-transition: background-color 0.2s;
+          transition: background-color 0.2s;
+}
+
+.tab.error > .tab-name {
+  background-color: #ed600d;
+}
+
+.elements > div:last-child {
+  display: table-cell;
+  padding-left: 1em;
+}
+
+.tabs:empty::before {
+  content: 'add at least one element';
+  background-color: #ed600d;
+  padding: 0 0.2em;
+  color: #fff;
+}
+
+.facets {
+  font-size: 80%;
+  margin-left: 1em;
+}
+
+.facet > .value {
+  margin-left: 1em;
+}
+
+.type-selection {
+  display: inline-block;
+}
+
+.type-selection .dropdown,
+.item-type-wrap {
+  display: inline-block;
+}
+
+.item-type-wrap::before {
+  content: 'of';
+  margin: 0 0.3em;
+}
+
+.type-selection .dropdown {
+  background-color: #eee;
+}
+
+button.pending {
+  display: block;
+  height: 1.5em;
+  overflow: hidden;
+}
+
+button.pending > .message {
+  display: block;
+  float: left;
+}
+
+button.pending > .signal {
+  display: block;
+  color: white;
+  height: 100%;
+  width: 5px;
+  background-color: #ff0;
+
+     -moz-transition: background-color 0.2s;
+      -ms-transition: background-color 0.2s;
+       -o-transition: background-color 0.2s;
+  -webkit-transition: background-color 0.2s;
+          transition: background-color 0.2s;
+
+  -webkit-animation: move_signal 4s linear 0s infinite alternate;
+     -moz-animation: move_signal 4s linear 0s infinite alternate;
+       -o-animation: move_signal 4s linear 0s infinite alternate;
+          animation: move_signal 4s linear 0s infinite alternate;
+}
+
+button.pending:hover > .signal {
+  background-color: #666;
+     -moz-transition: background-color 0.2s;
+      -ms-transition: background-color 0.2s;
+       -o-transition: background-color 0.2s;
+  -webkit-transition: background-color 0.2s;
+          transition: background-color 0.2s;
+}
+
+@-webkit-keyframes move_signal { from { margin-left: -7px } to { margin-left: 100% }  }
+   @-moz-keyframes move_signal { from { margin-left: -7px } to { margin-left: 100% }  }
+     @-o-keyframes move_signal { from { margin-left: -7px } to { margin-left: 100% }  }
+        @keyframes move_signal { from { margin-left: -7px } to { margin-left: 100% }  }
+
+
+input.pending {
+  -webkit-animation: flash 1s linear 0s infinite alternate;
+     -moz-animation: flash 1s linear 0s infinite alternate;
+       -o-animation: flash 1s linear 0s infinite alternate;
+          animation: flash 1s linear 0s infinite alternate;
+}
+
+@-webkit-keyframes flash { from { background-color: #ff0 } to { background-color: #eee }  }
+   @-moz-keyframes flash { from { background-color: #ff0 } to { background-color: #eee }  }
+     @-o-keyframes flash { from { background-color: #ff0 } to { background-color: #eee }  }
+        @keyframes flash { from { background-color: #ff0 } to { background-color: #eee }  }

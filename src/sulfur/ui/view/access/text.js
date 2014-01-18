@@ -7,10 +7,7 @@
 
 /* global define */
 
-define([
-  'sulfur/ui/publisher',
-  'sulfur/ui/view/accessor'
-], function (Publisher, Accessor) {
+define(['sulfur/ui/view/accessor'], function (Accessor) {
 
   'use strict';
 

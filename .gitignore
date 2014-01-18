@@ -1,2 +1,6 @@
+app/editor/main-built.js
+app/widget/main-built.js
+build/
+lib/
 node_modules/
-tmp/
+var/

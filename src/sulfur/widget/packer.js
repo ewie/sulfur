@@ -9,11 +9,28 @@
 
 define([
   'jszip',
-  'text!app/icon.svg',
-  'text!app/widget/index.html'
-], function (JSZip, iconSvg, indexHtml) {
+  'text!app/common/icon.svg',
+  'text!app/common/style.css',
+  'text!app/widget/index.html',
+  'text!app/widget/main-built.js',
+  'text!app/widget/style.css'
+], function (JSZip, iconSvg, commonStyleCss, indexHtml, mainJs, styleCss) {
 
   'use strict';
+
+  function addContent(d, ns, e, fileName, mediaType) {
+    var f = d.createElementNS(ns, 'content');
+    f.setAttribute('src', fileName);
+    f.setAttribute('type', mediaType);
+    e.appendChild(f);
+  }
+
+  function addPreference(d, ns, e, name, value) {
+    var f = d.createElementNS(ns, 'preference');
+    f.setAttribute('name', name);
+    f.setAttribute('value', value);
+    e.appendChild(f);
+  }
 
   return {
 
@@ -35,27 +52,15 @@ define([
       e.textContent = widget.name;
       r.appendChild(e);
 
-      e = d.createElementNS(ns, 'content');
-      e.setAttribute('src', 'index.html');
-      e.setAttribute('type', 'text/html');
-      r.appendChild(e);
+      addContent(d, ns, r, 'index.html', 'text/html');
+      addContent(d, ns, r, 'main.js', 'application/javascript');
+      addContent(d, ns, r, 'style.css', 'text/css');
 
-      e = d.createElementNS(ns, 'preference');
-      e.setAttribute('name', 'endpoint');
-      e.setAttribute('value', dgs.endpoint);
-      r.appendChild(e);
+      addPreference(d, ns, r, 'endpoint', dgs.endpoint);
+      addPreference(d, ns, r, 'recordCollectionName', widget.resource.recordCollectionName);
 
-      e = d.createElementNS(ns, 'preference');
-      e.setAttribute('name', 'recordCollectionName');
-      e.setAttribute('value', widget.resource.recordCollectionName);
-      r.appendChild(e);
-
-      if (widget.resource.hasFiles) {
-        e = d.createElementNS(ns, 'preference');
-        e.setAttribute('name', 'fileCollectionName');
-        e.setAttribute('value', widget.resource.fileCollectionName);
-        r.appendChild(e);
-      }
+      widget.resource.hasFiles && addPreference(d, ns, r,
+        'fileCollectionName', widget.resource.fileCollectionName);
 
       e = d.createElementNS(ns, 'icon');
       e.setAttribute('src', 'icon.svg');
@@ -90,6 +95,8 @@ define([
       z.file('config.xml', '<?xml version="1.0" encoding="utf-8"?>' + configXml);
       z.file('index.html', indexHtml);
       z.file('icon.svg', iconSvg);
+      z.file('main.js', mainJs);
+      z.file('style.css', commonStyleCss + styleCss);
 
       return z.generate({ type: 'blob', compression: 'DEFLATE' });
     }

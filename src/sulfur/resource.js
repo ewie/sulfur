@@ -7,10 +7,7 @@
 
 /* global define */
 
-define([
-  'sulfur/schema/value/simple/fileRef',
-  'sulfur/util/factory'
-], function (FileRefValue, Factory) {
+define(['sulfur/util/factory'], function (Factory) {
 
   'use strict';
 

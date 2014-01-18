@@ -1,2 +1,85 @@
 Sulfur is a library and web application to design W3C widgets performing CRUD
 operations on a DataGridService.
+
+Requirements
+============
+
+The following tools are required for development. Dependencies are managed
+using NPM.
+
+git      >= 1.8
+node.js  >= 0.10.24
+npm      >= 1.3.21
+
+
+Project structure
+=================
+
+./
+ app/
+  common/         sources common to both editor and widget
+  editor/         editor web application
+  widget/         widget web application
+ build/           build destination
+ lib/             JavaScript libraries
+ node_modules/
+ scripts/
+  server.js       a simple HTTP server and proxy used during development
+  unicode/        tool for generating src/sulfur/util/unicode.js
+   generate.js    the generating script
+   template.js    the template
+ src/             JavaScript source for the library and web application
+ test/            test specs for everything under src/
+ var/             various files
+ .jshintrc        configuration used by JSHint
+ Makefile
+ package.json     project configuration used by NPM
+ testem.json      testing configuration used by Testem
+
+
+Setup
+=====
+
+By modifying the environment variable $PATH in the following way we can execute
+binaries local to our project (containing directory node_modules/).
+
+  $ echo "PATH=./node_modules/.bin:$PATH" >> ~/.bashrc
+  $ source ~/.bashrc
+
+Clone the repository into a desired destination and install dependencies using
+NPM.
+
+  $ git clone <repo> <dest>
+  $ cd <dest>
+  $ npm i
+
+
+Testing
+=======
+
+testem is used for testing the JavaScript code. To launch the test tool execute
+the following command with a comma seperated list of browser names.
+
+  $ testem -l <browser...>
+
+Tests are written as specs using mocha.
+
+
+Building
+========
+
+To build the entire web application issue the following command.
+
+  $ make build
+
+This will bundle all JavaScript files into a single file and put it into
+directory build/ along with index.html, style.css and icon.svg
+
+
+TODO
+====
+
+The XML Schema serializer currently uses a temporary location to import the
+sulfur schema (containing definitions of non-standard types required by the
+DataGridService to be able to validate a record document). This URL must be
+changed when used in production.

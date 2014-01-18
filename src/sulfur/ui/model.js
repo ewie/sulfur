@@ -425,9 +425,19 @@ define([
       for (var name in attrs) {
         var value = attrs[name];
         if (value && typeof value.isValid === 'function') {
-          errors[name] = !value.isValid();
+          errors[name] = value.combinedError ?
+            value.combinedError() : !value.isValid();
         }
       }
+    },
+
+    combinedError: function () {
+      var errors = [];
+      for (var name in this._attrs) {
+        var err = this.error(name);
+        err && errors.push(err);
+      }
+      return errors.length ? errors.join('\n') : false;
     },
 
     /**

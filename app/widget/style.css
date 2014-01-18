@@ -1,0 +1,256 @@
+button[name = "expand"] {
+  font-family: 'FontAwesome';
+  background-color: transparent;
+  margin-right: 0.2em;
+  width: 1em;
+  text-align: center;
+}
+
+button[name = "expand"]::before {
+  content: '\F105';
+  color: rgba(0, 0, 0, 0.3);
+}
+
+.record-head {
+  font-size: 100%;
+/*  white-space: nowrap;*/
+}
+
+.record.invalid .record-id,
+.record.invalid .record-save {
+  background-color: #ed600d;
+     -moz-transition: background-color 0.2s;
+      -ms-transition: background-color 0.2s;
+       -o-transition: background-color 0.2s;
+  -webkit-transition: background-color 0.2s;
+          transition: background-color 0.2s;
+}
+
+.record-id {
+  background-color: #fff;
+  font-family: monospace;
+/*  font-size: 110%;*/
+  padding: 0.2em;
+  cursor: pointer;
+  vertical-align: top;
+  line-height: 1.5;
+  display: inline-block;
+     -moz-transition: background-color 0.2s;
+      -ms-transition: background-color 0.2s;
+       -o-transition: background-color 0.2s;
+  -webkit-transition: background-color 0.2s;
+          transition: background-color 0.2s;
+}
+
+.record-head > .record-id:hover {
+  background-color: #d6e6ed;
+     -moz-transition: background-color 0.2s;
+      -ms-transition: background-color 0.2s;
+       -o-transition: background-color 0.2s;
+  -webkit-transition: background-color 0.2s;
+          transition: background-color 0.2s;
+}
+
+.record-head > .remove {
+  text-align: center;
+  width: 1em;
+  display: inline-block;
+}
+
+.record-body,
+.record-controls {
+  display: none;
+}
+
+.record {
+  -webkit-transition: margin 0.2s;
+}
+
+.record.expanded {
+  margin: 0.5em 0;
+  background-color: #d6e6ed;
+  -webkit-transition: margin 0.2s;
+}
+
+.record.expanded > .record-body {
+  display: block;
+}
+
+.record.expanded > .record-head > .record-controls {
+  display: inline-block;
+}
+
+.record-id {
+  font-family: monospace;
+  background-color: #fff;
+  padding: 0.2em;
+  display: inline-block;
+}
+
+.errorable {
+  width: 100%;
+}
+
+input,
+textarea {
+  min-width: 100%;
+  max-width: 100%;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+textarea {
+  resize: vertical;
+}
+
+.calendar-hour,
+.calendar-minute,
+.calendar-second,
+.calendar-timezone {
+  min-width: inherit;
+}
+
+.record-id:empty::after {
+  content: "the record is not yet saved";
+  font-style: italic;
+  color: rgba(0, 0, 0, 0.3);
+}
+
+.field-head {
+  padding: 0 0.2em;
+}
+
+.field.required .field-name::after {
+  content: '\25A0';
+  color: #d33;
+  position: relative;
+  top: -0.6em;
+  left: 0.1em;
+  font-size: 60%;
+}
+
+.field.required.error .field-name::after {
+  text-shadow: #fff 0 0 0.5em;
+}
+
+.field.error > .field-head {
+  background-color: #ed600d;
+  color: #fff;
+}
+
+.field.error > .field-head::after {
+  content: attr(data-error-message);
+  font-size: 80%;
+  margin-left: 0.5em;
+}
+
+.field-value {
+  display: none;
+}
+
+.field.expanded > .field-value {
+  display: block;
+}
+
+.field.expanded button[name = "expand"]::before {
+  content: '\F107';
+}
+
+.field-head > label {
+  cursor: pointer;
+}
+
+.widget .properties {
+  display: block;
+}
+
+.widget .property {
+  display: block;
+}
+
+.geolocation-value > .map {
+  height: 300px;
+}
+
+.geolocation-value::before {
+  content: "add marker with left click, remove with right click";
+}
+
+.geolocation-value-min:not(:empty)::before {
+  content: "required:";
+  margin-right: 0.3em;
+}
+
+.geolocation-value-max::after {
+  content: "";
+  margin-right: 0.3em;
+}
+
+.geolocation-value-max:not(:empty)::before {
+  content: "allowed:";
+  margin-right: 0.3em;
+}
+
+.geolocation-value-count:not(:empty)::before {
+  content: "positions:";
+  margin-right: 0.3em;
+}
+
+.geolocation-value-invalid-count:not(:empty)::before {
+  content: "invalid positions:";
+  margin-right: 0.3em;
+}
+
+.field.error > {}
+
+.file-value {
+  position: relative;
+}
+
+.file-value a:not([href]),
+.record-download:not([href]) {
+  display: none;
+}
+
+.file-value a {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: inline-block;
+  width: 1.5em;
+  text-align: center;
+  background-color: #0080a6;
+  color: #fff;
+}
+
+.file-value a:hover {
+  background-color: rgba(0, 128, 166, 0.6);
+}
+
+.file-value a::before {
+  content: '\F019';
+  font-family: 'FontAwesome';
+}
+
+.record-close::before {
+  content: '\2715';
+}
+
+.geolocation-value-valid {
+  width: 100%;
+  height: 100%;
+
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' width='27.3125' height='41.03125'><g transform='translate(-26.375,-971.875)'><path d='M 40.036001,971.93046 53.65721,985.55167 40.036001,1012.7941 26.414792,985.55167 z' style='fill:#0080a6;fill-opacity:1;stroke:#d6e6ed;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1'/></g></svg>");
+
+}
+
+.geolocation-value-invalid {
+  width: 100%;
+  height: 100%;
+
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' width='27.3125' height='41.03125'><g transform='translate(-26.375,-971.875)'><path d='M 40.036001,971.93046 53.65721,985.55167 40.036001,1012.7941 26.414792,985.55167 z' style='fill:#ed600d;fill-opacity:1;stroke:#d33;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1'/></g></svg>");
+
+}
+
+

@@ -15,9 +15,7 @@ define(['sulfur/util/factory'], function (Factory) {
 
     var hasOwn = Object.prototype.hasOwnProperty;
 
-    var nil = function () {
-      return null;
-    };
+    var nil = function () { return null };
 
     var wrap = function (namespaces) {
       return function (prefix) {

@@ -129,9 +129,9 @@ define([
      * Such a group causes the regular expression to fail on every input.
      * Because a group matches a single codepoint which is a member of the
      * group's set of valid codepoints, an empty group cannot match any
-     * codepoint because any codepoint cannot be member of the empty set.
-     * An empty group results from a group subtraction when the LHS group is
-     * a subset of the RHS group.
+     * codepoint because no codepoint can be member of the empty set. An empty
+     * group results from a group subtraction when the LHS group is a subset of
+     * the RHS group.
      *
      * @return {true} if the regular expression contains an empty group
      * @return {false} otherwise

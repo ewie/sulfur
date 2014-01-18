@@ -12,9 +12,21 @@ define([
   'shared',
   'jszip',
   'sulfur/widget/packer',
-  'text!app/icon.svg',
-  'text!app/widget/index.html'
-], function (shared, JSZip, packer, iconSvg, indexHtml) {
+  'text!app/common/icon.svg',
+  'text!app/common/style.css',
+  'text!app/widget/index.html',
+  'text!app/widget/main-built.js',
+  'text!app/widget/style.css'
+], function (
+    shared,
+    JSZip,
+    packer,
+    iconSvg,
+    commonStyleCss,
+    indexHtml,
+    mainJs,
+    styleCss
+) {
 
   'use strict';
 
@@ -95,29 +107,45 @@ define([
 
       it("should include element <name> with the widget name", function () {
         var d = packer.createConfigurationDocument(widget, dgs);
-        var e = d.documentElement.querySelector('name');
+        var e = d.querySelector('widget > name');
         expect(e.namespaceURI).to.equal(packer.namespaceURI);
         expect(e.textContent).to.equal(widget.name);
       });
 
       it('should include element <content src="index.html" type="text/html"/>', function () {
         var d = packer.createConfigurationDocument(widget, dgs);
-        var e = d.documentElement.querySelector('content');
+        var e = d.querySelectorAll('widget > content').item(0);
         expect(e.namespaceURI).to.equal(packer.namespaceURI);
         expect(e.attributes.src.value).to.equal('index.html');
         expect(e.attributes.type.value).to.equal('text/html');
       });
 
+      it('should include element <content src="main.js" type="application/javascript"/>', function () {
+        var d = packer.createConfigurationDocument(widget, dgs);
+        var e = d.querySelectorAll('widget > content').item(1);
+        expect(e.namespaceURI).to.equal(packer.namespaceURI);
+        expect(e.attributes.src.value).to.equal('main.js');
+        expect(e.attributes.type.value).to.equal('application/javascript');
+      });
+
+      it('should include element <content src="style.css" type="text/css"/>', function () {
+        var d = packer.createConfigurationDocument(widget, dgs);
+        var e = d.querySelectorAll('widget > content').item(2);
+        expect(e.namespaceURI).to.equal(packer.namespaceURI);
+        expect(e.attributes.src.value).to.equal('style.css');
+        expect(e.attributes.type.value).to.equal('text/css');
+      });
+
       it('should include element <icon src="icon.svg"/>', function () {
         var d = packer.createConfigurationDocument(widget, dgs);
-        var e = d.documentElement.querySelector('icon');
+        var e = d.querySelector('widget > icon');
         expect(e.namespaceURI).to.equal(packer.namespaceURI);
         expect(e.attributes.src.value).to.equal('icon.svg');
       });
 
       it("should include element <preference/> defining the endpoint url", function () {
         var d = packer.createConfigurationDocument(widget, dgs);
-        var e = d.documentElement.querySelectorAll('preference').item(0);
+        var e = d.querySelectorAll('widget > preference').item(0);
         expect(e.namespaceURI).to.equal(packer.namespaceURI);
         expect(e.attributes.name.value).to.equal('endpoint');
         expect(e.attributes.value.value).to.equal(dgs.endpoint);
@@ -125,7 +153,7 @@ define([
 
       it("should include element <preference/> defining the resource's record collection name", function () {
         var d = packer.createConfigurationDocument(widget, dgs);
-        var e = d.documentElement.querySelectorAll('preference').item(1);
+        var e = d.querySelectorAll('widget > preference').item(1);
         expect(e.namespaceURI).to.equal(packer.namespaceURI);
         expect(e.attributes.name.value).to.equal('recordCollectionName');
         expect(e.attributes.value.value).to.equal(widget.resource.recordCollectionName);
@@ -133,7 +161,7 @@ define([
 
       it("should include element <preference/> defining the resource's file collection name when the resource has files", function () {
         var d = packer.createConfigurationDocument(widget, dgs);
-        var e = d.documentElement.querySelectorAll('preference').item(2);
+        var e = d.querySelectorAll('widget > preference').item(2);
         expect(e.namespaceURI).to.equal(packer.namespaceURI);
         expect(e.attributes.name.value).to.equal('fileCollectionName');
         expect(e.attributes.value.value).to.equal(widget.resource.fileCollectionName);
@@ -142,27 +170,27 @@ define([
       it("should not include element <preference/> defining the resource's file collection name when the resource has no files", function () {
         widget.resource.hasFiles = false;
         var d = packer.createConfigurationDocument(widget, dgs);
-        var ee = d.documentElement.querySelectorAll('preference');
+        var ee = d.querySelectorAll('widget > preference');
         expect(ee).to.have.lengthOf(2);
       });
 
       it("should include element <description> when a description is defined", function () {
         var d = packer.createConfigurationDocument(widget, dgs);
-        var e = d.documentElement.querySelector('description');
+        var e = d.querySelector('widget > description');
         expect(e.namespaceURI).to.equal(packer.namespaceURI);
         expect(e.textContent).to.equal(widget.description);
       });
 
       it("should include element <author> when an author name is defined", function () {
         var d = packer.createConfigurationDocument(widget, dgs);
-        var e = d.documentElement.querySelector('author');
+        var e = d.querySelector('widget > author');
         expect(e.namespaceURI).to.equal(packer.namespaceURI);
         expect(e.textContent).to.equal(widget.authorName);
       });
 
       it("should include element <author> with attribute @email when an author email address is defined", function () {
         var d = packer.createConfigurationDocument(widget, dgs);
-        var e = d.documentElement.querySelector('author');
+        var e = d.querySelector('widget > author');
         expect(e.namespaceURI).to.equal(packer.namespaceURI);
         expect(e.attributes.email.value).to.equal(widget.authorEmail);
       });
@@ -215,6 +243,19 @@ define([
         var spy = sandbox.spy(JSZip.prototype, 'file');
         packer.createArchive(widget, dgs);
         expect(spy.getCall(2)).to.be.calledWith('icon.svg', iconSvg);
+      });
+
+      it("should add file main.js", function () {
+        var spy = sandbox.spy(JSZip.prototype, 'file');
+        packer.createArchive(widget, dgs);
+        expect(spy.getCall(3)).to.be.calledWith('main.js', mainJs);
+      });
+
+      it("should add file style.css", function () {
+        var spy = sandbox.spy(JSZip.prototype, 'file');
+        packer.createArchive(widget, dgs);
+        expect(spy.getCall(4)).to.be.calledWith('style.css',
+          commonStyleCss + styleCss);
       });
 
     });

@@ -17,8 +17,7 @@ define(['sulfur/util/factory'], function (Factory) {
   var DGS_VALIDATION_SCOPE = NS_DGS + 'meta/ValidationScope';
 
   function createCollectionDefinition(title, dataSpaceEngine) {
-    // XXX
-    //   Generate a string rather than a Document object. The DataGridService
+    // XXX Generate a string rather than a Document object. The DataGridService
     //   won't handle a document with unqualified attribute "type" used by
     //   element "dataspaceengine", and the XML serializer won't generate a
     //   prefixed attribute either.

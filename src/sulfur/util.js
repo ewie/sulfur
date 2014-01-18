@@ -157,6 +157,47 @@ define(['sulfur/util/orderedStringMap'], function (OrderedStringMap) {
     },
 
     /**
+     * Perform an asynchronous HTTP request.
+     *
+     * @param {object} options
+     *
+     * @option options {string} method
+     * @option options {string} url
+     * @option options {function} success
+     * @option options {function} fail (optional)
+     * @option options {object} headers (optional)
+     *
+     * @return {object} an object with property "abort" to cancel the request
+     */
+    request: function (options) {
+      var xhr = new XMLHttpRequest();
+
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState === XMLHttpRequest.DONE) {
+          var status = Math.floor(this.status / 100);
+          var callback;
+          if (status === 2) {
+            callback = options.success;
+          } else {
+            callback = options.fail;
+          }
+          callback && callback(xhr);
+        }
+      };
+
+      xhr.open(options.method, options.url);
+      var headers = options.headers;
+      headers && Object.keys(headers).forEach(function (name) {
+        xhr.setRequestHeader(name, headers[name]);
+      });
+      xhr.send(options.data);
+
+      return {
+        abort: function () { xhr.abort() }
+      };
+    },
+
+    /**
      * Create a function returning a given value.
      *
      * @param {any} x a value to be returned by the function

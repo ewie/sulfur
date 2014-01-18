@@ -108,11 +108,8 @@ define([
     },
 
     set value(value) {
-      if (value === this.value) {
-        return;
-      }
       if (value === null || typeof value === 'undefined') {
-        this._unselectItem();
+        this._unselect();
       } else {
         if (!this._index.contains(value)) {
           throw new Error('unknown value "' + value + '"');
@@ -133,9 +130,18 @@ define([
       this._element.classList.remove('dropdown-expanded');
     },
 
+    _unselect: function () {
+      this._unselectItem();
+      this._publisher.publish('select');
+    },
+
+    _select: function (item) {
+      this._selectItem(item);
+      this._publisher.publish('select');
+    },
+
     _unselectItem: function () {
       this._clearSelection();
-      this._publisher.publish('select');
     },
 
     _selectItem: function (item) {
@@ -145,7 +151,6 @@ define([
       this._selectedItem = item;
       this._value.textContent = item.textContent;
       item.classList.add('dropdown-selected');
-      this._publisher.publish('select');
     },
 
     _clearSelection: function () {
@@ -193,7 +198,7 @@ define([
 
     _clickItem: function (ev) {
       var item = ev.target;
-      this._selectItem(item);
+      this._select(item);
       this.collapse();
       ev.stopPropagation();
     },
@@ -220,7 +225,7 @@ define([
     }()),
 
     _enter: function () {
-      this._selectItem(this._focusedItem);
+      this._select(this._focusedItem);
       this.collapse();
     },
 

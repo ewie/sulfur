@@ -45,7 +45,7 @@ define([
       var e = doc.createElementNS(ns, q(name));
       var v = value.value(name);
       if (v) {
-        // XXX uniform interface to the elements
+        // TODO uniform interface to get the elements
         var t = (type.elements || type.allowedElements).getByName(name).type;
         var f = serializeValue(v, t, doc, ns);
         e.appendChild(f);

@@ -1,0 +1,582 @@
+@import url(http://fonts.googleapis.com/css?family=Titillium+Web:300&subset=latin,latin-ext);
+
+body,
+button,
+input,
+textarea {
+  font-weight: normal;
+  margin: 0;
+  padding: 0;
+  font-family: 'Titillium Web', sans-serif;
+  font-size: 100%;
+  outline: none;
+  color: #000;
+}
+
+input,
+textarea {
+     -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+
+button,
+a.button {
+  border: 0 none;
+  margin: 0;
+  padding: 0 0.2em;
+  cursor: pointer;
+}
+
+button:disabled {
+  display: none;
+}
+
+input {
+  border: 0 none;
+  outline: none;
+  margin: 0;
+  background-color: #eee;
+  padding: 0 0.2em;
+}
+
+textarea {
+  border: 0 none;
+  margin: 0;
+  padding: 0;
+  outline: none;
+  padding: 0 0.2em;
+  background-color: #eee;
+  display: block;
+}
+
+input[type=checkbox] {
+     -moz-appearance: none;
+      -ms-appearance: none;
+       -o-appearance: none;
+  -webkit-appearance: none;
+           apperance: none;
+  width: 1.5em;
+  height: 1.5em;
+  text-align: center;
+  cursor: pointer;
+  background-color: #eee;
+     -moz-transition: background-color 0.2s;
+      -ms-transition: background-color 0.2s;
+       -o-transition: background-color 0.2s;
+  -webkit-transition: background-color 0.2s;
+          transition: background-color 0.2s;
+}
+
+input[type=checkbox]:hover {
+  background-color: #ddd;
+     -moz-transition: background-color 0.2s;
+      -ms-transition: background-color 0.2s;
+       -o-transition: background-color 0.2s;
+  -webkit-transition: background-color 0.2s;
+          transition: background-color 0.2s;
+}
+
+input[type=checkbox]::before {
+  font-family: FontAwesome;
+  content: '\F04D';
+  color: #ccc;
+}
+
+input[type=checkbox]:checked::before {
+  color: #000;
+}
+
+a {
+  text-decoration: none;
+  cursor: pointer;
+  color: #0080a6;
+     -moz-transition: color 0.2s;
+      -ms-transition: color 0.2s;
+       -o-transition: color 0.2s;
+  -webkit-transition: color 0.2s;
+          transition: color 0.2s;
+}
+
+a:hover {
+  color: #000;
+     -moz-transition: color 0.2s;
+      -ms-transition: color 0.2s;
+       -o-transition: color 0.2s;
+  -webkit-transition: color 0.2s;
+          transition: color 0.2s;
+}
+
+.add::before {
+  content: '\2715';
+  display: block;
+     -moz-transform: rotate(45deg);
+      -ms-transform: rotate(45deg);
+       -o-transform: rotate(45deg);
+  -webkit-transform: rotate(45deg);
+          transform: rotate(45deg);
+}
+
+label.required::after {
+  content: '\25A0';
+  font-size: 60%;
+  color: #d33;
+  position: relative;
+  top: -0.6em;
+  left: 0.1em;
+}
+
+label {
+  min-width: 6em;
+}
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-weight: normal;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: #bbd6e1;
+}
+
+label[for] {
+  cursor: pointer;
+}
+
+.body {
+  margin: 1em;
+  font-size: 130%;
+}
+
+.foot {
+  font-size: 70%;
+  color: #555;
+  margin-top: 1em;
+}
+
+.foot > li {
+  display: inline;
+}
+
+.foot > li::before {
+  content: '|';
+  color: #888;
+  padding: 0 0.5em;
+}
+
+.foot > li:first-child::before {
+  content: '';
+  padding: 0;
+}
+
+.input {
+  display: inline-block;
+}
+
+.errorable {
+  display: inline-block;
+  font-size: 60%;
+}
+
+.errorable > * {
+  font-size: 166%;
+}
+
+.errorable.error > input,
+.errorable.error > textarea,
+.errorable.error > .dropdown {
+  background-color: #ed600d;
+  display: block;
+}
+
+.errorable.error > input,
+.errorable.error > textarea {
+  color: #fff;
+}
+
+.errorable.error[data-error-message]::after {
+  content: attr(data-error-message);
+  background-color: #ed600d;
+  color: #fff;
+  padding: 0 0.2em;
+  border-top: 1px solid #d33;
+  display: inline-block;
+  white-space: pre-wrap;
+}
+
+.list-value.error > .list-value-error::before {
+  background-color: #ed600d;
+  color: #fff;
+  padding: 0 0.2em;
+  content: attr(data-error-message);
+}
+
+.enumerated-value {
+  position: relative;
+  white-space: nowrap;
+}
+
+.enumerated-value > button {
+  position: absolute;
+  top: 0;
+  left: 0;
+  vertical-align: top;
+}
+
+.enumerated-value > div {
+  padding-left: 1.5em;
+  vertical-align: top;
+}
+
+.menu {
+  background-color: #0080a6;
+  background-image: url(icon.svg);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-origin: content-box;
+}
+
+.menu ul {
+  margin-left: 2em;
+}
+
+.menu li {
+  display: inline-block;
+}
+
+.menu a,
+.menu span {
+  color: #fff;
+  font-size: 150%;
+  text-transform: uppercase;
+  padding: 0 0.3em;
+     -moz-transition: background-color 0.2s;
+      -ms-transition: background-color 0.2s;
+       -o-transition: background-color 0.2s;
+  -webkit-transition: background-color 0.2s;
+          transition: background-color 0.2s;
+}
+
+.menu a:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+     -moz-transition: background-color 0.2s;
+      -ms-transition: background-color 0.2s;
+       -o-transition: background-color 0.2s;
+  -webkit-transition: background-color 0.2s;
+          transition: background-color 0.2s;
+}
+
+button,
+a.button {
+  background-color: #0080a6;
+  color: #fff;
+  min-width: 1.5em;
+     -moz-transition: background-color 0.2s;
+      -ms-transition: background-color 0.2s;
+       -o-transition: background-color 0.2s;
+  -webkit-transition: background-color 0.2s;
+          transition: background-color 0.2s;
+}
+
+button:hover,
+a.button:hover {
+  background-color: rgba(0, 128, 166, 0.6);
+     -moz-transition: background-color 0.2s;
+      -ms-transition: background-color 0.2s;
+       -o-transition: background-color 0.2s;
+  -webkit-transition: background-color 0.2s;
+          transition: background-color 0.2s;
+}
+
+button.create,
+a.download {
+  font-size: 150%;
+  background-color: #e4f420;
+  color: #000;
+     -moz-transition: background-color 0.2s, color 0.2s;
+      -ms-transition: background-color 0.2s, color 0.2s;
+       -o-transition: background-color 0.2s, color 0.2s;
+  -webkit-transition: background-color 0.2s, color 0.2s;
+          transition: background-color 0.2s, color 0.2s;
+}
+
+a.download::before {
+  content: '\2B07';
+}
+
+button.create:hover,
+a.download:hover {
+  background-color: #000;
+  color: #e4f420;
+     -moz-transition: background-color 0.2s, color 0.2s;
+      -ms-transition: background-color 0.2s, color 0.2s;
+       -o-transition: background-color 0.2s, color 0.2s;
+  -webkit-transition: background-color 0.2s, color 0.2s;
+          transition: background-color 0.2s, color 0.2s;
+}
+
+.remove {
+  background-color: #d33;
+  color: #fff;
+  padding: 0 0.3em;
+  cursor: pointer;
+  vertical-align: top;
+}
+
+.remove::before {
+  content: '\2715';
+}
+
+.remove:hover,
+.remove:focus {
+  background-color: #f6664e;
+}
+
+.dropdown {
+  position: relative;
+  outline: none;
+  cursor: pointer;
+}
+
+.dropdown:focus,
+.dropdown:hover {
+  background-color: #ddd;
+     -moz-transition: background-color 0.2s;
+      -ms-transition: background-color 0.2s;
+       -o-transition: background-color 0.2s;
+  -webkit-transition: background-color 0.2s;
+          transition: background-color 0.2s;
+}
+
+.dropdown-value {
+  padding: 0 0.2em;
+}
+
+.dropdown-empty .dropdown-value {
+  font-style: italic;
+  color: #888;
+}
+
+.dropdown.dropdown-expanded {
+}
+
+.dropdown.dropdown-expanded .dropdown-values {
+  display: block;
+}
+
+.dropdown-values {
+  position: absolute;
+  display: table;
+  top: 100%;
+  left: 0;
+  z-index: 9999;
+  font-size: 80%;
+  background-color: #ddd;
+  display: none;
+}
+
+.dropdown-row {
+  display: table-row;
+}
+
+.dropdown-cell {
+  padding: 0 0.3em;
+  display: table-cell;
+  margin: 0;
+
+     -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+
+     -moz-transition: background-color 0.2s;
+      -ms-transition: background-color 0.2s;
+       -o-transition: background-color 0.2s;
+  -webkit-transition: background-color 0.2s;
+          transition: background-color 0.2s;
+}
+
+.dropdown-cell.dropdown-focus,
+.dropdown-cell:hover {
+  background-color: rgba(255, 255, 255, 0.5);
+     -moz-transition: background-color 0.2s;
+      -ms-transition: background-color 0.2s;
+       -o-transition: background-color 0.2s;
+  -webkit-transition: background-color 0.2s;
+          transition: background-color 0.2s;
+}
+
+.dropdown-cell.dropdown-selected {
+  background-color: #ccc;
+  color: #000;
+}
+
+.uri-value {
+  position: relative;
+}
+
+.uri-value a:not([href]) {
+  display: none;
+}
+
+.uri-value a {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: inline-block;
+  width: 1.5em;
+  text-align: center;
+  background-color: #0080a6;
+  color: #fff;
+}
+
+.uri-value a:hover {
+  background-color: rgba(0, 128, 166, 0.6);
+}
+
+.uri-value a::before {
+  content: '\27A4';
+}
+
+.datetime-value {
+  position: relative;
+  white-space: nowrap;
+}
+
+.datetime-value > .calendar {
+  position: absolute;
+  background-color: #eee;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: none;
+  z-index: 9999;
+  font-size: 90%;
+}
+
+.datetime-value {
+  position: relative;
+}
+
+.datetime-value button {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.calendar > table {
+  width: 100%;
+  line-height: 1.3;
+  text-align: center;
+  border-collapse: collapse;
+}
+
+.calendar .fa-caret-down,
+.calendar .fa-caret-left,
+.calendar .fa-caret-right,
+.calendar .fa-caret-up {
+  cursor: pointer;
+}
+
+.calendar-date th {
+  /* set width to 1/7th to avoid content-based width */
+  width: 14.28%;
+}
+
+.calendar-date .day {
+     -moz-transition: background-color 0.2s;
+      -ms-transition: background-color 0.2s;
+       -o-transition: background-color 0.2s;
+  -webkit-transition: background-color 0.2s;
+          transition: background-color 0.2s;
+}
+
+.calendar-date .day:hover {
+  background-color: #ddd;
+  cursor: pointer;
+     -moz-transition: background-color 0.2s;
+      -ms-transition: background-color 0.2s;
+       -o-transition: background-color 0.2s;
+  -webkit-transition: background-color 0.2s;
+          transition: background-color 0.2s;
+}
+
+.calendar-date .selected,
+.calendar-date .selected:hover {
+  background-color: #bbb;
+  color: #fff;
+  font-weight: bold;
+}
+
+.calendar-date .today,
+.calendar-date .today:hover {
+  background-color: #0080a6;
+  color: #fff;
+  font-weight: bold;
+}
+
+.calendar-time {
+  width: 100%;
+}
+
+.calendar-hour,
+.calendar-minute,
+.calendar-second,
+.calendar-timezone {
+  background-color: #ddd;
+  text-align: center;
+}
+
+.calendar-hour,
+.calendar-minute,
+.calendar-second {
+  width: 2em;
+}
+
+.calendar-timezone {
+  width: 4em;
+}
+
+.calendar-date-timezone {
+  text-align: center;
+}
+
+.calendar-date-timezone .calendar-timezone {
+  margin: 0 0.2em;
+}
+
+.calendar-close,
+.calendar-reset {
+  color: #0080a6;
+  cursor: pointer;
+     -moz-transition: color 0.2s;
+      -ms-transition: color 0.2s;
+       -o-transition: color 0.2s;
+  -webkit-transition: color 0.2s;
+          transition: color 0.2s;
+}
+
+.calendar-close:hover,
+.calendar-reset:hover {
+  color: #333;
+     -moz-transition: color 0.2s;
+      -ms-transition: color 0.2s;
+       -o-transition: color 0.2s;
+  -webkit-transition: color 0.2s;
+          transition: color 0.2s;
+}
+
+.calendar-close::before {
+  content: '\2715';
+}
+
+.calendar-reset::before {
+  font-family: 'FontAwesome';
+  content: '\F111';
+}
