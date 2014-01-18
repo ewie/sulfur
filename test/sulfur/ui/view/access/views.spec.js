@@ -227,16 +227,20 @@ define([
       var element;
 
       beforeEach(function () {
-        element = { appendChild: function () {} };
+        element = {
+          appendChild: function () {},
+          insertBefore: function () {}
+        };
       });
 
       it("should insert the view element before the reference view element", function () {
         var access = ViewsAccess.create(element);
         var view = mockView();
-        var ref = mockView({ insertBefore: sinon.spy() });
+        var ref = mockView();
+        var spy = sinon.spy(element, 'insertBefore');
         access.append(ref);
         access.before(view, ref);
-        expect(ref.element.insertBefore)
+        expect(spy)
           .to.be.calledWith(
             sinon.match.same(view.element),
             sinon.match.same(ref.element));
@@ -245,7 +249,7 @@ define([
       it("should invoke .inserted() on the view", function () {
         var access = ViewsAccess.create(element);
         var view = mockView();
-        var ref = mockView({ insertBefore: function () {} });
+        var ref = mockView();
         access.append(ref);
         var spy = sinon.spy(view, 'inserted');
         access.before(view, ref);
@@ -257,7 +261,7 @@ define([
         var view = mockView();
         var ref = mockView();
         expect(bind(access, 'before', view, ref))
-          .to.throw("expecting a present view as reference");
+          .to.throw("expecting an already inserted view as reference");
       });
 
       it("should reject when it contains the given view", function () {
@@ -283,19 +287,20 @@ define([
       var element;
 
       beforeEach(function () {
-        element = { appendChild: function () {} };
+        element = {
+          appendChild: function () {},
+          insertBefore: function () {}
+        };
       });
 
       it("should insert the view element after the reference view element", function () {
         var access = ViewsAccess.create(element);
         var view = mockView();
-        var ref = mockView({
-          insertBefore: sinon.spy(),
-          nextSibling: {}
-        });
+        var ref = mockView({ nextSibling: {} });
+        var spy = sinon.spy(element, 'insertBefore');
         access.append(ref);
         access.after(view, ref);
-        expect(ref.element.insertBefore)
+        expect(spy)
           .to.be.calledWith(
             sinon.match.same(view.element),
             sinon.match.same(ref.element.nextSibling));
@@ -316,7 +321,7 @@ define([
         var view = mockView();
         var ref = mockView();
         expect(bind(access, 'after', view, ref))
-          .to.throw("expecting a present view as reference");
+          .to.throw("expecting an already inserted view as reference");
       });
 
       it("should reject when it contains the given view", function () {
@@ -332,6 +337,116 @@ define([
         var view = mockView(undefined, true);
         expect(bind(access, 'after', view))
           .to.throw("expecting a view with no parent");
+      });
+
+    });
+
+    describe('#moveBefore()', function () {
+
+      var element;
+
+      beforeEach(function () {
+        element = {
+          appendChild: function () {},
+          insertBefore: function () {}
+        };
+      });
+
+      it("should insert the view element before the reference view element", function () {
+        var access = ViewsAccess.create(element);
+        var view = mockView();
+        var ref = mockView();
+        var spy = sinon.spy(element, 'insertBefore');
+        access.append(ref);
+        access.append(view);
+        access.moveBefore(view, ref);
+        expect(spy)
+          .to.be.calledWith(
+            sinon.match.same(view.element),
+            sinon.match.same(ref.element));
+      });
+
+      it("should invoke .inserted() on the view", function () {
+        var access = ViewsAccess.create(element);
+        var view = mockView();
+        var ref = mockView();
+        access.append(ref);
+        access.append(view);
+        var spy = sinon.spy(view, 'inserted');
+        access.moveBefore(view, ref);
+        expect(spy).to.be.called;
+      });
+
+      it("should reject when it does not contain the reference view", function () {
+        var access = ViewsAccess.create(element);
+        var view = mockView();
+        var ref = mockView();
+        access.append(view);
+        expect(bind(access, 'moveBefore', view, ref))
+          .to.throw("expecting an already inserted view as reference");
+      });
+
+      it("should reject when it does not contain the given view", function () {
+        var element = { appendChild: function () {} };
+        var access = ViewsAccess.create(element);
+        var view = mockView();
+        var ref = mockView();
+        expect(bind(access, 'moveBefore', view, ref))
+          .to.throw("expecting an already inserted view");
+      });
+
+    });
+
+    describe('#moveAfter()', function () {
+
+      var element;
+
+      beforeEach(function () {
+        element = {
+          appendChild: function () {},
+          insertBefore: function () {}
+        };
+      });
+
+      it("should insert the view element after the reference view element", function () {
+        var access = ViewsAccess.create(element);
+        var view = mockView();
+        var ref = mockView({ nextSibling: {} });
+        var spy = sinon.spy(element, 'insertBefore');
+        access.append(view);
+        access.append(ref);
+        access.moveAfter(view, ref);
+        expect(spy)
+          .to.be.calledWith(
+            sinon.match.same(view.element),
+            sinon.match.same(ref.element.nextSibling));
+      });
+
+      it("should invoke .inserted() on the view", function () {
+        var access = ViewsAccess.create(element);
+        var view = mockView();
+        var ref = mockView({ insertBefore: function () {} });
+        access.append(view);
+        access.append(ref);
+        var spy = sinon.spy(view, 'inserted');
+        access.moveAfter(view, ref);
+        expect(spy).to.be.called;
+      });
+
+      it("should reject when it does not contain the reference view", function () {
+        var access = ViewsAccess.create(element);
+        var view = mockView();
+        var ref = mockView();
+        access.append(view);
+        expect(bind(access, 'moveAfter', view, ref))
+          .to.throw("expecting an already inserted view as reference");
+      });
+
+      it("should reject when it does not contain the given view", function () {
+        var access = ViewsAccess.create(element);
+        var view = mockView();
+        expect(bind(access, 'moveAfter', view))
+          .to.throw("expecting an already inserted view");
       });
 
     });

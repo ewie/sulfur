@@ -14,7 +14,7 @@ define([
 
   'use strict';
 
-  function assertView(accessor, view) {
+  function assertNewView(accessor, view) {
     if (view.hasParent()) {
       throw new Error("expecting a view with no parent");
     }
@@ -23,9 +23,15 @@ define([
     }
   }
 
+  function assertInsertedView(accessor, view) {
+    if (!accessor.contains(view)) {
+      throw new Error("expecting an already inserted view");
+    }
+  }
+
   function assertRef(accessor, ref) {
     if (!accessor.contains(ref)) {
-      throw new Error("expecting a present view as reference");
+      throw new Error("expecting an already inserted view as reference");
     }
   }
 
@@ -57,32 +63,46 @@ define([
     },
 
     prepend: function (view) {
-      assertView(this, view);
+      assertNewView(this, view);
       this._index.set(view);
       this._element.insertBefore(view.element, this._element.firstElementChild);
       view.inserted();
     },
 
     append: function (view) {
-      assertView(this, view);
+      assertNewView(this, view);
       this._index.set(view);
       this._element.appendChild(view.element);
       view.inserted();
     },
 
     after: function (view, ref) {
-      assertView(this, view);
+      assertNewView(this, view);
       assertRef(this, ref);
       this._index.set(view);
-      ref.element.insertBefore(view.element, ref.element.nextSibling);
+      this._element.insertBefore(view.element, ref.element.nextSibling);
       view.inserted();
     },
 
     before: function (view, ref) {
-      assertView(this, view);
+      assertNewView(this, view);
       assertRef(this, ref);
       this._index.set(view);
-      ref.element.insertBefore(view.element, ref.element);
+      this._element.insertBefore(view.element, ref.element);
+      view.inserted();
+    },
+
+    moveBefore: function (view, ref) {
+      assertInsertedView(this, view);
+      assertRef(this, ref);
+      this._element.insertBefore(view.element, ref.element);
+      view.inserted();
+    },
+
+    moveAfter: function (view, ref) {
+      assertInsertedView(this, view);
+      assertRef(this, ref);
+      this._element.insertBefore(view.element, ref.element.nextSibling);
       view.inserted();
     }
 
