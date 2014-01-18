@@ -131,16 +131,41 @@ define([
       if (this.contains(item)) {
         return false;
       }
-      this._items.push(item);
-      if (item.publisher) {
-        this._subscribe(item.publisher, 'change', function () {
-          this._publish('change');
-        }.bind(this));
-        this._subscribe(item.publisher, 'destroy', function () {
-          this.remove(item);
-        }.bind(this));
+      return this.insertAt(item, this.size);
+    },
+
+    /**
+     * Insert an item at the given zero-based index in the collection. When the
+     * collection already contains the item, moves to the given index.
+     *
+     * @api public
+     *
+     * @param {any} item
+     * @param {number} index
+     *
+     * @return {true} when item was inserted or moved
+     * @return {false} when the item is already at the given index
+     */
+    insertAt: function (item, index) {
+      var oldIndex = this.indexOf(item);
+      if (index === oldIndex) {
+        return false;
       }
-      this._publish('add', item);
+      if (oldIndex > -1) {
+        this._items.splice(oldIndex, 1);
+        this._publish('move', item, index, oldIndex);
+      } else {
+        this._publish('add', item, index);
+        if (item.publisher) {
+          this._subscribe(item.publisher, 'change', function () {
+            this._publish('change');
+          }.bind(this));
+          this._subscribe(item.publisher, 'destroy', function () {
+            this.remove(item);
+          }.bind(this));
+        }
+      }
+      this._items.splice(index, 0, item);
       this._publish('change');
       return true;
     },

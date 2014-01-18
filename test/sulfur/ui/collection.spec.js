@@ -183,52 +183,120 @@ define([
         item = {};
       });
 
+      it("should return false when the collection contains the item", function () {
+        collection.add(item);
+        expect(collection.add(item)).to.be.false;
+      });
+
+      it("should delegate to #insertAt() with the item and the collection size as index", function () {
+        var index = collection.size;
+        var spy = sinon.spy(collection, 'insertAt');
+        collection.add(item);
+        expect(spy).to.be.calledWith(sinon.match.same(item), index);
+      });
+
+    });
+
+    describe('#insertAt()', function () {
+
+      var collection;
+      var item;
+
+      beforeEach(function () {
+        collection = Collection.create();
+        item = {};
+      });
+
       context("when the collection contains the item", function () {
 
         beforeEach(function () {
           collection.add(item);
         });
 
-        it("should not alter the collection", function () {
-          collection.add(item);
-          expect(collection.size).to.equal(1);
+        context("when the new index is the same as the current index", function () {
+
+          it("should not alter the collection", function () {
+            collection.insertAt(item, 0);
+            expect(collection.size).to.equal(1);
+          });
+
+          it("should not publish", function () {
+            var spy = sinon.spy(collection.publisher, 'publish');
+            collection.insertAt(item, 0);
+            expect(spy).to.not.be.called;
+          });
+
+          it("should return false", function () {
+            expect(collection.insertAt(item, 0)).to.be.false;
+          });
+
         });
 
-        it("should not publish", function () {
-          var spy = sinon.spy(collection.publisher, 'publish');
-          collection.add(item);
-          expect(spy).to.not.be.called;
-        });
+        context("when the new index is different from the current index", function () {
 
-        it("should return false", function () {
-          expect(collection.add(item)).to.be.false;
+          beforeEach(function () {
+            collection.add({});
+          });
+
+          it("should move the item to the given index", function () {
+            collection.insertAt(item, 1);
+            expect(collection.indexOf(item)).to.equal(1);
+          });
+
+          it("should publish on channel 'move' with the item and its new and old index", function () {
+            var spy = sinon.spy(collection.publisher, 'publish');
+            collection.insertAt(item, 1);
+            expect(spy).to.not.be.calledWith(
+              sinon.match.same(collection),
+              sinon.match.same(item),
+              0,
+              1);
+          });
+
+          it("should publish on channel 'change'", function () {
+            var spy = sinon.spy(collection.publisher, 'publish');
+            collection.insertAt(item, 1);
+            expect(spy).to.be.calledWith(
+              'change',
+              sinon.match.same(collection));
+          });
+
+          it("should return true", function () {
+            expect(collection.insertAt(item, 1)).to.be.true;
+          });
+
         });
 
       });
 
       context("when the collection does not contain the item", function () {
 
-        it("should add the item", function () {
-          collection.add(item);
-          expect(collection.indexOf(item)).to.equal(0);
+        beforeEach(function () {
+          collection.add({}, {});
+        });
+
+        it("should add the item at the given index", function () {
+          collection.insertAt(item, 1);
+          expect(collection.indexOf(item)).to.equal(1);
         });
 
         it("should return true", function () {
-          expect(collection.add(item)).to.be.true;
+          expect(collection.insertAt(item, 1)).to.be.true;
         });
 
-        it("should publish on channel 'add'", function () {
+        it("should publish on channel 'add' with the item and its index", function () {
           var spy = sinon.spy(collection.publisher, 'publish');
-          collection.add(item);
+          collection.insertAt(item, 1);
           expect(spy).to.be.calledWith(
             'add',
             sinon.match.same(collection),
-            sinon.match.same(item));
+            sinon.match.same(item),
+            1);
         });
 
         it("should publish on channel 'change'", function () {
           var spy = sinon.spy(collection.publisher, 'publish');
-          collection.add(item);
+          collection.insertAt(item, 1);
           expect(spy).to.be.calledWith(
             'change',
             sinon.match.same(collection));
@@ -241,7 +309,7 @@ define([
           });
 
           it("should publish on channel 'change' when the item publishes on channel 'change'", function (done) {
-            collection.add(item);
+            collection.insertAt(item, 1);
             collection.publisher.publish = function (channel) {
               expect(channel).to.equal('change');
               done();
@@ -250,7 +318,7 @@ define([
           });
 
           it("should remove the item when it publishes on channel 'destroy'", function (done) {
-            collection.add(item);
+            collection.insertAt(item, 1);
             var spy = sinon.spy(collection, 'remove');
             item.publisher.publish('destroy');
             async(function () {
