@@ -33,18 +33,19 @@ define([
 
   var allowedElements = Elements.create([
 
+    Element.create('latitude',
+      RestrictedType.create(DoubleType,
+        Facets.create(
+          [ MaxInclusiveFacet.create(DoubleValue.create(90)),
+            MinInclusiveFacet.create(DoubleValue.create(-90))
+          ]))),
+
     Element.create('longitude',
       RestrictedType.create(DoubleType,
         Facets.create(
-          [MaxInclusiveFacet.create(DoubleValue.create(180)),
-           MinInclusiveFacet.create(DoubleValue.create(-180))
-          ]))),
-
-    Element.create('latitude',
-      RestrictedType.create(DoubleType, Facets.create(
-        [MaxInclusiveFacet.create(DoubleValue.create(90)),
-         MinInclusiveFacet.create(DoubleValue.create(-90))
-        ])))
+          [ MaxInclusiveFacet.create(DoubleValue.create(180)),
+            MinInclusiveFacet.create(DoubleValue.create(-180))
+          ])))
 
   ]);
 

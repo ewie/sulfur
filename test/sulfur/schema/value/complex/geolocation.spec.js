@@ -10,6 +10,7 @@
 
 define([
   'shared',
+  'sulfur/schema/element',
   'sulfur/schema/facet/maxInclusive',
   'sulfur/schema/facet/minInclusive',
   'sulfur/schema/facets',
@@ -20,6 +21,7 @@ define([
   'sulfur/schema/value/simple/double'
 ], function (
     shared,
+    Element,
     MaxInclusiveFacet,
     MinInclusiveFacet,
     Facets,
@@ -42,20 +44,26 @@ define([
 
     describe('.allowedElement', function () {
 
-      it("should contain element 'longitude'", function () {
-        expect(GeolocationValue.allowedElements.getByName('longitude').type)
-          .to.eql(RestrictedType.create(DoubleType, Facets.create([
-            MaxInclusiveFacet.create(DoubleValue.create(180)),
-            MinInclusiveFacet.create(DoubleValue.create(-180))
-          ])));
+      it("should contain element 'latitude'", function () {
+        var e = GeolocationValue.allowedElements.toArray()[0];
+        var x = Element.create('latitude',
+          RestrictedType.create(DoubleType,
+            Facets.create(
+              [ MaxInclusiveFacet.create(DoubleValue.create(90)),
+                MinInclusiveFacet.create(DoubleValue.create(-90))
+              ])));
+        expect(e).to.eql(x);
       });
 
-      it("should contain element 'latitude'", function () {
-        expect(GeolocationValue.allowedElements.getByName('latitude').type)
-          .to.eql(RestrictedType.create(DoubleType, Facets.create([
-            MaxInclusiveFacet.create(DoubleValue.create(90)),
-            MinInclusiveFacet.create(DoubleValue.create(-90))
-          ])));
+      it("should contain element 'longitude'", function () {
+        var e = GeolocationValue.allowedElements.toArray()[1];
+        var x = Element.create('longitude',
+          RestrictedType.create(DoubleType,
+            Facets.create(
+              [ MaxInclusiveFacet.create(DoubleValue.create(180)),
+                MinInclusiveFacet.create(DoubleValue.create(-180))
+              ])));
+        expect(e).to.eql(x);
       });
 
     });
