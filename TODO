@@ -1,0 +1,16 @@
+A list of issues that may affect functionality in the future.
+
+* The XML Schema serializer currently uses a temporary location to import the
+  sulfur schema (containing definitions of non-standard types required by the
+  DataGridService to be able to validate a record document). This URL must be
+  changed when used in production (see file src/sulfur.js)
+
+* The widget uses Leaflet for input and output of geolocation values. To
+  initialize the map the widget requests the users current position using
+  HTML5's geolocation when available. Unfortunately Firefox has a bug causing
+  it not to provide the users current position or even an error, causing the
+  map initialization to never happen. To circumvent this, the widget checks
+  if the user-agent is Firefox version 24  OR HIGHER  and uses the
+  coordinates (0,0) this should be changed accordingly (see file
+  app/widget/view/value/geolocation.js) to properly handle any future Firefox
+  version which may fix the bug.
