@@ -10,8 +10,9 @@
 
 define([
   'shared',
-  'sulfur/schema/regex/codepoint'
-], function (shared, Codepoint) {
+  'sulfur/schema/regex/codepoint',
+  'sulfur/util/unicode'
+], function (shared, Codepoint, unicode) {
 
   'use strict';
 
@@ -112,6 +113,15 @@ define([
 
         });
 
+      });
+
+    });
+
+    describe('#character', function () {
+
+      it("should return the result of sulfur/util/unicode.encodeCharacterAsUtf16 with #value", function () {
+        var cp = Codepoint.create(0x12345);
+        expect(cp.character).to.equal(unicode.encodeCharacterAsUtf16(cp.value));
       });
 
     });

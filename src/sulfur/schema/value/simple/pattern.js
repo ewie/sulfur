@@ -35,15 +35,10 @@ define([
      *
      * @param {string} source the pattern's source
      *
-     * @throw {Error} if sulfur/schema/regex.compile throws
+     * @throw {Error} when the regex parser throws an exception
      */
     initialize: function (source) {
-      var parsed;
-      try {
-        parsed = Regex.parse(source);
-      } catch (e) {
-        throw new Error('invalid pattern "' + source + '" (error: ' + e.message + ')');
-      }
+      var parsed = Regex.parse(source);
       this._source = source;
       this._parsed = parsed;
       var translated = this._tranlated = parsed.translate();

@@ -90,6 +90,8 @@ define(['sulfur/util'], function (util) {
      * @param {number} value the codepoint value to encode
      *
      * @return {array} an array containing the lead and trail surrogate
+     * @return {undefined} when the codepoint cannot be encoded with a
+     *   surrogate pair
      */
     encodeToSurrogatePair: function (value) {
       if (!isValidCodepoint(value)) {

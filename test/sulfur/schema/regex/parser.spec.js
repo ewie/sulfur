@@ -625,7 +625,7 @@ define([
 
             it("should reject empty ranges", function () {
               expect(bind(parser, 'parse', '[b-a]'))
-                .to.throw("non-empty range 0x62, 0x61");
+                .to.throw("empty range b-a");
             });
 
             it("should reject unknown single character escapes", function () {

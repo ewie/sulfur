@@ -34,10 +34,16 @@ define([
     _validate: function (errors) {
       var value = this.get('value');
       if (value) {
-        PatternValue.isValidLiteral(value) || (errors.value = "invalid regular expression");
-        var pattern = PatternValue.parse(value);
-        pattern.containsGroupWithSurrogateCodepoints() && (errors.value = "group with surrogate codepoints causes unexpected behaviour");
-        pattern.containsEmptyGroup() && (errors.value = "contains an empty group which cannot match any input");
+        var pattern;
+        try {
+          pattern = PatternValue.parse(value);
+        } catch (e) {
+          errors.value = e.message;
+        }
+        if (pattern) {
+          pattern.containsGroupWithSurrogateCodepoints() && (errors.value = "group with surrogate codepoints causes unexpected behaviour");
+          pattern.containsEmptyGroup() && (errors.value = "contains an empty group which cannot match any input");
+        }
       }
     },
 

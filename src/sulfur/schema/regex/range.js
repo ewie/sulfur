@@ -27,7 +27,7 @@ define([
     initialize: function (start, end) {
       if (start.value > end.value) {
         throw new Error(
-          "non-empty range 0x" + start.value.toString(16) + ", 0x" + end.value.toString(16));
+          "empty range 0x" + start.value.toString(16) + ", 0x" + end.value.toString(16));
       }
       this.start = start;
       this.end = end;

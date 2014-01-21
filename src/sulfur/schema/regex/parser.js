@@ -234,6 +234,9 @@ define([
         if (scanner.scan('-')) {
           var e = parseRangeChar(scanner);
           if (e) {
+            if (e.value < s.value) {
+              throw new Error("empty range " + s.character + "-" + e.character);
+            }
             return Range.create(s, e);
           } else {
             // The end of the range could not be parsed so put the dash back.

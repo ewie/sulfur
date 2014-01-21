@@ -59,7 +59,12 @@ define([
         throw new Error("expecting a valid XML character");
       }
       this.value = value;
-    }
+    },
+
+    /**
+     * @return {string} the character with this codepoint value
+     */
+    get character() { return unicode.encodeCharacterAsUtf16(this.value) }
   });
 
 });

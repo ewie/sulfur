@@ -19,7 +19,6 @@ define([
 
   var expect = shared.expect;
   var sinon = shared.sinon;
-  var bind = shared.bind;
 
   describe('sulfur/schema/value/simple/pattern', function () {
 
@@ -60,12 +59,6 @@ define([
         expect(parseSpy).to.be.calledWith('.');
         expect(translateSpy).to.be.calledOn(parseSpy.getCall(0).returnValue);
         expect(compileSpy).to.be.calledOn(translateSpy.getCall(0).returnValue);
-      });
-
-      it("should throw when sulfur/schema/regex.parse throws", function () {
-        sandbox.stub(Regex, 'parse').throws(new Error("invalid for testing purposes"));
-        expect(bind(PatternValue, 'create', '.'))
-          .to.throw('invalid pattern "." (error: invalid for testing purposes)');
       });
 
     });

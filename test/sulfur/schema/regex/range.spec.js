@@ -29,7 +29,7 @@ define([
           var s = Codepoint.create('b');
           var e = Codepoint.create('a');
           expect(bind(Range, 'create', s, e))
-            .to.throw("non-empty range 0x62, 0x61");
+            .to.throw("empty range 0x62, 0x61");
         });
 
       });
