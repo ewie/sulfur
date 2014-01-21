@@ -40,6 +40,8 @@ build: builddir widget editor
 	cp app/common/icon.svg build/icon.svg
 
 clean:
+	rm -f app/editor/main-built.js
+	rm -f app/widget/main-built.js
 	rm -rf build
 	rm -f lib/highlight.js
 	rm -f lib/jszip.js
