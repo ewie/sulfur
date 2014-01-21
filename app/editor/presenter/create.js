@@ -91,6 +91,11 @@ define([
     });
   }
 
+  function invoke(fn) {
+    fn();
+    return fn;
+  }
+
   return Presenter.derive({
 
     initialize: function (model) {
@@ -134,9 +139,9 @@ define([
         }
       });
 
-      model.publisher.subscribe('change', function () {
-        view.setValid(model.isValid());
-      });
+      model.publisher.subscribe('change', invoke(function () {
+        view.enable(model.isValid());
+      }));
     }
 
   });

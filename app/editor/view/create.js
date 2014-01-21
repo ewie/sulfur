@@ -34,29 +34,26 @@ define([
   }).augment({
 
     setPending: function (isPending) {
-      var cl = this.element.querySelector('[name = "create"]').classList;
+      var cl = this.element.classList;
       isPending ? cl.add('pending') : cl.remove('pending');
     },
 
     enableDownload: function (url, filename) {
       var a = this._downloadButton;
-      var b = this._createButton;
-      a.style.display = '';
       a.setAttribute('href', url);
       a.setAttribute('download', filename);
       a.textContent = filename;
-      b.style.display = 'none';
+      this.element.classList.add('complete');
     },
 
     triggerDownload: function () {
       this._downloadButton.click();
     },
 
-    setValid: function (isValid) {
-      this.element.style.display = isValid ? 'block' : 'none';
+    enable: function (enabled) {
+      var cl = this.element.classList;
+      enabled ? cl.add('enabled') : cl.remove('enabled');
     },
-
-    get _createButton() { return this.element.querySelector('[name = "create"]') },
 
     get _downloadButton() { return this.element.querySelector('[name = "download"]') }
 

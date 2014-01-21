@@ -35,7 +35,7 @@ define([
 
     events: [
       Event.create('click', '[name = "new"]', PublishedEvent.create('new')),
-      Event.create('click', '[name = "settings"]', PublishedEvent.create('settings')),
+      Event.create('click', '[name = "toggle-settings"]', PublishedEvent.create('settings')),
       Event.create('change', '[name = "endpoint"]', PublishedEvent.create('endpoint')),
       Event.create('change', '[name = "proxy"]', PublishedEvent.create('proxy'))
     ],
@@ -55,8 +55,7 @@ define([
   }).augment({
 
     toggleSettings: function () {
-      var e = this._settingsElement;
-      e.style.display = e.style.display === 'none' ? '' : 'none';
+      this._settingsElement.classList.toggle('show');
     },
 
     get _settingsElement() { return this.element.querySelector('[name = "settings"]') }

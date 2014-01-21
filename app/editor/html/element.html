@@ -1,38 +1,38 @@
 <div class="element">
-  <div style="display:table-row">
-    <div style="display:table-cell">
-      <button name="up">&#x2B06;</button>
-      <button name="down">&#x2B07;</button>
-    </div>
-    <div style="display:table-cell">
-      <div class="properties">
-        <div class="property">
-          <label for="{{id:name}}" class="required">name</label>
-          <div class="input">
-            <input id="{{id:name}}" name="name" type="text"/>
-          </div>
-        </div>
-        <div class="property">
-          <label class="required">type</label>
-          <div class="input type-selection" style="white-space:nowrap">
-            <div name="base-type" tabindex="0" data-placeholder="select a base type" data-columns="3"></div>
-            <div class="item-type-wrap" style="display:none">
-              <div name="item-type" tabindex="0" data-placeholder="select an item type" data-columns="3"></div>
-            </div>
-          </div>
-        </div>
-        <div class="property">
-          <label for="{{id:optional}}">optional</label>
-          <div class="input">
-            <input id="{{id:optional}}" name="optional" type="checkbox"/>
-          </div>
-        </div>
-        <div name="default" class="property" style="display:none">
-          <label>default</label>
-          <div class="input"></div>
+  <div class="element-controls">
+    <ul>
+      <li><button name="up">&#x2B06;</button></li>
+      <li><button name="down">&#x2B07;</button></li>
+    </ul>
+  </div>
+  <div class="element-properties">
+    <div class="properties">
+      <div class="property">
+        <label for="{{id:name}}" class="required">name</label>
+        <div class="input">
+          <input id="{{id:name}}" name="name" type="text"/>
         </div>
       </div>
-      <div name="type"></div>
+      <div class="property">
+        <label class="required">type</label>
+        <div class="input type-selection" style="white-space:nowrap">
+          <div name="base-type" tabindex="0" data-placeholder="select a base type" data-columns="3"></div>
+          <div class="item-type-wrap" style="display:none">
+            <div name="item-type" tabindex="0" data-placeholder="select an item type" data-columns="3"></div>
+          </div>
+        </div>
+      </div>
+      <div class="property">
+        <label for="{{id:optional}}">optional</label>
+        <div class="input">
+          <input id="{{id:optional}}" name="optional" type="checkbox"/>
+        </div>
+      </div>
+      <div name="default" class="property" style="display:none">
+        <label>default</label>
+        <div class="input"></div>
+      </div>
     </div>
+    <div name="type"></div>
   </div>
 </div>

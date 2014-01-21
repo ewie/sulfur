@@ -1,6 +1,11 @@
 .settings {
   background-color: #D6E6ED;
   padding: 0.5em;
+  display: none;
+}
+
+.settings.show {
+  display: block;
 }
 
 .complex-type-element > div:last-child {
@@ -58,6 +63,7 @@
 
 .properties {
   display: table;
+  width: 500px;
 }
 
 .properties > h2 {
@@ -74,6 +80,8 @@
   vertical-align: top;
   padding-bottom: 0.3em;
   padding-right: 0.6em;
+  width: 1px;
+  white-space: nowrap;
 }
 
 .property > div {
@@ -114,7 +122,7 @@
 .tab {
   text-align: left;
   cursor: pointer;
-  margin-bottom: 2px;
+  margin-bottom: 1px;
   white-space: nowrap;
 }
 
@@ -167,11 +175,6 @@
   background-color: #ed600d;
 }
 
-.elements > div:last-child {
-  display: table-cell;
-  padding-left: 1em;
-}
-
 .tabs:empty::before {
   content: 'add at least one element';
   background-color: #ed600d;
@@ -179,17 +182,60 @@
   color: #fff;
 }
 
+.element {
+  display: table;
+}
+
+.element-controls {
+  display: table-cell;
+  padding: 0 0.7em;
+}
+
+.element-controls li {
+  margin-bottom: 1px;
+}
+
+.element-properties {
+  display: table-cell;
+}
+
 .facets {
   font-size: 80%;
   margin-left: 1em;
+}
+
+.facet {
+  margin-top: 0.3em;
 }
 
 .facet > .value {
   margin-left: 1em;
 }
 
+.facet-head {
+  overflow: hidden;
+}
+
+.facet h5 {
+  font-size: 100%;
+}
+
+.enumeration-facet h5,
+.pattern-group h5 {
+  display: inline-block;
+  margin-left: 0.5em;
+}
+
+.pattern-group-values {
+  margin-left: 1.5em;
+}
+
 .type-selection {
   display: inline-block;
+}
+
+.type-selection .errorable {
+  width: auto;
 }
 
 .type-selection .dropdown,
@@ -197,27 +243,54 @@
   display: inline-block;
 }
 
+.type-selection .dropdown-values {
+  font-size: 80%;
+}
+
 .item-type-wrap::before {
   content: 'of';
   margin: 0 0.3em;
 }
 
-.type-selection .dropdown {
-  background-color: #eee;
+.create > .button {
+  font-size: 150%;
+  background-color: #e4f420;
+  color: #000;
+     -moz-transition: background-color 0.2s, color 0.2s;
+      -ms-transition: background-color 0.2s, color 0.2s;
+       -o-transition: background-color 0.2s, color 0.2s;
+  -webkit-transition: background-color 0.2s, color 0.2s;
+          transition: background-color 0.2s, color 0.2s;
 }
 
-button.pending {
+.create > .download::before {
+  content: '\F019';
+  font-family: 'FontAwesome';
+  margin-right: 0.2em;
+}
+
+.create > .button:hover {
+  background-color: #000;
+  color: #e4f420;
+     -moz-transition: background-color 0.2s, color 0.2s;
+      -ms-transition: background-color 0.2s, color 0.2s;
+       -o-transition: background-color 0.2s, color 0.2s;
+  -webkit-transition: background-color 0.2s, color 0.2s;
+          transition: background-color 0.2s, color 0.2s;
+}
+
+.create.pending > button {
   display: block;
   height: 1.5em;
   overflow: hidden;
 }
 
-button.pending > .message {
+.create.pending > button > .message {
   display: block;
   float: left;
 }
 
-button.pending > .signal {
+.create.pending > button > .signal {
   display: block;
   color: white;
   height: 100%;
@@ -236,13 +309,33 @@ button.pending > .signal {
           animation: move_signal 4s linear 0s infinite alternate;
 }
 
-button.pending:hover > .signal {
+.create.pending button:hover > .signal {
   background-color: #666;
      -moz-transition: background-color 0.2s;
       -ms-transition: background-color 0.2s;
        -o-transition: background-color 0.2s;
   -webkit-transition: background-color 0.2s;
           transition: background-color 0.2s;
+}
+
+.create {
+  display: none;
+}
+
+.create.enabled {
+  display: block;
+}
+
+.create > .download {
+  display: none;
+}
+
+.create.complete > button {
+  display: none;
+}
+
+.create.complete > .download {
+  display: block;
 }
 
 @-webkit-keyframes move_signal { from { margin-left: -7px } to { margin-left: 100% }  }

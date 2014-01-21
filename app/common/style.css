@@ -182,11 +182,13 @@ label[for] {
 
 .errorable {
   display: inline-block;
-  font-size: 60%;
+  font-size: 80%;
+  width: 100%;
 }
 
 .errorable > * {
-  font-size: 166%;
+  /* inverse of font-size: 80% (see above) */
+  font-size: 125%;
 }
 
 .errorable.error > input,
@@ -194,6 +196,15 @@ label[for] {
 .errorable.error > .dropdown {
   background-color: #ed600d;
   display: block;
+}
+
+.errorable > input:not([type=checkbox]),
+.errorable > textarea {
+  width: 100%;
+
+     -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
 }
 
 .errorable.error > input,
@@ -221,6 +232,11 @@ label[for] {
 .enumerated-value {
   position: relative;
   white-space: nowrap;
+  margin-bottom: 1px;
+}
+
+.enumerated-value:last-child {
+  margin-bottom: 0;
 }
 
 .enumerated-value > button {
@@ -233,6 +249,10 @@ label[for] {
 .enumerated-value > div {
   padding-left: 1.5em;
   vertical-align: top;
+
+     -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
 }
 
 .menu {
@@ -295,33 +315,6 @@ a.button:hover {
           transition: background-color 0.2s;
 }
 
-button.create,
-a.download {
-  font-size: 150%;
-  background-color: #e4f420;
-  color: #000;
-     -moz-transition: background-color 0.2s, color 0.2s;
-      -ms-transition: background-color 0.2s, color 0.2s;
-       -o-transition: background-color 0.2s, color 0.2s;
-  -webkit-transition: background-color 0.2s, color 0.2s;
-          transition: background-color 0.2s, color 0.2s;
-}
-
-a.download::before {
-  content: '\2B07';
-}
-
-button.create:hover,
-a.download:hover {
-  background-color: #000;
-  color: #e4f420;
-     -moz-transition: background-color 0.2s, color 0.2s;
-      -ms-transition: background-color 0.2s, color 0.2s;
-       -o-transition: background-color 0.2s, color 0.2s;
-  -webkit-transition: background-color 0.2s, color 0.2s;
-          transition: background-color 0.2s, color 0.2s;
-}
-
 .remove {
   background-color: #d33;
   color: #fff;
@@ -343,6 +336,7 @@ a.download:hover {
   position: relative;
   outline: none;
   cursor: pointer;
+  background-color: #eee;
 }
 
 .dropdown:focus,
@@ -377,7 +371,6 @@ a.download:hover {
   top: 100%;
   left: 0;
   z-index: 9999;
-  font-size: 80%;
   background-color: #ddd;
   display: none;
 }
@@ -454,20 +447,19 @@ a.download:hover {
   background-color: #eee;
   top: 0;
   left: 0;
-  right: 0;
   display: none;
   z-index: 9999;
   font-size: 90%;
 }
 
-.datetime-value {
-  position: relative;
+.datetime-value > .errorable > input {
+  padding-left: 1.7em;
 }
 
 .datetime-value button {
   position: absolute;
+  left: 0;
   top: 0;
-  right: 0;
 }
 
 .calendar > table {
@@ -485,8 +477,7 @@ a.download:hover {
 }
 
 .calendar-date th {
-  /* set width to 1/7th to avoid content-based width */
-  width: 14.28%;
+  width: 2.5em;
 }
 
 .calendar-date .day {

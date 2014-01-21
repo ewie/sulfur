@@ -13,7 +13,6 @@ button[name = "expand"]::before {
 
 .record-head {
   font-size: 100%;
-/*  white-space: nowrap;*/
 }
 
 .record.invalid .record-id,
@@ -29,7 +28,6 @@ button[name = "expand"]::before {
 .record-id {
   background-color: #fff;
   font-family: monospace;
-/*  font-size: 110%;*/
   padding: 0.2em;
   cursor: pointer;
   vertical-align: top;
@@ -63,13 +61,22 @@ button[name = "expand"]::before {
 }
 
 .record {
+     -moz-transition: margin 0.2s;
+      -ms-transition: margin 0.2s;
+       -o-transition: margin 0.2s;
   -webkit-transition: margin 0.2s;
+          transition: margin 0.2s;
 }
 
 .record.expanded {
   margin: 0.5em 0;
   background-color: #d6e6ed;
+
+     -moz-transition: margin 0.2s;
+      -ms-transition: margin 0.2s;
+       -o-transition: margin 0.2s;
   -webkit-transition: margin 0.2s;
+          transition: margin 0.2s;
 }
 
 .record.expanded > .record-body {
@@ -240,17 +247,13 @@ textarea {
 .geolocation-value-valid {
   width: 100%;
   height: 100%;
-
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' width='27.3125' height='41.03125'><g transform='translate(-26.375,-971.875)'><path d='M 40.036001,971.93046 53.65721,985.55167 40.036001,1012.7941 26.414792,985.55167 z' style='fill:#0080a6;fill-opacity:1;stroke:#d6e6ed;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1'/></g></svg>");
-
 }
 
 .geolocation-value-invalid {
   width: 100%;
   height: 100%;
-
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' version='1.1' width='27.3125' height='41.03125'><g transform='translate(-26.375,-971.875)'><path d='M 40.036001,971.93046 53.65721,985.55167 40.036001,1012.7941 26.414792,985.55167 z' style='fill:#ed600d;fill-opacity:1;stroke:#d33;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1'/></g></svg>");
-
 }
 
 

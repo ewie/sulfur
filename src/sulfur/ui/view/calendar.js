@@ -23,11 +23,11 @@ define([
   var dateHeadHtml =
     '<thead>' +
       '<tr>' +
+        '<th><span class="calendar-close"></span></th>' +
+        '<th><span class="calendar-reset" title="reset to current date"></span></th>' +
         '<th><span class="fa fa-caret-left"></span></th>' +
         '<th colspan="3"></th>' +
         '<th><span class="fa fa-caret-right"></span></th>' +
-        '<th><span class="calendar-reset" title="reset to current date"></span></th>' +
-        '<th><span class="calendar-close"></span></th>' +
       '</tr>' +
       '<tr>' +
         '<th>M</th>' +
@@ -303,14 +303,14 @@ define([
       this._dateHead = parseHtml(dateHeadHtml, 'table');
       this._dateElement.appendChild(this._dateHead);
 
-      this._dateMonthAndYear = this._dateHead.children[0].children[1];
+      this._dateMonthAndYear = this._dateHead.children[0].children[3];
       this._dateBody = document.createElement('tbody');
       this._dateElement.appendChild(this._dateBody);
 
-      this._prevMonthBtn = this._dateHead.children[0].children[0];
-      this._nextMonthBtn = this._dateHead.children[0].children[2];
-      this._resetBtn = this._dateHead.children[0].children[3];
-      this._closeBtn = this._dateHead.children[0].children[4];
+      this._closeBtn = this._dateHead.children[0].children[0];
+      this._resetBtn = this._dateHead.children[0].children[1];
+      this._prevMonthBtn = this._dateHead.children[0].children[3];
+      this._nextMonthBtn = this._dateHead.children[0].children[4];
 
       this._prevMonthBtn.addEventListener('click', this._selectPreviousMonth.bind(this));
       this._nextMonthBtn.addEventListener('click', this._selectNextMonth.bind(this));
