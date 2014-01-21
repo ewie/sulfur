@@ -8,22 +8,64 @@
 /* global define */
 
 define([
+  'app/common/model/value/boolean',
+  'app/common/model/value/date',
+  'app/common/model/value/dateTime',
+  'app/common/model/value/decimal',
+  'app/common/model/value/double',
+  'app/common/model/value/float',
+  'app/common/model/value/integer',
+  'app/common/model/value/string',
+  'app/common/model/value/uri',
+  'app/common/presenter/value/boolean',
+  'app/common/presenter/value/date',
+  'app/common/presenter/value/dateTime',
+  'app/common/presenter/value/decimal',
+  'app/common/presenter/value/double',
+  'app/common/presenter/value/float',
+  'app/common/presenter/value/integer',
+  'app/common/presenter/value/list',
+  'app/common/presenter/value/string',
+  'app/common/presenter/value/uri',
   'app/editor/model/facet/enumeration',
   'app/editor/model/facet/maxLength',
   'app/editor/model/facet/minLength',
+  'app/editor/model/facet/pattern',
   'app/editor/presenter/facet/enumeration',
   'app/editor/presenter/facet/maxLength',
   'app/editor/presenter/facet/minLength',
+  'app/editor/presenter/facet/pattern',
   'app/editor/presenter/type/simple/atomic',
   'app/editor/view/type/simple/list',
   'sulfur/ui/presenter'
 ], function (
+    BooleanValueModel,
+    DateValueModel,
+    DateTimeValueModel,
+    DecimalValueModel,
+    DoubleValueModel,
+    FloatValueModel,
+    IntegerValueModel,
+    StringValueModel,
+    UriValueModel,
+    BooleanValuePresenter,
+    DateValuePresenter,
+    DateTimeValuePresenter,
+    DecimalValuePresenter,
+    DoubleValuePresenter,
+    FloatValuePresenter,
+    IntegerValuePresenter,
+    ListValuePresenter,
+    StringValuePresenter,
+    UriValuePresenter,
     EnumerationFacetModel,
     MaxLengthFacetModel,
     MinLengthFacetModel,
+    PatternFacetModel,
     EnumerationFacetPresenter,
     MaxLengthFacetPresenter,
     MinLengthFacetPresenter,
+    PatternFacetPresenter,
     SimpleAtomicTypePresenter,
     SimpleListTypeView,
     Presenter
@@ -36,14 +78,43 @@ define([
     return fn;
   }
 
-  function getFacetPresenter(facet) {
+  function getValuePresenter(valueModel) {
+    switch (valueModel) {
+    case BooleanValueModel:
+      return BooleanValuePresenter;
+    case DateValueModel:
+      return DateValuePresenter;
+    case DateTimeValueModel:
+      return DateTimeValuePresenter;
+    case DecimalValueModel:
+      return DecimalValuePresenter;
+    case DoubleValueModel:
+      return DoubleValuePresenter;
+    case FloatValueModel:
+      return FloatValuePresenter;
+    case IntegerValueModel:
+      return IntegerValuePresenter;
+    case StringValueModel:
+      return StringValuePresenter;
+    case UriValueModel:
+      return UriValuePresenter;
+    default:
+      throw new Error("unexpected facet value model");
+    }
+  }
+
+  function getFacetPresenter(facetModel) {
     switch (true) {
-    case EnumerationFacetModel.prototype.isPrototypeOf(facet):
-      return EnumerationFacetPresenter;
-    case MaxLengthFacetModel.prototype.isPrototypeOf(facet):
+    case EnumerationFacetModel.prototype.isPrototypeOf(facetModel):
+      return EnumerationFacetPresenter.withValuePresenter(
+        ListValuePresenter.withValuePresenter(
+          getValuePresenter(facetModel.valueModel.itemValueModel)));
+    case MaxLengthFacetModel.prototype.isPrototypeOf(facetModel):
       return MaxLengthFacetPresenter;
-    case MinLengthFacetModel.prototype.isPrototypeOf(facet):
+    case MinLengthFacetModel.prototype.isPrototypeOf(facetModel):
       return MinLengthFacetPresenter;
+    case PatternFacetModel.prototype.isPrototypeOf(facetModel):
+      return PatternFacetPresenter;
     }
   }
 

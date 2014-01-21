@@ -127,7 +127,7 @@ define([
   }
 
   function getValueModel(valueType) {
-    var ivm = getItemValueModel(valueType);
+    var ivm = getItemValueModel(valueType.itemValueType);
     if (ivm) {
       return ListValueModel.withItemValueModel(ivm);
     }
@@ -198,11 +198,9 @@ define([
 
     update: function (attrs) {
       if (attrs.itemType && !attrs.facets) {
-        var itemType = attrs.itemType.object;
+        var type = SimpleListType.create(attrs.itemType.primitive);
         attrs.facets = Collection.create(allowedFacets.map(function (allowedFacet) {
-          var valueModel = getValueModel(itemType.valueType);
-          var facetModel = getFacetModel(allowedFacet);
-          return facetModel.withValueModel(valueModel).create();
+          return createFacetModel(allowedFacet, type);
         }));
       }
       return Model.prototype.update.call(this, attrs);
@@ -217,8 +215,13 @@ define([
         var facetModels = this.get('facets').items;
         var facets = facetModels.reduce(function (facets, facetModel) {
           var facet = facetModel.object;
-          if (facet && (!Array.isArray(facet) || facet.length > 0)) {
-            facets.push(facet);
+          if (facet) {
+            // a facet model may not return an array of facet instances
+            if (Array.isArray(facet)) {
+              (facet.length > 0) && facets.push(facet[0]);
+            } else {
+              facets.push(facet);
+            }
           }
           return facets;
         }, []);
