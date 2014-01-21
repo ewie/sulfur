@@ -5,7 +5,7 @@
  * Licensed under the BSD 3-Clause License.
  */
 
-/* global define */
+/* global define, postMessage */
 
 define([
   'chai',
@@ -32,9 +32,20 @@ define([
     });
   });
 
-  function async(fn) {
-    setTimeout(fn, 0);
-  }
+  var async = (function () {
+    var secret = Math.random().toString(36).substr(2);
+    var queue = [];
+    addEventListener('message', function (ev) {
+      if (ev.source === window && ev.data === secret) {
+        ev.stopPropagation();
+        queue.length && queue.shift()();
+      }
+    });
+    return function (fn) {
+      queue.push(fn);
+      postMessage(secret, '*');
+    };
+  }());
 
   function bind() {
     var args = Array.prototype.slice.call(arguments);
