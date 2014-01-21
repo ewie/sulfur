@@ -28,7 +28,6 @@ define([
 
       view.publisher.subscribe('change', function () {
         var blob = view.access('file').file;
-        console.log(blob);
         model.update({ blob: blob });
       });
 

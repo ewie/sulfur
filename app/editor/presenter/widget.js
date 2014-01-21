@@ -58,7 +58,6 @@ define([
 
         resource.publisher.subscribe('change:schema', invoke(function () {
           var schema = resource.get('schema');
-          console.log('-- change');
           if (schema.object) {
             view.access('xml').html = serializer.serializeToMarkup(schema.object);
           } else {
@@ -69,7 +68,6 @@ define([
 
       'name description authorName authorEmail'.split(' ').forEach(function (name) {
         model.publisher.subscribe('update:' + name, invoke(function () {
-          console.log('-- widget', model);
           var access = view.access(name);
           access.value = model.get(name);
           access.error = model.error(name);

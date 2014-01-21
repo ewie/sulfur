@@ -34,8 +34,6 @@ define([
       var view = ListValueView.create();
       Presenter.prototype.initialize.call(this, view, model);
 
-      console.log(model);
-
       view.publisher.subscribe('add', function () {
         model.get('values').add(model.itemValueModel.create());
       });

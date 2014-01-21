@@ -93,7 +93,6 @@ define([
 
       view.publisher.subscribe('move', function (_, p, i) {
         var attrs = coordsToAttrs(p);
-        console.log('move', p);
         if (isList) {
           var values = model.get('values');
           var value = values.item(i);

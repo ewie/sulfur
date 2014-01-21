@@ -94,7 +94,6 @@ define([
 
     anyType: function (name) {
       if (this.isList(name)) {
-        console.log('--', name, schemaTypes.simpleListType);
         return schemaTypes.simpleListType;
       } else if (this.isSequence(name)) {
         return schemaTypes.complexListType;

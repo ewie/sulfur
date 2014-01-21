@@ -67,7 +67,6 @@ define([
       this._calendar.render();
       this._calendar.publisher.subscribe('change', function () {
         var d = c.date;
-        console.log(d);
         var t = c.time;
         var dt = DateTimeValue.create({
           year: d.year,

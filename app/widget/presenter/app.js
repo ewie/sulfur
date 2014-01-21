@@ -41,7 +41,7 @@ define([
 
   'use strict';
 
-  function loadRecordIds(presenter, resource, dgs, cb) {
+  function loadRecordIds(presenter, resource, dgs, success) {
     var status = presenter.view.access('status');
 
     status.html = "loading resource schema";
@@ -66,7 +66,7 @@ define([
 
         var ids = Array.prototype.map.call(r, function (r) { return r.value });
 
-        cb(resource, ids);
+        success(resource, ids);
       }
 
     });
@@ -102,7 +102,6 @@ define([
       method: 'GET',
       url: proxy.url(dgs.recordUrl(resource, recordId)),
       success: function (xhr) {
-        console.log(xhr);
         var p = new DOMParser();
         var d = p.parseFromString(xhr.responseText, 'text/xml');
         var rd = RecordDeserializer.create(resource.schema);
@@ -112,18 +111,15 @@ define([
     });
   }
 
-  function deleteRecord(resource, dgs, recordId, cb) {
+  function deleteRecord(resource, dgs, recordId, success) {
     util.request({
       method: 'DELETE',
       url: proxy.url(dgs.recordUrl(resource, recordId)),
-      success: function (xhr) {
-        console.log(xhr);
-        cb();
-      }
+      success: success
     });
   }
 
-  function saveRecord(resource, dgs, record, cb) {
+  function saveRecord(resource, dgs, record, success) {
     var url = record.isNew ?
       dgs.recordCollectionUrl(resource) :
       dgs.recordUrl(resource, record.id);
@@ -142,11 +138,10 @@ define([
         'content-type': 'text/xml'
       },
       success: function (xhr) {
-        console.log(xhr);
         var id = record.isNew ?
           dgs.recordIdFromUrl(resource, xhr.getResponseHeader('location')) :
           record.id;
-        cb(id);
+        success(id);
       }
     });
   }
@@ -162,9 +157,7 @@ define([
           'content-type': file.type || 'text/plain'
         },
         success: function (xhr) {
-          console.log(xhr);
           var url = xhr.getResponseHeader('location');
-          console.log(url);
           var id = dgs.fileIdFromUrl(resource, url);
           success(id);
         },
@@ -240,7 +233,6 @@ define([
         view.publisher.subscribe('new', function () {
           var recordModel = RecordModel.createFromSchema(model.get('resource').schema);
           recordModel.update({ loaded: true });
-          console.log(recordModel);
           model.get('records').add(recordModel);
         });
 
@@ -263,8 +255,6 @@ define([
             });
 
             recordModel.publisher.subscribe('open', function () {
-              console.log('-- open', recordModel);
-
               // toggle "opened" state
               recordModel.update({ opened: !recordModel.get('opened') });
 
@@ -277,8 +267,6 @@ define([
               var resource = model.get('resource');
               if (recordModel.get('id')) {
                 loadRecord(resource, dgs, recordModel.get('id'), function (r) {
-                  console.log(r);
-
                   var _recordModel = RecordModel.createFromSchema(resource.schema, r);
                   recordModel.update({
                     fields: _recordModel.get('fields'),
@@ -297,13 +285,10 @@ define([
 
             recordModel.publisher.subscribe('save', function () {
               var resource = model.get('resource');
+
               // TODO check if valid
 
-              console.log('-- save', recordModel);
-              console.log(resource);
-
               saveFiles(resource, dgs, recordModel, function () {
-
                 saveRecord(resource, dgs, recordModel.object, function (id) {
                   recordModel.update({ id: id });
                 });

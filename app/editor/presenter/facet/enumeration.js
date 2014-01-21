@@ -35,7 +35,6 @@ define([
       Presenter.prototype.initialize.call(this, view, model);
 
       view.publisher.subscribe('add', function () {
-        console.log('--', model.valueModel);
         model.get('values').add(model.valueModel.create());
       });
 

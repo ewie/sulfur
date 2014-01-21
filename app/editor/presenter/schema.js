@@ -69,7 +69,6 @@ define([
       model.publisher.subscribe('update:elements', invoke(function () {
         view.access('tabs').clear();
         var elements = model.get('elements');
-        console.log('-- elements', elements);
         var selectedTab;
         var index = ObjectMap.create();
 
@@ -89,7 +88,6 @@ define([
           index.set(m, { tp: tp, ep: ep });
 
           m.publisher.subscribe('select', function () {
-            console.log('-- select');
             selectedTab.unselect();
             view.access('element').view = ep.view;
             tp.select();
@@ -124,7 +122,6 @@ define([
 
         elements.publisher.subscribe('remove', function (_, m, i) {
           var mtp = index.get(m).tp;
-          console.log('-- remove', elements.size, elements);
           view.access('tabs').remove(mtp.view);
           if (elements.size === 0) {
             view.access('element').remove();

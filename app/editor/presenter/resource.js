@@ -39,7 +39,6 @@ define([
       'record file'.split(' ').forEach(function (prefix) {
         var name = prefix + 'CollectionName';
         view.publisher.subscribe(name, function () {
-          console.log('change', name);
           var attrs = {};
           attrs[name] = view.access(name).value;
           model.update(attrs);

@@ -169,7 +169,6 @@ define([
         var f = field.object;
         return [ f.name, f.value ];
       });
-      console.log(values);
       return Record.create(values, id);
     }
 

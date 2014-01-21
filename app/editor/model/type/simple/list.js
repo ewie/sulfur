@@ -237,7 +237,6 @@ define([
     },
 
     _construct: function () {
-      console.log('-- construct list');
       var facets = this.get('facets').items.reduce(function (facets, facetModel) {
         var facet = facetModel.object;
         if (facet) {
