@@ -31,6 +31,13 @@ define([
 
   }).augment({
 
+    _validate: function (errors) {
+      var blob = this.get('blob');
+      if (blob) {
+        blob.size || (errors.blob = "the file must not be empty");
+      }
+    },
+
     validateWithType: function (type) {
       var value = this.object;
       var err = false;
