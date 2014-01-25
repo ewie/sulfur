@@ -11,6 +11,7 @@ define([
   'text!app/widget/html/app.html',
   'sulfur/ui/view',
   'sulfur/ui/view/access/html',
+  'sulfur/ui/view/access/text',
   'sulfur/ui/view/access/view',
   'sulfur/ui/view/accessor',
   'sulfur/ui/view/blueprint',
@@ -20,6 +21,7 @@ define([
     html,
     View,
     HtmlAccess,
+    TextAccess,
     ViewAccess,
     Accessor,
     Blueprint,
@@ -38,6 +40,7 @@ define([
     ],
 
     accessors: [
+      Accessor.create('name', '[name = "name"]', TextAccess),
       Accessor.create('status', '[name = "status"]', HtmlAccess),
       Accessor.create('index', '[name = "index"]', ViewAccess),
       Accessor.create('records', '[name = "records"]', ViewAccess)

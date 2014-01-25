@@ -228,6 +228,8 @@ define([
       var dgs = config.dgs;
       var resource = config.resource;
 
+      view.access('name').text = config.name;
+
       function init() {
 
         view.publisher.subscribe('new', function () {
