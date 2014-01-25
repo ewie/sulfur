@@ -20,6 +20,7 @@ define(['sulfur/util/factory'], function (Factory) {
       options || (options = {});
       this._name = name;
       this._resource = resource;
+      this._icon = options.icon;
       this._description = options.description;
       this._authorName = options.authorName;
       this._authorEmail = options.authorEmail;
@@ -28,6 +29,8 @@ define(['sulfur/util/factory'], function (Factory) {
     get name() { return this._name },
 
     get resource() { return this._resource },
+
+    get icon() { return this._icon },
 
     get description() { return this._description },
 

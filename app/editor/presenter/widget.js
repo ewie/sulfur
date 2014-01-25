@@ -12,8 +12,16 @@ define([
   'app/editor/presenter/resource',
   'app/editor/serializer',
   'app/editor/view/widget',
-  'sulfur/ui/presenter'
-], function (CreatePresenter, ResourcePresenter, Serializer, WidgetView, Presenter) {
+  'sulfur/ui/presenter',
+  'sulfur/util/promisedFile'
+], function (
+    CreatePresenter,
+    ResourcePresenter,
+    Serializer,
+    WidgetView,
+    Presenter,
+    PromisedFile
+) {
 
   'use strict';
 
@@ -42,6 +50,10 @@ define([
           attrs[name] = view.access(name).value;
           model.update(attrs);
         });
+      });
+
+      view.publisher.subscribe('icon', function () {
+        model.update({ icon: PromisedFile.create(view.access('icon').file) });
       });
 
       this._registerModel();

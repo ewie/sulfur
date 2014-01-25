@@ -19,6 +19,7 @@ define([
 
     attributes: {
       name: { default: '' },
+      icon: { default: null },
       description: { default: '' },
       authorName: { default: '' },
       authorEmail: { default: '' },
@@ -28,6 +29,7 @@ define([
     _extract: function (widget) {
       return {
         name: widget.name,
+        icon: widget.icon,
         description: widget.description || '',
         authorName: widget.authorName || '',
         authorEmail: widget.authorEmail || '',
@@ -47,6 +49,7 @@ define([
       var resource = this.get('resource');
       if (name && resource) {
         return Widget.create(name, resource.object, {
+          icon: this.get('icon'),
           description: this.get('description'),
           authorName: this.get('authorName'),
           authorEmail: this.get('authorEmail')

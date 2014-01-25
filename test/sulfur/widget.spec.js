@@ -48,9 +48,24 @@ define([
 
     });
 
+    describe('#icon', function () {
+
+      it("should return the icon when defined", function () {
+        var icon = {};
+        var w = Widget.create('foo', {}, { icon: icon });
+        expect(w.icon).to.equal(icon);
+      });
+
+      it("should return undefined when not defined", function () {
+        var w = Widget.create('foo');
+        expect(w.icon).to.be.undefined;
+      });
+
+    });
+
     describe('#description', function () {
 
-      it("should return the widget description wheb defined", function () {
+      it("should return the widget description when defined", function () {
         var w = Widget.create('foo', {}, { description: 'blah' });
         expect(w.description).to.equal('blah');
       });

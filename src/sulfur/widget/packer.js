@@ -9,12 +9,12 @@
 
 define([
   'jszip',
-  'text!app/common/icon.svg',
+  'text!app/common/sulfur.svg',
   'text!app/common/style.css',
   'text!app/widget/index.html',
   'text!app/widget/main-built.js',
   'text!app/widget/style.css'
-], function (JSZip, iconSvg, commonStyleCss, indexHtml, mainJs, styleCss) {
+], function (JSZip, sulfurSvg, commonStyleCss, indexHtml, mainJs, styleCss) {
 
   'use strict';
 
@@ -31,6 +31,25 @@ define([
     f.setAttribute('value', value);
     e.appendChild(f);
   }
+
+  var getIconName = (function () {
+
+    var mediaTypes = {
+      'image/gif': 'gif',
+      'image/jpeg': 'jpg',
+      'image/png': 'png',
+      'image/svg': 'svg',
+      'image/vnd.microsft.ico': 'ico'
+    };
+
+    return function (file) {
+      if (mediaTypes.hasOwnProperty(file.type)) {
+        return 'icon.' + mediaTypes[file.type];
+      }
+      throw new Error("unknown icon file type");
+    };
+
+  }());
 
   return {
 
@@ -55,6 +74,7 @@ define([
       addContent(d, ns, r, 'index.html', 'text/html');
       addContent(d, ns, r, 'main.js', 'application/javascript');
       addContent(d, ns, r, 'style.css', 'text/css');
+      addContent(d, ns, r, 'sulfur.svg', 'image/svg');
 
       addPreference(d, ns, r, 'endpoint', dgs.endpoint);
       addPreference(d, ns, r, 'recordCollectionName', widget.resource.recordCollectionName);
@@ -63,7 +83,11 @@ define([
         'fileCollectionName', widget.resource.fileCollectionName);
 
       e = d.createElementNS(ns, 'icon');
-      e.setAttribute('src', 'icon.svg');
+      if (widget.icon) {
+        e.setAttribute('src', getIconName(widget.icon.file));
+      } else {
+        e.setAttribute('src', 'sulfur.svg');
+      }
       r.appendChild(e);
 
       if (widget.description) {
@@ -94,9 +118,13 @@ define([
 
       z.file('config.xml', '<?xml version="1.0" encoding="utf-8"?>' + configXml);
       z.file('index.html', indexHtml);
-      z.file('icon.svg', iconSvg);
+      z.file('sulfur.svg', sulfurSvg);
       z.file('main.js', mainJs);
       z.file('style.css', commonStyleCss + styleCss);
+
+      if (widget.icon) {
+        z.file(getIconName(widget.icon.file), widget.icon.blob);
+      }
 
       return z.generate({ type: 'blob', compression: 'DEFLATE' });
     }

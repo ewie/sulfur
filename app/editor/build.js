@@ -10,7 +10,8 @@
     'unorm': 'node_modules/unorm/lib/unorm'
   },
   shim: {
-    'unorm': { exports: 'UNorm' }
+    'unorm': { exports: 'UNorm' },
+    'jszip': { exports: 'JSZip' }
   },
   name: 'app/editor/main',
   stubModules: [ 'text' ],

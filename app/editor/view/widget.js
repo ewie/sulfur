@@ -9,6 +9,7 @@
 
 define([
   'sulfur/ui/view',
+  'sulfur/ui/view/access/file',
   'sulfur/ui/view/access/html',
   'sulfur/ui/view/access/value',
   'sulfur/ui/view/access/view',
@@ -19,6 +20,7 @@ define([
   'text!app/editor/html/widget.html'
 ], function (
     View,
+    FileAccess,
     HtmlAccess,
     ValueAccess,
     ViewAccess,
@@ -37,6 +39,7 @@ define([
 
     events: [
       Event.create('change', '[name = "name"]', PublishedEvent.create('name')),
+      Event.create('change', '[name = "icon"]', PublishedEvent.create('icon')),
       Event.create('change', '[name = "author-name"]', PublishedEvent.create('author-name')),
       Event.create('change', '[name = "author-email"]', PublishedEvent.create('author-email')),
       Event.create('change', '[name = "description"]', PublishedEvent.create('description'))
@@ -44,6 +47,7 @@ define([
 
     accessors: [
       Accessor.create('name', '[name = "name"]', ValueAccess),
+      Accessor.create('icon', '[name = "icon"]', FileAccess),
       Accessor.create('authorName', '[name = "author-name"]', ValueAccess),
       Accessor.create('authorEmail', '[name = "author-email"]', ValueAccess),
       Accessor.create('description', '[name = "description"]', ValueAccess),

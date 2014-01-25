@@ -37,7 +37,7 @@ build: builddir widget editor
 	cp app/editor/main-built.js build/main.js
 	cp app/editor/index.html build/index.html
 	cat app/common/style.css app/editor/style.css app/editor/github.css > build/style.css
-	cp app/common/icon.svg build/icon.svg
+	cp app/common/sulfur.svg build/sulfur.svg
 
 clean:
 	rm -f app/editor/main-built.js

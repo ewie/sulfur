@@ -6,13 +6,13 @@
  */
 
 /* global define */
-/* global afterEach, beforeEach, describe, it */
+/* global afterEach, beforeEach, context, describe, it */
 
 define([
   'shared',
   'jszip',
   'sulfur/widget/packer',
-  'text!app/common/icon.svg',
+  'text!app/common/sulfur.svg',
   'text!app/common/style.css',
   'text!app/widget/index.html',
   'text!app/widget/main-built.js',
@@ -21,7 +21,7 @@ define([
     shared,
     JSZip,
     packer,
-    iconSvg,
+    sulfurSvg,
     commonStyleCss,
     indexHtml,
     mainJs,
@@ -136,11 +136,45 @@ define([
         expect(e.attributes.type.value).to.equal('text/css');
       });
 
-      it('should include element <icon src="icon.svg"/>', function () {
+      it('should include element <content src="sulfur.svg" type="image/svg"/>', function () {
+        var d = packer.createConfigurationDocument(widget, dgs);
+        var e = d.querySelectorAll('widget > content').item(3);
+        expect(e.namespaceURI).to.equal(packer.namespaceURI);
+        expect(e.attributes.src.value).to.equal('sulfur.svg');
+        expect(e.attributes.type.value).to.equal('image/svg');
+      });
+
+      it('should include element <icon src="sulfur.svg"/> when the widget defines no icon', function () {
         var d = packer.createConfigurationDocument(widget, dgs);
         var e = d.querySelector('widget > icon');
         expect(e.namespaceURI).to.equal(packer.namespaceURI);
-        expect(e.attributes.src.value).to.equal('icon.svg');
+        expect(e.attributes.src.value).to.equal('sulfur.svg');
+      });
+
+      context("when the widget defines an icon", function () {
+
+        [
+          [ 'image/gif', 'gif' ],
+          [ 'image/jpeg', 'jpg' ],
+          [ 'image/png', 'png' ],
+          [ 'image/svg', 'svg' ],
+          [ 'image/vnd.microsft.ico', 'ico' ]
+        ].forEach(function (pair) {
+
+          var mediaType = pair[0];
+          var ext = pair[1];
+          var filename = 'icon.' + ext;
+
+          it('should include element <icon src="' + filename + '"/> when the icon has media type ' + mediaType, function () {
+            widget.icon = { file: { type: mediaType } };
+            var d = packer.createConfigurationDocument(widget, dgs);
+            var e = d.querySelector('widget > icon');
+            expect(e.namespaceURI).to.equal(packer.namespaceURI);
+            expect(e.attributes.src.value).to.equal(filename);
+          });
+
+        });
+
       });
 
       it("should include element <preference/> defining the endpoint url", function () {
@@ -239,10 +273,10 @@ define([
         expect(spy.getCall(1)).to.be.calledWith('index.html', indexHtml);
       });
 
-      it("should add file icon.svg", function () {
+      it("should add file sulfur.svg", function () {
         var spy = sandbox.spy(JSZip.prototype, 'file');
         packer.createArchive(widget, dgs);
-        expect(spy.getCall(2)).to.be.calledWith('icon.svg', iconSvg);
+        expect(spy.getCall(2)).to.be.calledWith('sulfur.svg', sulfurSvg);
       });
 
       it("should add file main.js", function () {
@@ -256,6 +290,37 @@ define([
         packer.createArchive(widget, dgs);
         expect(spy.getCall(4)).to.be.calledWith('style.css',
           commonStyleCss + styleCss);
+      });
+
+      context("when the widget defines an icon", function () {
+
+        [
+          [ 'image/gif', 'gif' ],
+          [ 'image/jpeg', 'jpg' ],
+          [ 'image/png', 'png' ],
+          [ 'image/svg', 'svg' ],
+          [ 'image/vnd.microsft.ico', 'ico' ]
+        ].forEach(function (pair) {
+
+          var mediaType = pair[0];
+          var ext = pair[1];
+          var filename = 'icon.' + ext;
+
+          it("should add file " + filename + " when the icon has media type " + mediaType, function () {
+            var spy = sandbox.spy(JSZip.prototype, 'file');
+            var blob = new ArrayBuffer(1);
+            widget.icon = {
+              file: { type: mediaType },
+              blob: blob
+            };
+            packer.createArchive(widget, dgs);
+            expect(spy.getCall(5)).to.be.calledWith(
+              filename,
+              sinon.match.same(blob));
+          });
+
+        });
+
       });
 
     });

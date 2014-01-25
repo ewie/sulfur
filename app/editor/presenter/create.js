@@ -91,6 +91,14 @@ define([
     });
   }
 
+  function loadWidgetIcon(widget, cb) {
+    if (widget.icon) {
+      widget.icon.load(cb);
+    } else {
+      cb();
+    }
+  }
+
   function invoke(fn) {
     fn();
     return fn;
@@ -127,14 +135,16 @@ define([
               }
             }
           ], function () {
-            var blob = widgetPacker.createArchive(widget, dgs);
-            var url = window.URL.createObjectURL(blob);
-            var filename = widgetPacker.archiveFileName(widget);
+            loadWidgetIcon(widget, function () {
+              var blob = widgetPacker.createArchive(widget, dgs);
+              var url = window.URL.createObjectURL(blob);
+              var filename = widgetPacker.archiveFileName(widget);
 
-            view.enableDownload(url, filename);
-            view.triggerDownload();
+              view.enableDownload(url, filename);
+              view.triggerDownload();
 
-            view.setPending(false);
+              view.setPending(false);
+            });
           });
         }
       });
