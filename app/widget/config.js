@@ -51,7 +51,13 @@ define([
 
     get: function (name) { return widget.preferences.getItem(name) },
 
-    get name() { return widget.name }
+    get name() { return widget.name },
+
+    get description() { return widget.description },
+
+    get authorName() { return widget.author },
+
+    get authorEmail() { return widget.authorEmail }
 
   };
 

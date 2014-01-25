@@ -293,6 +293,14 @@ label[for] {
           transition: background-color 0.2s;
 }
 
+.email::before {
+  content: '\2329';
+}
+
+.email::after {
+  content: '\232A';
+}
+
 button,
 a.button {
   background-color: #0080a6;

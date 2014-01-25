@@ -229,6 +229,14 @@ define([
       var resource = config.resource;
 
       view.access('name').text = config.name;
+      view.access('description').text = config.description;
+      view.access('authorName').text = config.authorName;
+      view.access('authorEmail').href = 'mailto:' + config.authorEmail;
+      view.access('authorEmail').text = config.authorEmail;
+
+      view.publisher.subscribe('about', function () {
+        view.toggleAbout();
+      });
 
       function init() {
 

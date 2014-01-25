@@ -11,6 +11,7 @@ define([
   'text!app/widget/html/app.html',
   'sulfur/ui/view',
   'sulfur/ui/view/access/html',
+  'sulfur/ui/view/access/link',
   'sulfur/ui/view/access/text',
   'sulfur/ui/view/access/view',
   'sulfur/ui/view/accessor',
@@ -21,6 +22,7 @@ define([
     html,
     View,
     HtmlAccess,
+    LinkAccess,
     TextAccess,
     ViewAccess,
     Accessor,
@@ -36,11 +38,15 @@ define([
     html: html,
 
     events: [
-      Event.create('click', '[name = "newRecord"]', PublishedEvent.create('new'))
+      Event.create('click', '[name = "new"]', PublishedEvent.create('new')),
+      Event.create('click', '[name = "toggle-about"]', PublishedEvent.create('about'))
     ],
 
     accessors: [
       Accessor.create('name', '[name = "name"]', TextAccess),
+      Accessor.create('authorName', '[name = "author-name"]', TextAccess),
+      Accessor.create('authorEmail', '[name = "author-email"]', LinkAccess),
+      Accessor.create('description', '[name = "description"]', TextAccess),
       Accessor.create('status', '[name = "status"]', HtmlAccess),
       Accessor.create('index', '[name = "index"]', ViewAccess),
       Accessor.create('records', '[name = "records"]', ViewAccess)
@@ -53,6 +59,12 @@ define([
     get blueprint() { return blueprint }
 
   }).augment({
+
+    toggleAbout: function () {
+      this._aboutElement.classList.toggle('show');
+    },
+
+    get _aboutElement() { return this.element.querySelector('[name = "about"]') },
 
     hideStatus: function () {
       this._status.style.display = 'none';
