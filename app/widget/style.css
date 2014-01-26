@@ -67,12 +67,6 @@ button[name = "expand"]::before {
           transition: background-color 0.2s;
 }
 
-.record-head > .remove {
-  text-align: center;
-  width: 1em;
-  display: inline-block;
-}
-
 .record-body,
 .record-controls {
   display: none;
@@ -178,7 +172,7 @@ textarea {
   display: block;
 }
 
-.field.expanded button[name = "expand"]::before {
+.field.expanded .expand::before {
   content: '\F107';
 }
 
@@ -227,10 +221,12 @@ textarea {
   margin-right: 0.3em;
 }
 
-.field.error > {}
-
 .file-value {
   position: relative;
+}
+
+.file-value input {
+  padding-left: 1.7em;
 }
 
 .file-value a:not([href]),
@@ -241,7 +237,8 @@ textarea {
 .file-value a {
   position: absolute;
   top: 0;
-  right: 0;
+  left: 0;
+  bottom: 0;
   display: inline-block;
   width: 1.5em;
   text-align: center;
@@ -251,11 +248,6 @@ textarea {
 
 .file-value a:hover {
   background-color: rgba(0, 128, 166, 0.6);
-}
-
-.file-value a::before {
-  content: '\F019';
-  font-family: 'FontAwesome';
 }
 
 .record-close::before {

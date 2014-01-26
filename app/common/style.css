@@ -21,11 +21,36 @@ textarea {
 }
 
 button,
-a.button {
+.button {
   border: 0 none;
   margin: 0;
   padding: 0 0.2em;
   cursor: pointer;
+  background-color: #0080a6;
+  color: #fff;
+     -moz-transition: background-color 0.2s;
+      -ms-transition: background-color 0.2s;
+       -o-transition: background-color 0.2s;
+  -webkit-transition: background-color 0.2s;
+          transition: background-color 0.2s;
+}
+
+button.icon,
+.button.icon {
+  display: inline-block;
+  padding: 0;
+  width: 1.6em;
+  text-align: center;
+}
+
+button:hover,
+.button:hover {
+  background-color: rgba(0, 128, 166, 0.6);
+     -moz-transition: background-color 0.2s;
+      -ms-transition: background-color 0.2s;
+       -o-transition: background-color 0.2s;
+  -webkit-transition: background-color 0.2s;
+          transition: background-color 0.2s;
 }
 
 button:disabled {
@@ -239,7 +264,7 @@ label[for] {
   margin-bottom: 0;
 }
 
-.enumerated-value > button {
+.enumerated-value > .button {
   position: absolute;
   top: 0;
   left: 0;
@@ -247,7 +272,7 @@ label[for] {
 }
 
 .enumerated-value > div {
-  padding-left: 1.5em;
+  padding-left: 1.6em;
   vertical-align: top;
 
      -moz-box-sizing: border-box;
@@ -301,34 +326,9 @@ label[for] {
   content: '\232A';
 }
 
-button,
-a.button {
-  background-color: #0080a6;
-  color: #fff;
-  min-width: 1.5em;
-     -moz-transition: background-color 0.2s;
-      -ms-transition: background-color 0.2s;
-       -o-transition: background-color 0.2s;
-  -webkit-transition: background-color 0.2s;
-          transition: background-color 0.2s;
-}
-
-button:hover,
-a.button:hover {
-  background-color: rgba(0, 128, 166, 0.6);
-     -moz-transition: background-color 0.2s;
-      -ms-transition: background-color 0.2s;
-       -o-transition: background-color 0.2s;
-  -webkit-transition: background-color 0.2s;
-          transition: background-color 0.2s;
-}
-
 .remove {
   background-color: #d33;
   color: #fff;
-  padding: 0 0.3em;
-  cursor: pointer;
-  vertical-align: top;
 }
 
 .remove::before {
@@ -338,6 +338,34 @@ a.button:hover {
 .remove:hover,
 .remove:focus {
   background-color: #f6664e;
+}
+
+.expandable .expandable-content {
+  display: none;
+}
+
+.expandable .expand {
+  font-family: 'FontAwesome';
+  background-color: transparent;
+  color: #888;
+  width: 1.5em;
+  text-align: center;
+}
+
+.expandable .expand:hover {
+  background-color: transparent;
+}
+
+.expandable .expand::before {
+  content: '\F105';
+}
+
+.expandable.expanded .expand::before {
+  content: '\F107';
+}
+
+.expandable.expanded .expandable-content {
+  display: block;
 }
 
 .dropdown {
@@ -422,11 +450,11 @@ a.button:hover {
   position: relative;
 }
 
-.uri-value a:not([href]) {
+.uri-value .follow:not([href]) {
   display: none;
 }
 
-.uri-value a {
+.uri-value .follow {
   position: absolute;
   top: 0;
   right: 0;
@@ -437,11 +465,11 @@ a.button:hover {
   color: #fff;
 }
 
-.uri-value a:hover {
+.uri-value .follow:hover {
   background-color: rgba(0, 128, 166, 0.6);
 }
 
-.uri-value a::before {
+.uri-value .follow::before {
   content: '\27A4';
 }
 
@@ -464,10 +492,11 @@ a.button:hover {
   padding-left: 1.7em;
 }
 
-.datetime-value button {
+.datetime-value .button {
   position: absolute;
   left: 0;
   top: 0;
+  bottom: 0;
 }
 
 .calendar > table {
