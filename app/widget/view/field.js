@@ -34,8 +34,7 @@ define([
     html: html,
 
     events: [
-      Event.create('click', '[name = "expand"]', DispatchedEvent.create('_toggleExpand')),
-      Event.create('click', 'label', DispatchedEvent.create('_toggleExpand'))
+      Event.create('click', '[name = "head"]', DispatchedEvent.create('_toggleExpand'))
     ],
 
     accessors: [

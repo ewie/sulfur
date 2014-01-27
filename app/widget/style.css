@@ -131,6 +131,7 @@ textarea {
 
 .field-head {
   padding: 0 0.2em;
+  cursor: pointer;
 }
 
 .field.required .field-name::after {
