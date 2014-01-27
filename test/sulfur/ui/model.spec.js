@@ -299,6 +299,31 @@ define([
 
     });
 
+    describe('#isInternallyValid()', function () {
+
+      var model;
+
+      beforeEach(function () {
+        model = DerivedModel.create();
+      });
+
+      it("should return true when there are no errors", function () {
+        expect(model.isInternallyValid()).to.be.true;
+      });
+
+      it("should return false when there are internal errors", function () {
+        model._validate = fail({ foo: 'error' });
+        model.update({ foo: 1 });
+        expect(model.isInternallyValid()).to.be.false;
+      });
+
+      it("should return true when there are only external errors", function () {
+        model.updateExternalErrors({ foo: 'external error' });
+        expect(model.isInternallyValid()).to.be.true;
+      });
+
+    });
+
     describe('#destroy()', function () {
 
       var model;

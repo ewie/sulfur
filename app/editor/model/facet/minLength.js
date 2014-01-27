@@ -36,18 +36,20 @@ define([
     validateWithBaseTypeAndFacets: function (_, facets) {
       var err = false;
       var valueModel = this.get('value');
-      var value = valueModel.object;
-      if (value && value.isNegative) {
-        err = "must be non-negative";
-      } else {
-        var facet = this.object;
-        if (facet) {
-          var errors = [];
-          facet.validateAmongFacets(facets, errors);
-          errors.length && (err = errors[0]);
+      if (valueModel.isInternallyValid()) {
+        var value = valueModel.object;
+        if (value && value.isNegative) {
+          err = "must be non-negative";
+        } else {
+          var facet = this.object;
+          if (facet) {
+            var errors = [];
+            facet.validateAmongFacets(facets, errors);
+            errors.length && (err = errors[0]);
+          }
         }
+        valueModel.updateExternalErrors({ value: err });
       }
-      valueModel.updateExternalErrors({ value: err });
     },
 
     _construct: function () {

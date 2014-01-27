@@ -39,15 +39,17 @@ define([
     },
 
     validateWithType: function (type) {
-      var value = this.object;
-      var err = false;
-      if (value) {
-        var v = type.createValidator();
-        var errors = [];
-        var isValid = v.validate(value, errors);
-        isValid || (err = errors.join('\n'));
+      if (this.isInternallyValid()) {
+        var value = this.object;
+        var err = false;
+        if (value) {
+          var v = type.createValidator();
+          var errors = [];
+          var isValid = v.validate(value, errors);
+          isValid || (err = errors.join('\n'));
+        }
+        this.updateExternalErrors({ value: err });
       }
-      this.updateExternalErrors({ value: err });
     },
 
     _construct: function () {

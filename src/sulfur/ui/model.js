@@ -264,6 +264,13 @@ define([
     },
 
     /**
+     * @api public
+     */
+    isInternallyValid: function () {
+      return !this._errors.hasAnyInternal();
+    },
+
+    /**
      * Detach all subscriptions to any attribute value's publisher created
      * through this model. Publish on channel "destroy". Subscribers should
      * remove any reference to this model.
@@ -431,13 +438,19 @@ define([
       }
     },
 
+    /**
+     * @api public
+     */
     combinedError: function () {
       var errors = [];
+      var hasErrors = !this.isValid();
       for (var name in this._attrs) {
         var err = this.error(name);
-        err && errors.push(err);
+        if (typeof err === 'string') {
+          err && errors.push(err);
+        }
       }
-      return errors.length ? errors.join('\n') : false;
+      return errors.length ? errors.join('\n') : hasErrors;
     },
 
     /**

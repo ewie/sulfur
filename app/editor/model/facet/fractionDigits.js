@@ -38,15 +38,17 @@ define([
     validateWithBaseTypeAndFacets: function (baseType) {
       var valueModel = this.get('value');
       var err = false;
-      var value = valueModel.object;
-      if (value && value.isNegative) {
-        err = "must be non-negative";
+      if (valueModel.isInternallyValid()) {
+        var value = valueModel.object;
+        if (value && value.isNegative) {
+          err = "must be non-negative";
+        }
+        var facet = this.object;
+        if (facet  && !facet.isRestrictionOf(baseType)) {
+          err = "must restrict the base type";
+        }
+        valueModel.updateExternalErrors({ value: err });
       }
-      var facet = this.object;
-      if (facet  && !facet.isRestrictionOf(baseType)) {
-        err = "must restrict the base type";
-      }
-      valueModel.updateExternalErrors({ value: err });
     },
 
     _construct: function () {
