@@ -53,6 +53,7 @@ NPM.
 
   $ git clone <repo> <dest>
   $ cd <dest>
+  $ git submodule init
   $ npm i
 
 
@@ -70,9 +71,10 @@ Tests are written as specs using mocha.
 Building
 ========
 
-To build the entire web application issue the following command.
+To build the entire web application run make with either rule "debug" or "build".
+The first retains a readable JavaScript, the latter minifies all JavaScript.
 
-  $ make build
+  $ make {build|debug}
 
 This will bundle all JavaScript files into a single file and put it into
 directory build/ along with index.html, style.css and icon.svg
