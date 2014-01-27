@@ -185,8 +185,13 @@ textarea {
   height: 300px;
 }
 
-.geolocation-value::before {
-  content: "add marker with left click, remove with right click";
+.geolocation-value::after {
+  content: "* add marker with left click, remove with right click";
+  display: block;
+  text-align: right;
+  font-size: 70%;
+  color: rgba(0, 0, 0, 0.4);
+  padding: 0 0.2em;
 }
 
 .geolocation-value-min:not(:empty)::before {
