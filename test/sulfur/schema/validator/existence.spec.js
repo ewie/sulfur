@@ -21,27 +21,27 @@ define([
 
     describe('#initialize()', function () {
 
-      describe("option `errorPrefix`", function () {
+      describe("option `message`", function () {
 
         it("should use the value when given", function () {
-          var validator = ExistenceValidator.create({ errorPrefix: "foo bar" });
-          expect(validator.errorPrefix).to.equal("foo bar");
+          var validator = ExistenceValidator.create({ message: "foo bar" });
+          expect(validator.message).to.equal("foo bar");
         });
 
         it("should use 'must be defined' when not given", function () {
           var validator = ExistenceValidator.create();
-          expect(validator.errorPrefix).to.equal("must be defined");
+          expect(validator.message).to.equal("must be defined");
         });
 
       });
 
     });
 
-    describe('#errorPrefix', function () {
+    describe('#message', function () {
 
-      it("should return the error message prefixy", function () {
-        var v = ExistenceValidator.create({ errorPrefix: 'foo' });
-        expect(v.errorPrefix).to.equal('foo');
+      it("should return the error message", function () {
+        var v = ExistenceValidator.create({ message: 'foo' });
+        expect(v.message).to.equal('foo');
       });
 
     });
@@ -63,11 +63,11 @@ define([
       });
 
       it("should generate an error message from the minimum value when an errors array is given", function () {
-        var validator = ExistenceValidator.create({ errorPrefix: "must exist" });
+        var validator = ExistenceValidator.create({ message: "must exist" });
         var errors = [];
         validator.validate(undefined, errors);
         expect(errors).to.have.lengthOf(1);
-        expect(errors[0]).to.equal(validator.errorPrefix);
+        expect(errors[0]).to.equal(validator.message);
       });
 
     });

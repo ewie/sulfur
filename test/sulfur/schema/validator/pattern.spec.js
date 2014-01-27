@@ -22,27 +22,27 @@ define([
 
     describe('#initialize()', function () {
 
-      describe("option `errorPrefix`", function () {
+      describe("option `message`", function () {
 
         it("should use the value when given", function () {
-          var validator = PatternValidator.create(null, { errorPrefix: "foo bar" });
-          expect(validator.errorPrefix).to.equal("foo bar");
+          var validator = PatternValidator.create(null, { message: "foo bar" });
+          expect(validator.message).to.equal("foo bar");
         });
 
-        it("should use 'must match' when not given", function () {
+        it("should use 'must match pattern ???' when not given", function () {
           var validator = PatternValidator.create();
-          expect(validator.errorPrefix).to.equal("must match pattern");
+          expect(validator.message).to.equal("must match pattern ???");
         });
 
       });
 
     });
 
-    describe('#errorPrefix', function () {
+    describe('#message', function () {
 
-      it("should return the error message prefixy", function () {
-        var v = PatternValidator.create(null, { errorPrefix: 'foo' });
-        expect(v.errorPrefix).to.equal('foo');
+      it("should return the error message", function () {
+        var v = PatternValidator.create(null, { message: 'foo' });
+        expect(v.message).to.equal('foo');
       });
 
     });
@@ -77,11 +77,11 @@ define([
 
       it("should generate an error message from the minimum value when an errors array is given", function () {
         var validator = PatternValidator.create(/^[0-9]$/,
-          { errorPrefix: "should match" });
+          { message: "should match ???" });
         var errors = [];
         validator.validate(null, errors);
         expect(errors).to.have.lengthOf(1);
-        expect(errors[0]).to.equal(validator.errorPrefix + " \u201C^[0-9]$\u201D");
+        expect(errors[0]).to.equal("should match ^[0-9]$");
       });
 
     });

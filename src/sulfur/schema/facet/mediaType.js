@@ -73,7 +73,7 @@ define([
       return EnumerationValidator.create(
         this.value,
         { testMethod: 'matches',
-          errorPrefix: "must have media type"
+          message: "must have media type ???"
         });
     }
 

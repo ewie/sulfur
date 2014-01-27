@@ -42,23 +42,23 @@ define([
 
       });
 
-      describe("option `errorPrefix`", function () {
+      describe("option `message`", function () {
 
         it("should use the value when given", function () {
-          var validator = MinimumValidator.create(null, { errorPrefix: "foo bar" });
-          expect(validator.errorPrefix).to.equal("foo bar");
+          var validator = MinimumValidator.create(null, { message: "foo bar" });
+          expect(validator.message).to.equal("foo bar");
         });
 
         context("when not given", function () {
 
           it("should use 'must be greater than' when matching exclusively", function () {
             var validator = MinimumValidator.create(null, { exclusive: true });
-            expect(validator.errorPrefix).to.equal("must be greater than");
+            expect(validator.message).to.equal("must be greater than ???");
           });
 
-          it("should use 'must be greater than or equal to' when matching inclusively", function () {
+          it("should use 'must be greater than or equal to ???' when matching inclusively", function () {
             var validator = MinimumValidator.create();
-            expect(validator.errorPrefix).to.equal("must be greater than or equal to");
+            expect(validator.message).to.equal("must be greater than or equal to ???");
           });
 
         });
@@ -81,11 +81,11 @@ define([
 
     });
 
-    describe('#errorPrefix', function () {
+    describe('#message', function () {
 
-      it("should return the error message prefixy", function () {
-        var v = MinimumValidator.create(null, { errorPrefix: 'foo' });
-        expect(v.errorPrefix).to.equal('foo');
+      it("should return the error message", function () {
+        var v = MinimumValidator.create(null, { message: 'foo' });
+        expect(v.message).to.equal('foo');
       });
 
     });
@@ -96,11 +96,11 @@ define([
         var validator = MinimumValidator.create({
           toString: returns('bar'),
           cmp: returns(1)
-        }, { errorPrefix: "should be more than" });
+        }, { message: "should be more than ???" });
         var errors = [];
         validator.validate(false, errors);
         expect(errors).to.have.lengthOf(1);
-        expect(errors[0]).to.equal(validator.errorPrefix + " \u201Cbar\u201D");
+        expect(errors[0]).to.equal("should be more than bar");
       });
 
       context("when the minimum responds to #cmp()", function () {

@@ -18,14 +18,14 @@ define(['sulfur/util/factory'], function (Factory) {
      * @param {object} options (optional)
      *
      * @option options {boolean} exclusive (default false) whether to match exclusively or not
-     * @option options {string} errorPrefix (optional) the error message prefix
+     * @option options {string} message (optional) the error message
      */
     initialize: function (minimum, options) {
       options || (options = {});
       this._minimum = minimum;
       this._exclusive = options.exclusive || false;
-      this._errorPrefix = options.errorPrefix ||
-        ("must be greater than" + (this._exclusive ? '' : " or equal to"));
+      this._message = options.message ||
+        ("must be greater than" + (this._exclusive ? '' : " or equal to") + ' ???');
     },
 
     /**
@@ -35,9 +35,9 @@ define(['sulfur/util/factory'], function (Factory) {
     get exclusive() { return this._exclusive },
 
     /**
-     * @return {string} the error message prefix
+     * @return {string} the error message
      */
-    get errorPrefix() { return this._errorPrefix },
+    get message() { return this._message },
 
     /**
      * Check if a value satisfies the minimum. If the minimum responds to .cmp(),
@@ -60,7 +60,7 @@ define(['sulfur/util/factory'], function (Factory) {
         y = this._minimum;
       }
       var isValid = x > y || y === x && !this._exclusive;
-      isValid || errors && errors.push(this.errorPrefix + " \u201C" + this._minimum + "\u201D");
+      isValid || errors && errors.push(this.message.replace(/\?{3}/g, this._minimum));
       return isValid;
     }
 

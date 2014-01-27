@@ -22,27 +22,27 @@ define([
 
     describe('#initialize()', function () {
 
-      describe("option `errorPrefix`", function () {
+      describe("option `message`", function () {
 
         it("should use the value when given", function () {
-          var validator = EqualValidator.create(null, { errorPrefix: "foo bar" });
-          expect(validator.errorPrefix).to.equal("foo bar");
+          var validator = EqualValidator.create(null, { message: "foo bar" });
+          expect(validator.message).to.equal("foo bar");
         });
 
-        it("should use 'must be equal to' when not given", function () {
+        it("should use 'must be equal to ???' when not given", function () {
           var validator = EqualValidator.create();
-          expect(validator.errorPrefix).to.equal("must be equal to");
+          expect(validator.message).to.equal("must be equal to ???");
         });
 
       });
 
     });
 
-    describe('#errorPrefix', function () {
+    describe('#message', function () {
 
-      it("should return the error message prefixy", function () {
-        var v = EqualValidator.create(null, { errorPrefix: 'foo' });
-        expect(v.errorPrefix).to.equal('foo');
+      it("should return the error message", function () {
+        var v = EqualValidator.create(null, { message: 'foo' });
+        expect(v.message).to.equal('foo');
       });
 
     });
@@ -52,11 +52,11 @@ define([
       it("should generate an error message from the minimum value when an errors array is given", function () {
         var validator = EqualValidator.create(
           { toString: returns('xxx') },
-          { errorPrefix: "should be" });
+          { message: "should be ???" });
         var errors = [];
         validator.validate(null, errors);
         expect(errors).to.have.lengthOf(1);
-        expect(errors[0]).to.equal(validator.errorPrefix + " \u201Cxxx\u201D");
+        expect(errors[0]).to.equal("should be xxx");
       });
 
       it("should return true when the value is equal to the expected value", function () {

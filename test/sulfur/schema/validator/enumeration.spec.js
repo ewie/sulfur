@@ -45,14 +45,14 @@ define([
 
       });
 
-      it("should use the value of option `errorPrefix` as error message prefix", function () {
-        var v = EnumerationValidator.create([{}], { errorPrefix: 'some prefix' });
-        expect(v.errorPrefix).to.equal('some prefix');
+      it("should use the value of option `message` as error message", function () {
+        var v = EnumerationValidator.create([{}], { message: 'some message' });
+        expect(v.message).to.equal('some message');
       });
 
-      it("should use 'must be' as default errorPrefix", function () {
+      it("should use 'must be ???' as default message", function () {
         var v = EnumerationValidator.create([{}]);
-        expect(v.errorPrefix).to.equal('must be');
+        expect(v.message).to.equal('must be ???');
       });
 
     });
@@ -73,11 +73,11 @@ define([
 
     });
 
-    describe('#errorPrefix', function () {
+    describe('#message', function () {
 
-      it("should return the error message prefix", function () {
-        var v = EnumerationValidator.create([{}], { errorPrefix: "foo" });
-        expect(v.errorPrefix).to.equal('foo');
+      it("should return the error message", function () {
+        var v = EnumerationValidator.create([{}], { message: "foo" });
+        expect(v.message).to.equal('foo');
       });
 
     });
@@ -99,14 +99,14 @@ define([
         beforeEach(function () {
           values = [ mockValue('x'), mockValue('y'), mockValue('z') ];
           validator = EnumerationValidator.create(values,
-            { testMethod: 'match', errorPrefix: "should be" });
+            { testMethod: 'match', message: "should be ???" });
         });
 
         it("should generate an error message from the allowed values", function () {
           var errors = [];
           validator.validate(false, errors);
           expect(errors).to.have.lengthOf(1);
-          expect(errors[0]).to.equal(validator.errorPrefix + " \u201Cx\u201D, \u201Cy\u201D or \u201Cz\u201D");
+          expect(errors[0]).to.equal("should be x, y or z");
         });
 
       });

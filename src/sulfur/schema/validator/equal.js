@@ -17,17 +17,17 @@ define(['sulfur/util/factory'], function (Factory) {
      * @param {any} value
      * @param {object} options (optional)
      *
-     * @option options {string} errorPrefix (optional)
+     * @option options {string} message (optional)
      */
     initialize: function (value, options) {
       this._value = value;
-      this._errorPrefix = options && options.errorPrefix || "must be equal to";
+      this._message = options && options.message || "must be equal to ???";
     },
 
     /**
-     * @return {string} the error message prefix
+     * @return {string} the error message
      */
-    get errorPrefix() { return this._errorPrefix },
+    get message() { return this._message },
 
     /**
      * Check if a value is strictly equal to the expected value.
@@ -39,7 +39,7 @@ define(['sulfur/util/factory'], function (Factory) {
      */
     validate: function (value, errors) {
       var isValid = value === this._value;
-      isValid || errors && errors.push(this.errorPrefix + " \u201C" + this._value + "\u201D");
+      isValid || errors && errors.push(this.message.replace(/\?{3}/g, this._value));
       return isValid;
     }
 

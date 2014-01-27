@@ -16,12 +16,7 @@ define([
 
   var format = (function () {
 
-    function quote(s) {
-      return '\u201C' + s + '\u201D';
-    }
-
     return function (ary) {
-      ary = ary.map(quote);
       var k = ary.length - 1;
       switch(k) {
       case 0:
@@ -42,7 +37,7 @@ define([
      * @param {object} options (optional)
      *
      * @option options {string} testMethod (optional)
-     * @option options {string} errorPrefix (optional)
+     * @option options {string} message (optional)
      *
      * @throw {Error} if any value does not respond to the test method
      */
@@ -68,7 +63,7 @@ define([
 
         this._values = values;
         this._testMethodName = testMethodName;
-        this._errorPrefix = options.errorPrefix || "must be";
+        this._message = options.message || "must be ???";
       };
 
     }()),
@@ -80,9 +75,9 @@ define([
     get testMethodName() { return this._testMethodName },
 
     /**
-     * @return {string} the error message prefix
+     * @return {string} the error message
      */
-    get errorPrefix() { return this._errorPrefix },
+    get message() { return this._message },
 
     /**
      * Validate a value against all allowed values by calling the test method
@@ -106,7 +101,7 @@ define([
         };
       }
       var isValid = this._values.some(fn);
-      isValid || errors && errors.push(this.errorPrefix + ' ' + format(this._values));
+      isValid || errors && errors.push(this.message.replace(/\?{3}/g, format(this._values)));
       return isValid;
     }
 
