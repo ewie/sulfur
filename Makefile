@@ -32,12 +32,17 @@ widget:
 editor: lib/highlight.js lib/jszip.js
 	r.js -o app/editor/build.js $(RJS_OPTS)
 
-build: RJS_OPTS += pragmas.production=true optimize=uglify2
-build: builddir widget editor
+bundle: builddir widget editor
 	cp app/editor/main-built.js build/main.js
 	cp app/editor/index.html build/index.html
 	cat app/common/style.css app/editor/style.css app/editor/github.css > build/style.css
 	cp app/common/sulfur.svg build/sulfur.svg
+
+debug: RJS_OPTS += pragmas.production=true
+debug: bundle
+
+build: RJS_OPTS += optimize=uglify2
+build: debug
 
 clean:
 	rm -f app/editor/main-built.js
