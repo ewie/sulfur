@@ -1,12 +1,12 @@
 {
   "name": "sulfur",
   "version": "0.0.1",
-  "license": "3-clause BSD",
+  "license": "BSD-3-Clause",
   "repository": {
     "type": "git",
     "url": "https://vsr-git.informatik.tu-chemnitz.de/sulfur/sulfur"
   },
-  "description": "Library and web application to create W3C widgets perfoming CRUD operations on a DataGridService.",
+  "description": "Library and web application to create W3C widgets perfoming CRUD operations on a WebComposition/Data Grid Service.",
   "private": true,
   "dependencies": {
     "jszip": "git://github.com/Stuk/jszip.git#v2.0.0",
