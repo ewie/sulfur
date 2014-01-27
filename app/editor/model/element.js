@@ -93,7 +93,7 @@ define([
 
   function createDefaultValueModel(valueType, value) {
     var m = SimpleAtomicTypeModel.getValueModel(valueType) ||
-      SimpleListTypeModel.getValueModel(valueType.itemValueType);
+      SimpleListTypeModel.getValueModel(valueType);
     if (m) {
       if (value) {
         return m.createFromObject(value);
