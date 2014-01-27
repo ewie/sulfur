@@ -64,11 +64,11 @@ define([
       ];
       if (this.maxLength) {
         validators.push(PropertyValidator.create('length',
-          MaximumValidator.create(this.maxLength)));
+          MaximumValidator.create(this.maxLength, { message: "must contain ??? items at maximum" })));
       }
       if (this.minLength) {
         validators.push(PropertyValidator.create('length',
-          MinimumValidator.create(this.minLength)));
+          MinimumValidator.create(this.minLength, { message: "must contain at least ??? items" })));
       }
       return AllValidator.create(validators);
     }

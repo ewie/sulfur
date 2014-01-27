@@ -151,7 +151,8 @@ define([
         var v = type.createValidator();
         expect(v.validators).to.include.something.eql(
           PropertyValidator.create('length',
-            MaximumValidator.create(IntegerValue.parse('3'))));
+            MaximumValidator.create(IntegerValue.parse('3'),
+              { message: "must contain ??? items at maximum" })));
       });
 
       it("should include a sulfur/schema/validator/property with property 'length' and a sulfur/schema/validator/minimum when a minimum length is defined", function () {
@@ -159,7 +160,8 @@ define([
         var v = type.createValidator();
         expect(v.validators).to.include.something.eql(
           PropertyValidator.create('length',
-            MinimumValidator.create(IntegerValue.parse('2'))));
+            MinimumValidator.create(IntegerValue.parse('2'),
+              { message: "must contain at least ??? items" })));
       });
 
       it("should include a sulfur/schema/validator/property with method 'toArray' and a sulfur/schema/validator/each using the element type's validator", function () {
