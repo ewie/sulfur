@@ -99,13 +99,6 @@ button[name = "expand"]::before {
   display: inline-block;
 }
 
-.record-id {
-  font-family: monospace;
-  background-color: #fff;
-  padding: 0.2em;
-  display: inline-block;
-}
-
 .errorable {
   width: 100%;
 }
