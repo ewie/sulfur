@@ -34,7 +34,7 @@ define([
     html: html,
 
     events: [
-      Event.create('click', '[name = "expand"]', DispatchedEvent.create('_expand'))
+      Event.create('click', '[name = "head"]', DispatchedEvent.create('_toggleExpand'))
     ],
 
     accessors: [
@@ -51,7 +51,7 @@ define([
 
   }).augment({
 
-    _expand: function () {
+    _toggleExpand: function () {
       this.element.classList.toggle('expanded');
     }
 
