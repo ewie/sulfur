@@ -18,14 +18,14 @@ define([
   return Model.clone({
 
     attributes: {
-      longitude: { default: function () { return DoubleValueModel.create() } },
-      latitude: { default: function () { return DoubleValueModel.create() } }
+      latitude: { default: function () { return DoubleValueModel.create() } },
+      longitude: { default: function () { return DoubleValueModel.create() } }
     },
 
     _extract: function (value) {
       return {
-        longitude: DoubleValueModel.createFromObject(value.value('longitude')),
-        latitude: DoubleValueModel.createFromObject(value.value('latitude'))
+        latitude: DoubleValueModel.createFromObject(value.value('latitude')),
+        longitude: DoubleValueModel.createFromObject(value.value('longitude'))
       };
     },
 
@@ -50,12 +50,12 @@ define([
     },
 
     _construct: function () {
-      var lng = this.get('longitude').object;
       var lat = this.get('latitude').object;
+      var lng = this.get('longitude').object;
       if (lat && lng) {
         return GeolocationValue.create([
-          [ 'longitude', lng ],
-          [ 'latitude', lat ]
+          [ 'latitude', lat ],
+          [ 'longitude', lng ]
         ]);
       }
     }

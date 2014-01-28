@@ -49,6 +49,8 @@ define([
         cb(0, 0, 1);
       });
     } else {
+      // invoke the callback asynchronously to mock the behaviour of
+      // geolocation.getCurrentPosition()
       setTimeout(function () { cb(0, 0, 1) }, 0);
     }
   }
@@ -87,8 +89,9 @@ define([
         }).addTo(map);
 
         map.on('click', function (ev) {
-          var lat = ev.latlng.lat;
-          var lng = ev.latlng.lng;
+          var latlng = ev.latlng.wrap();
+          var lat = latlng.lat;
+          var lng = latlng.lng;
           self.add(lat, lng);
         });
       });
