@@ -61,7 +61,9 @@ var handleProxyRequest = (function () {
     };
 
     var r = http.request(options, function (r) {
-      res.writeHead(r.statusCode, r.headers);
+      var headers = copy(r.headers);
+      headers['access-control-allow-origin'] = '*';
+      res.writeHead(r.statusCode, headers);
       r.on('data', res.write.bind(res));
       r.on('end', res.end.bind(res));
     });
