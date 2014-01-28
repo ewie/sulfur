@@ -81,6 +81,9 @@ define([
           access.value = model.get(name);
           access.error = model.error(name);
           settings.publisher.subscribe('change', invoke(function () {
+            if (model.error(name)) {
+              return;
+            }
             // Mock the resource, because we may not be able to construct it
             // from the model which may be invalid.
             var r = {};

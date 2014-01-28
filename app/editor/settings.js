@@ -24,7 +24,7 @@ define([
     get endpoint() { return localStorage.getItem('endpoint') },
 
     set endpoint(url) {
-      localStorage.setItem('endpoint', url);
+      url && localStorage.setItem('endpoint', url);
       dgs = DataGridService.create(url);
       this.publisher.publish('change', this);
     },
@@ -32,7 +32,7 @@ define([
     get proxy() { return localStorage.getItem('proxy') },
 
     set proxy(url) {
-      localStorage.setItem('proxy', url);
+      url && localStorage.setItem('proxy', url);
       this.publisher.publish('change', this);
     },
 

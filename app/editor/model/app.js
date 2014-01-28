@@ -34,7 +34,9 @@ define([
       this.get('endpoint') || (errors.endpoint = "must not be empty");
     },
 
-    _construct: function () {}
+    _construct: function () {
+      // empty
+    }
 
   });
 

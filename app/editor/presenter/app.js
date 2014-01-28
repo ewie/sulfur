@@ -12,14 +12,12 @@ define([
   'app/editor/presenter/widget',
   'app/editor/settings',
   'app/editor/view/app',
-  'sulfur/resource',
   'sulfur/ui/presenter'
 ], function (
     WidgetModel,
     WidgetPresenter,
     settings,
     AppView,
-    Resource,
     Presenter
 ) {
 
@@ -65,8 +63,11 @@ define([
         var access = view.access('endpoint');
         var value = model.get('endpoint');
         var error = model.error('endpoint');
-        access.value = value;
+        value && (access.value = value);
         access.error = error;
+        if (error) {
+          view.showSettings();
+        }
         error || (settings.endpoint = value);
       }));
 
@@ -74,8 +75,11 @@ define([
         var access = view.access('proxy');
         var value = model.get('proxy');
         var error = model.error('proxy');
-        access.value = value;
+        value && (access.value = value);
         access.error = error;
+        if (error) {
+          view.showSettings();
+        }
         error || (settings.proxy = value);
       }));
     }

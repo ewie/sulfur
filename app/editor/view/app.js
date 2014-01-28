@@ -58,6 +58,10 @@ define([
       this._settingsElement.classList.toggle('show');
     },
 
+    showSettings: function () {
+      this._settingsElement.classList.add('show');
+    },
+
     get _settingsElement() { return this.element.querySelector('[name = "settings"]') }
 
   });
