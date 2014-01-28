@@ -48,7 +48,7 @@ define([
           var isValid = v.validate(value, errors);
           isValid || (err = errors.join('\n'));
         }
-        this.updateExternalErrors({ value: err });
+        this.updateExternalErrors({ blob: err });
       }
     },
 
