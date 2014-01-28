@@ -64,6 +64,8 @@ define([
       } else {
         errors.namespace = "must not be empty";
       }
+      var elements = this.get('elements');
+      (elements.size === 0) && (errors.elements = true);
     },
 
     _construct: function () {
