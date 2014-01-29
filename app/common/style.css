@@ -65,6 +65,11 @@ input {
   padding: 0 0.2em;
 }
 
+input[type=file] {
+  /* height of <input type="file"/> happens to be 1px off */
+  height: 1.5em;
+}
+
 textarea {
   border: 0 none;
   margin: 0;
@@ -496,7 +501,6 @@ label[for] {
   position: absolute;
   left: 0;
   top: 0;
-  bottom: 0;
 }
 
 .calendar > table {

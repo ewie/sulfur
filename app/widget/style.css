@@ -237,12 +237,6 @@ textarea {
   position: absolute;
   top: 0;
   left: 0;
-  bottom: 0;
-  display: inline-block;
-  width: 1.5em;
-  text-align: center;
-  background-color: #0080a6;
-  color: #fff;
 }
 
 .file-value a:hover {
