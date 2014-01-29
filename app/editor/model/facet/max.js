@@ -21,7 +21,7 @@ define([
       value: {
         default: function (factory) { return factory.valueModel.create() }
       },
-      exclusive: { default: true }
+      exclusive: { default: false }
     },
 
     withValueModel: function (valueModel) {
