@@ -35,10 +35,20 @@ define([
 
     _validate: function (errors) {
       Model.prototype._validate.call(this, errors);
-      Resource.isValidName(this.get('recordCollectionName')) ||
-        (errors.recordCollectionName = "must not be empty and may contain only the characters A-Z a-z 0-9 - _");
-      Resource.isValidName(this.get('fileCollectionName')) ||
-        (errors.fileCollectionName = "must not be empty and may contain only the characters A-Z a-z 0-9 - _");
+
+      var rname = this.get('recordCollectionName');
+      var fname = this.get('fileCollectionName');
+
+      var rvalid = Resource.isValidName(rname);
+      var fvalid = Resource.isValidName(fname);
+
+      rvalid || (errors.recordCollectionName = "must not be empty and may contain only the characters A-Z a-z 0-9 - _");
+      fvalid || (errors.fileCollectionName = "must not be empty and may contain only the characters A-Z a-z 0-9 - _");
+
+      if (rvalid && fvalid && rname === fname) {
+        errors.recordCollectionName = "must be different from file collection name";
+        errors.fileCollectionName = "must be different from record collection name";
+      }
     },
 
     _construct: function () {
