@@ -309,7 +309,7 @@ define([
 
       this._closeBtn = this._dateHead.children[0].children[0];
       this._resetBtn = this._dateHead.children[0].children[1];
-      this._prevMonthBtn = this._dateHead.children[0].children[3];
+      this._prevMonthBtn = this._dateHead.children[0].children[2];
       this._nextMonthBtn = this._dateHead.children[0].children[4];
 
       this._prevMonthBtn.addEventListener('click', this._selectPreviousMonth.bind(this));
