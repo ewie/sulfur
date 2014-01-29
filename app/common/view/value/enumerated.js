@@ -24,11 +24,11 @@ define([
     html: html,
 
     events: [
-      Event.create('click', 'button[name = "remove"]', PublishedEvent.create('remove'))
+      Event.create('click', '[name = "remove"]', PublishedEvent.create('remove'))
     ],
 
     accessors: [
-      Accessor.create('value', 'div[name = "value"]', ViewAccess)
+      Accessor.create('value', '[name = "value"]', ViewAccess)
     ]
 
   });
