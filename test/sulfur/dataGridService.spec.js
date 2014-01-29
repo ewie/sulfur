@@ -83,6 +83,13 @@ define([
         expect(dgs.recordCollectionUrl(resource)).to.equal(dgs.endpoint + resource.recordCollectionName);
       });
 
+      it("should encode the record collection name", function () {
+        var dgs = DataGridService.create('http://example.org/');
+        var resource = { recordCollectionName: 'abc def' };
+        expect(dgs.recordCollectionUrl(resource))
+          .to.equal(dgs.endpoint + encodeURIComponent(resource.recordCollectionName));
+      });
+
     });
 
     describe('#recordUrl()', function () {
@@ -139,6 +146,13 @@ define([
         var dgs = DataGridService.create('http://example.org/');
         var resource = { fileCollectionName: 'abc' };
         expect(dgs.fileCollectionUrl(resource)).to.equal(dgs.endpoint + resource.fileCollectionName);
+      });
+
+      it("should encode the file collection name", function () {
+        var dgs = DataGridService.create('http://example.org/');
+        var resource = { fileCollectionName: 'abc def' };
+        expect(dgs.fileCollectionUrl(resource))
+          .to.equal(dgs.endpoint + encodeURIComponent(resource.fileCollectionName));
       });
 
     });

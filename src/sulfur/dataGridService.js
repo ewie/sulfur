@@ -61,7 +61,7 @@ define(['sulfur/util/factory'], function (Factory) {
     get endpoint() { return this._endpoint },
 
     recordCollectionUrl: function (resource) {
-      return concatPath(this.endpoint, resource.recordCollectionName);
+      return concatPath(this.endpoint, encodeURIComponent(resource.recordCollectionName));
     },
 
     recordCollectionMetaUrl: function (resource) {
@@ -95,7 +95,7 @@ define(['sulfur/util/factory'], function (Factory) {
     },
 
     fileCollectionUrl: function (resource) {
-      return concatPath(this.endpoint, resource.fileCollectionName);
+      return concatPath(this.endpoint, encodeURIComponent(resource.fileCollectionName));
     },
 
     fileUrl: function (resource, id) {
