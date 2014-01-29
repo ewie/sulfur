@@ -86,7 +86,6 @@ input[type=checkbox] {
        -o-appearance: none;
   -webkit-appearance: none;
            apperance: none;
-  width: 1.5em;
   height: 1.5em;
   text-align: center;
   cursor: pointer;
@@ -108,13 +107,11 @@ input[type=checkbox]:hover {
 }
 
 input[type=checkbox]::before {
-  font-family: FontAwesome;
-  content: '\F04D';
-  color: #ccc;
+  content: 'no';
 }
 
 input[type=checkbox]:checked::before {
-  color: #000;
+  content: 'yes';
 }
 
 a {

@@ -208,6 +208,14 @@
   margin-left: 0.5em;
 }
 
+.facet-exclusive-option {
+  margin-left: 0.6em;
+}
+
+.facet-is-exclusive {
+  margin-left: 0.3em;
+}
+
 .pattern-group-values {
   margin-left: 1.6em;
 }
