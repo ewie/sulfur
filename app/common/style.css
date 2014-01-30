@@ -320,11 +320,11 @@ label[for] {
           transition: background-color 0.2s;
 }
 
-.email::before {
+.email:not(:empty)::before {
   content: '\2329';
 }
 
-.email::after {
+.email:not(:empty)::after {
   content: '\232A';
 }
 
