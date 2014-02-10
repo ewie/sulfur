@@ -1,3 +1,3 @@
-[submodule "var/highlight.js"]
-	path = var/highlight.js
+[submodule "submodules/highlight.js"]
+	path = submodules/highlight.js
 	url = git://github.com/isagalaev/highlight.js

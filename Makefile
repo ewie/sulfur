@@ -2,8 +2,8 @@ HIGHLIGHT_JS_VERSION = 8.0
 
 RJS_OPTS = pragmas.production=false
 
-vardir:
-	mkdir -p var
+submodulesdir:
+	mkdir -p submodules
 
 libdir:
 	mkdir -p lib
@@ -11,16 +11,16 @@ libdir:
 builddir:
 	mkdir -p build
 
-var/highlight.js: vardir
-	-git submodule add git://github.com/isagalaev/highlight.js var/highlight.js
+submodules/highlight.js: submodulesdir
+	-git submodule add git://github.com/isagalaev/highlight.js submodules/highlight.js
 	git submodule update
 
-lib/highlight.js: libdir var/highlight.js
-	cd var/highlight.js; \
+lib/highlight.js: libdir submodules/highlight.js
+	cd submodules/highlight.js; \
 		git checkout tags/$(HIGHLIGHT_JS_VERSION); \
 		python3 tools/build.py -tamd xml; \
 		git checkout master
-	mv var/highlight.js/build/highlight.pack.js lib/highlight.js
+	mv submodules/highlight.js/build/highlight.pack.js lib/highlight.js
 
 lib/jszip.js: libdir
 	cat node_modules/jszip/jszip.js > lib/jszip.js
@@ -38,11 +38,11 @@ bundle: builddir widget editor
 	cat app/common/style.css app/editor/style.css app/editor/github.css > build/style.css
 	cp app/common/sulfur.svg build/sulfur.svg
 
-debug: RJS_OPTS += pragmas.production=true
-debug: bundle
+build: RJS_OPTS += pragmas.production=true
+build: bundle
 
-build: RJS_OPTS += optimize=uglify2
-build: debug
+build-minify: RJS_OPTS += optimize=uglify2
+build-minify: build
 
 clean:
 	rm -f app/editor/main-built.js

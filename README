@@ -1,5 +1,5 @@
 Sulfur is a library and web application to design W3C widgets performing CRUD
-operations on a DataGridService.
+operations on a WebComposition/Data Grid Service.
 
 Requirements
 ============
@@ -22,19 +22,20 @@ Project structure
   editor/         editor web application
   widget/         widget web application
  build/           build destination
- lib/             JavaScript libraries
+ lib/             JavaScript libraries not managed via NPM
  node_modules/
  scripts/
   server.js       a simple HTTP server and proxy used during development
   unicode/        tool for generating src/sulfur/util/unicode.js
    generate.js    the generating script
    template.js    the template
- src/             JavaScript source for the library and web application
+ src/             JavaScript source for the library and UI
+ submodules/      Git submodules
  test/            test specs for everything under src/
- var/             various files
  .jshintrc        configuration used by JSHint
  Makefile
  package.json     project configuration used by NPM
+ README
  testem.json      testing configuration used by Testem
  TODO             a list of important open issues
 
@@ -48,11 +49,11 @@ binaries local to our project (containing directory node_modules/).
   $ echo "PATH=./node_modules/.bin:$PATH" >> ~/.bashrc
   $ source ~/.bashrc
 
-Clone the repository into a desired destination and install dependencies using
-NPM.
+Clone the repository into a desired destination and initialize the submodules.
+Finally install dependencies using NPM.
 
-  $ git clone <repo> <dest>
-  $ cd <dest>
+  $ git clone <repo> <dir>
+  $ cd <dir>
   $ git submodule init
   $ npm i
 
@@ -71,10 +72,11 @@ Tests are written as specs using mocha.
 Building
 ========
 
-To build the entire web application run make with either rule "debug" or "build".
-The first retains a readable JavaScript, the latter minifies all JavaScript.
+To build the entire web application run make with either rule "build" or
+"build-with-minify". The first retains a readable JavaScript, the latter
+minifies all JavaScript.
 
-  $ make {build|debug}
+  $ make build[-minify]
 
 This will bundle all JavaScript files into a single file and put it into
-directory build/ along with index.html, style.css and icon.svg
+directory build/ along with index.html, style.css and sulfur.svg
