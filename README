@@ -36,6 +36,9 @@ Project structure
  Makefile
  package.json     project configuration used by NPM
  README
+ sulfur.xsd       XML Schema defining non-standard types, XML documents
+                  representing records must import this schema in order to be
+                  validated by the WebComposition/Data Grid Service
  testem.json      testing configuration used by Testem
  TODO             a list of important open issues
 

@@ -18,7 +18,9 @@ define(function () {
     },
 
     get schemaLocationURL() {
-      // XXX temporary schema location
+      // TODO
+      // use a more future proof location for the XML Schema which must be
+      // accessible to the WebComposition/Data Grid Service when validating XML
       return 'http://www-user.tu-chemnitz.de/~ewie/sulfur.xsd';
     }
 

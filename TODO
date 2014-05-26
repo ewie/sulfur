@@ -1,9 +1,8 @@
 A list of issues that may affect functionality in the future.
 
 * The XML Schema serializer currently uses a temporary location to import the
-  sulfur schema (containing definitions of non-standard types required by the
-  WebComposition/Data Grid Service to be able to validate a document). This URL
-  must be changed when used in production (see file src/sulfur.js)
+  sulfur schema (sulfur.xsd in project's root). This URL must be changed when
+  used in production (see file src/sulfur.js)
 
 * The widget uses Leaflet for input and output of geolocation values. To
   initialize the map the widget requests the user's current position using

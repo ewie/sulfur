@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema
+ xmlns:xs="http://www.w3.org/2001/XMLSchema"
+ targetNamespace="https://vsr.informatik.tu-chemnitz.de/projects/2013/sulfur">
+
+ <xs:simpleType name="fileRef">
+  <xs:restriction base="xs:string"/>
+ </xs:simpleType>
+
+ <xs:complexType name="geolocation">
+  <xs:all>
+   <xs:element name="latitude">
+    <xs:simpleType>
+     <xs:restriction base="xs:double">
+      <xs:minInclusive value="-90"/>
+      <xs:maxInclusive value="90"/>
+     </xs:restriction>
+    </xs:simpleType>
+   </xs:element>
+   <xs:element name="longitude">
+    <xs:simpleType>
+     <xs:restriction base="xs:double">
+      <xs:minInclusive value="-180"/>
+      <xs:maxInclusive value="180"/>
+     </xs:restriction>
+    </xs:simpleType>
+   </xs:element>
+  </xs:all>
+ </xs:complexType>
+
+</xs:schema>
