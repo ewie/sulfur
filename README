@@ -1,5 +1,6 @@
 Sulfur is a library and web application to design W3C widgets performing CRUD
 operations on a WebComposition/Data Grid Service.
+It is the result of a student research project.
 
 Requirements
 ============
